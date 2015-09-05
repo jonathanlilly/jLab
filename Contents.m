@@ -6,7 +6,7 @@
 %
 %  Requires Matlab version 2014b or later. 
 %
-%  Homepage: http://www.jmlilly.net/software 
+%  Homepage: http://www.jmlilly.net/jmlsoft.html.
 %  GitHub: https://github.com/jonathanlilly/jLab
 %  ________________________________________________________________________  
 %
