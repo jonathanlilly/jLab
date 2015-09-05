@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CURVEMOMENTS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="curvemoments.html">CURVEMOMENTS</a>  Centroid, area, and many other moments of a closed curve.
+    _______________________________________________________________________
+    
+    <img src="../figures/curvemoments.png">
+    ______________________________________________________________________
+ 
+    [XO,YO]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) returns the centroid of the region bounded 
+    by the closed curve specified by the column vectors XC and YC.
+ 
+    [XO,YO,L,R,D]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) also returns the arc length L, area
+    radius R defined such that pi R^2 is the enclosed area, and the root-
+    mean-squared distance D from the curve periphery to the centroid.
+ 
+    [XO,YO,L,R,D,A,B,THETA]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) also returns the region's
+    second central moment, the area moment of inertia.  This describes an 
+    ellipse with semi-major and minor axes A and B, and orientation THETA. 
+ 
+    The moments are calculated from the curve (XC,YC) using expressions
+    for converting spatial to line integrals derived from Green's theorem.
+ 
+    XC and YC may be matrices, with each column specifying a different 
+    closed curve.  In this case, all curves must contain the same number 
+    of points, corresponding to the rows.  No NaNs may be present. 
+    
+    XC and YC may also be cell arrays of column vectors.  In this case, the 
+    moments will be numerical arrays with the same lengths as XC and YC.
+ 
+    The above figure illustrates an application of <a href="curvemoments.html">CURVEMOMENTS</a> to a
+    quasigeostrophic eddy field from QGSNAPSHOT.  The blue curves are
+    curves of constant Okubo-Weiss parameter.  These are well matched by
+    the red curves, constructed from the second central moment quantites
+    A, B, and THETA, and centered at the curve centroids XO, YO.  
+    __________________________________________________________________
+ 
+    Velocity moments: Vorticity, angular momentum, kinetic energy, etc.
+ 
+    <a href="curvemoments.html">CURVEMOMENTS</a> can also compute various moments based on the velocity.
+ 
+    [VORT,DIV,MOM,KE]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC,ZC) where ZC is the complex-valued
+    velocity ZC=U+iV along the curve, returns the spatially-averaged 
+    vorticity VORT, the spatially-averaged divergence MOM, and the angular 
+    momentum MOM and kinetic energy KE averaged along the curve periphery.
+ 
+    For the velocity moments, <a href="curvemoments.html">CURVEMOMENTS</a> expects XC and YC to have units
+    of km while ZC is in cm/s.  VORT and DIV then have units of 1/s, MOM 
+    and MOMSTD have units of cm^2/s, and KE has units of cm^2/s^2.
+ 
+    Note that VORT and DIV are computed as integrals of the tangential and
+    normal velocities along the curve, respectively, then converted to area 
+    averages by applying Stokes' theorem and the divergence theorem.
+ 
+    MOM is the average angular momentum along the curve with respect to the
+    curve centroid. KE is the average value of the kinetic energy along the
+    curve, a velocity quantity analagous to averaged squared distance D^2.
+    __________________________________________________________________
+ 
+    See also <a href="closedcurves.html">CLOSEDCURVES</a>, <a href="curveinterp.html">CURVEINTERP</a>.
+  
+    '<a href="curvemoments.html">curvemoments</a> --t' runs some tests.
+    '<a href="curvemoments.html">curvemoments</a> --f' generates the above figure.
+ 
+    Usage: [xo,yo]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
+           [xo,yo,L,R,D]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
+           [xo,yo,L,R,D,a,b,theta]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
+           [vort,div,mom,ke,momstd]=<a href="curvemoments.html">curvemoments</a>(xc,yc,zc);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--20154 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

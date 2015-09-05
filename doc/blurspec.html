@@ -1,0 +1,80 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>BLURSPEC is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="blurspec.html">BLURSPEC</a>  Returns the blurred and aliased spectrum given the autocovariance.
+ 
+    <a href="blurspec.html">BLURSPEC</a> is used to rapidly compute blurred, aliased, and other 
+    modified versions of a spectrum from a known autocovariance.
+ 
+    Performing these calculations in the time domain, making use of 
+    Fourier relationships between modified versions of the autocovariance
+    and spectrum, is much faster than working in the frequency domain.
+    __________________________________________________________________
+ 
+    Blurred and aliased spectra
+ 
+    [F,S]=<a href="blurspec.html">BLURSPEC</a>(R) inverse Fourier transforms a given *one-sided*
+    autocovariance R to obtain a spectrum S that incorporates the effects
+    of aliasing, as well as blurring by the default taper, the 'boxcar'.
+ 
+    Here F is an array of frequencies and S is the one-sided Fourier 
+    spectrum.  If R is length N, the output arrays will be length (N/2+1) 
+    if N is even and (N+1)/2 if N is odd.
+ 
+    [F,SPP,SNN]=<a href="blurspec.html">BLURSPEC</a>(R) for complex-valued R returns SPP and SNN, the 
+    positive and negative rotary spectra, respectively.  
+ 
+    <a href="blurspec.html">BLURSPEC</a>(DT,R) optionally uses the sample interval DT in computing the 
+    frequency array F, and in setting the spectral levels.
+    __________________________________________________________________
+ 
+    Tapered and aliased spectra
+ 
+    <a href="blurspec.html">BLURSPEC</a>(R,'tapered',TAPER) incorporates the spectral smoothing due to 
+    the use of data TAPER, rather than the boxcar taper, in addition to the
+    effects of aliasing.  TAPER must be the same length as R.
+ 
+    Note that <a href="blurspec.html">BLURSPEC</a>(R,'tapered',[]) simply returns the blurred spectrum,
+    as an empty taper is taken to indicate the periodogram.
+ 
+    <a href="blurspec.html">BLURSPEC</a>(R,'window',WIN) uses the pre-computed window that is to 
+    multiply the autocovariance function WIN.  This is the half of the 
+    sequence obtained by convolving the taper with itself.  This version
+    is primarily used for speed in an internal call from MATERNFIT.
+    __________________________________________________________________
+ 
+    Aliased-only spectrum
+ 
+    <a href="blurspec.html">BLURSPEC</a>(R,'aliased') computes an approximation to *aliased* spectrum,
+    without blurring.  This approximation will be accurate to the extent
+    that R has decayed to zero by the end of its duration.
+ 
+    This is much faster than explicitly summing over aliased frequencies.
+    __________________________________________________________________
+ 
+    Differenced spectra
+ 
+    <a href="blurspec.html">BLURSPEC</a>(R,'difference') returns the blurred and aliased spectrum of 
+    the first forward difference of the process with autocovariance R.  In 
+    this case the output will be length N-1.
+ 
+    <a href="blurspec.html">BLURSPEC</a>(R,'seconddifference') returns the blurred and aliases spectrum
+    of the second forward difference of the process with autocovariance R.  
+    The output will be length N-2.
+ 
+    These options can be combined with the 'taper' and 'aliased' options 
+    described above. 
+    __________________________________________________________________
+ 
+    '<a href="blurspec.html">blurspec</a> --t' runs some tests.
+ 
+    Usage: [f,S]=<a href="blurspec.html">blurspec</a>(R);
+           [f,Spp,Snn]=<a href="blurspec.html">blurspec</a>(dt,R);        
+           [f,Spp,Snn]=<a href="blurspec.html">blurspec</a>(dt,R,'tapered',TAPER);        
+           [f,Spp,Snn]=<a href="blurspec.html">blurspec</a>(dt,R,'aliased');        
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly and A.M. Sykulski 
+                                  --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

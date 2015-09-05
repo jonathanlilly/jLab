@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEFREQ is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsefreq.html">MORSEFREQ</a>  Frequency measures for generalized Morse wavelets. [with F. Rekibi]
+ 
+    [FM,FE,FI]=<a href="morsefreq.html">MORSEFREQ</a>(GAMMA,BETA) calculates three different measures of
+    the frequency of the lowest-order generalized Morse wavelet specified 
+    by parameters GAMMA and BETA.
+ 
+    FM is the modal or peak, FE is the "energy" frequency, and FI is the 
+    instantaneous frequency at the wavelet center.
+ 
+    [FM,FE,FI,CF]=<a href="morsefreq.html">MORSEFREQ</a>(GAMMA,BETA) also computes the curvature CF of 
+    the instantaneous frequency at the wavelet center. 
+ 
+    Note that all frequency quantities here are *radian* as in cos(omega t)
+    and not cyclic as in cos(2 pi f t).
+  
+    The input parameters must either be matrices of the same size,
+    or some may be matrices and the others scalars.   
+ 
+    For BETA=0, the "wavelet" becomes an analytic lowpass filter, and FM 
+    is not defined in the usual way.  Instead the 1/2 power point of the
+    analytic bandpass filter is returned for FM. 
+ 
+    For details see
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+ 
+    See also <a href="morsebox.html">MORSEBOX</a>, <a href="morseprops.html">MORSEPROPS</a>, <a href="morsewave.html">MORSEWAVE</a>.
+ 
+    Usage: fm = <a href="morsefreq.html">morsefreq</a>(ga,be);
+           [fm,fe,fi] = <a href="morsefreq.html">morsefreq</a>(ga,be);  
+           [fm,fe,fi,cf] = <a href="morsefreq.html">morsefreq</a>(ga,be);  
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J. M. Lilly and F. Rekibi
+                          --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

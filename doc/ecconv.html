@@ -1,0 +1,51 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ECCONV is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ecconv.html">ECCONV</a>  Converts between eccentricity measures.
+   
+    Y=<a href="ecconv.html">ECCONV</a>(X,STR) converts the eccentricity measure X into eccentricity
+    measure Y as specified by the string STR. 
+   
+    STR is of the form 'in2out' where the names 'in' and 'out' may be
+    chosen from the following table.
+ 
+        STR        Name                    Definition  
+        ----------------------------------------------------------------
+       'ecc'       Eccentricity            sgn(b)*sqrt(1-b^2/a^2)
+       'ell'       Ellipticity             b/a
+       'lin'       Linearity               sgn(b)*(a^2-b^2)/(a^2+b^2)
+       'circ'      Circularity             2ab/(a^2+b^2) 
+       'nu'        Eccentricity angle      asin(b/sqrt(a^2 + b^2))
+       '<a href="rot.html">rot</a>'       Rotary ratio            sgn(b)*(a-abs(b))/(a+abs(b))
+  
+    where "a" and "b" are the semi-major and semi-minor axes respective. 
+    For example, ECC=<a href="ecconv.html">ECCONV</a>(L,'lin2ecc') converts the ellipse linearity L
+    into eccentricity ECC.  
+ 
+    All quantities are positive for mathematically positive rotation
+    and negative for mathematically negative rotation.  Note the linearity
+    is undefined for the case of purely circular rotation a=abs(b);
+ 
+    For further details, see Lilly and Gascard (2006).
+    ____________________________________________________________________
+    
+    Cell array input/output
+ 
+    If <a href="ecconv.html">ECCONV</a> is given cell array input, it returns cell array output.
+ 
+    Thus X may be a cell arrays of numerical arrays, and the output Y will
+    also be a cell array having an identical size as X.
+    ____________________________________________________________________
+ 
+    See also ELLCONV, <a href="elldiff.html">ELLDIFF</a>, TRANSCONV. 
+ 
+    Usage:   lin=<a href="ecconv.html">ecconv</a>(b./a,'ell2lin');
+             ecc=<a href="ecconv.html">ecconv</a>(lin,'lin2ecc');
+ 
+    '<a href="ecconv.html">ecconv</a> --t' runs a test.
+    '<a href="ecconv.html">ecconv</a> --f' generates a sample figure.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

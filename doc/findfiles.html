@@ -1,0 +1,51 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>FINDFILES is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="findfiles.html">FINDFILES</a>  Returns all files in a directory with a specified extension.
+ 
+    FILES=<a href="findfiles.html">FINDFILES</a>(DIRNAME,EXT) where DIRNAME is a full directory path, 
+    returns a cell arrays FILES of all files having extension EXT in 
+    directory DIRNAME.
+ 
+    For example, FILES=<a href="findfiles.html">FINDFILES</a>('/Users/lilly/Home','m') returns a cell
+    cell array of all m-files in the Home directory.
+ 
+    <a href="findfiles.html">FINDFILES</a>(DIRNAME,'*') returns files having any extension.  
+ 
+    <a href="findfiles.html">FINDFILES</a>(DIRNAME,'') returns files having no extension.  This can
+    be used to return directory names.
+    ___________________________________________________________________
+ 
+    Recursive searching
+ 
+    <a href="findfiles.html">FINDFILES</a>(DIRNAME,...,'recursive') recursively searches though
+    directory DIRNAME as well as any subdirectories it contains. 
+    
+    [FILES,PATHS]=<a href="findfiles.html">FINDFILES</a>(DIRNAME,...,'recursive') also outputs a cell 
+    array PATHS specifying the full path name to each file in FILES. 
+    ___________________________________________________________________
+ 
+    Additional options
+ 
+    <a href="findfiles.html">FINDFILES</a>(...,'include',STR1) additionally returns only those file
+    names which inlude the text STR1.
+ 
+    <a href="findfiles.html">FINDFILES</a>(...,'exclude',STR2) excludes those files names which 
+    include the text STR2.
+   
+    The include and exclude options must be input after the first two
+    variables.  Both options may be input simultaneously.
+    ___________________________________________________________________
+ 
+    Usage: files=<a href="findfiles.html">findfiles</a>(pwd,'m');
+           files=<a href="findfiles.html">findfiles</a>(dirname,ext);    
+           files=<a href="findfiles.html">findfiles</a>(dirname,ext,'include','help');
+           [files,dirs]=<a href="findfiles.html">findfiles</a>(dirname,ext,'include','help','recursive');
+           files=<a href="findfiles.html">findfiles</a>(dirname,ext,'include','help','exclude','<a href="jLab.html">jLab</a>');
+ 
+    '<a href="findfiles.html">findfiles</a> --t' runs a test.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

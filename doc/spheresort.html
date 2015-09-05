@@ -1,0 +1,96 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHERESORT is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="spheresort.html">SPHERESORT</a>  Sorted great circle distances to nearby points on the earth.
+ 
+    Computing great circle distances on the earth between two sets of
+    points --- data points and a fixed grid, say --- is computationally 
+    expensize.  <a href="spheresort.html">SPHERESORT</a> speeds this up substantially. 
+ 
+    [DS,XS,YS]=<a href="spheresort.html">SPHERESORT</a>(LAT,LON,LATO,LONO,CUTOFF) returns the great
+    circle distances DS between data points at locations LAT, LON and 
+    nearby grid points located at LATO, LONO, sorting in order of distance. 
+ 
+    XS and YS are the corresponding positions of the sorted data points 
+    in a local tangent plane about each grid point. 
+ 
+    <a href="spheresort.html">SPHERESORT</a> only computes distances for nearby points.  CUTOFF is the
+    maximum distance (in kilometers) for which we wish the great circle
+    distance to be computed.  
+ 
+    CUTOFF should be less that 1/4 of the circumference of the earth, 
+    <a href="radearth.html">RADEARTH</a> * PI/2, so that (LAT,LON) points lie in the same hemisphere
+    as the corresponding grid points.
+  
+    LAT and LON are arrays of the same size into data point locations.
+    LATO and LONO are arrays of length M and N, say, specifying the
+    latitudes and longitudes of an M x N matrix of grid points, i.e.
+ 
+        LATO =  [LATO_1;    LONO= [LONO_1 LONO_2 ... LONO_N]. 
+                 LATO_2; 
+                   ...
+                 LATO_M]
+ 
+    The output arrays are then each M x N x P arrays of column vectors, 
+    where P is the maximum number of points in the CUTOFF neighborhood at
+    any grid point.  Points farther away are filled with NANs.
+ 
+    DS gives the distances of data points less than CUTOFF kilometers 
+    from the (m,n)th grid point, sorted in order of increasing distance.  
+ 
+    XS and YS are also M x N x P, and give the coordinates of the 
+    corresponding data points in a Cartesian expansion about the (m,n)th
+    grid point, in kilometers.  See <a href="latlon2xy.html">LATLON2XY</a> for details.
+    _________________________________________________________________
+  
+    Additional input parameters
+ 
+    Let's say some additional variables Z1, Z2,...,ZK are given at
+    the data locations LAT, LON.  Then 
+    
+    [DS,XS,YS,Z1S,Z2S,...,ZKS]=
+ 
+                 <a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z1,Z2,...,ZK,LATO,LONO,CUTOFF);
+ 
+    also returns the sorted values of these variables.
+ 
+    Z1S, Z2S,...,ZKS are the same size as the other output arguments.  
+    Z1S then gives the value of Z1 at data points no more than CUTOFF 
+    kilometers from the (m,n)th grid point, etc.
+ 
+    To output an index into the data point locations, use
+   
+    [DS,XS,YS,INDEX]=<a href="spheresort.html">SPHERESORT</a>(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF).
+    _________________________________________________________________
+   
+    Parellel algorithm
+ 
+    With Matlab's Parallel Computing Toolbox installed, <a href="spheresort.html">SPHERESORT</a> can 
+    take advantage of multiple cores to speed up operations.
+ 
+    <a href="spheresort.html">SPHERESORT</a>('parallel',NWORKERS) parallelizes the computation with the
+    number of workers set to NWORKERS.  Choose this as the number of 
+    independent processors on your machine. 
+ 
+    As the additional efficiency is not dramatic, this is typically only an 
+    advantage for very large datasets.  Due to the nature of the
+    calculation we have to use SPMD, which is less efficient than PARFOR.
+ 
+    As an example, for a dataset with 1 million points, a 12 core Mac Pro 
+    takes about 44 seconds to complete the sort on a 1x1 degree grid, 
+    versus 184 seconds for the standard algorithm, a factor of 4 faster.
+    _________________________________________________________________
+ 
+    See also <a href="twodsort.html">TWODSORT</a>, <a href="polysmooth.html">POLYSMOOTH</a>.
+ 
+    '<a href="spheresort.html">spheresort</a> --t' runs a test.
+ 
+    Usage: ds=<a href="spheresort.html">spheresort</a>(lat,lon,lato,lono,cutoff);
+           ds=<a href="spheresort.html">spheresort</a>(lat,lon,lato,lono,cutoff,'parallel',Nworkers);
+           [ds,xs,ys]=<a href="spheresort.html">spheresort</a>(lat,lon,lato,lono,cutoff);
+           [ds,xs,ys,z1s,z2s]=<a href="spheresort.html">spheresort</a>(lat,lon,z1,z2,lato,lono,cutoff);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

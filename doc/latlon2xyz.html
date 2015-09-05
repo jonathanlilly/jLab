@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LATLON2XYZ is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="latlon2xyz.html">LATLON2XYZ</a>  Converts latitude and longitude into 3D Cartesian coordinates.
+ 
+    [X,Y,Z]=<a href="latlon2xy.html">LATLON2XY</a>Z(LAT,LON) converts latitude and longitude of 
+    a position on the surface of a sphere into Cartesian coordinates.  
+ 
+    LAT and LON are in degrees and X, Y, and Z are in kilometers.  
+ 
+    LAT and LON may either be arrays of the same size, or LON may be an
+    array and LAT a scalar.  X, Y, and Z will have the same size as LON.
+ 
+    The Cartesian coordinate system is a right-handed system whose
+    origin lies at the center of the sphere.  It is oriented with the 
+    Z-axis passing though the poles and the X-axis passing through
+    the point LAT=0, LON=0.  
+ 
+    By default, the radius of the sphere is taken as <a href="radearth.html">RADEARTH</a>.
+    <a href="latlon2xyz.html">LATLON2XYZ</a>(LAT,LON,R) uses a sphere of radius R, in kilometers,
+    instead.
+ 
+    <a href="latlon2xyz.html">LATLON2XYZ</a> is inverted by <a href="xyz2latlon.html">XYZ2LATLON</a>.
+ 
+    See <a href="jSphere.html">JSPHERE</a> for related functions.
+ 
+    '<a href="latlon2xy.html">latlon2xy</a>z --t' runs a test.
+ 
+    Usage: [x,y,z]=<a href="latlon2xy.html">latlon2xy</a>z(lat,lon);
+           [x,y,z]=<a href="latlon2xy.html">latlon2xy</a>z(lat,lon,R);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

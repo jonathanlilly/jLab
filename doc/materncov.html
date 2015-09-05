@@ -1,0 +1,83 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MATERNCOV is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="materncov.html">MATERNCOV</a>  Autocovariance of the Matern random process and variations.
+ 
+    [TAU,R]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA) returns the autocovariance 
+    function R of a length N complex-valued Matern random process having 
+    variance SIGMA^2, slope parameter ALPHA, and damping parameter LAMBDA.
+ 
+    DT is the sample interval.  Note that LAMBDA is understood to have the
+    same units as the inverse sample interval 1/DT.
+ 
+    TAU is an array of time lags at which R is computed, and is given by 
+    TAU=DT*[0,1,...,N-1].
+ 
+    The Matern autocovariance is given by
+ 
+       R(TAU) = SIGMA^2 * (LAMBDA|TAU|)^(ALPHA-1/2) 
+                              * BESSELK(ALPHA-1/2,LAMBDA|TAU|) * C
+ 
+    where C is a normalizing constant dependent upon ALPHA and LAMBDA.
+ 
+    By definition, R is one-sided theoretical autocovariance at 
+    non-negative time lags.  See below for the relationship between this 
+    and the full, length (2N-1) theoretical autocovariance function. 
+ 
+    Note that for LAMBDA=0, the case of fractional Brownian motion, R will 
+    contain only INFs because the autocovariance function is unbounded.
+ 
+    The input parameters SIGMA, ALPHA, and LAMBDA, may all either be scalars 
+    of arrays of the same length M.  If the latter, then the output 
+    autocovariance function R will be a matrix with N rows and M columns. 
+ 
+    [TAU,R]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) returns the 
+    autocovariance function of various extensions of the Matern process. 
+    <a href="maternoise.html">MATERNOISE</a>(...,'composite') also works.  See <a href="maternspec.html">MATERNSPEC</a> for details.
+ 
+    See <a href="maternspec.html">MATERNSPEC</a> for a more thorough discussion of the Matern process.
+ 
+    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
+    "Lagrangian time series models for ocean surface drifter trajectories."
+    __________________________________________________________________
+ 
+    Relationship to full autocovariance
+ 
+    For a time series of length N, the full autocovariance function RF is 
+    length 2N-1, defined at time lags -N+1,-N+2...,-1,0,1,...,N-2,N-1.
+ 
+    The one-sided autocovariance R contains the full autocovariance RF at 
+    positive time lags. Negative lags are given by Hermitian symmetry.
+ 
+    [TAUF,RF]=<a href="materncov.html">MATERNCOV</a>(...,'full') returns the full (two-sided)
+    autocovariance RF and the corresponding two-sided time array TAUF. 
+ 
+    RF is constructed from R as RF=[FLIPUD(CONJ(R(2:end,:));R]. 
+    __________________________________________________________________
+ 
+    Composite Matern
+ 
+    [TAU,R]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite'), returns 
+    the autocovariance of the composite Matern process.  See <a href="maternspec.html">MATERNSPEC</a> for
+    more details.
+ 
+    This autocovariance does not have a simple analytic form, but is 
+    computed in approximate form from inverse Fourier tranforming the
+    spectrum with 10x oversampling and a length 100 x N. 
+ 
+    This computation method is expected to minimize aliasing effects and
+    resolution errors.  
+    __________________________________________________________________
+ 
+    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>, MATERNFIT.
+ 
+    '<a href="materncov.html">materncov</a> --t' runs some tests.
+ 
+    Usage: [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda);
+           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu,mu);
+           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu,mu,'composite');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015  J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

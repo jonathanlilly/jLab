@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>STANDALONE is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="standalone.html">STANDALONE</a>  Create stand-alone version of an m-file, including dependencies.
+ 
+    FILES=<a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR) looks in m-file FILENAME for all
+    calls to m-files in directory SOURCEDIR and subdirectories, and returns 
+    a list of m-files called by FILENAME, or called by any m-files called 
+    by those files, and so forth. Commented-out calls are not included. 
+ 
+    This list of called m-files is returned in the cell array FILES.  The
+    first element of FILES is the original m-file FILENAME itself. 
+ 
+    Thus, in order to create a stand-alone version of FILENAME, one needs
+    to include all the files in FILES from SOURCEDIR and subdirectories.
+    
+    Note that SOURCEDIR must be the full pathname of a directory, e.g.
+    SOURCEDIR='/Users/lilly/Desktop/Dropbox/Matlab/jlab'.
+    
+    <a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR,TARGETDIR) on Mac or Unix systems moves
+    all the files to directory TARGETDIR, which is again the full pathname 
+    of a directory.  TARGETDIR is created if does not already exist. 
+    
+    WARNING: This routine will automatically copy potentially large numbers
+    of files by directly accessing the 'cp' command.  If you make an error 
+    in the input directories, you could end up with a big mess, or even
+    overwrite things you don't want to overwrite.  Please use with caution.
+ 
+    For example, to make standalone version of <a href="standalone.html">STANDALONE</a>, one would type
+ 
+         <a href="standalone.html">standalone</a>('<a href="standalone.html">standalone</a>.m',....,
+                '/Users/lilly/Desktop/DropBox/Matlab/jlab',...
+                '/Users/lilly/Desktop/DropBox/Matlab/standalone')
+ 
+    which moves <a href="standalone.html">STANDALONE</a> and all its dependencies into a directory of the
+    same name. 
+ 
+    Usage: files=<a href="standalone.html">standalone</a>(filename,sourcedir);
+           <a href="standalone.html">standalone</a>(filename,sourcedir,targetdir)
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

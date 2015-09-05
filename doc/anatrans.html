@@ -1,0 +1,61 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ANATRANS is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="anatrans.html">ANATRANS</a>  Analytic part of signal.
+ 
+    XP=<a href="anatrans.html">ANATRANS</a>(X) returns the analytic part of the real-valued signal X,
+    which is a column vector or a matrix with 'time' in columns. 
+ 
+    XP is defined for real X such that X = REAL(XP) = 1/2*(XP+CONJ(XP)).
+  
+    <a href="anatrans.html">ANATRANS</a> removes the mean of the signal.  It does not detrend, so if 
+    your time series has a linear trend you may wish to call DETREND first. 
+ 
+    [XP1,XP2,...,XPM]=<a href="anatrans.html">ANATRANS</a>(X1,X2,...,XM) also works for multiple input
+    arguments.  
+     
+    <a href="anatrans.html">ANATRANS</a>(X,DIM) optionally applies the analytic transform along 
+    dimension DIM, instead of along the first dimension.
+    ___________________________________________________________________
+    
+    Complex-valued signals
+ 
+    [ZP,ZN]=<a href="anatrans.html">ANATRANS</a>(Z,CONJ(Z)) returns the analytic part ZP of the 
+    complex-valued signal Z, and the analytic part ZN of its conjugate.
+ 
+    The normalization for complex-valued signals differs from that for 
+    real valued signals.  ZP and ZN are defined such that Z=ZP+CONJ(ZN). 
+ 
+    The analytic part of a real-valued signal and that of a complex-valued 
+    signal are thus defined differently by a factor of two, following the 
+    convention of Lilly and Gascard (2006) and Lilly and Olhede (2010).
+ 
+    Note that the equality Z=ZP+CONJ(ZN) is not necessarily exact, due to 
+    issues relating to boundary effects from the time series edges.
+    ___________________________________________________________________
+ 
+    Boundary conditions
+ 
+    <a href="anatrans.html">ANATRANS</a>(...,STR), where STR is a string, optionally specifies the
+    boundary condition to be imposed at the edges of the time series.  
+    Valid options for STR are 
+ 
+          STR = 'periodic' for periodic boundary conditions 
+          STR = 'zeros' for zero-padding beyond the endpoints 
+          STR = 'mirror' for reflecting the time series at both ends
+ 
+    The default value of STR is 'mirror', as this tends to minimize the
+    `edge effects' that occur near the ends of the time series.
+    ___________________________________________________________________
+ 
+    '<a href="anatrans.html">anatrans</a> --t' runs some tests.
+ 
+    Usage: z=<a href="anatrans.html">anatrans</a>(x);
+           z=<a href="anatrans.html">anatrans</a>(x,dim);
+           z=<a href="anatrans.html">anatrans</a>(x,dim,'mirror');
+           [zp,zn]=<a href="anatrans.html">anatrans</a>(z,conj(z));
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

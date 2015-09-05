@@ -1,0 +1,62 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TWODMED is the <a href="jStats.html">jStats</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="twodmed.html">TWODMED</a>  Median value of a function of two variables.
+    __________________________________________________________________
+ 
+    <img src="../figures/twodmed.png">
+    __________________________________________________________________
+ 
+    MED=<a href="twodmed.html">TWODMED</a>(X,Y,Z,XBIN,YBIN) where X, Y and Z are arrays of the same
+    length, forms the median of Z over the XY plane.
+ 
+    If XBIN and YBIN are length N and M, respectively, then MED is of 
+    size M-1 x N-1.  Bins with no data are assigned a value of NAN.
+ 
+    XBIN and YBIN must be monotonically increasing. 
+ 
+    MED=<a href="twodmed.html">TWODMED</a>(X,Y,Z,N) uses N bins in the X and Y directions, linearly
+    spaced between the minimum and maximum values.  MED is N-1 x N-1.
+ 
+    MED=<a href="twodmed.html">TWODMED</a>(X,Y,Z,[XMIN XMAX],[YMIN YMAX],N) uses N bins, linearly
+    spaced between the designated X and Y values.  MED is N-1 x N-1. 
+ 
+    [MED,XMID,YMID]=<a href="twodmed.html">TWODMED</a>(...) optionally returns the midpoints XMID
+    and YMID of the bins.
+ 
+    X, Y, and Z can also be cell arrays of numerical arrays, in which case 
+    all data values are concatented prior to finding the histogram.
+ 
+    <a href="twodmed.html">TWODMED</a>, <a href="twodstats.html">TWODSTATS</a>, and <a href="twodhist.html">TWODHIST</a> are three related functions for 
+    computing statistics as a function two variables using very fast
+    algorithms that avoid any loops through efficient use of indexing. 
+    __________________________________________________________________
+ 
+    Algorithms
+ 
+    <a href="twodmed.html">TWODMED</a> uses a fast (exact) algorithm which is particularly efficient 
+    for large arrays.
+ 
+    The values of Z are sorted into bins according to the associated (X,Y)
+    value, with bin edges specified by XBIN and YBIN, and the median of 
+    finite values of Z in each bin is computed looplessly using indexing.
+ 
+    <a href="twodmed.html">TWODMED</a>(...,'slow') uses a slow algorithm which uses less memory.  
+    By default, <a href="twodmed.html">TWODMED</a> uses a fast but memory-intensive algorithm.  
+    Use this flag if you get an out-of-memory error.
+    __________________________________________________________________
+ 
+    See also <a href="twodhist.html">TWODHIST</a>, <a href="twodstats.html">TWODSTATS</a>.
+    
+    '<a href="twodmed.html">twodmed</a> --f' generates the sample figure shown above.
+    '<a href="twodmed.html">twodmed</a> --t' runs a test.
+ 
+    Usage: med=<a href="twodmed.html">twodmed</a>(x,y,z,N);
+           med=<a href="twodmed.html">twodmed</a>(x,y,z,[xmin xmax],[xmin xmax],N);
+           med=<a href="twodmed.html">twodmed</a>(x,y,z,xbin,ybin);
+           [med,xmid,ymid]=<a href="twodmed.html">twodmed</a>(x,y,z,xbin,ybin);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

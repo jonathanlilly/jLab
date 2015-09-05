@@ -1,0 +1,107 @@
+/* This style file is based on m2html by Guillaume Flandin */
+/* http://www.artefact.tk/software/matlab/m2html/  */
+
+body {background-color:#FFFFFD;float:none;font-size:large;width:45em;
+      margin-left:auto; margin-right:auto;margin-top:0em; margin-bottom:0em; 
+      padding: 0em 0em 1em 0em;border:0em; color: black; font-family:utopia;} 
+
+img {width: 85%}
+
+img#small {width: auto}
+
+div.fragment { 
+	width: 98%;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+    border-left: 0px solid #CCCCCC;
+	border-right: 0px solid #CCCCCC;
+    background-color: #FFFFFF;
+	padding-left: 4px;
+	margin: 4px;
+    background-repeat: no-repeat;
+    background-position: -15% 0%;
+}
+
+div.box { 
+	width: 98%;
+	background-color: #FFFFFF;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+    border-left: 0px solid #CCCCCC;
+	border-right: 0px solid #CCCCCC;
+	color: black;
+	padding: 4px;
+}
+
+div.centered {text-align:center}
+
+.comment {
+	color: #228B22;
+}
+.string {
+	color: #B20000;
+}
+.keyword { 
+	color: #0000FF;
+}
+
+.keywordtype { color: #604020; }
+.keywordflow { color: #e08000; }
+.preprocessor { color: #806020; }
+.stringliteral { color: #002080; }
+.charliteral { color: #008080; }
+
+a {
+	text-decoration: none; 
+    color: #A020F0;
+}
+
+a:hover {
+	background-color: #006699;
+	color:#FFFFFF;
+}
+
+a.code {
+	font-weight: normal; 
+	color: #A020F0;
+}
+
+a.code:hover {
+	background-color: #FF0000;
+	color: #FFFFFF;
+}	
+
+h1 {
+	background: transparent;
+	color: #999999;
+	font-size: large;
+	text-align:left;padding-left:0.5em;padding-top:2ex;
+}
+
+h2 {
+	background: transparent;
+	color: #999999;
+	font-size: large;white-space:pre;
+	text-align:center;padding-left:1em;padding-right:1em;padding-top:0ex;
+}
+
+h4 {color: #006699;}
+
+address {
+	font-size:small;
+}
+
+form.search {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+input.search {
+	font-size: 75%;
+	color: #000080;
+	font-weight: normal;
+	background-color: #eeeeff;
+}
+
+li {
+    padding-left:5px;
+}

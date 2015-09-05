@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLSPLIT is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellsplit.html">CELLSPLIT</a>  Splits cell arrays of numeric arrays at data gaps.
+ 
+    TO=<a href="cellsplit.html">CELLSPLIT</a>(T,TOL), where T is a cell array of time arrays, splits T
+    into additional cells wherever gaps of longer than duration TOL occur.
+    Thus TO contains no gaps of longer than duration TOL. 
+ 
+    As an example, if T is a length two cell array 
+    
+        T{1}=[1 2 3 8 9 12 17]';  T{2} =[1 6 7]'; 
+ 
+    then TO=<a href="cellsplit.html">CELLSPLIT</a>(TI,3) leads to 
+ 
+        TO{1}=[1 2 3]'; TO{2}=[8 9 12]'; TO{3}=17; TO{4}=1; TO{5}=[6 7]'; 
+  
+    such that there are no gaps in TO greater than 3. 
+ 
+    In the process of this splitting, any empty cells in T are removed.  
+ 
+    [TO,Y1,Y2,...,YN]=<a href="cellsplit.html">CELLSPLIT</a>(T,X1,X2,...,XN,TOL) where the XN are cell
+    arrays of the same size as T, splits the XN at the *same locations* at
+    which T is split, and returns the results in the YN.  
+ 
+    The purpose of this is to separate all variables XN into separate cells 
+    whenever data gaps are longer than a specified cutoff.
+    
+    <a href="cellsplit.html">CELLSPLIT</a>(T,X1,X2,...,XN,TOL); with no output arguments overwrites
+    the original input variables T and X1,X2,...XN.
+ 
+    '<a href="cellsplit.html">cellsplit</a> --t' runs a test.
+ 
+    Usage: to=<a href="cellsplit.html">cellsplit</a>(t,tol);
+           [to,y1,y2,y3]=<a href="cellsplit.html">cellsplit</a>(t,x1,x2,x3,tol);
+           <a href="cellsplit.html">cellsplit</a>(t,x1,x2,x3,tol);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

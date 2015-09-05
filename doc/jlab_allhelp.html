@@ -1,0 +1,406 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>JLAB_ALLHELP is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="jlab_allhelp.html">JLAB_ALLHELP</a>  Displays the help comments for all <a href="jLab.html">JLAB</a> modules. 
+ 
+    <a href="jCell.html">jCell</a>:  Tools for operating on cell arrays of column vectors
+   
+    Basic mathematical operations
+      <a href="cellabs.html">cellabs</a>    - Absolute value of each element in a cell array.                    
+      <a href="cellmax.html">cellmax</a>    - Maximum of each element in a cell array.                           
+      <a href="cellmin.html">cellmin</a>    - Minimum of each element in a cell array. 
+      <a href="cellmean.html">cellmean</a>   - Mean value of each element a cell array or set of cell arrays.     
+      <a href="cellreal.html">cellreal</a>   - Real part of each element in a cell array.                         
+      <a href="cellimag.html">cellimag</a>   - Imaginary part of each element in a cell array.    
+      <a href="celllog10.html">celllog10</a>  - Base ten logarithm of each element in a cell array.
+      <a href="celladd.html">celladd</a>    - Addition acting on each element in a cell array.                   
+      <a href="cellmult.html">cellmult</a>   - Multiplication acting on each element in a cell array.   
+      <a href="celldiv.html">celldiv</a>    - Division acting on each element in a cell array.
+   
+    Reshaping, indexing, and sizes
+      <a href="cell2col.html">cell2col</a>   - Converts cell arrays of column vectors into 'column-appended' data.
+      <a href="col2cell.html">col2cell</a>   - Converts 'column-appended' data into cell arrays of column vectors.
+      <a href="cellindex.html">cellindex</a>  - Applies a cell array of indices to a cell array of column vectors. 
+      <a href="cellchunk.html">cellchunk</a>  - Converts cell array data into uniform length 'chunks'.             
+      <a href="cellength.html">cellength</a>  - Length of each element in a cell array.                            
+      <a href="cellsize.html">cellsize</a>   - Size of each element in a cell array along specified dimension.    
+   
+    Data processing
+      <a href="cellstrip.html">cellstrip</a>  - Strips NaN values from the beginnings or ends of cell arrays.
+      <a href="cellsplit.html">cellsplit</a>  - Splits cell arrays of numeric arrays at data gaps.
+      <a href="cellprune.html">cellprune</a>  - Removes all empty cells, or cells less than a specified length.
+      <a href="cellfill.html">cellfill</a>   - Fills missing data marked by NaNs in a cell array.
+      <a href="cellgrid.html">cellgrid</a>   - Interpolate a cell array of numeric arrays onto a regular grid.
+      <a href="cellfirst.html">cellfirst</a>  - Returns the first element of each entry in a cell array.
+   
+    Plotting
+      <a href="cellplot.html">cellplot</a>   - Rapidly plot all element of a cell array of numeric arrays. 
+   
+    See also <a href="jVarfun.html">jVarfun</a>.
+    __________________________________________________________________
+  
+    <a href="jCommon.html">jCommon</a>:  Useful general-purpose functions, common to other <a href="jLab.html">JLAB</a> modules
+   
+    Array functions
+      <a href="aresame.html">aresame</a>    - Test whether two N-D arrays are the same.                        
+      <a href="arrayify.html">arrayify</a>   - Converts a set of scalars or arrays into column arrays.            
+      <a href="blocklen.html">blocklen</a>   - Counts the lengths of 'blocks' in an array.                        
+      <a href="blocknum.html">blocknum</a>   - Numbers the contiguous blocks of an array.   
+      <a href="lnsd.html">lnsd</a>       - Last non-singleton dimension of an array.                          
+      <a href="matmult.html">matmult</a>    - Matrix multiplication for arrays of matrices.                      
+      <a href="nonnan.html">nonnan</a>     - Return all non-NAN elements of an array.                           
+      <a href="vectmult.html">vectmult</a>   - Matrix multiplication for arrays of vectors.    
+   
+    File and directory tools
+      <a href="commentlines.html">commentlines</a> - Returns the comment lines from m-files.                          
+      <a href="findfiles.html">findfiles</a>    - Returns all files in a directory with a specified extension.       
+      <a href="findpath.html">findpath</a>     - Returns the full pathname of a directory on the Matlab search path.
+      <a href="jhelp.html">jhelp</a>        - Opens linked <a href="jLab.html">JLAB</a> help files in Matlab's internal web browser.     
+      <a href="whichdir.html">whichdir</a>     - Returns directory name containing file in search path.             
+      <a href="standalone.html">standalone</a>   - Create stand-alone version of an m-file, including dependencies.
+   
+    Mathematical aliases
+      <a href="choose.html">choose</a>     - Binomial coefficient: <a href="choose.html">CHOOSE</a>(N,K) =  N!K!/(N-K)!
+      <a href="frac.html">frac</a>       - Fraction: <a href="frac.html">FRAC</a>(A,B)=A./B                                                    
+      <a href="imlog.html">imlog</a>      - Imaginary part of log: <a href="imlog.html">IMLOG</a>(X)=UNWRAP(IMAG(LOG(X)))                                      
+      <a href="iseven.html">iseven</a>     - True for even integer values; false otherwise.                     
+      <a href="isodd.html">isodd</a>      - True for odd integer values; false otherwise. 
+      <a href="oprod.html">oprod</a>      - Outer product:  <a href="oprod.html">OPROD</a>(X,Y)=X*CONJ(Y')                              
+      <a href="res.html">res</a>        - Residual after flooring:  <a href="res.html">RES</a>(X)=X-FLOOR(X)                        
+      <a href="rot.html">rot</a>        - Complex-valued rotation:  <a href="rot.html">ROT</a>(X)=EXP(SQRT(-1)*X)  
+      <a href="squared.html">squared</a>    - Squares the modulus of its argument:  <a href="squared.html">SQUARED</a>(X)=ABS(X).^2
+    
+    Matrices, polynomials, and special functions
+      <a href="jmat2.html">jmat2</a>      - 2x2 rotation matrix through specified angle.                       
+      <a href="jmat3.html">jmat3</a>      - 3x3 rotation matrix through specified angle.  
+      <a href="tmat.html">tmat</a>       - 2x2 complex grouping matrix.  <a href="tmat.html">TMAT</a> = [1  i; 1 -i] / SQRT(2)
+      <a href="bellpoly.html">bellpoly</a>   - Complete Bell polynomials.  
+      <a href="hermpoly.html">hermpoly</a>   - Hermite polynomials. [with F. Rekibi]   
+      <a href="hermfun.html">hermfun</a>    - Orthonormal Hermite functions. [with F. Rekibi]                    
+   
+    Dataset organization as structures
+      <a href="make.html">make</a>       - Create a structure containing named variables as fields.  
+      <a href="matsave.html">matsave</a>    - Create and save structure of variables as a mat-file. 
+      <a href="use.html">use</a>        - Copies structure fields into named variables in workspace.         
+   
+    Statistics
+      <a href="cum2mom.html">cum2mom</a>    - Convert cumulants to moments.    
+      <a href="mom2cum.html">mom2cum</a>    - Convert moments to cumulants.                                      
+      <a href="pdfprops.html">pdfprops</a>   - Mean and variance associated with a probability distribution.  
+      <a href="simplepdf.html">simplepdf</a>  - Gaussian, uniform, Cauchy, and exponential pdfs.                   
+   
+    Filling bad data points
+      <a href="fillbad.html">fillbad</a>    - Linearly interpolate over bad data points.  
+   
+    Date and time
+      <a href="yearfrac.html">yearfrac</a>   - Convert date from 'datenum' format to 'year.fraction'.
+    __________________________________________________________________
+  
+    <a href="jEllipse.html">jEllipse</a>:  Analysis of modulated elliptical, or bivariate, signals
+   
+     Elliptical signal properties
+      <a href="ellband.html">ellband</a>    - Bandwidth of modulated elliptical signals in two or three dimensions. 
+      <a href="ellparams.html">ellparams</a>  - Ellipse parameters of a modulated bivariate or trivariate oscillation.
+      <a href="ellvel.html">ellvel</a>     - Average and instantaneous ellipse velocities.    
+      <a href="ellrad.html">ellrad</a>     - Average and instantaneous ellipse radius.                             
+   
+     Elliptical signal generation and conversions
+      <a href="ellsig.html">ellsig</a>     - Creates a modulated elliptical signal in two or three dimensions.     
+      <a href="sig2latlon.html">sig2latlon</a> - Converts an oscillatory signal to lat/lon displacements.  
+      <a href="elldiff.html">elldiff</a>    - Differentiation of modulated elliptical signals.    
+             
+     Plotting tools
+      <a href="ellcurves.html">ellcurves</a>   - Returns curves corresponding to specified ellipse properties.         
+      <a href="ellipseplot.html">ellipseplot</a> - Plot ellipses.
+   
+     Basic ellipse properties 
+      <a href="ab2kl.html">ab2kl</a>      - Converts A and B to ellipse parameters Kappa and Lambda.              
+      <a href="kl2ab.html">kl2ab</a>      - Converts ellipse parameters Kappa and Lambda to A and B.              
+      <a href="ecconv.html">ecconv</a>     - Converts between eccentricity measures.          
+      <a href="ellrossby.html">ellrossby</a>  - Ellipse Rossby number, for oceanographic applications.                
+   
+     See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jWavelet.html">jWavelet</a>.
+    __________________________________________________________________
+  
+    <a href="jFigures.html">jFigures</a>:  A low-level directory containing routines for example figures.
+    __________________________________________________________________
+  
+    <a href="jGraph.html">jGraph</a>:  Plotting tools and refinements for making high-quality figures
+   
+    High-level graphical post-processing
+      <a href="fixlabels.html">fixlabels</a>    - Specify precision of axes labels. 
+      <a href="fontsize.html">fontsize</a>     - Rapidly set title, axes, label, and text fontsizes.              
+      <a href="letterlabels.html">letterlabels</a> - For automatically putting letter labels on subplots.           
+      <a href="linecolor.html">linecolor</a>    - Set line colors based on a property value within a colormap.                    
+      <a href="linestyle.html">linestyle</a>    - Rapidly set color, style, and width properties of lines.
+      <a href="linering.html">linering</a>     - Moves lines through the current line style order. 
+      <a href="packfig.html">packfig</a>      - Squeeze together rows and/or columns of the current figure. 
+   
+     Oceanography-specific plotting tools
+      <a href="hodograph.html">hodograph</a>  - Generate <a href="hodograph.html">hodograph</a> plots (simple and fancy).                                   
+      <a href="provec.html">provec</a>     - Generate progressive vector diagrams (simple and fancy).             
+      <a href="stickvect.html">stickvect</a>  - Plots "stick vectors" for multicomponent velocity time series.  
+      [See also <a href="cellplot.html">CELLPLOT</a>, <a href="regionplot.html">REGIONPLOT</a>, <a href="topoplot.html">TOPOPLOT</a>]
+   
+    Modified plotting functions
+      <a href="discretecolorbar.html">discretecolorbar</a> - Plots a colorbar with discrete variation.  
+      <a href="jpcolor.html">jpcolor</a>          - Modified version of PCOLOR appropriate for cell-centered grids.  
+      <a href="patchcontourf.html">patchcontourf</a>    - Generate filled contours using patches, with specified colors.
+      <a href="uvplot.html">uvplot</a>           - Plots the real and imaginary parts of a signal on the same axis.
+   
+    Figure tweaking
+      <a href="dlines.html">dlines</a>     - Add diagonal lines to a plot.  
+      <a href="hlines.html">hlines</a>     - Add horizontal lines to a plot.                                  
+      <a href="vlines.html">vlines</a>     - Add vertical lines to a plot.   
+      <a href="nocontours.html">nocontours</a> - Removes contours from a CONTOURF plot.                           
+      <a href="noxlabels.html">noxlabels</a>  - Remove some or all x-axis tick mark labels.                      
+      <a href="noylabels.html">noylabels</a>  - Remove some or all y-axis tick mark labels. 
+      <a href="xoffset.html">xoffset</a>    - Offsets lines in the x-direction after plotting.       
+      <a href="yoffset.html">yoffset</a>    - Offsets lines in the y-direction after plotting.                 
+      <a href="xtick.html">xtick</a>      - Sets locations of x-axis tick marks.                             
+      <a href="ytick.html">ytick</a>      - Sets locations of y-axis tick marks.                             
+      <a href="ztick.html">ztick</a>      - Sets locations of z-axis tick marks.
+   
+    Graphics aliases
+      <a href="boxon.html">boxon</a>      - Sets 'box' property to 'off'.                                    
+      <a href="boxon.html">boxon</a>      - Sets 'box' property to 'on'.                                                                  
+      <a href="flipmap.html">flipmap</a>    - Flips the current colormap upside-down.                          
+      <a href="flipx.html">flipx</a>      - Flips the direction of the x-axis                                
+      <a href="flipy.html">flipy</a>      - Flips the direction of the y-axis    
+      <a href="inticks.html">inticks</a>    - Sets the 'tickdir' property of the current axis to 'in'.
+      <a href="outticks.html">outticks</a>   - Sets the 'tickdir' property of the current axis to 'out'.         
+      <a href="xlin.html">xlin</a>       - Sets x-axis scale to linear.                                      
+      <a href="xlog.html">xlog</a>       - Sets x-axis scale to logarithm.                                 
+      <a href="ylin.html">ylin</a>       - Sets y-axis scale to linear.                                      
+      <a href="ylog.html">ylog</a>       - Sets y-axis scale to log.        
+   
+    Colormaps
+     <a href="lansey.html">lansey</a>     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+   
+    Low-level functions
+      <a href="axeshandles.html">axeshandles</a> - Returns handles to all axes children.
+      <a href="crop.html">crop</a>        - Gets rid of whitespace around an image. [by A. Bliss]             
+      <a href="linehandles.html">linehandles</a> - Finds all line and patch handles from a given set of axes.      
+    __________________________________________________________________
+  
+    <a href="jMap.html">jMap</a>:  Mapping scattered data using local polynomial fitting
+   
+      <a href="polysmooth.html">polysmooth</a> - Smoothing scattered 2D data with local polynomial fitting. 
+      <a href="spheresort.html">spheresort</a> - Sorted great circle distances to nearby points on the earth.
+      <a href="twodsort.html">twodsort</a>   - Distances from data points to nearby grid points.   
+    __________________________________________________________________
+  
+    <a href="jMatern.html">jMatern</a>:  Parametric spectral analysis based on the Matern process
+   
+    Please note that this toolbox is still in development.  
+   
+    Top-level functions
+      <a href="maternoise.html">maternoise</a> - Realizations of the Matern random process and variations.  [with A. Sykulski]      
+      <a href="maternspec.html">maternspec</a> - Fourier spectrum of the Matern random process and variations.                                
+      <a href="materncov.html">materncov</a>  - Autocovariance of the Matern random process and variations.                         
+      <a href="maternimp.html">maternimp</a>  - Impulse response function for the Matern random process.                      
+   
+    Other utilities
+      <a href="blurspec.html">blurspec</a>   - Returns the blurred and aliased spectrum given the autocovariance.
+      <a href="fminsearchbnd.html">fminsearchbnd</a>: - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
+   
+    Low-level Matern functions
+      <a href="materncfun.html">materncfun</a> - Returns the normalization function C_ALPHA for a Matern process.
+      <a href="maternchol.html">maternchol</a> - Cholesky decomposition of the Matern covariance and variations.
+      <a href="maternedge.html">maternedge</a> - Long-time cutoff edge for the Matern impulse response function.               
+   
+    See also <a href="jSpectral.html">jSpectral</a>.
+    __________________________________________________________________
+  
+    <a href="jMatfiles.html">jMatfiles</a>:  Descriptions of included mat-files, mostly for testing and examples.
+   
+      bravo94      - Labrador Sea mooring data from Lilly et. al (1999).
+      drifterbetty - Two-hour resolution drifter trajectory, AOML GDP id #44000.
+      ebasnfloats  - "Meddy" float data analyzed in Lilly and Olhede (2009,10,11,12).
+      npg2006      - Float data analyzed in Lilly and Gascard (2006).
+      qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
+      solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
+      vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
+    __________________________________________________________________
+  
+    <a href="jOceans.html">jOceans</a>:  Oceanography-specific data and model analysis tools
+   
+    Conversions for Lagrangian trajectories
+      <a href="latlon2uv.html">latlon2uv</a>   - Converts latitude and longitude to horizontal velocity.  
+      <a href="uv2latlon.html">uv2latlon</a>   - Integrates horizontal velocity to give latitude and longitude.  
+   
+    Manipulating Lagrangian trajectories
+      <a href="trajextract.html">trajextract</a> - Extracts Lagrangian trajectory segments within given region.        
+      <a href="trajfill.html">trajfill</a>    - Fills float or drifter trajectories with linear interpolation.       
+      <a href="trajunwrap.html">trajunwrap</a>  - Unwraps Lagrangian trajectories from a periodic domain.              
+      <a href="trajwrap.html">trajwrap</a>    - Wraps Lagrangian trajectories to fit within a periodic domain.       
+      <a href="trajchunk.html">trajchunk</a>   - Converts cell array data into chunks based on the Coriolis period.
+   
+    Idealized numerical model tools
+      <a href="psi2fields.html">psi2fields</a>   - Velocity and other fields from the streamfunction. [with P.E. Isachsen]    
+      <a href="periodize.html">periodize</a>    - Returns a doubly periodic version of an input array.   
+   
+    Eulerian eddy identification and analysis
+      <a href="inellipse.html">inellipse</a>    - Locates points on the interior of ellipses.                          
+      <a href="closedcurves.html">closedcurves</a> - Locate and interpolate closed curves in a possibly periodic domain.
+      <a href="curvemoments.html">curvemoments</a> - Centroid, area, and many other moments of a closed curve.          
+      <a href="divgeom.html">divgeom</a>      - Geometric decomposition of eddy vorticity flux divergence.     
+   
+     Plotting tools for mooring data
+      <a href="hodograph.html">hodograph</a>  - Generate <a href="hodograph.html">hodograph</a> plots (simple and fancy).                                   
+      <a href="provec.html">provec</a>     - Generate progressive vector diagrams (simple and fancy).             
+      <a href="stickvect.html">stickvect</a>  - Plots "stick vectors" for multicomponent velocity time series. 
+   
+     Topography tools and data
+      jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.              
+      <a href="topoplot.html">topoplot</a>    - Plot regional or global topography at one-sixth degree resolution.
+    
+     See also <a href="jData.html">jData</a>.
+    __________________________________________________________________
+  
+    <a href="jRidges.html">jRidges</a>:  Wavelet ridge analysis of modulated oscillatory signals
+     
+     Top-level functions
+      <a href="ridgewalk.html">ridgewalk</a>  - Extract wavelet transform ridges, including bias estimates. 
+      <a href="ridgemap.html">ridgemap</a>   - Maps ridge quantities back onto the time series.            
+      <a href="instmom.html">instmom</a>    - Univariate and multivariate instantaneous moments.          
+   
+     Ridge utilities
+      <a href="ridgelen.html">ridgelen</a>   - Wavelet ridge length expressed as number of full cycles.    
+      <a href="periodindex.html">periodindex</a> - Returns time index in increments of instantaneous period.  
+   
+     See also <a href="jEllipse.html">jEllipse</a>, <a href="jWavelet.html">jWavelet</a>.
+    __________________________________________________________________
+  
+     <a href="jSpectral.html">jSpectral</a>:  Multitaper spectral analysis, and other time series tools
+    
+     Multitaper spectral analysis
+      <a href="sleptap.html">sleptap</a>    - Calculate Slepian tapers.                                        
+      <a href="mspec.html">mspec</a>      - Multitaper power and cross spectra.       
+   
+     Multitaper polarization analysis
+      <a href="msvd.html">msvd</a>       - Singular value decomposition for polarization analysis.   
+      <a href="polparams.html">polparams</a>  - Spectral matrix polarization parameters.                         
+      <a href="specdiag.html">specdiag</a>   - Diagonalize a 2 x 2 spectral matrix.        
+   
+    Assorted other transforms 
+      <a href="slidetrans.html">slidetrans</a>  - Sliding-window ('moving-window') Fourier transform.   
+      <a href="anatrans.html">anatrans</a>    - Analytic part of signal.                                         
+      <a href="wigdist.html">wigdist</a>     - Wigner distribtion (alias-free algorithm).   
+    
+    Time series analysis utilities
+      <a href="doublen.html">doublen</a>     - Interpolates a time series to double its length.                 
+      <a href="fourier.html">fourier</a>     - The one-sided Fourier frequencies for a given length time series.
+      <a href="sampletimes.html">sampletimes</a> - Computes mean sampling intervals and their statistics.          
+   
+     Plotting tools
+      <a href="twospecplot.html">twospecplot</a> - Plots a pair of rotary or Cartesian spectra.   
+   
+     See also <a href="jWavelet.html">jWavelet</a>, <a href="jEllipse.html">jEllipse</a>, <a href="jMatern.html">jMatern</a>.
+    __________________________________________________________________
+  
+    <a href="jSphere.html">jSphere</a>:  Tools for latitude, longitude, and spherical geometry
+   
+    Simple lat / lon conversions
+      <a href="deg180.html">deg180</a>     - Converts degrees to the range [-180,180].                        
+      <a href="deg360.html">deg360</a>     - Converts degrees to the range [0, 360].                          
+      <a href="jdeg2rad.html">jdeg2rad</a>   - Converts degrees to radians.                                     
+      <a href="jrad2deg.html">jrad2deg</a>   - Converts radians to degrees.   
+   
+    Distances and regions 
+      <a href="inregion.html">inregion</a>   - Tests whether lat/lon points lie within a specified box.         
+      <a href="spheredist.html">spheredist</a> - Computes great circle distances on a sphere.            
+   
+    Earth constants and frequencies
+      <a href="radearth.html">radearth</a>   - The radius of the earth in kilometers.   
+      <a href="corfreq.html">corfreq</a>    - Coriolis frequency in radians per hour.   
+      <a href="tidefreq.html">tidefreq</a>   - Frequencies of the eight major tidal components.
+   
+    Coordinate transformations 
+      <a href="latlon2xy.html">latlon2xy</a>  - Converts latitude and longitude into local Cartesian coordinates.
+      <a href="latlon2xyz.html">latlon2xyz</a> - Converts latitude and longitude into 3D Cartesian coordinates.   
+      <a href="xy2latlon.html">xy2latlon</a>  - Converts local Cartesian coordinates into latitude and longitude.
+      <a href="xyz2latlon.html">xyz2latlon</a> - Converts 3D Cartesian coordinates into latitude and longitude.   
+      <a href="sphere2uvw.html">sphere2uvw</a> - Converts a 3D spherical vector to a 3D Cartesian vector. 
+   
+    Differential operators
+      <a href="spherecurl.html">spherecurl</a> - Curl of a vector field on the surface of a sphere.               
+      <a href="spherediv.html">spherediv</a>  - Divergence of a vector field on the surface of a sphere.         
+      <a href="spheregrad.html">spheregrad</a> - Gradient of a field on the surface of a sphere.                  
+      <a href="spherelap.html">spherelap</a>  - Laplacian of a field on the surface of a sphere.   
+   
+    Plotting tools
+      <a href="latratio.html">latratio</a>   - Set plot aspect ratio for latitude / longitude plot.    
+      <a href="lonshift.html">lonshift</a>   - Shifts longitude origin for plotting purposes.                   
+      <a href="regionplot.html">regionplot</a> - Plots a simple box indicating a latitude / longitude region.    
+    __________________________________________________________________
+  
+    <a href="jStats.html">jStats</a>:  Fast statistical analysis of large datasets in two dimensions
+    
+      <a href="twodhist.html">twodhist</a>   - Two-dimensional histogram.  
+      <a href="twodstats.html">twodstats</a>  - Mean, variance, and covariance of functions of two variables.
+      <a href="twodmed.html">twodmed</a>    - Median value of a function of two variables.                 
+    __________________________________________________________________
+  
+    <a href="jVarfun.html">jVarfun</a>:  Perform common operations on multiple variables simultaneously.
+   
+     Sizes and statistics
+      <a href="vsize.html">vsize</a>      - Returns the sizes of multiple arguments.                           
+      <a href="vmean.html">vmean</a>      - Mean over finite elements along a specified dimension.             
+      <a href="vsum.html">vsum</a>       - Sum over finite elements along a specified dimension.              
+      <a href="vstd.html">vstd</a>       - Standard deviation over finite elements along a specfied dimension.
+      <a href="vmoment.html">vmoment</a>    - Central moment over finite elements along a specfied dimension.    
+      <a href="vmedian.html">vmedian</a>    - Median over finite elements along a specified dimension. 
+   
+     Reshaping, shifting, swapping
+      <a href="vcolon.html">vcolon</a>     - Condenses its arguments, like X(:).                                
+      <a href="vshift.html">vshift</a>     - Cycles the elements of an array along a specified dimension.       
+      <a href="vsqueeze.html">vsqueeze</a>   - Squeezes multiple input arguments simultaneously.                  
+      <a href="vrep.html">vrep</a>       - Replicates an array along a specified dimension.                   
+      <a href="vswap.html">vswap</a>      - <a href="vswap.html">VSWAP</a>(X,A,B) replaces A with B in numeric array X.                         
+      <a href="vtranspose.html">vtranspose</a> - Transpose multiple input arguments simultaneously. 
+   
+     Initializing
+      <a href="vzeros.html">vzeros</a>     - Initializes multiple variables to arrays of zeros or nans. 
+      <a href="vempty.html">vempty</a>     - Initializes multiple variables to empty sets or empty cell arrays. 
+   
+     Operations and indexing
+      <a href="vfilt.html">vfilt</a>      - Filtering along rows without change in length.                     
+      <a href="vdiff.html">vdiff</a>      - Length-preserving first central difference. 
+      <a href="vindex.html">vindex</a>     - Indexes an N-D array along a specified dimension.                  
+      <a href="vindexinto.html">vindexinto</a> - Indexes into N-D array along a specified dimension.
+   
+     Reshaping dataset composed of irregular length segments 
+      <a href="col2mat.html">col2mat</a>    - Expands 'column-appended' data into a matrix.                      
+      <a href="colbreaks.html">colbreaks</a>  - Insert NANs into discontinuties in a vector.                       
+      <a href="mat2col.html">mat2col</a>    - Compress NAN-padded matrix data into long columns.    
+      
+     See also <a href="jCell.html">jCell</a>.
+    __________________________________________________________________
+  
+    <a href="jWavelet.html">jWavelet</a>: Continuous wavelet analysis using generalized Morse wavelets
+   
+    Top-level wavelet transform functions
+      <a href="wavetrans.html">wavetrans</a>  - Continuous wavelet transform.
+      <a href="morsewave.html">morsewave</a>  - Generalized Morse wavelets of Olhede and Walden (2002).              
+      <a href="morsespace.html">morsespace</a> - Logarithmically-spaced frequencies for generalized Morse wavelets.   
+      <a href="wavespecplot.html">wavespecplot</a> - Plot of wavelet spectra together with time series.
+   
+    Details of generalized Morse wavelets 
+      <a href="morsearea.html">morsearea</a>  - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]
+      <a href="morsebox.html">morsebox</a>   - Heisenberg time-frequency box for generalized Morse wavelets.        
+      <a href="morsefreq.html">morsefreq</a>  - Frequency measures for generalized Morse wavelets. [with F. Rekibi]  
+      <a href="morseprops.html">morseprops</a> - Properties of the demodulated generalized Morse wavelets.            
+      <a href="morsexpand.html">morsexpand</a> - Generalized Morse wavelets via time-domain Taylor series.
+      <a href="morsederiv.html">morsederiv</a> - Frequency-domain derivatives of generalized Morse wavelets.
+   
+    Morlet wavelet 
+      <a href="morlwave.html">morlwave</a>   - Morlet wavelet.                                                      
+      <a href="morlfreq.html">morlfreq</a>   - Compute Morlet wavelet carrier frequency given peak frequency.   
+   
+    See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

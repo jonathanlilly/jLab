@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VMEAN is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="vmean.html">VMEAN</a>  Mean over finite elements along a specified dimension.
+ 
+    Y=<a href="vmean.html">VMEAN</a>(X,DIM) takes the mean of all finite elements of X along      
+    dimension DIM. 
+                                                                          
+    [Y,NUM]=<a href="vmean.html">VMEAN</a>(X,DIM) also outputs the number of good data points NUM, 
+    which has the same dimension as X.              
+ 
+    [Y1,Y2,...YN]=<a href="vmean.html">VMEAN</a>(X1,X2,...XN,DIM) or also works, where all the XN
+    are the same size.  
+ 
+    <a href="vmean.html">VMEAN</a>(X1,X2,...XN,DIM);  with no output arguments overwrites the 
+    original input variables.
+    __________________________________________________________________
+ 
+    Weighted means
+ 
+    <a href="vmean.html">VMEAN</a> can also form a weighted mean.
+ 
+    Y=<a href="vmean.html">VMEAN</a>(X,DIM,W) forms the weighted mean of X using weights W, an array 
+    of the same size as X. 
+ 
+    In this case [Y,NUM]=<a href="vmean.html">VMEAN</a>(X,DIM,W) returns total weight using in 
+    forming the mean at each point, rather than the number of data points.
+   
+    Thus <a href="vmean.html">VMEAN</a>(X,DIM,W) is the same as <a href="vmean.html">VMEAN</a>(X.*W,DIM)./<a href="vmean.html">VMEAN</a>(W,DIM).
+ 
+    [Y1,Y2,...YN]=<a href="vmean.html">VMEAN</a>(X1,X2,...XN,DIM,W) also works. 
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2001--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

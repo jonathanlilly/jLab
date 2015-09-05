@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLSTRIP is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellstrip.html">CELLSTRIP</a>  Strips NaN values from the beginnings or ends of cell arrays.
+ 
+    Y=<a href="cellstrip.html">CELLSTRIP</a>(X) where X is a cell array of numeric arrays, strips any
+    NaN values at the beginnings or the ends of the cells and returns the 
+    result in Y.  Thus Y will begin and end with non-NaN values.
+ 
+    An example of an input cell array X and the output Y is as follows:
+ 
+        X{1} = [1 2 nan 4 nan]';  X{2}=[nan 2 3]';  X{3}=[1 2];   X{4}=[];
+        Y{1} = [1 2 nan 4]';      Y{2}=[2 3]';      Y{3}=[1 2];   Y{4}=[];
+ 
+    <a href="cellstrip.html">CELLSTRIP</a> does not remove empty cells.  This is done by <a href="cellprune.html">CELLPRUNE</a>.
+ 
+    [Y1,Y2,...YN]=<a href="cellstrip.html">CELLSTRIP</a>(X1,X2,...XN) with multiple input arguments, all
+    of the same size, strips locations of leading or trailing NaNs that 
+    occur in *any* of the input variables.  Thus the output variables will
+    all be the same size, and none of them will begin or end with a NaN.
+ 
+    <a href="cellstrip.html">CELLSTRIP</a>(X1,X2,...XN); with no output arguments overwrites the 
+    original input variables.   
+ 
+    '<a href="cellstrip.html">cellstrip</a> --t' runs a test.
+ 
+    Usage: y=<a href="cellstrip.html">cellstrip</a>(x);
+           [y1,y2,y3]=<a href="cellstrip.html">cellstrip</a>(x1,x2,x3);
+           <a href="cellstrip.html">cellstrip</a>(x1,x2,x3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

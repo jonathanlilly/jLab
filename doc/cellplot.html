@@ -1,0 +1,75 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLPLOT is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellplot.html">CELLPLOT</a>  Rapidly plot all elements of a cell array of numeric arrays.
+ 
+    <a href="cellplot.html">CELLPLOT</a>(X) where X is a cell array containing N arrays,
+ 
+        X{1}=X1, X{2}=X2,..., X{N}=XN
+  
+    is the same as 
+ 
+       PLOT(X1), PLOT(X2),..., PLOT(XN).
+ 
+    However, <a href="cellplot.html">CELLPLOT</a> is vastly quicker than the obvious loop and also has
+    some handy features, as described below.
+ 
+    <a href="cellplot.html">CELLPLOT</a>(X,Y), where X and Y are both cell arrays of N arrays, performs
+ 
+       PLOT(X1,Y1), PLOT(X1,Y1),..., PLOT(XN,YN).
+ 
+    H=<a href="cellplot.html">CELLPLOT</a>(...) returns the handle to the plots.  
+ 
+    <a href="cellplot.html">CELLPLOT</a> is compatible with the M_MAP toolbox, as described below.%
+ 
+    <a href="cellplot.html">CELLPLOT</a>(X) or <a href="cellplot.html">CELLPLOT</a>(X,Y) still works if X and Y are not cell 
+    arrays, but are vectors or matrices.  This is useful in accessing the 
+    additional options described below. 
+    __________________________________________________________________
+    
+    Additional options
+ 
+    <a href="cellplot.html">CELLPLOT</a>(...,STY) uses the linestyle specified by STY.  STY is a
+    string following the format in <a href="linestyle.html">LINESTYLE</a>, e.g. STY='2b g r--'. 
+ 
+    <a href="cellplot.html">CELLPLOT</a>(...,'M_MAP') will work with Rich Pawlowicz's M_MAP 
+    package by calling M_PLOT.  
+ 
+    <a href="cellplot.html">CELLPLOT</a>(...,INDEX) only plots the elements of the cell array 
+    indicated by index.
+ 
+    The string arguments and INDEX can be combined provided they are 
+    after the one or two input cell array variables.
+    __________________________________________________________________
+ 
+    <a href="cellplot.html">CELLPLOT</a> on the sphere
+     
+    When plotting data on the sphere, there is an annoying wrap-around
+    effect when the data crosses the dateline at longitude 180.  This
+    leads to lines extending all the way across the plot.
+ 
+    <a href="cellplot.html">CELLPLOT</a>(LONO,LON,LAT) where LONO is the value of a cutoff longitude
+    uses LONO as the right-hand-edge of the plot, and LONO-360 as the 
+    left-hand-edge, with no wraparound effects.  
+ 
+    This works together also with the 'm_map' option.  In this case LONO 
+    should be between -180 and 180, and one must set the maximum longitude
+    in M_MAP to LONO. For a global plot, this means one will call M_PROJ as
+  
+          M_PROJ(...,'longitudes',[LONO-360 LONO],...).
+ 
+    If you run <a href="cellplot.html">CELLPLOT</a> with M_MAP and data doesn't show up, make sure 
+    the longitudes have been set correctly.
+    __________________________________________________________________
+ 
+    See also <a href="linestyle.html">LINESTYLE</a>.
+ 
+    Usage: <a href="cellplot.html">cellplot</a>(x)
+           <a href="cellplot.html">cellplot</a>(x,y)
+           h=<a href="cellplot.html">cellplot</a>(x,y,index,'m_map');
+           <a href="cellplot.html">cellplot</a>(lono,lat,lon,index);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

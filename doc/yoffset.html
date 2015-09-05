@@ -1,0 +1,38 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>YOFFSET is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="yoffset.html">YOFFSET</a>  Offsets lines in the y-direction after plotting.
+ 	    	    	    
+    <a href="yoffset.html">YOFFSET</a> allows data to be manipulated after it has been plotted, by
+    operating on the data stored in the figure itself.  This may be used 
+    only with 2-D line plots (not symbol plots, contour plots, etc.). 
+ 
+    <a href="yoffset.html">YOFFSET</a> offsets all lines in the current axes a specified amount.
+ 		
+    <a href="yoffset.html">YOFFSET</a>(N) or <a href="yoffset.html">YOFFSET</a> N, where N is a *real* number, offsets each
+    column of the Y-data by an amount N from the previous column.  N must 
+    be a number, not a variable whose value is a number.
+ 
+    <a href="yoffset.html">YOFFSET</a>(N) or <a href="yoffset.html">YOFFSET</a> N, where N is an *imaginary* number, offsets
+    each column of the Y-data by an amount imag(N)*DY from the previous 
+    column, where DY is the Y-axis length of the original (unoffset) plot.
+ 
+    <a href="yoffset.html">YOFFSET</a>(M,N) or <a href="yoffset.html">YOFFSET</a> M N, applies the same offsets to each of M 
+    groups of lines. For example, for complex-valued data Z use <a href="uvplot.html">UVPLOT</a>(Z) 
+    followed by <a href="yoffset.html">YOFFSET</a> 2 N.
+ 
+    <a href="yoffset.html">YOFFSET</a> with no arguments returns the data to its original (unoffset) 
+    orientation [as do <a href="yoffset.html">YOFFSET</a>(0) and <a href="yoffset.html">YOFFSET</a>(0i)].
+    
+    <a href="yoffset.html">YOFFSET</a> also allow multiple axes to be manipulated simultaneously.
+ 
+    <a href="yoffset.html">YOFFSET</a> LOCK and <a href="yoffset.html">YOFFSET</a> UNLOCK lock and unlock all Y-data in the
+    current figure. When LOCK is on, calls to <a href="yoffset.html">YOFFSET</a> are applied to each
+    subplot individually.
+ 
+    See also <a href="yoffset.html">YOFFSET</a>, <a href="linestyle.html">LINESTYLE</a>.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

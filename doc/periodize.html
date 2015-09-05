@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PERIODIZE is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="periodize.html">PERIODIZE</a>  Returns a doubly periodic version of an input array.
+ 
+    [XP,YP,FP]=<a href="periodize.html">PERIODIZE</a>(X,Y,F) takes the matrix F and forms a doubly-
+    periodic version FP, which will be 3*SIZE(F). 
+ 
+    XP and YP are the new X and Y axes extended based on the delta-X and
+    delta-Y values within X and Y.  X and Y must both have uniform spacing.
+    
+    [XE,YE,FP]=<a href="periodize.html">PERIODIZE</a>(N,X,Y,F) only extends F periodically by N points, 
+    so that FP is SIZE(F,1)+2*N by SIZE(F,2)+2*N.
+ 
+    [XE,YE,FP]=<a href="periodize.html">PERIODIZE</a>(N,M,X,Y,F) extends F periodically by N points in
+    the X-direction, corresponding to the *columns* of F, and by M points 
+    in the Y-direction, corresponding to the *rows* of F. 
+ 
+    Thus in this case FP will be SIZE(F,1)+2*M by SIZE(F,2)+2*N.
+ 
+    F may have multiple higher dimensions, for example a third dimension 
+    corresponding to time.  Only the first two dimensions are periodized.
+ 
+    For singly periodic versions, use <a href="periodize.html">PERIODIZE</a>(0,M,F) or <a href="periodize.html">PERIODIZE</a>(N,0,F). 
+ 
+    [XP,YP,F1P,F2P,...,FKP]=<a href="periodize.html">PERIODIZE</a>(...,X,Y,F1,F2,...,FK) also works,
+    and returns periodized versions of all the K arrays F1, F2,...,FK.
+ 
+    '<a href="periodize.html">periodize</a> --t' runs a test.
+    '<a href="periodize.html">periodize</a> --f' generates a sample figure.
+ 
+    Usage: [xp,yp,fp]=<a href="periodize.html">periodize</a>(x,y,f);
+           [xp,yp,fp]=<a href="periodize.html">periodize</a>(N,x,y,f);
+           [xp,yp,fp]=<a href="periodize.html">periodize</a>(N,M,x,y,f);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

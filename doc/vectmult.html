@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VECTMULT is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="vectmult.html">VECTMULT</a>  Matrix multiplication for arrays of vectors. 
+ 
+    [Y1,Y2,...,YM]=<a href="vectmult.html">VECTMULT</a>(A,X1,X2,...,XN) is equivalent to the usual
+    multiplication of a matrix by a vector,
+   
+            Y = A * X
+ 
+    where A is an M x N matrix, X is an N-vector, and Y is an M-vector.
+    X1--XN and Y1--YM are the components of X and Y respectively.
+ 
+    Often however one has arrays of vectors.  Here we group the N 
+    components of X into N arrays, X1,X2,...,XN, which can be of any size
+    provided they are all the same size.
+ 
+    <a href="vectmult.html">VECTMULT</a> then returns the components of the output vector Y as the M
+    arrays Y1,Y2,...,YM.
+ 
+    The matrix A may be a M x N matrix, or alternatively, it may be an 
+    array of size M x N x SIZE(XN).
+ 
+    See also <a href="matmult.html">MATMULT</a>.
+    
+    Usage: [y1,y2]=<a href="vectmult.html">vectmult</a>(a,x1,x2);
+           [y1,y2,y3]=<a href="vectmult.html">vectmult</a>(a,x1,x2,y3);
+ 
+    '<a href="vectmult.html">vectmult</a> --t' runs a test.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

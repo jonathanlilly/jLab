@@ -1,0 +1,64 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MATERNOISE is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="maternoise.html">MATERNOISE</a>  Realizations of the Matern random process and variations.  [with A. Sykulski]
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA) simulates a length N complex-
+    valued Matern random process Z having variance SIGMA^2, slope parameter
+    ALPHA, and damping parameter LAMBDA.
+ 
+    DT is the sample interval.  Note that LAMBDA is understood to have the
+    same units as the inverse sample interval 1/DT.  For values of LAMBDA
+    greater than about 1/DT, the process becomes essentially white noise. 
+    Thus typical values will have LAMBDA<(1/DT).
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,[N,M],SIGMA,ALPHA,LAMBDA) generate M realizations of  
+    this process, so that Z is of size N x M.
+ 
+    See <a href="maternspec.html">MATERNSPEC</a> for details on the input arguments. 
+ 
+    Note that the process Z is explicitly set to have zero temporal mean. 
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) simulates extensions of 
+    the Matern process.  <a href="maternoise.html">MATERNOISE</a>(...,'composite') also works.  See 
+    <a href="maternspec.html">MATERNSPEC</a> for details on these options.
+ 
+    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
+    "Lagrangian time series models for ocean surface drifter trajectories."
+    __________________________________________________________________
+ 
+    Multiple parameter values
+ 
+    The input arguments SIGMA, ALPHA, etc. may all be either scalars, or
+    arrays of the same length, say K.  
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,...), with at least one of SIGMA, ALPHA,
+    etc. being an array of length K, returns a matrix Z that is N x K. 
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,[N M],SIGMA,ALPHA,...) then gives Z of size N x M x K.
+    __________________________________________________________________
+ 
+    Algorithm
+ 
+    <a href="maternoise.html">MATERNOISE</a> uses a Cholesky matrix decomposition method which makes the
+    autocovariance matrix of the generated process Z have exactly the form 
+    of a sampled Matern autocovariance function, for nonzero LAMBDA, or of 
+    fractional Brownian motion for H=0. 
+ 
+    Note that since the Cholesky decomposition requires O(N^3) operations,
+    generating very long time series (>2000 points or so) may be slow.
+    __________________________________________________________________
+ 
+    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>.
+ 
+    '<a href="maternoise.html">maternoise</a> --t' runs some tests.
+    '<a href="maternoise.html">maternoise</a> --f' generates a sample figure.
+ 
+    Usage: z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda);
+           z=<a href="maternoise.html">maternoise</a>(dt,[N,M],sigma,alpha,lambda,nu,mu);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015  A.M. Sykulski and J.M. Lilly
+                                  --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

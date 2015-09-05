@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHEREDIST is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="spheredist.html">SPHEREDIST</a>  Computes great circle distances on a sphere.
+ 
+    D=<a href="spheredist.html">SPHEREDIST</a>(LAT1,LON1,LAT2,LON2) computes arc length in kilometers 
+    along a great circle on the earth from the point with latitude and
+    longitude coordinates LAT1 and LON1 to the point LAT2 and LON2. 
+   
+    All input arguments should be arrays of the same size, or else either
+    LAT1,LON1 or LAT2,LON2 should be scalars.
+    __________________________________________________________________
+ 
+    Cumulative distance
+ 
+    With two input arguments, <a href="spheredist.html">SPHEREDIST</a> instead returns the cumulative
+    distance from the first point in each column.
+ 
+    D=<a href="spheredist.html">SPHEREDIST</a>(LAT,LON) where LAT and LON are 2D arrays of the same size,
+    computes the cumulative great circle distance along each row.
+ 
+    The great circle distance between adjacent LAT/LON points are cumputed,
+    and these are then cumsummed to generate the cumulative distance D.
+ 
+    In this case, <a href="spheredist.html">SPHEREDIST</a> can accommodate NaNs at the top of each row,
+    and will begin with the first non-NaN value.  Any interior NaNs however
+    will cause all subsequent output values in that row to also be NaNs.
+    __________________________________________________________________
+ 
+    The Earth is approximated as a sphere of radius <a href="radearth.html">RADEARTH</a>.
+ 
+    D=<a href="spheredist.html">SPHEREDIST</a>(...,R) instead uses a sphere of radius R, in kilometers.
+ 
+    '<a href="spheredist.html">spheredist</a> --t' runs a test.
+ 
+    Usage:  d=<a href="spheredist.html">spheredist</a>(lat,lon,lato,lono); 
+            d=<a href="spheredist.html">spheredist</a>(lat,lon); 
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

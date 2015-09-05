@@ -1,0 +1,1 @@
+%MAKEFIGS_TRIVARIATE has been moved to JLAB_MAKEFIGS.

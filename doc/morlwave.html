@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORLWAVE is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morlwave.html">MORLWAVE</a>  Morlet wavelet.   
+   
+    The Morlet wavelet is not recommended.  Instead use a generalized Morse
+    wavelet with GAMMA set to 3.  This function is included for testing and
+    comparison purposes.  See Lilly and Olhede (2009, 2012) for details.
+ 
+    PSI=<a href="morlwave.html">MORLWAVE</a>(N,FMAX,F) returns the complex-valued Morlet wavelet of 
+    length N, with a peak in the frequency domain at *radian* F, based on a
+    mother wavelet having a peak frequency FMAX>1.
+   
+    If F is a scalar, PSI is a column vector of length M.  If F is an
+    array, PSI is a matrix of size M x LENGTH(F), with the columns in order  
+    of decreasing frequency.
+ 
+    The peak frequency FMAX should be greater than one.  As FMAX increases
+    from unity, the number of oscillations in the wavelet increases.
+ 
+    Note that the wavelets are centered at the midpoint in time, row 
+    number ROUND(SIZE(PSI,1)/2).
+ 
+    [PSI,PSIF]=<a href="morlwave.html">MORLWAVE</a>(N,FMAX,F) also returns a size SIZE(PSI) matrix 
+    PSIF which is the frequency-domain version of the wavelets.
+ 
+    For further details on this representation of the Morlet wavelet, see
+    Appendix A of
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+    _________________________________________________________________
+ 
+    Normalization
+ 
+    <a href="morlwave.html">MORLWAVE</a> supports two kinds of normalization for the wavelets.
+ 
+    <a href="morlwave.html">MORLWAVE</a>(..., 'bandpass') uses "bandpass normalization", the 
+    default.  See Lilly and Gascard (2006).  This implies that the 
+    FFT of wavelet has a maximum value of 2. 
+ 
+    <a href="morlwave.html">MORLWAVE</a>(..., 'energy') uses the unit energy normlization.  The 
+    time-domain wavelet energy SUM(ABS(PSI).^2) is then unity. 
+ 
+    Note <a href="morlwave.html">MORLWAVE</a> now uses bandpass-normalization by default.
+    _________________________________________________________________
+ 
+    See also <a href="morlfreq.html">MORLFREQ</a>, MORLPROPS, <a href="morsewave.html">MORSEWAVE</a>.
+    
+    Usage: psi=<a href="morlwave.html">morlwave</a>(n,fmax,f);
+           [psi,psif]=<a href="morlwave.html">morlwave</a>(n,fmax,f);  
+ 
+    '<a href="morlwave.html">morlwave</a> --t' run a test.
+    '<a href="morlwave.html">morlwave</a> --f' generates a sample figure.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 F. Rekibi and J. M. Lilly 
+                          --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

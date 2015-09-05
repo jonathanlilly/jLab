@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLCURVES is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellcurves.html">ELLCURVES</a>  Returns curves corresponding to specified ellipse properties.
+ 
+    For direct plotting of ellipses, see ELLPLOT, which calls <a href="ellcurves.html">ELLCURVES</a>.
+ 
+    Z=<a href="ellcurves.html">ELLCURVES</a>(KAPPA,LAMBDA,THETA,ZO) returns complex-valued curves Z
+    tracing out the periphery of ellipses with amplitude KAPPA, linearity 
+    LAMBDA, and orientation THETA, located at complex positions ZO=XO+iYO.
+ 
+    All input arguments are arrays of the same length, say N.  By default,  
+    Z is calculated at 32 locations around the periphery.  Thus Z will be a
+    complex-valued matrix with 32 rows and N columns. 
+ 
+    <a href="ellcurves.html">ELLCURVES</a>(KAPPA,LAMBDA,THETA,PHI,Z) with five input arguments begins 
+    each ellipse at phase PHI.  For most applications, the starting phase
+    does not matter.  The default value is to begin with a phase of zero. 
+ 
+    <a href="ellcurves.html">ELLCURVES</a>(... ,'npoints',M) uses M points around the ellipse periphery.
+ 
+    <a href="ellcurves.html">ELLCURVES</a>(... ,'aspect',AR) with AR=[XAR YAR] multiplies the X-signal 
+    and Y-signal by XAR and YAR, respectively, for plotting purposes. 
+ 
+    <a href="ellcurves.html">ELLCURVES</a> is called by ELLPLOT, and is also useful in applications,
+    e.g. analysis of model fields within elliptical contours.
+ 
+    The curves can be plotted with PLOT(Z).
+ 
+    See also <a href="ellipseplot.html">ELLIPSEPLOT</a>, <a href="ellsig.html">ELLSIG</a>, <a href="inellipse.html">INELLIPSE</a>.
+ 
+    Usage: z=<a href="ellcurves.html">ellcurves</a>(kappa,lambda,theta,zo);
+           z=<a href="ellcurves.html">ellcurves</a>(kappa,lambda,theta,phi,zo);
+           z=<a href="ellcurves.html">ellcurves</a>(kappa,lambda,theta,phi,zo,'npoints',64);
+           z=<a href="ellcurves.html">ellcurves</a>(kappa,lambda,theta,phi,zo,'aspect',ar,'npoints',64);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

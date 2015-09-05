@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHERE2UVW is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="sphere2uvw.html">SPHERE2UVW</a> Converts a 3D spherical vector to a 3D Cartesian vector.
+ 
+    [U,V,W]=XYZ2SPHERE(LAT,LON,V1,V2,V3) converts a vector in spherical
+    coordinates with components V1, V2, and V3 located at point 
+    (LAT, LON) into a Cartesian 3-vector with components U, V, and W.
+ 
+    LAT and LON are in degrees.
+ 
+    The vector in the spherical coordinate system has radial component
+    V1, longitudinal component V2, and latitudinal component V3.   
+ 
+    The Cartesian vector [U,V,W] is in a reference frame with the
+    X-axis at zero degrees longitude and the Z-axis at the North Pole.  
+ 
+    All input arguments should be arrays of the same size.
+ 
+    <a href="sphere2uvw.html">SPHERE2UVW</a> is inverted by UVW2SPHERE.
+ 
+    See <a href="jSphere.html">JSPHERE</a> for related functions.
+ 
+    Usage: [x,y,z]=<a href="sphere2uvw.html">sphere2uvw</a>(lat,lon,v1,v2,v3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

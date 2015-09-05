@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>DLINES is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="dlines.html">DLINES</a>   Add diagonal lines to a plot.
+ 
+    <a href="dlines.html">DLINES</a>(M,STYLE) puts diagonal lines with slopes M having style
+    described by the string STYLE. 
+ 
+    By default, <a href="dlines.html">DLINES</a> uses the lower left corner of the current axis
+    as the line origin for M>0, and the lower right corner if M<0.
+ 
+    <a href="dlines.html">DLINES</a>(M,Y0,STYLE) instead uses Y0 as the intercept of the left-
+    hand side of the current x-axis.
+ 
+    (Note that the above descriptions refer to the axis sides with
+    the 'normal', rather than 'reverse', directions.)
+ 
+    The SYTLE strings follow the format specified in <a href="linestyle.html">LINESTYLE</a>.  Thus
+    STYLE='2b--' draws blue dotted lines of width 2.
+ 
+    STYLE is optional and defauts to STYLE='g--', a green dashed line.
+ 
+    H=<a href="dlines.html">DLINES</a>(...) returns an array of handles H to the lines.
+ 
+    See also <a href="hlines.html">HLINES</a>, <a href="vlines.html">VLINES</a>.	
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

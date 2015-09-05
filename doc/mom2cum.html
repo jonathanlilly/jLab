@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MOM2CUM is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="mom2cum.html">MOM2CUM</a>  Convert moments to cumulants. 
+ 
+    [K0,K1,...KN]=<a href="mom2cum.html">MOM2CUM</a>(M0,M1,...MN) converts the first N moments 
+    M0,M1,...MN into the first N cumulants K0,K1,...KN.
+ 
+    The MN and KN are all scalars or arrays of the same size.
+ 
+    Note for a probability density function, M0=1 and K0=0.
+ 
+    KCELL=<a href="mom2cum.html">MOM2CUM</a>(MCELL), where MCELL is a cell array whose (N+1)th
+    is the Nth moment, returns a similar cell array of cumulants.
+ 
+    <a href="mom2cum.html">MOM2CUM</a> is inverted by <a href="cum2mom.html">CUM2MOM</a>.
+ 
+    See also <a href="cum2mom.html">CUM2MOM</a>, <a href="bellpoly.html">BELLPOLY</a>.
+ 
+    '<a href="mom2cum.html">mom2cum</a> --t' runs a test.
+ 
+    Usage: [k0,k1,k2]=<a href="mom2cum.html">mom2cum</a>(m0,m1,m2);
+           kcell=<a href="mom2cum.html">mom2cum</a>(mcell);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

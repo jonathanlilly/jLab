@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>FOURIER is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="fourier.html">FOURIER</a>  The one-sided Fourier frequencies for a given length time series.
+ 
+    F=<a href="fourier.html">FOURIER</a>(N) returns the one-sided (or positive) Fourier frequencies 
+    for a time series of length N.   
+ 
+    F is a radian or angular frequency so that the Nyquist is at PI.
+ 
+    F=<a href="fourier.html">FOURIER</a>(DT,N) uses sample rate DT in calculating the frequencies, so
+    that the Nyquist will be at PI/DT.
+  
+    Note that the highest resolved frequency, MAX(F), differs for even or
+    odd N.  For even N, it is the Nyquist PI/DT, but for odd N the Nyquist
+    is not resolved and the highest resolved frequency is (N-1)/N * PI/DT.
+ 
+    F has length FLOOR(N/2)+1, or N/2+1 for even N, and (N+1)/2 for odd N.
+ 
+    See also CENTEREDTIMES.
+ 
+    Usage: f=<a href="fourier.html">fourier</a>(N);
+           f=<a href="fourier.html">fourier</a>(dt,N);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

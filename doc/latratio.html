@@ -1,0 +1,31 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LATRATIO is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="latratio.html">LATRATIO</a>  Set plot aspect ratio for latitude / longitude plot.
+ 
+    <a href="latratio.html">LATRATIO</a>(LAT) sets the aspect ratio of the current axis correctly a 
+    Cartesian plot centered about the latitude LAT, i.e. the x/y aspect 
+    ratio is set to COS(LAT).
+ 
+    Equal distances along the x- and y-axes then correspond to the same 
+    physical distance.
+ 
+    LAT is measured in degrees.
+ 
+    <a href="latratio.html">LATRATIO</a>(LAT,H) does the same for the axis with handle H.
+ 
+    <a href="latratio.html">LATRATIO</a> with no input arguments sets the aspect ratio of the current
+    axis using the midpoint of the y-axis limits.
+ 
+    AR=<a href="latratio.html">LATRATIO</a>(LAT) alternately returns the correct aspect ratio in a 
+    two-element array AR, without modifying any plots. 
+ 
+    Usage: <a href="latratio.html">latratio</a>(lat,h);
+           <a href="latratio.html">latratio</a>(lat);
+           latratio;
+           ar=<a href="latratio.html">latratio</a>n(lat);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

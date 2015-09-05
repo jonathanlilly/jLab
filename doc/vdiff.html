@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VDIFF is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ VDIFF	Length-preserving first central difference.
+ 
+    DX=<a href="vdiff.html">VDIFF</a>(X,DIM) differentiates X along dimension DIM using the first 
+    central difference; DX is the same size as X.                                 
+                                                                         
+    [D1,D2,...,DN]=<a href="vdiff.html">VDIFF</a>(X1,X2,...,XN,DIM) for multiple input variables 
+    also works. 
+ 
+    <a href="vdiff.html">VDIFF</a>(X1,X2,...,DIM); with no output arguments overwrites the
+    original input variables.
+ 
+    DXDT=<a href="vdiff.html">VDIFF</a>(DT,...) optionally uses scalar timestep DT to approximate
+    a time derivative, i.e. DXDT equals DX divided by DT.
+    _____________________________________________________________________
+ 
+    First and last points
+ 
+    The first and last points must be treated differently, as the central 
+    difference is not defined there.  Three different methods can be used.
+ 
+    <a href="vdiff.html">VDIFF</a>(...,STR) specifies which method to use.
+ 
+         'endpoint'  uses the first forwards / first backwards difference
+                     at the first and last point, respectively.  
+         'periodic'  treats the array as being periodic along dimension DIM,
+                     so that the central difference is defined at endpoints.
+         'nans'      fills in the first and last values with NANs.
+ 
+    The default behavior is 'endpoint'.
+    _____________________________________________________________________
+ 
+    '<a href="vdiff.html">vdiff</a> --t' runs some tests.
+ 
+    Usage:  x=<a href="vdiff.html">vdiff</a>(x,dim);
+            x=<a href="vdiff.html">vdiff</a>(dt,x,dim);
+            x=<a href="vdiff.html">vdiff</a>(dt,x,dim,'periodic');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

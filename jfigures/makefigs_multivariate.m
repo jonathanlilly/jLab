@@ -1,0 +1,1 @@
+%MAKEFIGS_MULTIVARIATE has been moved to JLAB_MAKEFIGS.

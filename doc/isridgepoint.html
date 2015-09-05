@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ISRIDGEPOINT is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="isridgepoint.html">ISRIDGEPOINT</a>  Finds wavelet ridge points using one of several criterion.
+ 
+    <a href="isridgepoint.html">ISRIDGEPOINT</a> is a low-level function called by <a href="ridgewalk.html">RIDGEWALK</a>.
+   
+    BOOL=<a href="isridgepoint.html">ISRIDGEPOINT</a>(W,FS,CHI,STR) where W is a wavelet transform matrix  
+    at *radian* frequecies FS, finds all ridge points of W with amplitudes
+    |W| exceeding the amplitude cutoff A.  Several different different 
+    ridge defintions may be used and are specified by STR.
+ 
+    BOOL is a matrix of the same size as W, which is equal to one for 
+    those elements of W which are ridge points, and zero otherwise.
+ 
+    STR may be either of the following:
+ 
+         'phase'       Rate of transform change of phase definition
+         'amplitude'   Maxima of transfom amplitude definition
+ 
+    For all definitions, <a href="isridgepoint.html">ISRIDGEPOINT</a> rejects spurious ridge points.
+    These tend to occur on the flanks of interesting signals, and 
+    reflect the wavelet structure rather than the signal structure.
+ 
+    A ridge point is considered spurious if either it is located at an
+    amplitude minima, or if the frequency anomaly (transform frequency
+    minus scale frequency) is a maximum.
+ 
+    See also RIDGEQUANTITY, <a href="ridgewalk.html">RIDGEWALK</a>.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

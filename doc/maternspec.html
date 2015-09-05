@@ -1,0 +1,144 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MATERNSPEC is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="maternspec.html">MATERNSPEC</a>  Fourier spectrum of the Matern random process and variations.
+  
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA) returns the spectrum S of a  
+    length N complex-valued Matern random process having variance SIGMA^2, 
+    slope parameter ALPHA, and damping parameter LAMBDA.
+ 
+    DT is the sample interval.  Note that LAMBDA is understood to have the
+    same units as the inverse sample interval 1/DT.
+ 
+    F is an array of one-sided (positive) Fourier frequencies for a time
+    series of length N, F=<a href="fourier.html">FOURIER</a>(N).  Note that F is a *radian* frequency. 
+ 
+    The lengths of the output variables F and S are N/2+1 for even N, and
+    (N+1)/2 for odd N.
+      
+    S is the postive rotary spectrum given by
+ 
+         S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * C
+ 
+    where C is a normalizing constant dependent upon ALPHA and LAMBDA.  The
+    negative rotary spectrum takes the same form.
+ 
+    For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
+    Brownian motion.  
+ 
+    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
+    "Lagrangian time series models for ocean surface drifter trajectories."
+    __________________________________________________________________
+ 
+    Matrix and cell array output
+ 
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA) where N is a scalar while the
+    other input arguments are all either scalars or arrays of the same 
+    length M, gives an output spectra S with LENGTH(F) rows and M columns. 
+ 
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA) where N is an array of M 
+    different lengths, returns F and S that are length M cell arrays.  Then 
+    SIGMA, ALPHA, and LAMBDA may all either be scalars or length M arrays.
+ 
+    This latter format is convenient for generating sets of spectra that 
+    do not all have the same size. 
+ 
+    When N is an array, <a href="maternspec.html">MATERNSPEC</a>(...,'parallel') parallelizes the 
+    computation of the various spectra using a PARFOR loop.  This option
+    requires that Matlab's Parallel Computing Toolbox be installed.
+ 
+    The matrix and cell array formats also work for the variations of the 
+    Matern process described below. 
+    __________________________________________________________________
+ 
+    Oscillatory Matern
+ 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU) with six input 
+    arguments modifies the spectrum to have a rotation frequency NU. 
+ 
+    This is accomplished by shifting the spectrum to be centered on F=NU 
+    rather than F=0.  SPP and SNN are now the postive rotary and negative
+    rotary spectra,with the spectrum for positive frequencies +F returned
+    in SPP, and for negative frequencies -F in SNN.  
+ 
+    With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
+    Uhlenbeck process.
+ 
+    Note that NU has units of radians per sample interval DT.
+    __________________________________________________________________
+ 
+    Extended Matern
+   
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
+    returns the spectrum of the four-parameter "extended" Matern process:
+ 
+       S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
+                                     / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C               
+ 
+    where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
+ 
+    The additional parameter, MU, has the same units as DT. 1/MU has the 
+    interpretation of a frequency e-folding scale.
+ 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
+    extended Matern spectrum to be centered at F=NU rather than F=0.
+ 
+    With MU set to zero, this becomes the standard Matern spectrum.
+    __________________________________________________________________
+ 
+    Damped exponential 
+ 
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,-1/2,LAMBDA,0,MU) with ALPHA set to -1/2
+    returns the spectrum of the damped exponential process, having the form
+ 
+       S(F) = SIGMA^2 * EXP(-MU * SQRT(F^2+LAMBDA^2)) * C 
+                               
+    where C is again a normalizing constant, dependent upon LAMBDA and MU. 
+ 
+    This is a special case of the extended Matern process.  As for that 
+    process, setting NU to a nonzero value results in a shifted spectrum.
+    __________________________________________________________________
+ 
+    Composite Matern
+ 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(SIGMA,ALPHA,LAMBDA,NU,MU,'composite') implements
+    the "composite" Matern spectrum having the form
+ 
+        SPP(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F-NU)^2 + LAMBDA^2] 
+        SNN(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F+NU)^2 + LAMBDA^2] 
+ 
+    where B is a normalizing constant discussed shortly.  This consists of 
+    a Matern spectrum times an oscillatory Matern spectrum having ALPHA=1.
+ 
+    The quantity in square brackets is recognized as the transfer function
+    for a damped simple harmonic oscillator.  In oceanographic terms, this 
+    composite model gives the spectrum of a damped slab model of the 
+    surface mixed layer forced by winds having a Matern spectrum.
+ 
+    The interpretation of the variance SIGMA is different from the other 
+    cases in <a href="maternspec.html">MATERNSPEC</a>, because an analytic form of the total variance 
+    does not exist. Instead SIGMA^2 is an approximation to the variance
+    associated with the oscillatory peak at F=NU.  
+ 
+    The additional parameter here, MU, has units of *frequency* and is the
+    damping parameter associated with the background process, which in this
+    case reprents the structure of the wind spectrum.
+ 
+    Here B = 2 * LAMBDA * (NU^2 + MU^2) is a normalizing constant that lets
+    SIGMA^2 be interpreted as an approximation to the inertial variance. 
+    __________________________________________________________________
+ 
+    See also <a href="materncov.html">MATERNCOV</a>, <a href="maternoise.html">MATERNOISE</a>, MATERNFIT, <a href="blurspec.html">BLURSPEC</a>.
+ 
+    '<a href="maternspec.html">maternspec</a> --f' generates some sample figures.
+    Tests for <a href="maternspec.html">MATERNSPEC</a> can be found in <a href="materncov.html">MATERNCOV</a>.
+ 
+    Usage:  [f,s]=<a href="maternspec.html">maternspec</a>(N,sigma,alpha,lambda);
+            [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda);
+            [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu);
+            [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu,mu);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

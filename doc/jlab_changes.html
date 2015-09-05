@@ -1,0 +1,108 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
+ 
+    Changes new in version 1.6
+ 
+    New datasets
+ 
+    <a href="about_ibcao.html">about_ibcao</a> - International Bathymetric Chart of the Arctic Ocean topography.
+ 
+    New functions
+ 
+    <a href="jlab_index.html">jlab_index</a> - Alphabetical index into <a href="jLab.html">JLAB</a> and <a href="jData.html">JDATA</a> contents.
+    <a href="standalone.html">standalone</a> - Create stand-alone version of an m-file, including dependencies.
+    <a href="yearfrac.html">yearfrac</a>   - Convert date from 'datenum' format to 'year.fraction'.
+    <a href="lansey.html">lansey</a>     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+   
+    <a href="celldiv.html">celldiv</a>    - Division acting on each element in a cell array.
+    <a href="cellstrip.html">cellstrip</a>  - Strips NaN values from the beginnings or ends of cell arrays.
+    <a href="cellgrid.html">cellgrid</a>   - Interpolate a cell array of numeric arrays onto a regular grid.
+    <a href="cellsplit.html">cellsplit</a>  - Splits cell arrays of numeric arrays at data gaps.
+    <a href="cellprune.html">cellprune</a>  - Removes all empty cells, or cells less than a specified length.
+    <a href="cellfill.html">cellfill</a>   - Fills missing data marked by NaNs in a cell array.
+    <a href="cellfirst.html">cellfirst</a>  - Returns the first element of each entry in a cell array.
+ 
+    Changes and improvements
+ 
+    All example figures now echo code to the Matlab command window.
+ 
+    <a href="materncov.html">MATERNCOV</a>, <a href="maternspec.html">MATERNSPEC</a>, and <a href="maternoise.html">MATERNOISE</a> extensions and simplifications.
+    <a href="about_jtopo.html">ABOUT_JTOPO</a> dataset now includes high-latitude topography data from IBCAO.  
+    <a href="mspec.html">MSPEC</a>, <a href="sleptap.html">SLEPTAP</a>, and <a href="maternspec.html">MATERNSPEC</a> now support parallelization.  
+    <a href="twodhist.html">TWODHIST</a> and <a href="twodstats.html">TWODSTATS</a> are now vastly faster thanks to Matlab's 
+        HISTCOUNTS2, available as of release 2015b.
+    <a href="twodhist.html">TWODHIST</a> and <a href="twodstats.html">TWODSTATS</a> now support parallelization.
+    <a href="latlon2uv.html">LATLON2UV</a> now supports parallelization.
+    <a href="cellchunk.html">CELLCHUNK</a> now supports parallelization.
+    <a href="cellchunk.html">CELLCHUNK</a> bugfix for 50% overlap mode. 
+    <a href="aresame.html">ARESAME</a> now works with cell arrays of numerical arrays.
+    <a href="corfreq.html">CORFREQ</a> is now defined to be positive in the Northern Hemisphere, 
+        and negative in the Southern Hemisphere, following convention.
+    <a href="mspec.html">MSPEC</a> bugfix for periodogram applied to multi-component datasets.
+    <a href="topoplot.html">TOPOPLOT</a> now plots topography underneath other items on the plot.
+    <a href="maternchol.html">MATERNCHOL</a> improved handling of numerical non-positive-definiteness.
+    <a href="vswap.html">VSWAP</a> now works with cell arrays.  
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> bugfix for empty index input.
+    <a href="patchcontourf.html">PATCHCONTOURF</a> bugfix for <a href="use.html">use</a> with M_MAP.
+    _________________________________________________________________
+ 
+    Changes new in version 1.5 
+ 
+    This is a major new release, which includes the following changes:
+        
+      --- Compatible with the graphics changes introduced in Matlab R2014b 
+      --- Completely new organization with a more modular approach
+      --- Many obsolete functions removed and redundancies eliminated
+ 
+    New functions
+ 
+    <a href="divgeom.html">divgeom</a>        - Geometric decomposition of eddy vorticity flux divergence.
+    <a href="blurspec.html">blurspec</a>       - Returns the blurred and aliased spectrum given the autocovariance.
+    <a href="findpath.html">findpath</a>       - Returns the full pathname of a directory on the Matlab search path.
+    <a href="patchcontourf.html">patchcontourf</a>  - Generate filled contours using patches, with specified colors.
+    <a href="cellchunk.html">cellchunk</a>      - Converts cell array data into uniform length 'chunks'.
+    <a href="trajchunk.html">trajchunk</a>      -  Converts Lagrangian trajectories into chunks based on the Coriolis period.
+    <a href="cellmean.html">cellmean</a>       - Mean value of each element a cell array or set of cell arrays.
+    <a href="uv2latlon.html">uv2latlon</a>      - Integrates horizontal velocity to give latitude and longitude.
+    <a href="sig2latlon.html">sig2latlon</a>     - Converts an oscillatory signal to lat/lon displacements.
+    <a href="fminsearchbnd.html">fminsearchbnd</a>  - fminsearch, but with bound constraints by transformation. [By J. D'Errico]
+    <a href="whichdir.html">whichdir</a>       - Returns directory name containing file in search path.
+    <a href="jlab_allhelp.html">jlab_allhelp</a>   - Displays the help comments for all <a href="jLab.html">JLAB</a> modules.
+ 
+    Improved datasets
+ 
+    <a href="about_drifters.html">about_drifters</a> - Modified to include data through June 2014.  Please
+       note that the earlier verison of drifters.mat was missing half the 
+       data on account of a read error.  The new version corrects this.
+ 
+    Minor changes and improvements
+ 
+    <a href="spheresort.html">SPHERESORT</a> speed improvements, bug fix, and support for parallel computing.
+    <a href="readtopo.html">READTOPO</a> now works with Smith and Sandwell v. 18.1
+    <a href="findfiles.html">FINDFILES</a> now optionally searches directories recurvisely. 
+    PACKBOTH, PACKROWS, and PACKCOLS are now combined into <a href="packfig.html">PACKFIG</a>.
+    <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a> is now one file that makes figures for recent published papers. 
+    <a href="maternspec.html">MATERNSPEC</a> bugfix for input parameter arrays of length greater than one.
+    FLOATREGION now rejects individual trajectory segements outside of region.
+    <a href="cellplot.html">CELLPLOT</a> fixed minor bug in which <a href="cellplot.html">CELLPLOT</a> did not plot the first point.
+    <a href="twospecplot.html">TWOSPECPLOT</a> no longer opens a new figure window by default.
+    <a href="ridgewalk.html">RIDGEWALK</a> now outputs ridges in a cell array, with one ridge per cell.  
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>, <a href="morsebox.html">MORSEBOX</a>, <a href="fontsize.html">FONTSIZE</a>, <a href="topoplot.html">TOPOPLOT</a>, <a href="nocontours.html">NOCONTOURS</a>, <a href="topoplot.html">TOPOPLOT</a>, 
+    <a href="discretecolorbar.html">DISCRETECOLORBAR</a>, <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a>, and sample figures modified to work 
+    with Matlab version R2014b.
+ 
+    <a href="ellvel.html">ELLVEL</a>, <a href="ellrossby.html">ELLROSSBY</a>, <a href="ellband.html">ELLBAND</a>, <a href="ellparams.html">ELLPARAMS</a>, <a href="ellrad.html">ELLRAD</a>, and <a href="ridgelen.html">RIDGELEN</a> now all 
+    correctly return empty arrays, or empty cell arrays, given empty input.
+ 
+    <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>, and <a href="maternoise.html">MATERNOISE</a> improvements.  All 
+    extended to accommodate non-unit sample rates.
+ 
+    Removed a large number of obsolete functions; consolidated many others.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2002--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

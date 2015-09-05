@@ -1,0 +1,84 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TOPOPLOT is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="topoplot.html">TOPOPLOT</a>  Plot regional or global topography at one-sixth degree resolution.
+    __________________________________________________________________
+ 
+    <img src="../figures/topoplot.png">
+    __________________________________________________________________
+ 
+    <a href="topoplot.html">TOPOPLOT</a> with no input arguments makes a patch plot of the earth's
+    surface topography within the axis of the current plot.  Continents are
+    black and the continental shelf to a depth of 500~m is gray.
+ 
+    <a href="topoplot.html">TOPOPLOT</a> CONTINENTS plots the continents only as a patch plots with
+    the continents in black.  
+ 
+    If the current plot is empty, <a href="topoplot.html">TOPOPLOT</a> uses the domain -180 to 180 
+    degrees in longitude, and -80.666 to 80.666 degrees in latitude.
+ 
+    These two options use <a href="patchcontourf.html">PATCHCONTOURF</a>, which does not use the current 
+    colormap and so allow one to allow plot a colored field in addition to
+    the topography.  The remaining options use CONTOURF.
+ 
+    The patches will be set to have negative ZData, in order to appear 
+    below other items on the plot.
+    __________________________________________________________________
+  
+    <a href="topoplot.html">TOPOPLOT</a>(REGION,V) makes a filled contour plot of the earth's surface
+    topography within a region specified by REGION, at contour intervals V.   
+ 
+    REGION is an array with the format [WEST EAST SOUTH NORTH]. Longitudes 
+    may either be specified on the interval [-180, 180] or on [0, 360].
+ 
+    V is an array of contour levels, in kilometers, with positive values 
+    for heights above sea level and negative values for below sea level.
+ 
+    By default, <a href="topoplot.html">TOPOPLOT</a> uses a flipped grayscale colormap, with high
+    elevations colored dark gray, and low elevations colored light gray.
+    <a href="topoplot.html">TOPOPLOT</a> uses CONTOURF with the contours themselves not shown. 
+   
+    <a href="topoplot.html">TOPOPLOT</a> uses the one-sixth degree resolution topography file JTOPO.MAT
+    included with <a href="jLab.html">JLAB</a>, based on the Smith and Sandwell dataset.  The 
+    latitude range +/- 80.666 is covered. Type 'help jtopo' for details. 
+ 
+    <a href="topoplot.html">TOPOPLOT</a>(REGION) with V unspecified uses V=[0 -1/2 -1], showing the
+    continents in black and the contintental shelf at 500 m depth in gray.
+ 
+    To plot the continents in black, use <a href="topoplot.html">TOPOPLOT</a>(REGION,[-1/2 0]).
+ 
+    <a href="topoplot.html">TOPOPLOT</a>([],V) sets REGION to the axis limits of the current plot.
+    __________________________________________________________________
+ 
+    Additional options
+ 
+    <a href="topoplot.html">TOPOPLOT</a>(REGION,V,VC) additionally draws the individual contour levels
+    in VC, with the color shading still based on the array V.
+ 
+    <a href="topoplot.html">TOPOPLOT</a>(REGION,[],VC) draws only the contours in VC, with no shading.
+    By default, these will be drawn as heavy white lines.
+   
+    <a href="topoplot.html">TOPOPLOT</a>(REGION,V,VC,STY) uses linestyle STY for the individual contour
+    levels.  STY is in <a href="linestyle.html">LINESTYLE</a> form, e.g. STY='2g--'.
+ 
+    [H,HC]=<a href="topoplot.html">TOPOPLOT</a>(REGION,V,VC) returns the handles to the contours
+    corresponding to levels V and VC, respectively.
+    
+    <a href="topoplot.html">TOPOPLOT</a>(...,'M_MAP') will work with Rich Pawlowicz's M_MAP package by
+    calling M_CONTOUR and M_CONTOURF.
+    __________________________________________________________________
+ 
+    See also JTOPO, <a href="regionplot.html">REGIONPLOT</a>, <a href="readtopo.html">READTOPO</a>.
+  
+    '<a href="topoplot.html">topoplot</a> --f' generates the above sample figures and some others.
+ 
+    Usage: <a href="topoplot.html">topoplot</a>(region,v);
+           <a href="topoplot.html">topoplot</a>(region,v,'m_map');
+           [h,hc]=<a href="topoplot.html">topoplot</a>(region,v,vc);
+           [h,hc]=<a href="topoplot.html">topoplot</a>(region,v,vc,'2m--');
+           [h,hc]=<a href="topoplot.html">topoplot</a>(region,v,vc,'2m--','m_map');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

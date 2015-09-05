@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLDIFF is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="elldiff.html">ELLDIFF</a>  Differentiation of modulated elliptical signals.
+ 
+    Given the properties of a time-varying elliptical signal, <a href="elldiff.html">ELLDIFF</a> 
+    finds the ellipse properties of the time derivative of that signal.  
+  
+    [K2,L2,TH2,PHI2]=<a href="elldiff.html">ELLDIFF</a>(K,L,TH,PHI) where the input arguments
+    specify a time-varying ellipse of the complex-valued time series 
+    Z=X+iY, returns the ellipse parameters for the associated time-
+    varing ellipse of the first central difference of Z.  
+ 
+    K and L are the input ellipse amplitude and linearity, respectively,
+    while TH and PHI are its orientation and orbital phase.  The output
+    arguments are the same parameters for the differentiated ellipse.
+     
+    [...]=<a href="elldiff.html">ELLDIFF</a>(DT,...) optionally specifies a time-step of DT
+    (default=1) for the differentiation. 
+ 
+    [...]=<a href="elldiff.html">ELLDIFF</a>(...,FACT) optionally multiplies the output amplitudes
+    by the scale factor FACT (default=1), e.g. for a unit conversion from 
+    kilometers into centimeters.
+ 
+    See also <a href="ellparams.html">ELLPARAMS</a>.
+  
+    Usage:  [k2,l2,theta2,phi2]=<a href="elldiff.html">elldiff</a>(k,l,theta,phi);
+            [k2,l2,theta2,phi2]=<a href="elldiff.html">elldiff</a>(4*3600,k,l,theta,phi,1e5);
+ 
+    '<a href="elldiff.html">elldiff</a> --t' runs a test
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

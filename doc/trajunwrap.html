@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TRAJUNWRAP is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="trajunwrap.html">TRAJUNWRAP</a>  Unwraps Lagrangian trajectories from a periodic domain.
+ 
+    CX=<a href="trajunwrap.html">TRAJUNWRAP</a>(CX,L) unwraps the complex-valued Lagrangian trajectory CX 
+    from within a doubly periodic domain having edges at +/- L.  
+ 
+    CX specifies the partile position in complex-valued form CX=X+iY.
+ 
+    CX may be of any dimension, but time is assumed to increase along rows.
+    The output array will be the same size as the input array.  
+ 
+    Set L=[LX LY] to specify different periodicities in the X and Y 
+    directions. Use L=[LX NaN] for only zonal periodicity, or L=[NaN Ly] 
+    for only meridional periodicity.
+ 
+    [CX1,CX2,...,CXN]=<a href="trajunwrap.html">TRAJUNWRAP</a>(CX1,CX2,...CXN,L) also works for multiple
+    arrays of trajectories with the same periodicity.
+ 
+    <a href="trajunwrap.html">TRAJUNWRAP</a>(CX1,CX2,...CXN,L); with no output arguments overwrites the 
+    original named input variables.
+ 
+    See also <a href="trajwrap.html">TRAJWRAP</a>.
+ 
+    Usage: cx=<a href="trajunwrap.html">trajunwrap</a>(cx,L);
+           cx=<a href="trajunwrap.html">trajunwrap</a>(cx,[Lx Ly],'nan');
+           cx=<a href="trajunwrap.html">trajunwrap</a>(cx,[Lx Ly]);
+           [cx1,cx2]=<a href="trajunwrap.html">trajunwrap</a>(cx1,cx2,[Lx Ly]);
+           <a href="trajunwrap.html">trajunwrap</a>(cx1,cx2,[Lx Ly]);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

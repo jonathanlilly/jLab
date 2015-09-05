@@ -1,0 +1,46 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CURVEINTERP is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="curveinterp.html">CURVEINTERP</a>  Interpolate a field or its gradient onto a set of curves.
+ 
+    <a href="curveinterp.html">CURVEINTERP</a> is a low-level function called by <a href="closedcurves.html">CLOSEDCURVES</a> and
+    <a href="curvemoments.html">CURVEMOMENTS</a>.
+ 
+    FC=<a href="curveinterp.html">CURVEINTERP</a>(X,Y,F,XC,YC) interpolates the field in matrix F, with 
+    axes X and Y, onto the curves specified by XC and YC.  
+ 
+    X is associated with the *columns* of F and Y with its *rows*.  The 
+    lengths of X and Y must match SIZE(F,2) and SIZE(F,1) respectively.
+ 
+    Unlike INTERP2, <a href="curveinterp.html">CURVEINTERP</a> permits XC and YC to be cell arrays of 
+    column vectors, in which case FC will be a cell array of the same size.
+    This is useful for working with <a href="closedcurves.html">CLOSEDCURVES</a> and <a href="curvemoments.html">CURVEMOMENTS</a>.
+ 
+    <a href="curveinterp.html">CURVEINTERP</a> uses a fast loopless algorithm that is an order of 
+    magnitude faster than looping over the individual curves. 
+ 
+    <a href="curveinterp.html">CURVEINTERP</a> works by calling INTERP2 with the 'linear' algorithm.
+    __________________________________________________________________
+ 
+    Gradient interpolation
+ 
+    GRADFC=<a href="curveinterp.html">CURVEINTERP</a>(X,Y,F,XC,YC,'gradient') alternately interpolates not
+    F, but instead its *gradient*, and returns the result in the complex-
+    valued quantity GRADFC=dF/dX+sqrt(-1)*dF/dY.
+   
+    This can be very useful when F is large, because it is not necessary
+    to compute the gradient of F everywhere.  It is only computed locally
+    in near the curves, which can lead to a considerable speed improvment.
+    __________________________________________________________________
+ 
+    See also <a href="closedcurves.html">CLOSEDCURVES</a>, <a href="curvemoments.html">CURVEMOMENTS</a>.
+ 
+    '<a href="curveinterp.html">curveinterp</a> --t' runs a test.
+ 
+    Usage: fc=<a href="curveinterp.html">curveinterp</a>(x,y,f,xc,yc);
+           gradfc=<a href="curveinterp.html">curveinterp</a>(x,y,f,xc,yc,'gradient');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

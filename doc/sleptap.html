@@ -1,0 +1,49 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SLEPTAP is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="sleptap.html">SLEPTAP</a>  Calculate Slepian tapers.
+ 
+    [PSI,LAMBDA]=<a href="sleptap.html">SLEPTAP</a>(N,P,K) calculates the K lowest-order Slepian
+    tapers PSI of length N and time-bandwidth product P, together with
+    their eigenvalues LAMBDA. PSI is N x K and LAMBDA is K x 1.
+ 
+    K is optional and defaults to 2P-1.  
+    P is optional and defaults to 4.
+    
+    For N<=512, <a href="sleptap.html">SLEPTAP</a> uses the tridiagonal method described in Percival 
+    and Walden (1993).  For N>512, it first computes tapers for N=512 and 
+    then spline-interpolates.
+    
+    N may also be an array of lengths.  In this case PSI is a cell array of 
+    matrices, with PSI{1} being N(1) x K, PSI{2} being N(2) x K, etc., 
+    while LAMBDA is K x LENGTH(N).  See 'Cell array input' under <a href="mspec.html">MSPEC</a>.
+    _____________________________________________________________________
+ 
+    Normalization
+ 
+    By default, the tapers are set to have unit energy. Alternatively
+    <a href="sleptap.html">SLEPTAP</a>(...,'bandpass') uses the "bandpass" normalization in which the
+    tapers are rescaled so that the maximum value of the Fourier transform
+    of the first taper is set to two. 
+ 
+    See <a href="wavetrans.html">WAVETRANS</a> for details on bandpass normalization.  
+    _____________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="sleptap.html">SLEPTAP</a>(N, ...,'parallel') when N is an array of lengths parallelizes 
+    the taper computation using a PARFOR loop.  This requires that Matlab's
+    Parallel Computing Toolbox be installed.
+    _____________________________________________________________________
+ 
+    See also <a href="mspec.html">MSPEC</a>, <a href="msvd.html">MSVD</a>, <a href="twospecplot.html">TWOSPECPLOT</a>.
+    
+    '<a href="sleptap.html">sleptap</a> --t' runs some tests.  
+ 
+    Usage:  [psi,lambda]=<a href="sleptap.html">sleptap</a>(n); 
+            [psi,lambda]=<a href="sleptap.html">sleptap</a>(n,p,k); 
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

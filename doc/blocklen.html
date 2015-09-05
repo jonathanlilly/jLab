@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>BLOCKLEN is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="blocklen.html">BLOCKLEN</a> Counts the lengths of 'blocks' in an array.
+ 
+    Suppose X is a column vector which contains blocks of identical
+    values, e.g. X=[0 0 0 1 1 3 2 2 2]';
+ 
+    L=<a href="blocklen.html">BLOCKLEN</a>(X) counts the lengths of contiguous blocks containing
+    identical values of X, and returns an array L of size SIZE(X).
+    Each elements of L specifies the length of the block to which the
+    corresponding element of X belongs.
+ 
+    In the above example, L=[3 3 3 2 2 1 3 3 3]';
+ 
+    [L,IA,IB,NUM]=<a href="blocklen.html">BLOCKLEN</a>(X) optionally returns indices IA and IB 
+    into the first and last elements, respectively, of each block, as
+    as well as the block number NUM. NUM is the same size as L.
+ 
+    [...]=<a href="blocklen.html">BLOCKLEN</a>(X,D) defines the junction between two blocks as
+    locations where ABS(DIFF(X))>D.  Thus D=1 is a 'rate of change'
+    definition, and X=[1 2 3 5 6 10 16 17 18]'; will yield the same 
+    result for L as in the previous example.
+ 
+    See also <a href="blocknum.html">BLOCKNUM</a>.
+  
+    Usage: [L,ia,ib]=<a href="blocklen.html">blocklen</a>(x);  
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2000--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

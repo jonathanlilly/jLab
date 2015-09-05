@@ -1,0 +1,100 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TRAJCHUNK is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="trajchunk.html">TRAJCHUNK</a>  Converts Lagrangian trajectories into chunks based on the Coriolis period.
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a> is used to split float or drifter data into chuncks such that
+    the length of each chunk is a fixed multiple of the average Coriolis
+    frequency. This is useful in spectral analysis. 
+ 
+    [NUMO,LATO]=<a href="trajchunk.html">TRAJCHUNK</a>(NUM,LAT,P), where NUM and LAT are arrays of date
+    number and latitude for float or drifter data, re-organizes these into 
+    chunks such that the average Coriolis frequency f_C in each chunk is at 
+    least P times the Rayleigh frequency f_R for that chunk.
+ 
+    Recall that the Rayleigh frequency is f_R=2*pi/(DT*N), in units of 
+    radians per unit time, where DT is the sample interval and N is the
+    number of samples.
+ 
+    The output variables NUM and LAT are now cell arrays of numerical
+    arrays, with each cell is truncated such that its length is just long
+    enough such that f_C > P * f_R.  
+ 
+    Trajectories that are not long enough to satisfy this criterion are 
+    discarded, as are short residual segments at the end of trajectories.   
+ 
+    Each input trajectory is thus split into zero, one, or more than one
+    cells in the output variables.   
+    __________________________________________________________________
+ 
+    Additional options
+ 
+    [NUMO,LATO,Y1,Y2,...,YM]=<a href="trajchunk.html">TRAJCHUNK</a>(NUM,LAT,X1,X2,...XM,N) chunks the M
+    input arrays X1, X2,... XM in the same manner, and returns these as Y1,
+    Y2,... YM.  The YM are cell arrays of the same size as NUMO.
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a>(...,P,LMIN) also specifies a mininum number of points LMIN
+    for each chunk.      
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a> with no output arguments overwrites the original named output
+    variables. 
+ 
+    [..,II]=<a href="trajchunk.html">TRAJCHUNK</a>(...), with an extra final output argument, 
+    outputs a cell array II of indices to the original time series. 
+ 
+    As an example, LAT(II{1}) gives the latitudes of the data in the first 
+    cell of the output, LATO{1}.
+    __________________________________________________________________
+    
+    Keeping short data segments
+ 
+    By default, any data is cells shorter than the specified length are 
+    discarded, as are data segments at the end of the trajectories.  
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a>(...,'keep') keeps these instead.  Short cells are returned in
+    their own chunks, and leftover segments are appended to the end of the 
+    preceding chunk.  
+ 
+    This preserves the number of data points, while favoring a requested 
+    length, if possible, from each trajectory. 
+    __________________________________________________________________
+ 
+    Cell array input 
+ 
+    The input variables NUM and LAT are cell arrays of numerical arrays,
+    with one trajectory per cell, as with FLOATS.MAT and DRIFTERS.MAT.  For
+    details on these datasets, see <a href="about_floats.html">ABOUT_FLOATS</a> and <a href="about_drifters.html">ABOUT_DRIFTERS</a>.
+ 
+    In this case, the output variables are still 1D cell arrays of numeric
+    arrays.  Chunks drawn from each successive trajectory are appended to 
+    the end of the output cell arrays.   
+ 
+    [...,II,KK]=<a href="trajchunk.html">TRAJCHUNK</a>(...) in this case also outputs the indices of
+    the data locations within the input cells.  KK is not a cell array
+    like the other output arguments, but rather a row array of LENGTH(II).
+ 
+    As an example, LAT(KK(1))(II{1}) gives the latitudes of the data in the 
+    first cell of the output, LATO{1}.
+    __________________________________________________________________
+    
+    Overlap
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a>(...,'overlap',PCT) outputs chunks with a percentage PCT 
+    overlap.  For example, <a href="trajchunk.html">TRAJCHUNK</a>(...,'overlap',50) outputs chunks that 
+    overlap by 50%.  The default behavior gives chunks with no overlap.
+    __________________________________________________________________   
+ 
+    See also <a href="cellchunk.html">CELLCHUNK</a>.
+ 
+    '<a href="trajchunk.html">trajchunk</a> --t' runs a test.
+ 
+    Usage: [num,lat]=<a href="trajchunk.html">trajchunk</a>(num,lat,P);
+           [num,lat,lon,cv]=<a href="trajchunk.html">trajchunk</a>(num,lat,lon,cv,P);
+           [num,lat,lon,cv]=<a href="trajchunk.html">trajchunk</a>(num,lat,lon,cv,P,lmin);
+           [num,lat,lon,cv]=<a href="trajchunk.html">trajchunk</a>(num,lat,lon,cv,P,'overlap',50);
+           <a href="trajchunk.html">trajchunk</a>(num,lat,lon,cv,P);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

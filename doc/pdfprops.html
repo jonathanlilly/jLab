@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PDFPROPS is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pdfprops.html">PDFPROPS</a>  Mean and variance associated with a probability distribution.
+ 
+    [MU,SIGMA]=<a href="pdfprops.html">PDFPROPS</a>(X,FX), given a probability distribution function FX
+    over values X, returns the mean MU and the standard deviation SIGMA. 
+ 
+    The statistics are computed using a trapezoidal integration.  FX is 
+    multiplied by a constant so that it integrates to one.
+ 
+    [MU,SIGMA,SKEW,KURT]=<a href="pdfprops.html">PDFPROPS</a>(X,FX) also retuns the skewness and the
+    kurtosis, which are the third and fourth central moments, respectively 
+    normalized by the third and fourth powers of the standard deviation.  
+ 
+    <a href="pdfprops.html">PDFPROPS</a>(X,FX,DIM) alternately computes moments along dimension DIM.
+    By default, DIM=1, so the moments are computed along rows.
+    
+    '<a href="pdfprops.html">pdfprops</a> --t' runs a test.
+ 
+    Usage:  [mu,sigma]=<a href="pdfprops.html">pdfprops</a>(x,fx); 
+            [mu,sigma,skew,kurt]=<a href="pdfprops.html">pdfprops</a>(x,fx);
+            [mu,sigma,skew,kurt]=<a href="pdfprops.html">pdfprops</a>(x,fx,dim);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2001--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

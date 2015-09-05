@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ORBITBREAKS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="orbitbreaks.html">ORBITBREAKS</a>  Separate orbit into passes based on turning points.
+ 
+    <a href="orbitbreaks.html">ORBITBREAKS</a> is a level function called by <a href="about_alongtrack.html">ABOUT_ALONGTRACK</a>.
+ 
+    [LAT,LON]=<a href="orbitbreaks.html">ORBITBREAKS</a>(LAT,LON), where LAT and LON are column vectors
+    representing a satellite orbital groundtrack, is used to separate 
+    different passes based on the turning points in latitude.
+ 
+    NANs are inserted into both LAT and LON wherever LAT has a turning
+    point.  Note that no data is removed.
+ 
+    All latitudes and lontidues are in degrees.  The output longitude has 
+    range [-180, 180].
+ 
+    Calling <a href="col2mat.html">COL2MAT</a>(LAT,LON) will then reshape LAT and LON into matrices, 
+    with each orbital pass in its own column.
+    
+    [LAT,LON,X1,X2,... XN]=<a href="orbitbreaks.html">ORBITBREAKS</a>(LAT,LON,X1,X2,... XN) will insert
+    NANs into the other arguments in the same locations as for LAT and LON.
+ 
+    The input arguments should contain no NANs.  For missing data, use INFs
+    instead.
+ 
+    <a href="orbitbreaks.html">ORBITBREAKS</a>(LAT,LON, ...) with no output arguments overwrites the 
+    original variables.
+ 
+    See also <a href="colbreaks.html">COLBREAKS</a>, <a href="col2mat.html">COL2MAT</a>.
+ 
+    'orbitbreak --t' runs a test.
+ 
+    Usage: [lat,lon]=<a href="orbitbreaks.html">orbitbreaks</a>(lat,lon);
+           [lat,lon,x1,x2,x3]=<a href="orbitbreaks.html">orbitbreaks</a>(lat,lon,x1,x2,x3);
+           <a href="orbitbreaks.html">orbitbreaks</a>(lat,lon);
+           <a href="orbitbreaks.html">orbitbreaks</a>(lat,lon,x1,x2,x3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

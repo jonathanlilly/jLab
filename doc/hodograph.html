@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>HODOGRAPH is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="hodograph.html">HODOGRAPH</a>   Generate hodograph plots (simple and fancy).
+ 
+    A hodograph of a velocity time series is defined as a polar
+    coordinate plot of the eastward component versus the northward.
+   
+    Simple hodographs:
+ 
+      <a href="hodograph.html">HODOGRAPH</a>(U,V) generates a simple hodograph plotting U versus V.
+      U and V are column vectors, or matrices with time oriented in
+      columns.  
+   
+      <a href="hodograph.html">HODOGRAPH</a>(CV), where CV=U+iV, also works.
+ 
+    Fancy hodographs:
+ 
+      A fancy hodograph use SCATTER to plot change the color and/or
+      sizes of the points according to another parameter, say density.
+      A colorbar is also plotted.
+ 
+      <a href="hodograph.html">HODOGRAPH</a>(U,V,C) uses C as the symbol color.  The array C must
+      have the same size as U and V.
+ 
+      <a href="hodograph.html">HODOGRAPH</a>(U,V,C,S) also uses S as the symbol size.  The array S
+      must have the same size as U and V.
+ 	
+      <a href="hodograph.html">HODOGRAPH</a>(CV,C) and <a href="hodograph.html">HODOGRAPH</a>(CV,C,S) also work.
+ 
+      Note that since SCATTER is slow for large datasets, it is useful
+      to decimate the data before plotting.  This is accomplished
+      using <a href="hodograph.html">HODOGRAPH</a>(...,INDEX). Then only the points CV(INDEX,:) are
+      plotted.
+ 
+      [H,HC]=F<a href="hodograph.html">HODOGRAPH</a>(...) returns the handle H to the data, and the
+      handle HC to the colorbar axis.
+ 
+    As an example,
+   
+           load bravo94
+           cv=<a href="vfilt.html">vfilt</a>(bravo.rcm.cv(:,3),24);
+           th=100*detrend(bravo.cat.th(:,3));
+           [h,hc]=<a href="hodograph.html">hodograph</a>(cv,th,20+0*th,[1:4000]);
+           caxis([-8 8])
+          
+    makes Figure 6a of Lilly and Rhines (2002) JPO.
+          
+    Usage: <a href="hodograph.html">hodograph</a>(cv);
+           [h,hc]=<a href="hodograph.html">hodograph</a>(cv,c,index);
+           [h,hc]=<a href="hodograph.html">hodograph</a>(cv,c,s,index);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2000--2012 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,86 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ABOUT_SANDWELL is the <a href="jdata.html">jdata</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="about_sandwell.html">ABOUT_SANDWELL</a>  One minute resolution topography data from Smith and Sandwell. 
+    _______________________________________________________________________
+    
+    <img src="../figures/sandwell.png">
+    _______________________________________________________________________
+ 
+    SANDWELL.MAT is a matfile containing nearly-global topography data from 
+    the Smith and Sandwell database version 18.1, at its full, 
+    approximately one minute resolution.
+ 
+    LOAD SANDWELL loads the structure SANDWELL, with the following fields:
+ 
+        sandwell.about     Pointer to this document  
+        sandwell.lat       Array of latitudes         [17280 x 1] 
+        sandwell.lon       Array of longitudes        [1 x 21600]
+        sandwell.topo      Matrix of topography       [17280 x 21600]
+ 
+    Typing '<a href="use.html">use</a> sandwell' maps these fields into variables in the current
+    workspace.
+ 
+    TOPO is a matrix of topography in units of kilometers and is positive 
+    for above sea level, and negative for below sea level.  LON is a row
+    vector of longitudes and LAT a column vector of latitudes.
+ 
+    LAT and LON output are *grid-centered*, that is, they indicate 
+    midpoints of the topography cells. LON is uniformly spaced, but LAT is 
+    non-uniformly spaced, with bin sizes decreasing poleward.
+ 
+    SANDWELL.MAT is distributed with <a href="jLab.html">JLAB</a> at http://www.jmlilly.net.
+ 
+    Note that the Smith and Sandwell database is defined only for latitudes
+    between -80.738 and 80.738.  Topography at higher northern latitudes is
+    found in the IBCAO dataset, see <a href="about_ibcao.html">ABOUT_IBCAO</a>.
+ 
+    JTOPO.MAT, a 1/6th degree version of SANDWELL merged with high-latitude
+    data from the International Bathymetric Chart of the Arctic Ocean 
+    (IBCAO), is distributed with JLAB; see <a href="about_jtopo.html">ABOUT_JTOPO</a> for details.
+ 
+    Forming regional datasets is more convenient by directly accessing the 
+    original binary file, topo_18.1.img.  This can be read using <a href="readtopo.html">READTOPO</a>.
+    <a href="readtopo.html">READTOPO</a> and topo_18.1.img are distributed together with SANDWELL.MAT.
+    __________________________________________________________________
+ 
+    Data and documentation
+ 
+    The original location for the Smith and Sandwell Global Topography
+    Dataset v. 18.1, file 'topo_18.1.img' is
+ 
+        http://topex.ucsd.edu/WWW_html/mar_topo.html.
+ 
+    The reference for the Smith and Sandwell Database is
+ 
+       Smith, W. H. F., and D. T. Sandwell, Global seafloor topography 
+       from satellite altimetry and ship TOPO soundings, Science, v. 277, 
+       p. 1957-1962, 26 Sept., 1997.
+    __________________________________________________________________
+ 
+    License and Copyright 
+ 
+    The data file topo_18.1.img is distributed with <a href="jData.html">JDATA</a> for RESEARCH AND 
+    NON-PROFIT <a href="use.html">USE</a> ONLY, in accordance with the copyright statement for the
+    Smith and Sandwell dataset.  For details, type 'help <a href="topo_copyright.html">topo_copyright</a>'.
+    __________________________________________________________________
+ 
+    Dataset creation
+ 
+    For completeness, the m-file <a href="about_sandwell.html">ABOUT_SANDWELL</a> also contains steps used in 
+    the creation of SANDWELL.MAT. If you wish to do this yourself, typing
+    '<a href="about_sandwell.html">about_sandwell</a> --create' with <a href="jLab.html">JLAB</a> installed will recreate 
+    SANDWELL.MAT from source. 
+    __________________________________________________________________
+     
+    See also <a href="about_ibcao.html">ABOUT_IBCAO</a>, and JTOPO, <a href="regionplot.html">REGIONPLOT</a>, and <a href="topoplot.html">TOPOPLOT</a> in <a href="jLab.html">JLAB</a>.
+ 
+    '<a href="about_sandwell.html">about_sandwell</a> --f' generates the sample figure shown above.
+ 
+    Usage: about_sandwell
+           about_sandwell --create
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

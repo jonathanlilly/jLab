@@ -1,0 +1,63 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TWODSORT is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="twodsort.html">TWODSORT</a>  Distances from data points to nearby grid points.
+ 
+    [D,XD,YD]=<a href="twodsort.html">TWODSORT</a>(X,Y,XO,YO,CUTOFF) returns distances D between data
+    points at locations X,Y and nearby grid points at XO,YO, computed
+    efficiently and organized in a convenient manner.
+ 
+    XD and YD are deviations from each data point location to the grid 
+    point location. CUTOFF is the maximum distance for which we wish the
+    output arrays to be returned.
+  
+    X and Y are arrays of the same size into data point locations. XO and
+    YO  are arrays of length M and N, say, specifying the bin center
+    locations of an M x N matrix of grid points, i.e.
+ 
+        XO =  [XO_1;    YO= [YO_1 YO_2 ... YO_N]. 
+               XO_2; 
+                ...
+               XO_M]
+ 
+    The output arrays are then each M x N x P arrays of column vectors, 
+    where P is the maximum number of points in the CUTOFF neighborhood at
+    any grid point.  Points farther away are filled with NANs.
+ 
+    D gives the distances of those data points less than CUTOFF from the
+    (m,n)th grid point, sorted in order of increasing distance.  XD and YD 
+    are deviations of each data point from the (m,n)th grid point location.
+    _________________________________________________________________
+  
+    Additional input parameters
+ 
+    Let's say some additional variables Z1, Z2,...,ZK are given at the data
+    locations X,Y.  Then 
+    
+    [D,XD,YD,Z1D,Z2D,...,ZKD]=
+ 
+                 <a href="twodsort.html">TWODSORT</a>(X,Y,Z1,Z2,...,ZK,XO,YO,CUTOFF);
+ 
+    also returns the values of these variables.
+ 
+    Z1D, Z2D,...,ZKD are the same size as the other output arguments.  Z1D
+    then gives the value of Z1 at data points no more than CUTOFF 
+    kilometers from the (m,n)th grid point, etc.
+ 
+    To output an index into the data point locations, use
+   
+    [D,X,Y,INDEX]= <a href="twodsort.html">TWODSORT</a>(X,Y,[1:LENGTH(X(:))],XO,YO,CUTOFF).
+    _________________________________________________________________
+  
+    See also <a href="spheresort.html">SPHERESORT</a>, <a href="polysmooth.html">POLYSMOOTH</a>.
+ 
+    '<a href="twodsort.html">twodsort</a> --t' runs a test.
+ 
+    Usage: [ds,xs,ys]=<a href="twodsort.html">twodsort</a>(x,y,xo,yo,cutoff);
+           [ds,xs,ys,zs]=<a href="twodsort.html">twodsort</a>(x,y,zs,xo,yo,cutoff);
+           [xs,ys,z1s,z2s,...,zNs]=<a href="twodsort.html">twodsort</a>(x,y,z1,z2,...,zN,xo,yo,cutoff);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

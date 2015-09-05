@@ -1,0 +1,64 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLVEL is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="ellvel.html">ELLVEL</a>  Average and instantaneous ellipse velocities. 
+ 
+    V=<a href="ellvel.html">ELLVEL</a>(KAPPA,LAMBDA,THETA,PHI,STR) where KAPPA and LAMBDA are the 
+    amplitude and linearity of a time-varying ellise, THETA is its time-
+    varying orientation, and PHI is its time-varying phase, returns various
+    measures of the ellispe 'velocity'.
+ 
+    STR determines the velocity quantity to be output.
+ 
+        STR       Symbol     Description
+        ----------------------------------------------------------------
+       'geo'      VM         Geometric mean velocity    
+       'ave'      VBAR       Period-averaged speed          
+       'kin'      VEKE       Kinetic energy velocity        
+       'cir'      VGAMMA     Circulation velocity        
+       'azi'      VAZ        Instantaneous azimuthal velocity        
+       'ins'      VI         Instantaneous speed 
+ 
+    All are signed quantities reflecting the direction of motion.  That is, 
+    a velocity is defined to be positive when the ellipse is orbited in the 
+    mathematically positive (counterclockwise) sense, and negative when the
+    ellipse is orbited in the mathematically negative sense.
+ 
+    VM=<a href="ellvel.html">ELLVEL</a>(KAPPA,LAMBDA,THETA,PHI) with STR omitted returns VM, the
+    geometric mean velocity.  This is a basic of ellipse velocity that is 
+    analagous to the geometric mean radius as a measure of ellipse size.
+ 
+    <a href="ellvel.html">ELLVEL</a>(DT,...,) optionally uses DT as the data sample rate, with a 
+    default value of DT=1.  DT is a scalar.
+ 
+    <a href="ellvel.html">ELLVEL</a>(DT,...,FACT,STR) optionally converts the physical units of 
+    velocity through a multiplication by FACT, with a default value of 
+    FACT=1.  For example, FACT=1e5 converts kilometers into centimeters, 
+    while FACT=1e5/24/3600 converts km/day into cm/sec.
+    ____________________________________________________________________
+    
+    Cell array input/output
+ 
+    If <a href="ellvel.html">ELLVEL</a> is given cell array input, it returns cell array output.
+ 
+    Thus KAPPA, LAMBDA, THETA, and PHI may each be cell arrays of the 
+    same size, where each element in the cell array is a numerical array.
+ 
+    VM and other velocity measures will be also cell arrays of this size.
+ 
+    In this case <a href="ellvel.html">ELLVEL</a>(DT,...) also works with DT a scalar or an 
+    array whose length is the number of elements in the cell arrays.
+    ____________________________________________________________________
+ 
+    See also <a href="ellrad.html">ELLRAD</a>, <a href="ellparams.html">ELLPARAMS</a>, <a href="elldiff.html">ELLDIFF</a>.
+ 
+    Usage:  v=<a href="ellvel.html">ellvel</a>(kappa,lambda,theta,phi);
+            v=<a href="ellvel.html">ellvel</a>(dt,kappa,lambda,theta,phi,1e5);
+            vbar=<a href="ellvel.html">ellvel</a>(kappa,lambda,theta,phi,'ave');
+ 
+    '<a href="ellvel.html">ellvel</a> --f' generates a sample figure.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

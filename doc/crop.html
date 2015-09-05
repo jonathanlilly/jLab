@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CROP is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="crop.html">CROP</a>  Gets rid of whitespace around an image. [by A. Bliss]
+ 
+    <a href="crop.html">CROP</a>(FILENAME,APPEND,MARGIN) is the full calling form. APPEND and
+       MARGIN are optional inputs.
+ 
+    <a href="crop.html">CROP</a>('filename.ext') crops the image in the file and saves it using
+    the original filename, overwriting the old image. The extension (ext)
+    can be anything IMREAD supports.
+ 
+    <a href="crop.html">CROP</a>(directory) crops all images in a directory. 
+ 
+    If APPEND is 1, <a href="crop.html">CROP</a> saves the cropped image as 'filename_crop.ext'
+    in the same directory as the original.
+ 
+    MARGIN sets the margin width in pixels (default is 10).
+ 
+    Changes since version 1:
+        1. Now accepts directories as input.
+        2. Improved input checks and comments.
+        3. Handles transparency in .png files.
+        4. Just prior to saving version 1, I added the APPEND option.
+ 
+    Example:
+        <a href="crop.html">crop</a>('C:\MATLAB7\toolbox\matlab\demos\html\cruller_01.png',1)
+ 
+    See also: IMREAD, IMWRITE
+    See crop_license.m for the license details.
+    Written by Andy Bliss Sept 8th, 2006. Revised May 31, 2012.
+    __________________________________________________________________
+    This third-party software is included with <a href="jLab.html">JLAB</a> for convenience, in
+    accordance with the redistribution policy at crop_license.m.
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

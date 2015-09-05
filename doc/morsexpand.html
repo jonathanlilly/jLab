@@ -1,0 +1,52 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEXPAND is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsexpand.html">MORSEXPAND</a>  Generalized Morse wavelets via time-domain Taylor series.
+ 
+    PSI=<a href="morsexpand.html">MORSEXPAND</a>(T,GAMMA,BETA,FS) computes the lowest-order generalized
+    Morse wavelet specified by parameters GAMMA and BETA, and having a peak
+    frequency at *radian* frequency FS, using a time-domain Taylor series.
+ 
+    Normally one would use <a href="morsewave.html">MORSEWAVE</a> to compute the wavelets in the
+    frequency domain, but it is sometimes useful to have an explicit
+    time-domain representation.
+ 
+    There are no contraints on the size of T nor its ordering.  
+ 
+    All input parameters other than T should be scalars.
+    __________________________________________________________________
+ 
+    Algorithms
+ 
+    <a href="morsexpand.html">MORSEXPAND</a> can use one of two different algorithms.
+ 
+    <a href="morsexpand.html">MORSEXPAND</a>(,...,'moment'), the default behavior,  Taylor-expands the
+    time-domain wavelet directly.
+ 
+    <a href="morsexpand.html">MORSEXPAND</a>(,...,'cumulant') expands the logarithm of the time-domain 
+    wavelet and then takes the exponential. 
+ 
+    <a href="morsexpand.html">MORSEXPAND</a>(N,...) specifies the number of terms to include in the
+    Taylor expansion.  N defaults to 10 in the 'cumulant' case and 100 in
+    the 'moment' case.
+ 
+    These algorithms implement equations (30) and (31) of Lilly and
+    Olhede (2009).
+ 
+    For details see
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+    __________________________________________________________________
+ 
+    See also <a href="morsewave.html">MORSEWAVE</a>, <a href="wavetrans.html">WAVETRANS</a>.
+    
+    '<a href="morsexpand.html">morsexpand</a> --t' runs a test.
+ 
+    Usage: psi=<a href="morsexpand.html">morsexpand</a>(t,gamma,beta,fs);
+           psi=<a href="morsexpand.html">morsexpand</a>(n,t,gamma,beta,fs);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

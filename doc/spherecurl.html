@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHERECURL is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="spherecurl.html">SPHERECURL</a>  Curl of a vector field on the surface of a sphere.
+ 
+    CURL=<a href="spherecurl.html">SPHERECURL</a>(LAT,LON,U,V) computes the vertical component of the 
+    curl of the vector field (U,V) on the surface of the sphere.
+ 
+    U and V are zonal and meridional velocities in meters per second, and
+    CURL is in inverse seconds.
+ 
+    LAT and LON are vectors specifing an evenly-spaced grid, and U and V
+    are arrays of size LENGTH(LON) x LENGTH(LAT) x M, where M is greater
+    than or equal to one. LAT and LON are in degrees.
+ 
+    The radius of the Earth as specified by <a href="radearth.html">RADEARTH</a> is used by default.
+    <a href="spherecurl.html">SPHERECURL</a>(...,R) uses a sphere of radius R, in kilometers, instead.
+ 
+    Derivatives are computed using the first central difference.
+ 
+    [CURL,UY,VX]=<a href="spherecurl.html">SPHERECURL</a>(LAT,LON,U,V) optionally returns the zonal and
+    meridional contributions UY and VX, such that CURL=VX-UY.
+    ___________________________________________________________________
+ 
+    First and last points
+ 
+    <a href="spherecurl.html">SPHERECURL</a> can use different boundary conditions in the numerical
+    computation of derivatives for the first and last points.
+  
+    <a href="spherecurl.html">SPHERECURL</a>(...,'periodic') uses a periodic derivative with respect to
+    longitude.  This is the default behavior.  
+ 
+    <a href="spherecurl.html">SPHERECURL</a>(...,'endpoint') uses the forwards / first backwards 
+    difference at the first and last longitude, respectively. 
+ 
+    For both of these options, the endpoint condition is used for 
+    differentiation with respect to latitude.
+ 
+    <a href="spherecurl.html">SPHERECURL</a>(...,'nans')  fills in the first and last values on all four
+    sides of the region with NANs. 
+ 
+    See <a href="vdiff.html">VDIFF</a> for more information.  
+    ___________________________________________________________________
+ 
+    See also <a href="spheregrad.html">SPHEREGRAD</a>, <a href="spherelap.html">SPHERELAP</a>, SPHERDIV, <a href="jSphere.html">JSPHERE</a>.
+ 
+    '<a href="spherecurl.html">spherecurl</a> --t' runs a test.
+ 
+    Usage: curl=<a href="spherecurl.html">spherecurl</a>(lat,lon,u,v);
+           [curl,uy,vx]=<a href="spherecurl.html">spherecurl</a>(lat,lon,u,v);
+           curl=<a href="spherecurl.html">spherecurl</a>(lat,lon,u,v,R);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2009 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

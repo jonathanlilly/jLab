@@ -1,0 +1,169 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>RIDGEWALK is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="ridgewalk.html">RIDGEWALK</a>  Extract wavelet transform ridges, including bias estimates. 
+ 
+    [IR,JR,WR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W,FS) where W is a wavelet transform matrix
+    at frequecies FS, such as that returned by <a href="morsewave.html">MORSEWAVE</a>, returns the 
+    wavelet ridges of transform W.
+ 
+    The columns of W correspond to different frequencies, specified by the
+    frequency array FS, at which the wavelet transform was performed.  Note
+    that FS assumes a unit sample rate.  
+ 
+    The frequencies FS are expected to be ordered from highest to lowest.  
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a> returns the following quantities along ridges
+ 
+        IR     Ridge indices into rows of W (time) 
+        JR     Ridge indices into columns of W (scale) 
+        WR     Wavelet transfrom value along the ridge
+        FR     Transform frequency values in radian frequency
+ 
+    All output variables are cell arrays with one ridge per cell.  To plot
+    the ridges, use <a href="cellplot.html">CELLPLOT</a>(IR,JR).  <a href="cell2col.html">CELL2COL</a>(IR,JR,WR,FR) turns these
+    cell arrays into concatenated column vectors. 
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>(DT,W,FS,...) uses a sample rate DT to compute the ridge
+    frequency FR.  The default value of DT is unity.  This does not affect
+    the specification of FS, which is given in terms of a unit sample rate.
+    _______________________________________________________________________
+ 
+    Masked-out regions
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a> permits the use to explicitly specify time-frequency regions 
+    which should be excluded from the ridge analyis.
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>(...,W,FS,BOOL), where BOOL is a boolean array of the same
+    size as W, then those points for which BOOL is false will be excluded 
+    from the ridge analysis. In addition, ridges are not permitted to cross
+    such regions, to prevent spurious chaining between distant frequencies.
+ 
+    This functionality is useful if we have ancillary information, such as
+    a local signal-to-noise estimate, that can help determine a priori
+    which time-frequency points appear to be statistically significant. 
+    _______________________________________________________________________
+ 
+    Additional options
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a> has other contingencies for rejecting spurious ridge points.
+    These tend to occur on the flanks of interesting signals, and 
+    reflect the wavelet structure rather than the signal structure.
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>(...,{L,CHI}) specifies options for the ridge computation.
+ 
+         L  -- Removes all ridges of less than L periods in length
+       CHI  -- Removes all small amplitude ridge points having |W|<CHI
+ 
+    In general, L should be set in proportion to the number of oscillations
+    contained in the wavelet.  A recommended setting is L > 2*P/pi, with P 
+    described shortly. This criterion means that the ridge must be longer
+    than the number of oscillations in the central envelope of the wavelet.
+ 
+    Here P is a quantity that characterizes the number of oscillations in a
+    wavelet.  For the generalized Morse wavelets calculated by <a href="morsewave.html">MORSEWAVE</a>, 
+    P is given by P=SQRT(BETA*GAMMA), see Lilly and Olhede (2009).
+ 
+    The options cell may also include some additional parameters for hidden
+    options that are used during testing. These should not be required by
+    most users, but are documented in the function body for completeness.
+    _______________________________________________________________________  
+ 
+    Time-dependent frequency range
+ 
+    The ridge curves may be limited to a time-varying frequency range.
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>(DT,...,{FMAX,FMIN,L,CHI}) additionally specifies a maximum 
+    frequency FMAX and minumum frequency FMIN for the ridges.  Only ridge
+    points between these two frequencies are returned.
+ 
+    FMAX and FMIN are both *radian* frequencies per unit time as specified
+    by DT. DT is optional and its default value is unity.  Thus FMAX and 
+    FMIN are directly comparable to the ridge frequency FR. 
+    
+    Both FMAX and FMIN are either scalars, or arrays the same length as W. 
+    _______________________________________________________________________
+ 
+    Output of bias parameters
+ 
+    [IR,JR,WR,FR,BR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(...) optionally outputs two additional
+    quantities along the ridges.
+ 
+        BR     Instantaneous bandwidth  
+        CR     Instantaneous curvature  
+ 
+    When these 'bias parameters' BR and CR are small compared with the
+    frequency, i.e. BR/FR << 1 and CR/(FR^2) << 1, then the signal is 
+    accurately estimated, as discussed in 
+ 
+       Lilly and Olhede (2010), On the analytic wavelet transform. 
+            IEEE Trans. Info. Theory, 56 (8), 4135--4156.
+ 
+    For more details, see <a href="instmom.html">INSTMOM</a>.
+    _______________________________________________________________________
+ 
+    Joint ridges
+ 
+    [IR,JR,W1R,W2R,...,WNR,F1R,F2R,...FNR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) 
+    finds the joint ridges of N transforms that all have the same size.  
+ 
+    In this case, there is only one set of ridges but N different values.
+    All of the output fields are again cell arrays of the same size.
+ 
+    [IR,JR,WR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS,'mat') specifies an alternate,
+    'matrix' format for joint ridges.  Now WR and FR are cell arrays, each 
+    element of which is a matrix with N columns.  The default 'column' 
+    format splits these N columns into N different output arguments.
+ 
+    For details on joint ridges, see
+ 
+       Lilly and Olhede (2012), Analysis of Modulated Multivariate 
+            Oscillations. IEEE Trans. Sig. Proc., 60 (2), 600--612.
+    _______________________________________________________________________
+    
+    Bias parameters for joint ridges
+ 
+    [IR,JR,WR,FR,BR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS,'mat') for the case of 
+    joint ridges similarly outputs the two bias parameters along the 
+    ridges, here organized in matrix format.
+ 
+    BR and CR are normalized versions of (17) and (18) of Lilly and Olhede 
+    (2012). Both BR and CR have been normalized by dividing them by the 
+    modulus of the estimated analytic signal, SQRT(SUM(ABS(WR).^2,2)).
+ 
+    [...,B1R,B2R,...,BRN,C1R,C2N,...,CNR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS), the
+    default, uses column format instead.  In this case there will be 2+4*N
+    total output arguments: IR, JR, and N columns of WR, FR, BR, and CR.     
+ 
+    The bias associated with the estimated signal is small compared to the 
+    magnitude of the signal when the modulus of XCR is small.
+ 
+    For more details on the bias parameters for multivariate signals see 
+    Lilly and Olhede (2012).
+    _______________________________________________________________________
+ 
+    Interscale interpolation
+    
+    <a href="ridgewalk.html">RIDGEWALK</a> interpolates among discrete scale levels to yield more
+    accurate values for the ridge quantities WR and FR using a fast
+    quadratic interpolation.  
+    
+    See the low-level functions <a href="ridgeinterp.html">RIDGEINTERP</a> and <a href="quadinterp.html">QUADINTERP</a> for details.
+    _______________________________________________________________________
+ 
+    See also <a href="wavetrans.html">WAVETRANS</a>, <a href="ridgemap.html">RIDGEMAP</a>.
+ 
+    '<a href="ridgewalk.html">ridgewalk</a> --t' runs a test.
+    '<a href="ridgewalk.html">ridgewalk</a> --f' generates a sample figure.
+ 
+    Usage: [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs);
+           [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,{L,CHI});
+           [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,{L,CHI});
+           [ir,jr,wxr,wyr,fxr,fyr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI});
+           [ir,jr,wr,fr,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI},'mat');
+           [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,bool,{L,CHI});
+    _______________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VSHIFT is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="vshift.html">VSHIFT</a>  Cycles the elements of an array along a specified dimension.
+ 
+    Y=<a href="vshift.html">VSHIFT</a>(X,N,DIM) cycles the elements of X N places along dimension DIM.
+   
+    Example: x=[1 2 3 4 5];
+             <a href="vshift.html">vshift</a>(x,+1,2)=[2 3 4 5 1]           
+             <a href="vshift.html">vshift</a>(x,-1,2)=[5 1 2 3 4]           
+ 
+    Note shifting by N and then by -N recovers the original array. 
+ 
+    [Y1,Y2,...YN]=<a href="vshift.html">VSHIFT</a>(X1,X2,...XN,N,DIM) also works.
+ 
+    <a href="vshift.html">VSHIFT</a>(X1,X2,...XN,N,DIM); with no arguments overwrite the original 
+    input variables.
+ 
+    Note that <a href="vshift.html">VSHIFT</a> is similar to Matlab's CIRCSHIFT, but has the opposite
+    convection for positive and negative shifts. 
+ 
+    ------------------------------------------------------------------
+    Y=<a href="vshift.html">VSHIFT</a>(X,N,DIM,INDEX,DIM2) applies this shift selectively, only to
+    that subset of X obtained by indexing X with INDEX along DIM2, i.e.
+ 
+ 		    1 2      DIM2     DIMS(X)
+ 		    | |        |         |
+ 		  X(:,:, ... INDEX, ..., :)	
+ 
+    is cycled N places along dimension DIM, but the remainder of X is not. 
+    DIM and DIM2 cannot be the same.  The above extensions to multiple 
+    output varibles work in this case as well.  
+    ------------------------------------------------------------------
+ 
+    See also: <a href="vindex.html">VINDEX</a>, CIRCSHIFT.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2001--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

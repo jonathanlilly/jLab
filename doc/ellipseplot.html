@@ -1,0 +1,142 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLIPSEPLOT is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellipseplot.html">ELLIPSEPLOT</a>  Plot ellipses.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z) plots an ellipse of amplitude K, linearity L, and
+    orientation TH at complex-valued location Z=X+iY.
+ 
+    K, L, and TH are shorthand for the symbols KAPPA, LAMBDA, and THETA.
+    K and L are related to the semi-axes A and B by K=SQRT((A^2+B^2)/2)
+    and L=(A^2-B^2)/(A^2+B^2).  See Lilly and Gascard (2006) for details. 
+ 
+    Multiple ellipses are plotted if K, L, TH, and Z, are arrays of the
+    same size.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> draws each column of the input arrays with a different 
+    color, cycling through the default line colors.
+ 
+    H=<a href="ellipseplot.html">ELLIPSEPLOT</a>(...) outputs an array of line handles.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> calls <a href="ellcurves.html">ELLCURVES</a> to actually compute the elliptical curves. 
+    ______________________________________________________________________
+ 
+    Aspect ratio
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(...,AR) with AR=[XAR YAR] multiplies the X-signal and
+    Y-signal by XAR and YAR, respectively, for plotting purposes. The
+    aspect ratio is set such that circles appear circular.
+ 
+    It's okay for AR to have three entries, AR=[XAR YAR ZAR], as is
+    output by "get(gca,'dataaspectratio')".  The last entry is ignored.
+ 
+    AR is optional and defaults to [1 1]. 
+ 
+    The following trailing options can occur in any order, as long as 
+    they are after K, L, TH, Z, and (if present) AR.
+    ______________________________________________________________________
+ 
+    Skipping ellipses
+ 
+    Frequently one does not wish to plot all the ellipses.  There are two
+    ways to accomplish this, as documented in this and the next section.
+ 
+    K, L, TH, and Z are column vectors, plot every SKIP-th ellipse with
+ 
+          <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'skip',SKIP).
+ 
+    This plots ellipses at indicies [SKIP:SKIP:LENGTH(K)-SKIP].
+ 
+    More generally, if the input field are matrices of the same size, each
+    having N dimensions, then SKIP can be an array with N elements.  Then
+    SKIP(1) indicates the SKIP number for the first matrix dimension, etc.
+    ______________________________________________________________________
+ 
+    Indexing ellipses
+    
+    To have more precise control over which ellipses are plotted, use
+    
+           <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'index',INDEX) 
+ 
+    which only plots the ellipses at the indicies indicated by INDEX. If
+    INDEX is empty, nothing happens.  
+ 
+    When K, L, TH, and Z are column vectors, INDEX is an array.  
+  
+    More generally, INDEX can be a cell array of N arrays, one for each 
+    dimension of the input matrices.
+ 
+    See <a href="periodindex.html">PERIODINDEX</a> for generating an index that skips every N periods.
+    ______________________________________________________________________
+ 
+    Specifying linestyles
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,STY) where STY is a single style string in 
+    <a href="linestyle.html">LINESTYLE</a> format, or a cell array of such strings, determines the line
+    styles for the ellipses.
+ 
+    With cell array input, the entries of STY is applied to the elements in
+    the cell arrays K{1}, K{2}, etc.  Otherwise, the entries in STY are 
+    applied to the multiple columns (if any) of the arrays K, L, TH and Z.
+ 
+    By default, the default line styles are used, so corresponding to 
+    STY{1}='b'; STY{2}='g'; STY{3}='r'; and so forth.
+ 
+    For example, STY{1}='2b--'; STY{2}='r-.'; will alternate between thick
+    blue dashed lines and thin red dash-dotted lines.
+ 
+    See <a href="linestyle.html">LINESTYLE</a> for more details. 
+    ______________________________________________________________________
+  
+    Additional options
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'m_map') will work with Rich Pawlowicz's 
+    M_MAP package. In this case Z should be of the form LON+SQRT(-1)*LAT,
+    or a cell array of numeric arrays having this form.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'phase',PHI) optionally draws a small line, 
+    like a clock hand, to indicate the ellipse phase PHI.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'npoints',N) plots ellipses with N points
+    along the circumference.  The default value is 32.  Use N=16 or 64 
+    for faster plotting or for smoother, more well-defined ellipses.
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z, ... ,'scale',S) sets the ellipse scale for a 
+    plot in which Z is of the form LON+SQRT(-1)*LAT.  Here K should be
+    in units kilometers, and the resulting ellipses will be plotted at S
+    times their actual size, with S=1 corresponding to actual size.
+ 
+    [H,INDEX]=<a href="ellipseplot.html">ELLIPSEPLOT</a>(K,L,TH,Z,...) also returns the index INDEX into
+    the ellipse locations that were actually mapped.  This is particularly 
+    useful with the 'skip' input argument, and allows the handles H to 
+    be manipulated later, for example, to set color based on K values.
+    ______________________________________________________________________
+ 
+    Cell array input 
+ 
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> also works if the input arguments are cell arrays. 
+ 
+    Specifically, if K, L, TH, and Z are all cell arrays of N different 
+    numerical arrays, then <a href="ellipseplot.html">ELLIPSEPLOT</a> will act on each of them in turn.
+ 
+    In this case SIZE(K{M}), SIZE(L{M}), SIZE(TH{M}), and SIZE(Z{M}) must 
+    all be identical for M=1,2,... N.
+    ______________________________________________________________________
+ 
+    See also <a href="periodindex.html">PERIODINDEX</a>, <a href="linecolor.html">LINECOLOR</a>, <a href="ellcurves.html">ELLCURVES</a>.
+ 
+    '<a href="ellipseplot.html">ellipseplot</a> --f' makes some test figures.
+ 
+    Usage: <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,ar)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,'axis')
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,ar,'phase',phi)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,ar,'npoints',64)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,ar,'index',index)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,ar,'skip',5)
+           <a href="ellipseplot.html">ellipseplot</a>(k,l,th,z,'2r--')
+    ______________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,46 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELL2COL is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cell2col.html">CELL2COL</a>  Converts cell arrays of column vectors into 'column-appended' data.
+ 
+    COL=<a href="cell2col.html">CELL2COL</a>(X) concatenates X, a cell array of N column vectors, into a 
+    single column vector COL with N blocks of data, each ending with a NAN.
+ 
+    If the data is complex, each column will end with NAN+SQRT(-1)*NAN;
+ 
+    To mark missing data, any pre-exiting NANs in X will be replaced with 
+    INFs, and any complex NANs will be replaced with complex INFs.
+ 
+    <a href="cell2col.html">CELL2COL</a>(X) where X is a cell array of numeric arrays of any dimension
+    also works.  In this case each array will be convered into a column 
+    vector via X{1}=X{1}(:) and so forth prior to concatenation.
+    __________________________________________________________________
+ 
+    Multiple input /output arguments
+ 
+    [C1,C2,...,CN]=<a href="cell2col.html">CELL2COL</a>(X1,X2,...,XN) also works.  
+    __________________________________________________________________
+  
+    Variable overwriting
+ 
+    <a href="cell2col.html">CELL2COL</a>(X1,X2,...,XN) with no output arguments overwrites the input
+    variables.
+    __________________________________________________________________
+ 
+    Invertibility
+   
+    <a href="cell2col.html">CELL2COL</a> is inverted by <a href="col2cell.html">COL2CELL</a>, provided 
+ 
+        (i)  The cell arrays XN are all column vectors of the same size and
+        (ii) The first input argument X1 contains no NANs.
+    __________________________________________________________________
+ 
+    See also <a href="col2cell.html">COL2CELL</a>, <a href="col2mat.html">COL2MAT</a>, <a href="mat2col.html">MAT2COL</a>, <a href="colbreaks.html">COLBREAKS</a>, <a href="col2cell.html">COL2CELL</a>.
+ 
+    Usage: col=<a href="cell2col.html">cell2col</a>(x);
+           [c1,c2,...,cN]=<a href="cell2col.html">cell2col</a>(x1,x2,...,xN);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

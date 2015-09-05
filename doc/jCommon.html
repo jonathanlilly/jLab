@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>jCommon is a module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="jCommon.html">jCommon</a>:  Useful general-purpose functions, common to other <a href="jLab.html">JLAB</a> modules
+ 
+  Array functions
+    <a href="aresame.html">aresame</a>    - Test whether two N-D arrays are the same.                        
+    <a href="arrayify.html">arrayify</a>   - Converts a set of scalars or arrays into column arrays.            
+    <a href="blocklen.html">blocklen</a>   - Counts the lengths of 'blocks' in an array.                        
+    <a href="blocknum.html">blocknum</a>   - Numbers the contiguous blocks of an array.   
+    <a href="lnsd.html">lnsd</a>       - Last non-singleton dimension of an array.                          
+    <a href="matmult.html">matmult</a>    - Matrix multiplication for arrays of matrices.                      
+    <a href="nonnan.html">nonnan</a>     - Return all non-NAN elements of an array.                           
+    <a href="vectmult.html">vectmult</a>   - Matrix multiplication for arrays of vectors.    
+ 
+  File and directory tools
+    <a href="commentlines.html">commentlines</a> - Returns the comment lines from m-files.                          
+    <a href="findfiles.html">findfiles</a>    - Returns all files in a directory with a specified extension.       
+    <a href="findpath.html">findpath</a>     - Returns the full pathname of a directory on the Matlab search path.
+    <a href="jhelp.html">jhelp</a>        - Opens linked <a href="jLab.html">JLAB</a> help files in Matlab's internal web browser.     
+    <a href="whichdir.html">whichdir</a>     - Returns directory name containing file in search path.             
+    <a href="standalone.html">standalone</a>   - Create stand-alone version of an m-file, including dependencies.
+ 
+  Mathematical aliases
+    <a href="choose.html">choose</a>     - Binomial coefficient: <a href="choose.html">CHOOSE</a>(N,K) =  N!K!/(N-K)!
+    <a href="frac.html">frac</a>       - Fraction: <a href="frac.html">FRAC</a>(A,B)=A./B                                                    
+    <a href="imlog.html">imlog</a>      - Imaginary part of log: <a href="imlog.html">IMLOG</a>(X)=UNWRAP(IMAG(LOG(X)))                                      
+    <a href="iseven.html">iseven</a>     - True for even integer values; false otherwise.                     
+    <a href="isodd.html">isodd</a>      - True for odd integer values; false otherwise. 
+    <a href="oprod.html">oprod</a>      - Outer product:  <a href="oprod.html">OPROD</a>(X,Y)=X*CONJ(Y')                              
+    <a href="res.html">res</a>        - Residual after flooring:  <a href="res.html">RES</a>(X)=X-FLOOR(X)                        
+    <a href="rot.html">rot</a>        - Complex-valued rotation:  <a href="rot.html">ROT</a>(X)=EXP(SQRT(-1)*X)  
+    <a href="squared.html">squared</a>    - Squares the modulus of its argument:  <a href="squared.html">SQUARED</a>(X)=ABS(X).^2
+  
+  Matrices, polynomials, and special functions
+    <a href="jmat2.html">jmat2</a>      - 2x2 rotation matrix through specified angle.                       
+    <a href="jmat3.html">jmat3</a>      - 3x3 rotation matrix through specified angle.  
+    <a href="tmat.html">tmat</a>       - 2x2 complex grouping matrix.  <a href="tmat.html">TMAT</a> = [1  i; 1 -i] / SQRT(2)
+    <a href="bellpoly.html">bellpoly</a>   - Complete Bell polynomials.  
+    <a href="hermpoly.html">hermpoly</a>   - Hermite polynomials. [with F. Rekibi]   
+    <a href="hermfun.html">hermfun</a>    - Orthonormal Hermite functions. [with F. Rekibi]                    
+ 
+  Dataset organization as structures
+    <a href="make.html">make</a>       - Create a structure containing named variables as fields.  
+    <a href="matsave.html">matsave</a>    - Create and save structure of variables as a mat-file. 
+    <a href="use.html">use</a>        - Copies structure fields into named variables in workspace.         
+ 
+  Statistics
+    <a href="cum2mom.html">cum2mom</a>    - Convert cumulants to moments.    
+    <a href="mom2cum.html">mom2cum</a>    - Convert moments to cumulants.                                      
+    <a href="pdfprops.html">pdfprops</a>   - Mean and variance associated with a probability distribution.  
+    <a href="simplepdf.html">simplepdf</a>  - Gaussian, uniform, Cauchy, and exponential pdfs.                   
+ 
+  Filling bad data points
+    <a href="fillbad.html">fillbad</a>    - Linearly interpolate over bad data points.  
+ 
+  Date and time
+    <a href="yearfrac.html">yearfrac</a>   - Convert date from 'datenum' format to 'year.fraction'.
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

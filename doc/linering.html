@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LINERING is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="linering.html">LINERING</a>  Moves lines through the current line style order.  
+ 
+    <a href="linering.html">LINERING</a> works like a moveable highlighter, picking out a group of
+    lines from the current plot.  This is accomplished by moving the
+    line handles by a specified amount with respect to the current
+    line style, color, and width order.
+ 
+    Different subplots in the current figure may be locked together,
+    highlighting comparable groups of lines.
+ 	
+    <a href="linering.html">LINERING</a>(N), where N is a *real* integer, moves all line handles
+    in the current axes N steps forward (or backward for N<0) with
+    respect to the current style order.  When N is an *imaginary*
+    integer, <a href="linering.html">LINERING</a> moves the imag(N)th line to the first position
+    with respect to the current style order.
+ 
+    <a href="linering.html">LINERING</a> N also works, where N is an number (not a variable whose
+    value is a number).
+ 
+    <a href="linering.html">LINERING</a> with no arguments is the same as <a href="linering.html">LINERING</a>(1), and returns
+    the lines to their original styles.
+    
+    <a href="linering.html">LINERING</a> LOCK and <a href="linering.html">LINERING</a> UNLOCK lock and unlock all axes in the
+    current figure.  When LOCK is on, calls to <a href="linering.html">LINERING</a> or LINESTYLE
+    are applied to all lines in the current figure.
+ 
+    See also <a href="linestyle.html">LINESTYLE</a>.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

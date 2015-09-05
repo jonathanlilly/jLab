@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VINDEXINTO is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="vindexinto.html">VINDEXINTO</a>  Indexes into N-D array along a specified dimension.
+ 
+    Y=<a href="vindex.html">VINDEX</a>INTO(Y,X,INDEX,DIM) indexes the array X into the multi- 
+    dimensional array Y along dimension DIM. This is equivalent to   
+ 		
+ 		    1 2       DIM     DIMS(X)
+ 		    | |        |         |
+ 		  Y(:,:, ... INDEX, ..., :)=X;		
+ 
+    where the location of INDEX is specified by DIM.  X must have the
+    exact same size as the block it replaces, or be a scalar.  
+    
+    <a href="vindexinto.html">VINDEXINTO</a> is defined leave Y unchanged if INDEX is empty, and to 
+    ignore NANs and INFs in INDEX.  
+ 
+    <a href="vindexinto.html">VINDEXINTO</a>(Y,X,INDEX,0) with DIM=0 is equivalent to Y(INDEX)=X;
+   
+    [Y1,Y2,...YN]=<a href="vindex.html">VINDEX</a>INTO(Y1,Y2,...YN,X1,X2,...XN,INDEX,DIM) also 
+    works.
+ 
+    <a href="vindexinto.html">VINDEXINTO</a>(Y1,Y2,...YN,X1,X2,...XN,INDEX,DIM); with no output 
+    arguments overwrites the original input variables ,Y2,...YN.
+ 
+    See also <a href="vindex.html">VINDEX</a>, SQUEEZE, DIMS, PERMUTE, SHIFTDIM
+ 
+    '<a href="vindex.html">vindex</a>into --t' runs a test.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

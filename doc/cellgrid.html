@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLGRID is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellgrid.html">CELLGRID</a>  Interpolate a cell array of numeric arrays onto a regular grid. 
+ 
+    [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(T,X,DT) where T is a cell array of time arrays, and
+    X is of the same size as T, linearly interpolates the elements of X 
+    within T at times TO, which are regularly spaced with interval DT.  
+ 
+    <a href="cellgrid.html">CELLGRID</a> does not modify bad data points, such as those marked with
+    NaNs.  See <a href="cellfill.html">CELLFILL</a> to interpolate over bad data points.  
+ 
+    As an example, with T and X given by
+ 
+        T{1} = [1 2 3  5  6]';   T{2}=[3 7  9 10]';   
+        X{1} = [2 4 6 10 12]';   X{2}=[5 9 11 12]';
+    
+    [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(1,T,X) will return
+ 
+        TO{1} = [1 2 3 4  5  6]';   TO{2} = [3 4 5 6 7 8  9  10]';   
+        Y{1}  = [2 4 6 8 10 12]';   Y{2}  = [5 6 7 8 9 10 11 12]';
+ 
+    By default, <a href="cellgrid.html">CELLGRID</a> uses INTERP1 with linear interpolation. 
+    <a href="cellgrid.html">CELLGRID</a>(...,STR) instead uses the method specified by STR, e.g. 
+    'pchip'.  See INTERP1 for details. 
+ 
+    [TO,Y1,Y2,...YN]=<a href="cellgrid.html">CELLGRID</a>(T,X1,X2,...XN,DT) with multiple input
+    arguments also works provided the XN are all the same size. 
+ 
+    <a href="cellgrid.html">CELLGRID</a>(X1,X2,...XN); with no output arguments overwrites the 
+    original input variables. 
+ 
+    '<a href="cellgrid.html">cellgrid</a> --t' runs a test.
+ 
+    Usage: [to,y]=<a href="cellgrid.html">cellgrid</a>(t,x,dt);
+           [to,y1,y2,y3]=<a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt);
+           <a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>UV2LATLON is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="uv2latlon.html">UV2LATLON</a>  Integrates horizontal velocity to give latitude and longitude.
+ 
+    [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,U,V,LATO,LONO) where NUM is the data in DATENUM
+    format, integates velocities U and V from intial location (LATO,LONO)
+    to form a trajectory on the earth described by LAT and LON.
+ 
+    LATO and LONO are an initial latitude and longitude in degrees,
+    and U and V are eastward and northward velocity components in cm/s. 
+ 
+    [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,CV,LATO,LONO), where CV is the complex-valued
+    velocity CV=U+SQRT(-1)*V, also works.
+ 
+    <a href="uv2latlon.html">UV2LATLON</a> is inverted by <a href="latlon2uv.html">LATLON2UV</a>.  
+    ___________________________________________________________________
+ 
+    Cell array input / output
+ 
+    <a href="uv2latlon.html">UV2LATLON</a> returns cell array output given cell array input.  
+ 
+    That is, if NUM, U, and V, are all cell arrays of length K, containing
+    K different numerical arrays, then the output will also be cell arrays
+    of length K.  
+ 
+    In this case LATO and LONO are either scalars, or arrays of length K.
+    ___________________________________________________________________
+ 
+    Algorithm
+ 
+    <a href="uv2latlon.html">UV2LATLON</a> works by converting the velocity at the current point into 
+    a vector in 3D Cartesian coordinates, using <a href="sphere2uvw.html">SPHERE2UVW</a>, finding the new
+    location in 3D space, and then converting this back into latitude 
+    and longitude using <a href="xyz2latlon.html">XYZ2LATLON</a>, and then interating for the next point.
+ 
+    By default, <a href="uv2latlon.html">UV2LATLON</a> uses a forward integration from an initial point. 
+    This inverts <a href="latlon2uv.html">LATLON2UV</a>(...,'forward') to a high degree of precision for
+    typical drifter and float velocity values and sampling intervals.
+ 
+    <a href="uv2latlon.html">UV2LATLON</a>(NUM,CV,LATF,LONF,'backward') instead uses a *backward* 
+    integration, and LATF and LONF are now the *final* points rather than 
+    the initial points.  This inverts <a href="latlon2uv.html">LATLON2UV</a>(...,'backward'). 
+    ___________________________________________________________________
+  
+    See also <a href="xy2latlon.html">XY2LATLON</a>, <a href="latlon2xy.html">LATLON2XY</a>, <a href="latlon2uv.html">LATLON2UV</a>.
+ 
+    '<a href="uv2latlon.html">uv2latlon</a> --t' runs a test.
+ 
+    Usage: [lat,lon]=<a href="uv2latlon.html">uv2latlon</a>(num,u,v,lato,lono);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

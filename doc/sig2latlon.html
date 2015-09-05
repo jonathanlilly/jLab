@@ -1,0 +1,38 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SIG2LATLON is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="sig2latlon.html">SIG2LATLON</a>  Converts an oscillatory signal to lat/lon displacements.
+ 
+    [LATRES,LONRES]=<a href="sig2latlon.html">SIG2LATLON</a>(X,Y,LAT,LON) where X and Y are zonal and
+    meridional displacements, in kilometers, about some time-varying 
+    position wiht latitude LAT and longitude LON, returns the residuals
+    between the signal and the position curve.
+ 
+    [LATRES,LONRES,DLAT,DLON]=<a href="sig2latlon.html">SIG2LATLON</a>(X,Y,LAT,LON) also returns the
+    latitude and longitude displacements associated with X and Y.  
+ 
+    The residuals are output first because this is usually what is desired.
+    These are essentially LAT-DLAT and LON-DLON, apart from an unwrapping 
+    correction for longitude.
+ 
+    All input arguments are arrays of the same size.  
+    ____________________________________________________________________
+    
+    Cell array input/output
+ 
+    If <a href="sig2latlon.html">SIG2LATLON</a> is given cell array input, it returns cell array output.
+ 
+    Thus X, Y, LAT, and LON may each be cell arrays of the same size, 
+    where each element in the cell array is a numerical array. The output
+    arguments will then also be cell arrays of this size.
+    ____________________________________________________________________
+ 
+    '<a href="sig2latlon.html">sig2latlon</a> --t' runs a test.
+ 
+    Usage: [latres,lonres]=<a href="sig2latlon.html">sig2latlon</a>(x,y,lat,lon);
+           [latres,lonres,dlat,dlon]=<a href="sig2latlon.html">sig2latlon</a>(x,y,lat,lon);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPECDIAG is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="specdiag.html">SPECDIAG</a>  Diagonalize a 2 x 2 spectral matrix.
+   
+    [D1,D2,TH,NU,Z]=<a href="specdiag.html">SPECDIAG</a>(S) for a 2 x 2 spectral matrix S returns the
+    eigenvalues D1 and D2 and the angles TH and NU and eigenvector matrix Z
+    which diagonalize S according to the decomposition
+ 
+           Z = <a href="jmat2.html">JMAT2</a>(TH) *  KMAT(PI/4) * <a href="jmat2.html">JMAT2</a>(NU) 
+           S = Z [D1 0; 0 D2] Z'
+ 
+    where <a href="jmat2.html">JMAT2</a> is the two by two rotation matrix and KMAT(PI/4) is a
+    diagonal matrix with main diagonal [(1+i) (1-i)]/SQRT(2). 
+ 
+    If S is a 2 x 2 x M matrix, then D1, D2, NU, and TH are all Mx1 column
+    vectors, and Z is 2 x 2 x M. More generally, if S is 2 x 2 x M x ... N, 
+    then D1, D2, NU, and TH are all M x ... N  and Z is 2 x 2 x M x ... N.  
+    Note that singleton dimensions will be squeezed out.
+   
+    [...]=<a href="specdiag.html">SPECDIAG</a>(S11,S22,S12) also works. In this case all input and
+    output variables are matrices of the same size.  Z is not output. 
+ 
+    'SPECDIAG --t' runs some tests.
+   
+    Usage: [d1,d2,th,nu,z]=<a href="specdiag.html">specdiag</a>(s);
+           [d1,d2,th,nu]=<a href="specdiag.html">specdiag</a>(s11,s22,s12);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

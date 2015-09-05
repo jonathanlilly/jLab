@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEBOX is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsebox.html">MORSEBOX</a>  Heisenberg time-frequency box for generalized Morse wavelets.
+ 
+    A=<a href="morsebox.html">MORSEBOX</a>(GAMMA,BETA) returns the time-bandwidth product of the
+    a generalized Morse wavelet, that is, the area of its Heisenberg box.
+ 
+    [A,SIGT,SIGO,SKEW]=<a href="morsebox.html">MORSEBOX</a>(GAMMA,BETA) also returns the box width in 
+    time SIGT and in frequency SIGO, with A=SIGT*SIGO, as well as the 
+    frequency-domain skewness SKEW.
+ 
+    Both SIGT and SIGO are non-dimensionalized with respect to the (radian)
+    peak frequency <a href="morsefreq.html">MORSEFREQ</a>, as in Lilly and Olhede (2009) given below.
+ 
+    Not for all values of BETA and GAMMA are these standard derivations
+    defined as real-valued quantities.  For locations where these would 
+    be imaginary, their values are set to NAN.
+ 
+    For details see
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+ 
+    In this calculation, care is taken to avoid potential problems caused
+    by large arguments to the gamma function, by utilizing GAMMALN.  This
+    lets the Heisenberg area be computed for small values of GAMMA/BETA.  
+ 
+    See also <a href="morsefreq.html">MORSEFREQ</a>, <a href="morseprops.html">MORSEPROPS</a>, <a href="morsewave.html">MORSEWAVE</a>.
+ 
+    '<a href="morsebox.html">morsebox</a> --t' runs a test.
+    '<a href="morsebox.html">morsebox</a> --f' generates a sample figure.
+ 
+    Usage: a=<a href="morsebox.html">morsebox</a>(ga,be);
+           [a,sigt,sigo]=<a href="morsebox.html">morsebox</a>(ga,be);
+           [a,sigt,sigo,skew]=<a href="morsebox.html">morsebox</a>(ga,be);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

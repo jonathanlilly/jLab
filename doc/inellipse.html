@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>INELLIPSE is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="inellipse.html">INELLIPSE</a>  Locates points on the interior of ellipses.
+ 
+    <a href="inellipse.html">INELLIPSE</a>(Z,KAPPA,LAMBDA,THETA,ZO) where Z is a complex-valued
+    location Z=X+iY, and KAPPA, LAMBDA, THETA describe an ellipse at 
+    complex-valued position ZO=XO+iYO, is true if Z is inside the ellipse.
+ 
+    KAPPA is the ellipse amplitude, LAMBDA is the linearity, and THETA is
+    the orientation of the major axis with respect to the X-axis.
+ 
+    KAPPA and LAMBDA are related to the semi-axis lengths A and B by 
+    KAPPA^2=(A^2+B^2)/2 and LAMBDA=(A^2-B^2)/(A^2+B^2).  For details, see 
+    Lilly and Gascard (2006). 
+    __________________________________________________________________
+ 
+    Array or matrix input
+ 
+    BOOL=<a href="inellipse.html">INELLIPSE</a>(Z,KAPPA,LAMBDA,THETA,ZO), where Z is a length M *row*
+    vector, and the other input variables are length N *row* vector, 
+    returns an M x N boolean matrix BOOL.  
+  
+    In this case the (m,n)th entry of BOOL is true if the mth location Z
+    is inside the mth ellipse.
+ 
+    If the input variables have the same number of multiple *rows*, say K, 
+    this is interpreted as corresponding to K different time.  In this case
+    BOOL will be a 3D array with dimensions M x N x K.  
+    __________________________________________________________________
+ 
+    See also <a href="ellcurves.html">ELLCURVES</a>, <a href="ellipseplot.html">ELLIPSEPLOT</a>.
+ 
+    '<a href="inellipse.html">inellipse</a> --f' generates sample figure.
+ 
+    Usage: bool=<a href="inellipse.html">inellipse</a>(z,kappa,lambda,theta,zo);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

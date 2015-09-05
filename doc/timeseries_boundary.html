@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TIMESERIES_BOUNDARY is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="timeseries_boundary.html">TIMESERIES_BOUNDARY</a>  Apply boundary conditions to data before transform.
+ 
+    <a href="timeseries_boundary.html">TIMESERIES_BOUNDARY</a> is a low-level function called by <a href="wavetrans.html">WAVETRANS</a> and
+    <a href="anatrans.html">ANATRANS</a>.
+ 
+    <a href="timeseries_boundary.html">TIMESERIES_BOUNDARY</a> applies periodic, zero-padded, or mirror boundary
+    conditions to a time series.  See <a href="anatrans.html">ANATRANS</a> or <a href="wavetrans.html">WAVETRANS</a>.
+ 
+    This is a low-level function, not meant to be user called by users.
+ 
+    <a href="timeseries_boundary.html">TIMESERIES_BOUNDARY</a>(X,STR,DETRENDSTR) applies boundary conditions 
+    specified by STR to time series X.  If DETRENDSTR='detrend', X is first
+    detrended.  STR may be 'periodic', 'zeros', 'mirror', or 'reverse':
+ 
+       'periodic' wraps the beginning around to the end, and vice versa
+       'zeros'    extends the time series with zeros at both edges
+       'mirror'   reflects the time series about the beginning and the end
+       'reverse'  is like mirror, but with a change in sign, and a shift
+                    to make the time series be continuous at both edges
+ 
+    <a href="timeseries_boundary.html">TIMESERIES_BOUNDARY</a>(X,DIM,STR) applies the boundary conditions
+    specified by STR along dimension DIM.  By default, DIM=1.  Note that
+    no detrending is possible for DIM not equal to one.  Also, 'reverse'
+    only works for the default case of DIM=1.  
+ 
+    Usage: y=<a href="timeseries_boundary.html">timeseries_boundary</a>(x,str,detrendstr);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

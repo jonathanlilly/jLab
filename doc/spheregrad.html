@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHEREGRAD is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="spheregrad.html">SPHEREGRAD</a>  Gradient of a field on the surface of a sphere.
+ 
+    [FX,FY]=<a href="spheregrad.html">SPHEREGRAD</a>(LAT,LON,F) computes the gradient of the scalar field
+    F on the surface of the sphere.
+ 
+    FX and FY are the components of the gradient of F in the zonal and
+    meridional directions, respectively, with units of F per meter.
+ 
+    LAT and LON are vectors specifing an evenly-spaced grid, and F is an 
+    array of size LENGTH(LON) x LENGTH(LAT) x M, where M is greater than or
+    equal to one.  LAT and LON are in degrees.
+ 
+    The radius of the Earth as specified by <a href="radearth.html">RADEARTH</a> is used by default.
+    <a href="spherediv.html">SPHEREDIV</a>(...,R) uses a sphere of radius R, in kilometers, instead.
+ 
+    Derivatives are computed using the first central difference.
+ 
+    FZ=<a href="spheregrad.html">SPHEREGRAD</a>(LAT,LON,F) with one output argument returns the 
+    complex-valued array FZ=FX+i*FY.
+    ___________________________________________________________________
+ 
+    First and last points
+ 
+    <a href="spheregrad.html">SPHEREGRAD</a> can use different boundary conditions in the numerical
+    computation of derivatives for the first and last points.
+  
+    <a href="spheregrad.html">SPHEREGRAD</a>(...,'periodic') uses a periodic derivative with respect to
+    longitude.  This is the default behavior.  
+ 
+    <a href="spheregrad.html">SPHEREGRAD</a>(...,'endpoint') uses the forwards / first backwards 
+    difference at the first and last longitude, respectively. 
+ 
+    For both of these options, the endpoint condition is used for 
+    differentiation with respect to latitude.
+ 
+    <a href="spheregrad.html">SPHEREGRAD</a>(...,'nans')  fills in the first and last values on all four
+    sides of the region with NANs. 
+ 
+    See <a href="vdiff.html">VDIFF</a> for more information.  
+    ___________________________________________________________________
+ 
+    See also <a href="spherediv.html">SPHEREDIV</a>, <a href="spherelap.html">SPHERELAP</a>, <a href="spherecurl.html">SPHERECURL</a>, <a href="jSphere.html">JSPHERE</a>.
+ 
+    '<a href="spheregrad.html">spheregrad</a> --t' runs a test.
+ 
+    Usage: [fx,fy]=<a href="spheregrad.html">spheregrad</a>(lat,lon,f);
+           [fx,fy]=<a href="spheregrad.html">spheregrad</a>(lat,lon,f,R);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2009 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

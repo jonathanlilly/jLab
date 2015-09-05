@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLRAD is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellrad.html">ELLRAD</a>  Average and instantaneous ellipse radius. 
+ 
+    R=<a href="ellrad.html">ELLRAD</a>(KAPPA,LAMBDA,PHI,STR) where KAPPA and LAMBDA are the amplitude 
+    and linearity of a time-varying ellise, and PHI is its time-varying 
+    phase, returns various measures of the ellipse 'radius'.
+    
+    STR determines the radius quantity to be output.
+ 
+        STR       Symbol     Description
+        ----------------------------------------------------------------
+       'geo'      RM         Geometric mean radius = SQRT(A*B)    
+       'ave'      RBAR       Period-averaged distance from the origin          
+       'ins'      RI         Instantaneous distance from the origin
+   
+    See Lilly and Gascard (2006) for details.
+ 
+    If STR is omitted, the geometric mean radius is returned by default.
+ 
+    RM=<a href="ellrad.html">ELLRAD</a>(KAPPA,LAMBDA) with PHI omitted also works for computing RM.
+    ____________________________________________________________________
+    
+    Cell array input/output
+ 
+    If <a href="ellrad.html">ELLRAD</a> is given cell array input, it returns cell array output.
+ 
+    Thus KAPPA, LAMBDA, and PHI may each be cell arrays of the same size, 
+    where each element in the cell array is a numerical array.  
+ 
+    The output variables will be also cell arrays of this size.
+    ____________________________________________________________________
+ 
+    See also <a href="ellvel.html">ELLVEL</a>, <a href="ellparams.html">ELLPARAMS</a>, <a href="elldiff.html">ELLDIFF</a>.
+ 
+    Usage:  rm=<a href="ellrad.html">ellrad</a>(kappa,lambda);
+            rbar=<a href="ellrad.html">ellrad</a>(kappa,lambda,phi,'average');
+            ri=<a href="ellrad.html">ellrad</a>(kappa,lambda,phi,'instantaneous');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

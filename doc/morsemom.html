@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEMOM is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsemom.html">MORSEMOM</a>  Frequency-domain moments of generalized Morse wavelets.
+ 
+    <a href="morsemom.html">MORSEMOM</a> is a low-level function called by several other Morse wavelet
+    functions.
+   
+    [MP,NP]=<a href="morsemom.html">MORSEMOM</a>(P,GAMMA,BETA) computes the Pth order frequency-
+    domain moment M and energy moment N of the lower-order generalized 
+    Morse wavelet specified by parameters GAMMA and BETA.
+ 
+    The Pth moment and energy moment are defined as
+ 
+            mp = 1/(2 pi) int omega^p  psi(omega)     d omega 
+            np = 1/(2 pi) int omega^p |psi(omega)|.^2 d omega 
+ 
+    respectively, where omega is the radian frequency.  These are 
+    evaluated using the normalization that max(abs(psi(omega)))=2.
+ 
+    The input parameters must either be matrices of the same size, or
+    some may be matrices and the others scalars.   
+ 
+    [MP,NP,KP,LP]=<a href="morsemom.html">MORSEMOM</a>(...) also returns the Pth order cumulant KP and
+    the Pth order energy cumulant LP.
+ 
+    For details see
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+ 
+    See also <a href="morsewave.html">MORSEWAVE</a>, <a href="morsederiv.html">MORSEDERIV</a>, <a href="mom2cum.html">MOM2CUM</a>.
+ 
+    '<a href="morsemom.html">morsemom</a> --t' runs some tests.
+ 
+    Usage:  mp=<a href="morsemom.html">morsemom</a>(p,ga,be);
+            [mp,np]=<a href="morsemom.html">morsemom</a>(p,ga,be);
+            [mp,np,kp,lp]=<a href="morsemom.html">morsemom</a>(p,ga,be);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

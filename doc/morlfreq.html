@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORLFREQ is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morlfreq.html">MORLFREQ</a>  Compute Morlet wavelet carrier frequency given peak frequency.
+ 
+    FNU=<a href="morlfreq.html">MORLFREQ</a>(FMAX), where FMAX is the desired peak frequency of the a 
+    Morlet wavelet, returns the appropriate carrier wave frequency FNU.
+ 
+    The Morlet wavelet carrier wave and peak frequency differ on account
+    of the correction term which ensures zero mean.
+ 
+    Note that FMAX and FNU are both *radian* as in cos(omega t) and not
+    cyclic as in in cos(2 pi f t).
+ 
+    [FNU,FMIN]=<a href="morlfreq.html">MORLFREQ</a>(FMAX) also returns the (radian) frequency at which
+    the Morlet wavelet obtains a minimum, which occurs for FMIN<0.
+ 
+    For details see Appendix A of
+    
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+           wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+ 
+    '<a href="morlfreq.html">morlfreq</a> --t' runs a test.
+    '<a href="morlfreq.html">morlfreq</a> --f' generates a sample figure.
+ 
+    Usage: fnu=<a href="morlfreq.html">morlfreq</a>(fmax);
+           [fnu,fmin]=<a href="morlfreq.html">morlfreq</a>(fmax);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,50 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SLIDETRANS is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="slidetrans.html">SLIDETRANS</a>  Sliding-window ('moving-window') Fourier transform.
+    
+    Y=<a href="slidetrans.html">SLIDETRANS</a>(X,PSI,F) computes the sliding-window Fourier transform of
+    the signal X using window PSI at frequencies F. X and W are column
+    vectors.  Y is a matrix of size LENGTH(X) by LENGTH(FS).
+ 
+    The frequencies F are radian frequencies as in COS(F T).   
+ 
+    PSI may also be a matrix, in which case Y is a 3-D array of size 
+    LENGTH(X) by LENGTH(FS) by SIZE(W,2).
+ 
+    <a href="slidetrans.html">SLIDETRANS</a>(...,STR) sets the endpoint boundary conditions, with STR
+    equal to 'mirror', 'periodic', or 'zeros'.  The default is 'periodic'. 
+    For more details, see the boundary condition discussion in <a href="wavetrans.html">WAVETRANS</a>.
+ 
+    A good choice for window is the first "Slepian" taper; see <a href="sleptap.html">SLEPTAP</a>.
+    Hermite functions are also used; see <a href="hermfun.html">HERMFUN</a>.
+ 
+    <a href="slidetrans.html">SLIDETRANS</a> follows the same normalization as <a href="wavetrans.html">WAVETRANS</a> when the input
+    signal X is complex-valued, so see that function for details.
+    _________________________________________________________________
+ 
+    Definition
+ 
+    The sliding window transform is defined as
+ 
+       y(t,f) = int psi^*(u-t) exp[-2 pi i f (u-t)] x(t) du.
+ 
+    When a sinusoid is transformed at its own frequency, the rate of change
+    of the phase of the sliding window transform recovers the frequency of
+    the sinusoid.  This is the same as with the wavelet transform.
+ 
+    This differs from the definition of Mallat (1999), p. 69, by a unit
+    amplitude factor of exp[2 pi i f t].  In Mallat's defintion, the
+    transform of a sinusoid at the sinusoid's frequency has constant phase.
+    Both definitions have the same modulus.
+    _________________________________________________________________
+ 
+    '<a href="slidetrans.html">slidetrans</a> --t' runs a test.
+    '<a href="slidetrans.html">slidetrans</a> --f' generates a sample figure.
+ 
+    Usage: y=<a href="slidetrans.html">slidetrans</a>(x,psi,f);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

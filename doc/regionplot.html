@@ -1,0 +1,51 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>REGIONPLOT is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="regionplot.html">REGIONPLOT</a>  Plots a simple box indicating a latitude / longitude region.
+ 
+    <a href="regionplot.html">REGIONPLOT</a>(REGION) draws a latitude / longitue box indicated by REGION
+    on the current axes. 
+  
+    REGION is an array with the format [WEST EAST SOUTH NORTH]. Longitudes 
+    may either be specified on the interval [-180, 180] or on [0, 360].
+ 
+    By default, longitudes will be converted to [-180,180] unless the
+    region overlaps the dateline, in which case [0,360] will be used.
+ 
+    The current axes will be held as the box is plotted, then returned to 
+    its previous HOLD state. 
+ 
+    REGION can also be a cell array of N arrays, each with the format 
+    REGION{N}=[WEST EAST SOUTH NORTH].  All N regions will then be plotted.
+ 
+    <a href="regionplot.html">REGIONPLOT</a> is compatible with the M_MAP toolbox, as described below.
+ 
+    H=<a href="regionplot.html">REGIONPLOT</a> outputs the line handle H to the plotted box.
+    __________________________________________________________________
+ 
+    Additional options
+ 
+    H=<a href="regionplot.html">REGIONPLOT</a> returns the graphics handle to the plotted box. 
+ 
+    <a href="regionplot.html">REGIONPLOT</a>(REGION,STY) uses style string STY, in the <a href="linestyle.html">LINESTYLE</a> format,
+    with a default value of STY='k'.
+ 
+    <a href="regionplot.html">REGIONPLOT</a>(REGION,'M_MAP') will work with Rich Pawlowicz's M_MAP 
+    package by calling M_PLOT.  
+  
+    The additional input parameters can be input together in either order,
+    i.e. <a href="regionplot.html">REGIONPLOT</a>(REGION,STY,'M_MAP') or <a href="regionplot.html">REGIONPLOT</a>(REGION,'M_MAP',STY).
+    __________________________________________________________________
+ 
+    See also <a href="inregion.html">INREGION</a>, FLOATREGION, <a href="topoplot.html">TOPOPLOT</a>.
+ 
+    '<a href="regionplot.html">regionplot</a> --f' generates some sample figures.
+ 
+    Usage: <a href="regionplot.html">regionplot</a>(region);
+           h=<a href="regionplot.html">regionplot</a>(region,'m_map'); 
+           h=<a href="regionplot.html">regionplot</a>(region,'m_map','2k'); 
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

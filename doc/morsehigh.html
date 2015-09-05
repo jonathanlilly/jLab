@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEHIGH is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsehigh.html">MORSEHIGH</a>  High-frequency cutoff of the generalized Morse wavelets.
+ 
+    <a href="morsehigh.html">MORSEHIGH</a> is a low-level function called by <a href="morsespace.html">MORSESPACE</a>.
+ 
+    FALPHA=<a href="morsehigh.html">MORSEHIGH</a>(GAMMA,BETA,ALPHA) returns the high frequency cutoff
+    FALPHA of the generalized Morse wavelet specified by GAMMA and BETA, 
+    with cutoff level FALPHA.
+ 
+    Specifically, if PSI is the wavelet and PSIMAX is its maximum value, 
+    then FALPHA is the highest *radian* frequency at which 
+ 
+       PSI(FALPHA)/PSIMAX > ALPHA.
+ 
+    This gives a way to choose the high-frequency cutoff in the wavelet
+    transform.  See Lilly and Olhede (2009d) for details. 
+   
+    The input parameters may either all be scalars, or GAMMA and BETA
+    may be scalars of the same size with scalar ALPHA.
+    ___________________________________________________________________
+ 
+    Precision vs. speed
+ 
+    <a href="morsehigh.html">MORSEHIGH</a>(..., N) uses 1/N times the peak frequency <a href="morsefreq.html">MORSEFREQ</a> as the
+    numerical interval.  N=100 is the default; choose a smaller value
+    for faster speed but diminished precision. 
+    ___________________________________________________________________
+   
+    See also <a href="morsefreq.html">MORSEFREQ</a>, <a href="morsewave.html">MORSEWAVE</a>.
+ 
+    Usage: falpha=<a href="morsehigh.html">morsehigh</a>(ga,be,alpha);
+           falpha=<a href="morsehigh.html">morsehigh</a>(ga,be,alpha,N);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

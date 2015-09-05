@@ -1,0 +1,58 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLSIG is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellsig.html">ELLSIG</a>  Creates a modulated elliptical signal in two or three dimensions.
+ 
+    Z=<a href="ellsig.html">ELLSIG</a>(KAPPA,LAMBDA,THETA,PHI) creates a time-varying, complex-valued
+    elliptical signal Z=X+iY characterized by RMS amplitude KAPPA,
+    linearity LAMBDA, orientation THETA, and orbital phase PHI.
+ 
+    [X,Y]=<a href="ellsig.html">ELLSIG</a>(KAPPA,LAMBDA,THETA,PHI) returns the analytic part of the 
+    ellipse signal along the X and Y axes.
+ 
+    See Lilly and Gascard (2006) and Lilly and Olhede (2010a) for details.
+ 
+    <a href="ellsig.html">ELLSIG</a> is inverted by <a href="ellparams.html">ELLPARAMS</a>, which returns the ellipse parameters
+    given the analytic signals X and Y.
+    ______________________________________________________________________
+   
+    Three dimensions
+ 
+    <a href="ellsig.html">ELLSIG</a> can also generate an elliptical signal in three dimenions. 
+ 
+    [X,Y,Z]=<a href="ellsig.html">ELLSIG</a>(KAPPA,LAMBDA,THETA,PHI,ALPHA,BETA) returns the analytic 
+    part of the ellipse signal along the X, Y, and Z axes.
+    
+    Here BETA is the "zenith angle" giving the orientation of the plane 
+    containing the ellipse with respect to the vertical, while ALPHA is 
+    the "azimuth angle", the angle the normal to the plane of the ellipse
+    makes with the x-axis.  
+ 
+    In the trivariate case, LAMBDA is positive, and the direction of 
+    rotation of the particle projected onto the X-Y plane is changed by  
+    letting the zenith angle BETA exceed PI/2.
+ 
+    See Lilly (2011) for details on the trivariate case.     
+    __________________________________________________________________
+ 
+    Cell array input / output
+ 
+    <a href="ellsig.html">ELLSIG</a> also works if the input arguments are cell arrays of numeric
+    arrays, in which case the output arguments will also be cell arrays of
+    the same size.
+    ______________________________________________________________________
+ 
+    [X,Y]=<a href="ellsig.html">ELLSIG</a>(...,'real') or [X,Y,Z]=<a href="ellsig.html">ELLSIG</a>(...,'real') takes the real 
+    part of the output arguments.
+    ______________________________________________________________________
+ 
+    '<a href="ellsig.html">ellsig</a> --t' runs some tests.
+ 
+    Usage:  z=<a href="ellsig.html">ellsig</a>(kappa,lambda,theta,phi);
+            [x,y]=<a href="ellsig.html">ellsig</a>(kappa,lambda,theta,phi);
+            [x,y,z]=<a href="ellsig.html">ellsig</a>(kappa,lambda,theta,phi,alpha,beta);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

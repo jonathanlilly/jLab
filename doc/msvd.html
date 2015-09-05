@@ -1,0 +1,53 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MSVD is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="msvd.html">MSVD</a>  Singular value decomposition for polarization analysis.
+ 
+    <a href="msvd.html">MSVD</a> computes the singular value decomposition for multiple-
+    transform polarization analysis at all or selected frequencies.
+ 
+    [D,U1,V1]=<a href="msvd.html">MSVD</a>(W) computes the singular value decomposition of 
+    sub-matrices of the eigentransform W.
+ 
+    The input matrix W is an J x N x K matrix where 
+ 
+           J is the number of transforms (frequencies or scales)
+           N is the number of dataset components
+           K is the number of eigentransforms (tapers or wavelets)
+ 
+    The output is
+ 
+ 	       D  --  J x MIN(K,N) matrix of singular values
+ 	      U1  --  J x N matrix of first left singular vectors
+ 	      V1  --  J x K matrix of first right singular vectors
+ 
+    The left singular vectors U1 are the eigenvectors of the spectral
+    matrix, while the right singular vectors V1 are the eigenvectors of 
+    the "structure matrix".  
+ 
+    W may optionally be of size M x J x N x K, in which case the
+    output arguments are all three-dimensional matrices with sizes
+ 
+ 	       D  --  M x J x MIN(K,N) matrix of singular values
+ 	      U1  --  M x J x N matrix of first left singular vectors
+ 	      V1  --  M x J x K matrix of first right singular vectors
+ 
+    [D,U1,V1]=<a href="msvd.html">MSVD</a>(W,INDEX) for three-dimensional W optionally 
+    performs the SVD only at the rows of MMAT indicated by INDEX.  The 
+    output arguments then all have LENGTH(INDEX) rows rather than M.
+ 
+    [D,U1,V1,TR]=<a href="msvd.html">MSVD</a> optionally outputs TR, the trace of the spectral 
+    matrix, which is of size J (for 3-D W) or M x J (for 4-D W).  
+ 
+    <a href="msvd.html">MSVD</a>(..., 'quiet') suppresses a progress report.
+ 	
+    Usage:  [d,u1,v1]=<a href="msvd.html">msvd</a>(w);
+            [d,u1,v1]=<a href="msvd.html">msvd</a>(w,index);
+            [d,u1,v1,tr]=<a href="msvd.html">msvd</a>(w,index);
+ 
+    '<a href="msvd.html">msvd</a> --t' runs a test.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 1993--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

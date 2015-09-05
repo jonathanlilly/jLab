@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>DOUBLEN is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="doublen.html">DOUBLEN</a>  Interpolates a time series to double its length.
+ 
+    Y=<a href="doublen.html">DOUBLEN</a>(X) for a column vector X of length M, returns the
+    interpolation of X to length 2M.  M must be even.
+   
+    For matrix X of size M x N, each column is interpolated to length
+    2M, and Y is size 2M x N.
+   
+    The interpolated vector Y may be considered to be of the same
+    duration, but with twice the sample rate, as the original vector.
+    In the interpolated vector, all frequencies higher than the
+    original Nyquist are set to zero.
+   
+    <a href="doublen.html">DOUBLEN</a> uses the frequency-domain zero padding algorithm of Mallat
+    (1999), second edition, Section 4.5.4.
+ 
+    '<a href="doublen.html">doublen</a> --t' runs a test.
+    '<a href="doublen.html">doublen</a> --f' generates a sample figure.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015  J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

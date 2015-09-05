@@ -1,0 +1,65 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PSI2FIELDS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="psi2fields.html">PSI2FIELDS</a>  Velocity and other fields from the streamfunction. [with P.E. Isachsen]
+ 
+    CV=<a href="psi2fields.html">PSI2FIELDS</a>(PSI) where PSI is a matrix of streamfunction values, 
+    returns the complex velocity U+iV.
+ 
+    [CV,ZETA,N,S,P]=<a href="psi2fields.html">PSI2FIELDS</a>(PSI) also returns velocity gradient fields:
+ 
+           ZETA    - Vorticity               dv/dx-du/dy
+              N    - Normal strain           du/dx-dv/dy
+              S    - Shear strain            dv/dx+du/dy
+              P    - Okubo-Weiss parameter   S^2+N^2-ZETA^2
+ 
+    PSI should be oriented with the X-dimension along *columns* and the 
+    Y-dimensions along the *rows*.  Both of these must be of even length.
+ 
+    The output fields are all the same size as PSI.  
+   
+    PSI can have additional dimensions after the first two, for example, 
+    with time in the third dimensions.  Up to four dimensions are possible.
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a>(DX,PSI) uses the grid spacing DX, in units of kilometers, in
+    computing the gradient fields. By default, DX is set to unity. 
+    
+    PSI is taken to have units of meters squared per second.  The units of
+    CV are given in centimeters per second, N and S have units of inverse
+    seconds, and P has units of inverse seconds squared. 
+    __________________________________________________________________
+ 
+    Algorithm choice
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a> can use two different algorithms.
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a>(PSI,'spectral'), the default hehavior, computes the gradient
+    fields in the spectral domain.  This is particularly appropriate when
+    PSI is doubly periodic.
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a>(PSI,'spatial') alternately computes the gradient fields
+    in the spatial domain, using first central differences for derivatives.
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a>(PSI,'arakawa') computes gradients in the spatial domain 
+    with the weighted central difference scheme used by Arakawa (1966).
+ 
+    <a href="psi2fields.html">PSI2FIELDS</a>(PSI,'spatial',STR) or <a href="psi2fields.html">PSI2FIELDS</a>(PSI,'arakawa',STR) 
+    specifies the boundary conditions for derivatives at the domain edges.  
+ 
+    The default behavior for spatial derivatives is STR='periodic'.  Other
+    choices are 'mirror' and 'zeros'.  See <a href="vdiff.html">VDIFF</a> for more details. 
+    __________________________________________________________________
+ 
+    '<a href="psi2fields.html">psi2fields</a> --t' runs some tests.
+    '<a href="psi2fields.html">psi2fields</a> --f' generates two sample figures.
+ 
+    Usage: cv=<a href="psi2fields.html">psi2fields</a>(psi);
+           [cv,zeta,N,S,P]=<a href="psi2fields.html">psi2fields</a>(psi);
+           [cv,zeta,N,S,P]=<a href="psi2fields.html">psi2fields</a>(dx,psi);
+           [cv,zeta,N,S,P]=<a href="psi2fields.html">psi2fields</a>(dx,psi,'spatial');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly and P.E. Isachsen 
+                              --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

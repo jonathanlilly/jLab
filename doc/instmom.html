@@ -1,0 +1,103 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>INSTMOM is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="instmom.html">INSTMOM</a>  Univariate and multivariate instantaneous moments.
+ 
+    [A,OMEGA,UPSILON]=<a href="instmom.html">INSTMOM</a>(X), where X is an analytic signal, computes 
+    the amplitude A, instantaneous *radian* frequency OMEGA, and 
+    instantaneous bandwidth assuming a unit sample rate. 
+ 
+    X is an array with the first dimension being "time".  Thus, X can be a 
+    matrix of analytic signals oriented as column vectors, or a 2- or 3-D 
+    wavelet transform such as output by <a href="wavetrans.html">WAVETRANS</a>.
+ 
+    The output arrays are the same size as X. 
+ 
+    The instantaneous frequency, bandwidth, and curvature are defined as
+ 
+             A    = abs X
+           OMEGA  = d/dt Im ln X = d/dt arg X
+          UPSILON = d/dt Re ln X = d/dt ln abs X  
+   
+    where i=SQRT(-1) as usual.
+ 
+    <a href="instmom.html">INSTMOM</a>(X,DIM) computes the moments along dimension DIM, instead of 
+    the default of computing the moments along the rows (DIM=1).
+ 
+    For details, see 
+   
+        Lilly & Olhede (2010), "Bivariate instantaneous frequency and 
+             bandwidth", IEEE Trans. Sig. Proc., 58 (2), 591--603.
+    _____________________________________________________________________
+    
+    Sample interval
+ 
+    <a href="instmom.html">INSTMOM</a>(DT,...) uses sample interval DT, where DT is a scalar, for 
+    computing time derivatives.  DT=1 is the default.
+    _____________________________________________________________________
+  
+    Joint instantaneous moments
+ 
+    <a href="instmom.html">INSTMOM</a> can also calculate the joint instananeous moments of 
+    multivariate signals, as defined in Lilly and Olhede (2010).
+ 
+    [JA,JOMEGA,JUPSILON]=<a href="instmom.html">INSTMOM</a>(X1,X2,...,XN,DIM) returns the *joint*
+    instantaneous moments calculated across the N signals X1,X2,... XN, 
+    based on the univariate instantaneous moments along dimension DIM.
+ 
+    The joint instantaneous amplitude JA is the root-mean-square of the 
+    component amplitudes across dimension JDIM, while JOMEGA is power-
+    weighted average of the component instantaneous frequencies.
+ 
+    For details and for the definition of the joint instantaneous bandwidth 
+    JUPSILON, see Lilly and Olhede (2010).
+ 
+    [JA,JOMEGA,JUPSILON]=<a href="instmom.html">INSTMOM</a>(X,DIM,JDIM) also works, where the joint
+    instantaneous moments are calculated across dimensions JDIM of X.
+ 
+    The joint instantaneous moments JA, JOMEGA, and JUPSILON then have the 
+    same size as X, except along dimension JDIM where they have only one 
+    entry.  Note that DIM is no longer optional when JDIM is used.
+    _____________________________________________________________________
+  
+    Instantaneous curvature
+ 
+    <a href="instmom.html">INSTMOM</a> can also return the next-higher order instantaneous moment, 
+    which is more rarely encountered. 
+ 
+    [A,OMEGA,UPSILON,XI]=<a href="instmom.html">INSTMOM</a>(X) returns the instantaneous curvature XI,
+    defined as
+ 
+             XI   = d^2/dt^2 abs X / abs X + i d^2/dt^2 arg X
+                  = UPSILON^2 + d/dt UPSILON + i d/dt OMEGA
+ 
+    Similarly [JA,JOMEGA,JUPSILON,JXI]=<a href="instmom.html">INSTMOM</a>(X,DIM,JDIM) returns the
+    joint instantaneous curvature JXI for the multivariate signal X.
+     
+    For details on the univariate and joint instantaneous curvature, see 
+ 
+        Lilly and Olhede (2012a), "Analysis of modulated multivariate 
+             oscillations", IEEE Trans. Sig. Proc., 60 (2), 600--612. 
+    _____________________________________________________________________
+ 
+    Boundary conditions
+ 
+    The first and last points must be treated differently, as the central 
+    difference is not defined there.  Three different methods can be used.
+ 
+    <a href="instmom.html">INSTMOM</a>(...,STR) specifies the method: STR= 'endpoint' (the default),
+    'periodic', or 'nans'.  See <a href="vdiff.html">VDIFF</a> for details.   
+    _____________________________________________________________________
+ 
+    '<a href="instmom.html">instmom</a> --f' generates some sample figures.
+ 
+    Usage: [a,om]=<a href="instmom.html">instmom</a>(x);
+           [a,om,up,xi]=<a href="instmom.html">instmom</a>(dt,x);
+           [a,om,up,xi]=<a href="instmom.html">instmom</a>(dt,x,dim);
+           [a,om,up,xi]=<a href="instmom.html">instmom</a>(dt,x1,x2,x3,x4,dim);
+           [a,om,up,xi]=<a href="instmom.html">instmom</a>(dt,x,dim,jdim);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

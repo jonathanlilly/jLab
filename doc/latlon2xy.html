@@ -1,0 +1,69 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LATLON2XY is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="latlon2xy.html">LATLON2XY</a>  Converts latitude and longitude into local Cartesian coordinates.
+ 
+    [X,Y]=<a href="latlon2xy.html">LATLON2XY</a>(LAT,LON,LATO,LONO) converts (LAT,LON) with units of
+    degrees into displacements (X,Y) in a plane tangent to the earth at the
+    point (LATO, LONO). X and Y have units of kilometers.
+ 
+    CX=<a href="latlon2xy.html">LATLON2XY</a>(LAT,LON,LATO,LONO) with one output argument returns the 
+    location as a complex-valued quantity X+SQRT(-1)*Y. NANs in LAT or LON
+    become NAN+SQRT(-1)*NAN.
+    
+    LAT and LON are arrays of the same size.  LATO and LONO are either also
+    arrays of this size, or else scalars.  X and Y have the same size as 
+    the input arrays.  
+ 
+    X and Y are computed by projecting the tangent plane onto the sphere
+    using full spherical geometry.  
+ 
+    The radius of the earth is given by the function <a href="radearth.html">RADEARTH</a>.
+ 
+    Note that X and Y are set to NANs for points on the opposite side of
+    the earth from the tangent plane, that is, where the great circle 
+    distance would exceed <a href="radearth.html">RADEARTH</a> * pi/2.  
+    ___________________________________________________________________
+ 
+    Great circle distance
+ 
+    [X,Y,D]=<a href="latlon2xy.html">LATLON2XY</a>(...) also returns the great circle distance D between
+    the two sets of points.  
+ 
+    For points on the same side on the earth from the tangent plane, i.e.
+    where the great circle distance is less than <a href="radearth.html">RADEARTH</a> * pi/2, LATLON2XY
+    gives the same distance as <a href="spheredist.html">SPHEREDIST</a>.  
+ 
+    However, for points on the opposite side of the earth, <a href="latlon2xy.html">LATLON2XY</a> 
+    returns NANs whereas <a href="spheredist.html">SPHEREDIST</a> returns the correct distance.
+ 
+    The great circle distance computed here is useful because it is a fast 
+    computation if X and Y are already known.
+    ___________________________________________________________________
+ 
+    Cell array input / output
+ 
+    <a href="latlon2xy.html">LATLON2XY</a> returns cell array output given cell array input.  
+ 
+    That is, if LAT, LON, LATO, and LONO are all cell arrays of length K, 
+    containing K different numerical arrays, then the output will also be 
+    cell arrays of length K.  
+ 
+    This also works if LAT and LON are cell arrays but LATO and LONO are 
+    scalars.
+    ___________________________________________________________________
+ 
+    <a href="latlon2xy.html">LATLON2XY</a> is inverted by <a href="xy2latlon.html">XY2LATLON</a>.
+ 
+    See also <a href="xy2latlon.html">XY2LATLON</a>, <a href="latlon2uv.html">LATLON2UV</a>, <a href="spheredist.html">SPHEREDIST</a>.
+ 
+    '<a href="latlon2xy.html">latlon2xy</a> --t' runs some tests.
+ 
+    Usage:  [x,y]=<a href="latlon2xy.html">latlon2xy</a>(lat,lon,lato,lono);
+            [x,y,d]=<a href="latlon2xy.html">latlon2xy</a>(lat,lon,lato,lono);
+            cx=<a href="latlon2xy.html">latlon2xy</a>(lat,lon,lato,lono);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

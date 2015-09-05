@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>BLOCKNUM is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="blocknum.html">BLOCKNUM</a>  Numbers the contiguous blocks of an array.
+ 
+    Suppose X is a column vector which contains blocks of identical
+    values, e.g. X=[0 0 0 1 1 3 2 2 2]';
+ 
+    N=<a href="blocknum.html">BLOCKNUM</a>(X) gives each contiguous block of identical values a
+    unique number, in order beginning with 1.  Each elements of N
+    specifies the number of the block to which the corresponding
+    element of X belongs.
+ 
+    In the above example, N=[1 1 1 2 2 3 4 4 4]';
+   
+    [N,A,B]=<a href="blocknum.html">BLOCKNUM</a>(X) also returns arrays A and B which are indices
+    into the first and last point, respectively, of each block.  In
+    the above example, A=[1 4 6 7]' and B=[3 5 6 9]';
+ 
+    [...]=<a href="blocknum.html">BLOCKNUM</a>(X,D) defines the junction between two blocks as
+    locations where ABS(DIFF(X))>D.  Thus D=1 is a 'rate of change'
+    definition, and X=[1 2 3 5 6 10 16 17 18]'; will yield the same 
+    result for N as in the previous example.
+ 
+    See also <a href="blocklen.html">BLOCKLEN</a>.
+ 
+    Usage: num=<a href="blocknum.html">blocknum</a>(x);
+           [num,a,b]=<a href="blocknum.html">blocknum</a>(x);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2000--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

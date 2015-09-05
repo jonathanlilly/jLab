@@ -1,0 +1,39 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEDERIV is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsederiv.html">MORSEDERIV</a>  Frequency-domain derivatives of generalized Morse wavelets.
+ 
+    DCELL=<a href="morsederiv.html">MORSEDERIV</a>(N,GAMMA,BETA,OMEGA) returns the first N normalized
+    frequency derivatives of the lowest-order generalized Morse wavelet 
+    specified by parameters GAMMA and BETA, at the radian frequency OMEGA.
+ 
+    DCELL is a cell array with DCELL{N} containing the Nth derivative.
+ 
+    This derivative is defined as
+ 
+            dn = ( omega^n / psi ) * ( d^n psi / d omega^n )
+ 
+    where omega is the radian frequency and psi is the wavelet.
+  
+    N must be a scalar. The other input parameters must either be matrices
+    of the same size, or some may be matrices and the others scalars.
+ 
+    DCELL=<a href="morsederiv.html">MORSEDERIV</a>(N,GAMMA,BETA) evaluates the derivative at the peak
+    frequency by default.
+ 
+    For details see
+ 
+        Lilly and Olhede (2009).  Higher-order properties of analytic 
+            wavelets.  IEEE Trans. Sig. Proc., 57 (1), 146--160.
+ 
+    See also <a href="morsewave.html">MORSEWAVE</a>, <a href="morsemom.html">MORSEMOM</a>, <a href="bellpoly.html">BELLPOLY</a>.
+ 
+    '<a href="morsewave.html">morsewave</a> --t' runs a test.
+ 
+    Usage: dcell=<a href="morsederiv.html">morsederiv</a>(4,gamma,beta,omega);
+           dcell=<a href="morsederiv.html">morsederiv</a>(4,gamma,beta);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2009 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

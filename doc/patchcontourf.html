@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PATCHCONTOURF is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="patchcontourf.html">PATCHCONTOURF</a>  Generate filled contours using patches, with specified colors.
+ 
+    Frequently one wishes to make a filled contour plot of one field over
+    another with two different colormap schemes.  This is not currently 
+    possible with CONTOURF because Matlab uses one colormap per axes.
+ 
+    For example, one may wish to plot sea surface temperature filled in 
+    color with the continents filled in black.
+ 
+    PATCHCONTOURS gets around this problem by geneating filled contours 
+    plots as patch objects, with out reference to the current colormap.  
+    Colors of filled contours may be specified explicitly. 
+ 
+    <a href="patchcontourf.html">PATCHCONTOURF</a>(Z,V) makes a filled contour plot of field Z at value V. 
+    The interiors of the contour are colored black by default.
+ 
+    <a href="patchcontourf.html">PATCHCONTOURF</a>(Z,V,C) alternately uses color C as both the fill color 
+    and the edge color.  C may be either a string, as in 'g' for green, 
+    or a color array of length 3, such as [1/2 1/2 1/2] for gray.
+ 
+    <a href="patchcontourf.html">PATCHCONTOURF</a>(X,Y,Z,V) and <a href="patchcontourf.html">PATCHCONTOURF</a>(X,Y,Z,V,C) use vectors X and Y
+    to specify the contour locations.  X has length SIZE(X,2) while Y has
+    length SIZE(X,1).  
+ 
+    H=<a href="patchcontourf.html">PATCHCONTOURF</a>(...) returns a handle to the patch object.
+  
+    <a href="patchcontourf.html">PATCHCONTOURF</a>(...,'m_map') alternately works with R. Pawlowicz's M_MAP
+    mapping package, available at http://www.eos.ubc.ca/~rich/map.html.
+ 
+    '<a href="patchcontourf.html">patchcontourf</a> --f' generates a sample figure.
+ 
+    Usage: <a href="patchcontourf.html">patchcontourf</a>(z,v);
+           <a href="patchcontourf.html">patchcontourf</a>(z,v,c);
+           <a href="patchcontourf.html">patchcontourf</a>(x,y,z,v,c);
+           h=<a href="patchcontourf.html">patchcontourf</a>(x,y,z,v,c);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

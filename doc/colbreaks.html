@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>COLBREAKS is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="colbreaks.html">COLBREAKS</a>  Insert NANs into discontinuties in a vector.
+ 
+    O1=<a href="colbreaks.html">COLBREAKS</a>(I1), where I1 is a column vector, inserts NANs into I1 at
+    its discontinuties (and puts one at the end), for example:
+ 		
+ 	  <a href="colbreaks.html">COLBREAKS</a>([2;2;2;3;3])=[2;2;2;NAN;3;3;NAN];
+ 
+    [O1,O2,O3,...]=<a href="colbreaks.html">COLBREAKS</a>(I1,I2,...), where I1,I2,... are all column 
+    vectors of the same length, uses I1 as a reference for the other 
+    vectors and inserts NANs into all the vectors at locations where I1 is 
+    discontinous.
+ 	
+    For instance, using station number for I1 will sort a column of CTD 
+    data into a NAN-padded matrix.
+ 
+    Note that for complex-valued input arrays, a complex-valued NAN, 
+    NAN+SQRT(-1)*NAN, is used to indicate the break locations. 
+ 
+    MAT2=<a href="colbreaks.html">COLBREAKS</a>(MAT1), where MAT1 and MAT2 are matrices of the same 
+    size, also works.  In this case the first column of MAT1 is used as the
+    reference vector.
+ 
+    <a href="colbreaks.html">COLBREAKS</a>, <a href="col2mat.html">COL2MAT</a>, and <a href="mat2col.html">MAT2COL</a> together form a system for moving data
+    with segments of nonuniform length rapidly back and forth between a 
+    column format and a padded-matrix format. CTD or float data, for 
+    instance, can be stored in the (usually much smaller) column format and
+    converted into the matrix format upon loading.
+   
+    <a href="colbreaks.html">COLBREAKS</a>(C1,C2,...); with no output arguments overwrites the original
+    input variables.  
+ 
+    See also <a href="col2mat.html">COL2MAT</a>, <a href="mat2col.html">MAT2COL</a>, <a href="col2cell.html">COL2CELL</a>, <a href="cell2col.html">CELL2COL</a>, <a href="orbitbreaks.html">ORBITBREAKS</a>.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2000--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>INREGION is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="inregion.html">INREGION</a>  Tests whether lat/lon points lie within a specified box.
+ 
+    BOOL = <a href="inregion.html">INREGION</a>(REGION,LAT,LON), where LAT and LON are arrays having
+    the same size, returns an array BOOL which is true (=1) for all
+    LAT/LON pairs which lie inside REGION, and false (=0) otherwise.
+ 
+    REGION is an array with the format [WEST EAST SOUTH NORTH]. Longitudes 
+    may either be specified on the interval [-180, 180] or on [0, 360].
+ 
+    The region may overlap the prime meridian (LON=0) or the dateline
+    (LON=180).  Region boundaries are interpreted to exclude the poles. 
+    ______________________________________________________________________
+ 
+    Cell array lat/lon input 
+ 
+    <a href="inregion.html">INREGION</a> also works if LAT and LON are cell arrays. 
+ 
+    In this case, BOOL is also a cell array, with the Kth element of BOOL, 
+    BOOL{K}, being a boolean array of the same size as LAT{K} and LON{K}.
+    ______________________________________________________________________
+ 
+    Multiple boxes 
+ 
+    <a href="inregion.html">INREGION</a> can detect if points are within any of several boxes.  To do
+    so, just make REGION a cell array, REGION={R1,R2,...,RN} where the RN
+    are numeric arrays, each with the format [WEST EAST SOUTH NORTH].
+   
+    In this way one can build up a more general region from the union of
+    several rectangular regions.  
+    ______________________________________________________________________
+ 
+    See also <a href="regionplot.html">REGIONPLOT</a>, FLOATREGION, <a href="inellipse.html">INELLIPSE</a>.
+ 
+    '<a href="inregion.html">inregion</a> --t' runs a test.
+ 
+    Usage:  bool=<a href="inregion.html">inregion</a>(region,lat,lon);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

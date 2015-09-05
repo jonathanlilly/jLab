@@ -1,0 +1,49 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PERIODINDEX is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="periodindex.html">PERIODINDEX</a>  Returns time index in increments of instantaneous period.
+ 
+    INDEX=<a href="periodindex.html">PERIODINDEX</a>(DT,OMEGA,N) returns a time index INDEX that skips 
+    every N times the instantaneous period 2*pi/OMEGA.
+ 
+    OMEGA is a column vector of instantaneous frequency in radians per unit 
+    time as computed by <a href="instmom.html">INSTMOM</a>. DT is the sample time, a scalar.  The
+    units of 2*pi/OMEGA should be the same as the units of DT.
+ 
+    Then <a href="periodindex.html">PERIODINDEX</a> constructs an index into a vector of the same length
+    as OMEGA that skips every N times the instantaneous period 2*pi/OMEGA.
+    Thus N=1 returns an index with one sample per period, etc.
+ 
+    The first and last N periods are omitted from the index.  Specifically,
+    the first value of INDEX is N times first value of 2*pi/OMEGA, and 
+    the last value of INDEX is not larger than the length of OMEGA minus
+    N times the last value of 2*pi/OMEGA.
+ 
+    OMEGA can have interior NANS, in which case the first and last N 
+    periods of each contiguous block of non-NAN data are omitted as above.
+ 
+    INDEX=<a href="periodindex.html">PERIODINDEX</a>(OMEGA,N) also works, in which case DT is taken to be
+    as unity.  Thus OMEGA must have units of radians per sample interval.
+ 
+    <a href="periodindex.html">PERIODINDEX</a> is useful with <a href="ellipseplot.html">ELLIPSEPLOT</a> for plotting ellipses a
+    specified number of periods apart.
+    ___________________________________________________________________
+ 
+    Cell array input / output
+ 
+    <a href="periodindex.html">PERIODINDEX</a> returns cell array output given cell array input.  
+ 
+    That is, if OMEGA is a cell arrays of length K, containing K different 
+    numerical arrays, then INDEX will also be cell arrays of length K.  
+ 
+    In this case DT may be either a scalar, or an array of length K.
+    ___________________________________________________________________
+ 
+    See also <a href="ellipseplot.html">ELLIPSEPLOT</a>.
+ 
+    Usage: index=<a href="periodindex.html">periodindex</a>(dt,omega,N);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

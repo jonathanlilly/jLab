@@ -1,0 +1,34 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLINDEX is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellindex.html">CELLINDEX</a>  Applies a cell array of indices to a cell array of column vectors.
+ 
+    Y=<a href="cellindex.html">CELLINDEX</a>(X,INDEX) where X is a cell array of N column vectors, and
+    INDEX is a cell array of indices into those vectors
+ 
+        X{1}=X1, X{2}=X2,..., X{N}=XN
+        INDEX{1}=I1, INDEX{2}=I2,..., INDEX{N}=IN
+  
+    applies INDEX to each element of X, returning Y defined by
+ 
+       Y{1}=X1(I1), Y{2}=X2(I2),..., Y{N}=XN(IN).
+ 
+    The output arrays YN are the same size as the indices IN. 
+    __________________________________________________________________
+ 
+    Multiple input arguments
+ 
+    [Y1,Y2,...,YM]=<a href="cellindex.html">CELLINDEX</a>(X1,X2,...,XM,INDEX) also works, with M 
+    different cell arrays XM of identical size input, leading to M cell
+    arrays YM all having the same size as INDEX.
+    __________________________________________________________________
+ 
+    See also <a href="jCell.html">JCELL</a>, <a href="vindex.html">VINDEX</a>.
+ 
+    Usage: y=<a href="cellindex.html">cellindex</a>(x,index);
+           [y1,y2,y3]=<a href="cellindex.html">cellindex</a>(x1,x2,x3,index);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

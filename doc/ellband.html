@@ -1,0 +1,101 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLBAND is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellband.html">ELLBAND</a>  Bandwidth of modulated elliptical signals in two or three dimensions.
+ 
+    [A,B,C]=<a href="ellband.html">ELLBAND</a>(KAPPA,LAMBDA,THETA,PHI) computes the instantaneous 
+    bandwidth of the elliptical signal characterized by RMS amplitude 
+    KAPPA, linearity LAMBDA, orientation THETA, and orbital phase PHI.
+ 
+    The three output arguments are
+ 
+           A  - Amplitude modulation bandwidth  
+           B  - Deformation bandwidth
+           C  - Precession bandwidth. 
+ 
+    and these satisfy UPSILON^2=A^2+B^2+C^2 where UPSILON is the joint 
+    instantaneous bandwidth of the bivariate signal.
+ 
+    The form of these terms is as follows:
+ 
+          A = 1/KAPPA d/dt KAPPA 
+          B = 1/2 * 1/SQRT(1-LAMBDA^2) *  d/dt LAMBDA 
+          C = LAMBDA d/dt THETA
+ 
+    [A,B,C,UPSILON]=<a href="ellband.html">ELLBAND</a>(KAPPA,LAMBDA,THETA,PHI) also returns the total 
+    instantaneous bandwith UPSILON=SQRT(A^2+B^2+C^2).
+ 
+    <a href="ellband.html">ELLBAND</a>(...,DIM) performs the analysis with time running along
+    dimension DIM, as opposed to the default behavior of DIM=1.
+ 
+    For details see Lilly and Olhede (2010).
+ 
+    <a href="ellband.html">ELLBAND</a> also works if the input arguments are cell arrays of numerical
+    arrays, in which case the output will be similarly sized cell arrays.
+    __________________________________________________________________
+ 
+    Three dimensions
+ 
+    <a href="ellband.html">ELLBAND</a> can also compute the instantaneous bandwidth of modulated 
+    elliptical signals in three dimensions.
+ 
+    [A,B,C,D,E]=<a href="ellband.html">ELLBAND</a>(KAPPA,LAMBDA,THETA,PHI,ALPHA,BETA) returns the
+    terms in the bandwidth from a modulated ellipical signal in a plane
+    with a normal vector having azimuth angle ALPHA and zenith angle BETA.
+    
+    The five output arguments are
+ 
+           A   - Amplitude modulation bandwidth, as in 2D 
+           B   - Deformation bandwidth, as in 2D
+           C   - Precession bandwidth, as in 2D
+           D   - Precession bandwidth with full 3D effects
+           E   - Bandwidth due to motion of the normal to the plane
+ 
+    and these, in principle, satisfy UPSILON^2=A^2+B^2+C^2+D^2+|E|^2 where 
+    UPSILON is the joint instantaneous bandwidth of the trivariate signal.
+    See below for a caveat on this statement.
+ 
+    Terms A--C are just as in the bivariate case.  The new terms are:
+ 
+          D = LAMBDA [d/dt THETA + COS(BETA) * d/dt ALPHA]
+          E = N^T X_+ / |X_+^H X_+|    
+    
+    where N is the trivariate normal vector, X_+ is the trivariate analytic
+    signal vector, and "T" denotes the matrix transpose, and "H" the 
+    Hermitian transpose.  Note that term E may be complex-valued.
+ 
+    Note that term C does not contribute to the full bandwidth, but is 
+    output in order to compare the two-dimensional and three-dimensional
+    effects in the full precession bandwidth, term D.
+ 
+    An important point is that the trivariate ellipse parameters can be 
+    ill-defined for a nearly linear signal, and the elliptical bandwidth 
+    terms can give erroneously large values at isolated points.  To check
+    for this, compare with the joint bandwidth from <a href="instmom.html">INSTMOM</a>.
+ 
+    [A,B,C,D,E,UPSILON]=<a href="ellband.html">ELLBAND</a>(KAPPA,LAMBDA,THETA,PHI,ALPHA,BETA) also 
+    returns the total bandwith UPSILON=SQRT(A^2+B^2+C^2+D^2+|E|^2).
+ 
+    For details see Lilly (2011).
+    __________________________________________________________________
+ 
+    <a href="ellband.html">ELLBAND</a>(DT,...) sets the sample interval DT, which defaults to DT=1.
+    DT may be a scalar, or if the input fields are cell arrays having
+    length N, DT may be a numerical array of length N. 
+    
+    See also <a href="anatrans.html">ANATRANS</a>, <a href="wavetrans.html">WAVETRANS</a>, <a href="instmom.html">INSTMOM</a>.
+ 
+    '<a href="ellband.html">ellband</a> --t' runs a test.
+    '<a href="ellband.html">ellband</a> --f' generates a figure from Lilly and Olhede (2010).
+ 
+    Usage:  [a,b,c]=<a href="ellband.html">ellband</a>(kappa,lambda,theta,phi);
+            [a,b,c]=<a href="ellband.html">ellband</a>(dt,kappa,lambda,theta,phi);  
+            [a,b,c]=<a href="ellband.html">ellband</a>(dt,kappa,lambda,theta,phi,dim);  
+            [a,b,c,upsilon]=<a href="ellband.html">ellband</a>(dt,kappa,lambda,theta,phi,dim);  
+            [a,b,c,d,e]=<a href="ellband.html">ellband</a>(kappa,lambda,theta,phi,alpha,beta); 
+            [a,b,c,d,e]=<a href="ellband.html">ellband</a>(dt,kappa,lambda,theta,phi,alpha,beta);    
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

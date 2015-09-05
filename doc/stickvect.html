@@ -1,0 +1,59 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>STICKVECT is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="stickvect.html">STICKVECT</a> Plots "stick vectors" for multicomponent velocity time series.
+   
+    <a href="stickvect.html">STICKVECT</a>(TIME,SCALE,U,V), where U and V are measurements of
+    "eastward" and "northward" velocities respectively, represents the
+    velocity points as vectors strung out along the x-axis.
+ 
+    The vector TIME is used as the x-axis, and SCALE is the stretching
+    factor used to map U values onto TIME.  SCALE velocity units
+    correspond to one X unit. The aspect ratio of the plot is set so
+    that angles are not distorted: the point (U,V)=(1,1) will make a
+    45 degree angle.
+ 
+    <a href="stickvect.html">STICKVECT</a>(TIME,SCALE,U,V,NSTICKS) plots only NSTICKS vectors
+    evenly spaced throughout the length of the input vectors.
+ 
+    <a href="stickvect.html">STICKVECT</a> may also be used with multicomponent time series. In
+    this case U and V are matrices the columns of which are distinct
+    time series from (for example) different depths.
+  
+    <a href="stickvect.html">STICKVECT</a>(TIME,SCALE,U,V,NSTICKS,SHIFT), when U and V are
+    matrices, will offset the stickvector lines in the vertical by
+    amount SHIFT. SHIFT may either be a scalar, denoting the offset
+    between adjacent time series, a vector containing the "baseline"
+    values for each instrument, or a matrix of same size as U and V.
+    TIME may be a vector, or it may be a matrix of the same size as U
+    and V if the time-axes are not all the same.
+ 	
+    <a href="stickvect.html">STICKVECT</a>(TIME,CV,...), where CV=U+iV, also works.
+ 
+    <a href="stickvect.html">STICKVECT</a> plots a small diagonal line in the upper right-hand
+    corner of the plot, which should be at a 45 degree angle; this
+    provides a check that the aspect ratio is correct.  
+   
+    H=<a href="stickvect.html">STICKVECT</a>(...) returns a vector containing handles to the
+    stickvector lines of the various time series.
+ 
+    To adjust the appearance of the plot, first vary SCALE and then
+    vary NSTICKS.
+ 	
+    As an example,  
+   
+          load bravo94
+          cv=<a href="vfilt.html">vfilt</a>(bravo.rcm.cv,100);
+          <a href="stickvect.html">stickvect</a>(bravo.rcm.yearf,180,cv,300,-30);
+  
+    recreates the upper part of Fig. 24 of Lilly et. al JPO 1999. 
+    This may be run by typing '<a href="stickvect.html">stickvect</a> --f'.
+ 		
+    Usage:  <a href="stickvect.html">stickvect</a>(time,scale,u,v);
+            <a href="stickvect.html">stickvect</a>(time,scale,u,v,nsticks);
+            <a href="stickvect.html">stickvect</a>(time,scale,u,v,nsticks,shift);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 1998--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details      
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

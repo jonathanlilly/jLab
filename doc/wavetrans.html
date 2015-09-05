@@ -1,0 +1,135 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>WAVETRANS is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="wavetrans.html">WAVETRANS</a>  Continuous wavelet transform.
+    _______________________________________________________________________
+ 
+    <img src="../figures/wavetrans.png">
+    _______________________________________________________________________
+ 
+    W=<a href="wavetrans.html">WAVETRANS</a>(X,PSI) computes the wavelet transform W of a data series X
+    using wavelets PSI. X has time oriented in rows, and PSI is either a
+    matrix of wavelets, or a cell array defining wavelet properties.
+ 
+    If PSI is a matrix containing the wavelets, SIZE(PSI,1) should be the 
+    same as SIZE(X,1), with time-domain wavelets at different scales or 
+    frequencies in the columns of PSI.  See <a href="morsewave.html">MORSEWAVE</a> or <a href="morlwave.html">MORLWAVE</a>.
+ 
+    If PSI is a cell array, it defines the properties of generalized Morse
+    wavelets, which are then computed internally, as described below. 
+    ___________________________________________________________________
+ 
+    Multiple input series
+ 
+    X and PSI may both contain multiple components.  Then PSIF(:,:,k) is
+    the kth wavelet, and X(:,n) is the nth data component.  If there are K
+    wavelets at J frequencies and M data points in N components of X, then
+    W is of size M x J x N x K.  Note that W is always squeezed to remove
+    singleton dimensions.
+ 
+    [W1,W2,...,WN]=<a href="wavetrans.html">WAVETRANS</a>(X1,X2,...,XN,PSI) also works, where the XN are
+    all column vectors of the same length.
+    ___________________________________________________________________
+ 
+    Generalized Morse wavelets
+ 
+    <a href="wavetrans.html">WAVETRANS</a> can automatically compute the wavelet transform using the
+    generalized Morse wavelets, without needing to precompute the wavelets.
+ 
+    <a href="wavetrans.html">WAVETRANS</a>(X,{GAMMA,BETA,FS}), with PSI being a cell array, uses the
+    Generalized Morse Wavelets specified by the parameters GAMMA and BETA.
+ 
+    FS is an array of *radian* frequencies, as in cos(ft) not cos(2 pi ft),
+    assuming a unit sample rate.  Thus the Nyquist frequency is at pi.
+    Use <a href="morsespace.html">MORSESPACE</a> to easily choose the frequency bins.
+ 
+    <a href="wavetrans.html">WAVETRANS</a>(X,{K,GAMMA,BETA,FS) uses the first K orthogonal multi-
+    wavelets to create K different transforms.  The default is K=1,
+    employing only the first wavelet.  See <a href="morsewave.html">MORSEWAVE</a> for details.
+ 
+    <a href="wavetrans.html">WAVETRANS</a>(X,{...,'energy'}) specifies a unit energy normalization for
+    the wavelets.  The default is the 'bandpass' or unit amplitude
+    normalization.  See <a href="morsewave.html">MORSEWAVE</a> for details.
+ 
+    For general purpose use, set GAMMA=3 and choose BETA to be no smaller
+    than one.  Increase BETA to make your wavelet have more 'wiggles'.
+    ___________________________________________________________________
+ 
+    Boundary conditions
+ 
+    W=<a href="wavetrans.html">WAVETRANS</a>(...,STR), where STR is a string, optionally specifies the
+    boundary condition to be imposed at the edges of the time series.
+    Valid options for STR are
+ 
+          STR = 'periodic' for periodic boundary conditions
+          STR = 'zeros' for zero-padding beyond the endpoints
+          STR = 'mirror' for reflecting the time series at both ends
+          STR = 'reverse' for reflection together with a sign reversal
+ 
+    The default value of STR is 'periodic', which means endpoints of the
+    time series are implicitly joined to make a periodic signal. All
+    boundary conditions take into account potential blocks of missing data,
+    marked by NaNs, at beginning and end of each column.
+    ___________________________________________________________________
+ 
+    Missing data
+ 
+    The data X may contain blocks of NANs at the beginning and/or end of
+    each column, marking the absence of data.  In this case only the
+    data series is taken to correspond to the block of finite data values,
+    and the boundary conditions are applied accordingly. The corresponding
+    portions of the transform matrix W are then also set to NANs. No NANs
+    may occur in the interior of the data series.
+    ___________________________________________________________________
+ 
+    Detrending
+ 
+    Note that the data X is detrended before transforming.  This feature
+    is suppressed by <a href="wavetrans.html">WAVETRANS</a>(..., 'nodetrend').
+    ___________________________________________________________________
+ 
+    Complex-valued data
+ 
+    The wavelet transform is normalized differently for complex-valued data
+    than for real-valued data.  If WX and WY are the wavelet transforms of
+    two real-valued signals, X and Y, then
+ 
+         WP=<a href="wavetrans.html">WAVETRANS</a>(X+iY,PSI)   = (1/SQRT(2))*(WX + i WY)
+         WN=<a href="wavetrans.html">WAVETRANS</a>(X-iY,PSI)   = (1/SQRT(2))*(WX - i WY)
+ 
+    defines the positive and negative rotary transforms WP and WN.
+ 
+    The factors of SQRT(2) are included such that the transform power is
+    unchanged, that is, ABS(WX).^2+ABS(WY).^2 = ABS(WP).^2+ABS(WN).^2.
+ 
+    There are therefore two equivalent ways to compute the positive and
+    negative rotary transforms.  The first is
+ 
+      [WP,WN]=<a href="wavetrans.html">WAVETRANS</a>(X+iY,X-iY,PSI) 
+ 
+    which takes the wavelet transform of the X+iY and its conjugate.
+  
+    The second is to take the wavelet transform of the real-valued data
+ 
+        [WX,WY]=<a href="wavetrans.html">WAVETRANS</a>(X,Y,PSI)      followed by 
+        [WP,WN]=<a href="vectmult.html">VECTMULT</a>(TMAT,WX,WY) 
+ 
+    which converts WX and WY to WP and WN using a matrix multiplication
+    with the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
+    ___________________________________________________________________
+ 
+    See also <a href="morsespace.html">MORSESPACE</a>, <a href="ridgewalk.html">RIDGEWALK</a>, <a href="wavespecplot.html">WAVESPECPLOT</a>.
+ 
+    '<a href="wavetrans.html">wavetrans</a> --t' runs some tests.
+    '<a href="wavetrans.html">wavetrans</a> --f' generates a sample figure.
+ 
+    Usage:  w=<a href="wavetrans.html">wavetrans</a>(x,psi);
+            w=<a href="wavetrans.html">wavetrans</a>(x,{gamma,beta,f,str});
+            w=<a href="wavetrans.html">wavetrans</a>(x,{gamma,beta,f,str},str);
+            [wx,wy]=<a href="wavetrans.html">wavetrans</a>(x,y,{gamma,beta,f,str},str);
+            [wp,wn]=<a href="wavetrans.html">wavetrans</a>(x+i*y,x-i*y,{gamma,beta,f,str},str);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

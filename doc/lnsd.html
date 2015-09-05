@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LNSD is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="lnsd.html">LNSD</a>  Last non-singleton dimension of an array.
+   
+    <a href="lnsd.html">LNSD</a>(X) returns the number of the last non-singleton dimension of X.
+ 
+    This provides a useful definition of the dimensionality of X.  Unlike 
+    Matlab's NDIMS, which thinks that a column vector and a scalar both 
+    have dimension 2, <a href="lnsd.html">LNSD</a> defines the dimension of a scalar to be zero and
+    that of a column vector to be one, while a row vector has an <a href="lnsd.html">LNSD</a> of 2.
+   
+    Note that <a href="lnsd.html">LNSD</a>(X) changes if X is permuted. 
+   
+    [N1,N2,...NM]=<a href="lnsd.html">LNSD</a>(X1,X2,...XM) returns the dimensions of multiple 
+    input arguments.  If zero or one output arguments are given, a single 
+    row array [N1 N2 ...NM] is output.
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2002--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

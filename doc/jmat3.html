@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>JMAT3 is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="jmat3.html">JMAT3</a> 3x3 rotation matrix through specified angle.
+ 
+    J=<a href="jmat3.html">JMAT3</a>(PHI,N) creates a rotation matrix about axis N in three 
+    dimensions, e.g. <a href="jmat3.html">JMAT3</a>(PHI,3) returns
+ 
+        J=[COS(PHI) -SIN(PHI) 0;
+           SIN(PHI)  COS(PHI) 0;
+              0        0      1]
+ 
+    such that J*X rotates the column-vector X by PHI radians
+    counterclockwise in the XY plane.
+ 
+    If LENGTH(PHI)>1, then J will have dimension 3 x 3 x SIZE(PHI).
+    N may either be a scalar or an array of the same length as PHI.
+ 
+    See also <a href="vectmult.html">VECTMULT</a>, <a href="jmat2.html">JMAT2</a>.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2007--2010 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

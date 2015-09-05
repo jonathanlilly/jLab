@@ -1,0 +1,61 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VFILT is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="vfilt.html">VFILT</a>  Filtering along rows without change in length.
+ 
+    Y=<a href="vfilt.html">VFILT</a>(X,FILTER) convolves FILTER with X along their rows and crops 
+    the result Y to be the same length as X. If FILTER is a number, a 
+    Hanning filter of that length is used.  
+                                                                          
+    [Y1,Y2,...YN]=<a href="vfilt.html">VFILT</a>(X1,X2,...XN,FILTER) also works.
+ 
+    The input arrays XI may have any dimensionality.
+ 
+    <a href="vfilt.html">VFILT</a>(X1,X2,...XN,FILTER); with no output arguments overwrites the
+    original input variables.
+    ___________________________________________________________________
+ 
+    Median filter
+ 
+    <a href="vfilt.html">VFILT</a> can also be used to implement a sliding-window median filter.
+ 
+    Y=<a href="vfilt.html">VFILT</a>(...,N,'median') returns the median in a window of length N
+    centered on the current point.  If N is even, N+1 is used for the
+    window length.  Y will be the same length as X.
+    
+    The median filter is sensibly defined with an implicit "boxcar" filter. 
+    <a href="vfilt.html">VFILT</a>(...,FILTER,'median') with some other filter input will therefore
+    use a sliding window of length LENGTH(FILTER), ignoring FILTER itself.
+    ___________________________________________________________________
+ 
+    Boundary conditions
+ 
+    Y=<a href="vfilt.html">VFILT</a>(..., STR), where STR is a string, optionally specifies
+    the boundary condition to be imposed at the edges of the time
+    series.  Valid options for STR are 
+ 
+          STR = 'zeros' or 'nonans' for zero-padding beyond endpoints 
+          STR = 'nan' for zero-padding beyond the endpoints, setting 
+                 contaminated points near the edges to NaNs
+          STR = 'periodic' for periodic boundary conditions 
+          STR = 'mirror' for reflecting the time series at both ends
+ 
+    By default, STR='nan', implying that the roughly length(FILTER)/2 
+    data points on each end of Y which are contaminated by edge effects
+    are replaced with NANs.
+ 
+    All boundary conditions take into account potential blocks of 
+    missing data, marked by NaNs, at beginning and end of each column.  
+    ___________________________________________________________________
+ 
+   '<a href="vfilt.html">vfilt</a> --t' runs a test.
+ 
+    Usage: y=<a href="vfilt.html">vfilt</a>(x,filter);
+           y=<a href="vfilt.html">vfilt</a>(x,filter,'zeros');
+           y=<a href="vfilt.html">vfilt</a>(x,N,'median,'zeros');
+           [y1,y2,y3]=<a href="vfilt.html">vfilt</a>(x1,x2,x3,filter);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

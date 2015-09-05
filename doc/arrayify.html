@@ -1,0 +1,26 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ARRAYIFY is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="arrayify.html">ARRAYIFY</a>  Converts a set of scalars or arrays into column arrays.
+ 
+    [O1,O2,O3,...,ON]=<a href="arrayify.html">ARRAYIFY</a>(I1,I2,I3,...,IN) where each of the IN is
+    either a scalar or an array with M elements, converts each input 
+    variable into a length M column vector.  
+ 
+    The input variables that are M-element arrays are resized to column
+    vectors, while scalars are replicated to have M identical elements.
+ 
+    <a href="arrayify.html">ARRAYIFY</a> will return an error if any of the input variables that are 
+    not scalars have different numbers of elements from each other. 
+ 
+    <a href="arrayify.html">ARRAYIFY</a>(I1,I2,...IN); with no output arguments overwrites the original
+    input variables.
+ 
+    '<a href="arrayify.html">arrayify</a> --t' runs a test.
+ 
+    Usage: [o1,o2,o3]=<a href="arrayify.html">arrayify</a>(i1,i2,i3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

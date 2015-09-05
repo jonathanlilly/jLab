@@ -1,0 +1,49 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>XY2LATLON is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="xy2latlon.html">XY2LATLON</a>  Converts local Cartesian coordinates into latitude and longitude.
+ 
+    [LAT,LON]=<a href="xy2latlon.html">XY2LATLON</a>(X,Y,LATO,LONO) converts (X,Y) position with units 
+    of kilometers, specifying a location in a plane tangent to the earth 
+    at the point (LATO,LONO), into latitude and longitude locations.  
+ 
+    LONO may each either be specified on the interval [-180, 180] or on the
+    interval [0, 360].  Output longitudes LON are defined to be within the
+    interval [-180, 180].
+ 
+    LAT and LON may be computed with either the full spherical geometry,
+    the default, or using a small angle approximation.  To specify the
+    small angle approximation use <a href="xy2latlon.html">XY2LATLON</a>(...,'small').
+ 
+    LAT and LON are defined to be NAN for points with SQRT(X^2+Y^2)
+    exceeding the radius of the earth.
+ 
+    <a href="xy2latlon.html">XY2LATLON</a>(CX,LATO,LONO) with three input arguments, where CX is the 
+    complex-valued displacement CX=X+SQRT(-1)*Y, also works
+ 
+    The radius of the earth is given by the function <a href="radearth.html">RADEARTH</a>.
+    ___________________________________________________________________
+ 
+    Cell array input / output
+ 
+    <a href="xy2latlon.html">XY2LATLON</a> returns cell array output given cell array input.  
+ 
+    That is, if the input arguments are all cell arrays of length K, 
+    containing K different numerical arrays, then the output will also be 
+    cell arrays of length K.  
+ 
+    This also works if X and Y, or alternatively CX, are cell arrays but 
+    LATO and LONO are scalars.
+    ___________________________________________________________________
+ 
+    <a href="xy2latlon.html">XY2LATLON</a> is inverted by <a href="latlon2xy.html">LATLON2XY</a>.
+ 
+    See also <a href="latlon2xy.html">LATLON2XY</a>, <a href="latlon2uv.html">LATLON2UV</a>.
+ 
+    Usage:  [lat,lon]=<a href="xy2latlon.html">xy2latlon</a>(x,y,lato,lono);
+            [lat,lon]=<a href="xy2latlon.html">xy2latlon</a>(cx,lato,lono);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2005--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

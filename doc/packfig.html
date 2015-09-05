@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PACKFIG is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="packfig.html">PACKFIG</a>  Squeeze together rows and/or columns of the current figure.
+   
+    <a href="packfig.html">PACKFIG</a>(M,N) squeezes together all rows and columns in the current 
+    figure, which has M rows and N columns generated with SUBPLOT. This is
+    used when all subplots in a given column share common x- and y-axes.
+   
+    <a href="packfig.html">PACKFIG</a>(M,N,'columns') only packs the columns, and not the rows.
+    <a href="packfig.html">PACKFIG</a>(M,N,'rows') only packs the rows, and not the columns.
+ 
+    When the columns are packed, the Y-axis tick labels for the interior 
+    subplots are removed.  Similarly, when the rows are packed, the X-axis
+    tick labels for the interior subplots are removed.
+ 
+    H=<a href="packfig.html">PACKFIG</a>(M,N) returns a vector of handles H into the subplots.
+ 
+    <a href="packfig.html">PACKFIG</a>(H,M,N) also works, where H is a vector of handles.
+ 
+    After calling <a href="packfig.html">PACKFIG</a>, do not call SUBPLOT again, as this will destroy
+    the subplots; instead, access the subplots through AXES(H(I)) where I 
+    is an integer. 
+    _________________________________________________________________
+ 
+    Use with AXIS EQUAL
+ 
+    <a href="packfig.html">PACKFIG</a>, PACKROWS, and PACKCOLS may not work when AXIS EQUAL and
+    AXIS([A B C D]) are used together because of the way Matlab constricts
+    the figure with AXIS EQUAL. Consider altering the aspect ratio with 
+ 
+        set(gcf,'paperposition',[ left, bottom, width, height]) 
+ 
+    or
+ 
+        set(gcf,'position',[ left, bottom, width, height]) 
+ 
+    in order to obtain the desired result.  
+    [Thanks to <a href="jLab.html">JLAB</a> user Rodrigo Duran for this note.]
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details   
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

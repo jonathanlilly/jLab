@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TWOSPECPLOT is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="twospecplot.html">TWOSPECPLOT</a>  Plots a pair of rotary or Cartesian spectra.
+ 
+    <a href="twospecplot.html">TWOSPECPLOT</a>(F,SPP,SNN) plots the rotary spectra SPP and SNN with log- 
+    log axes.  SNN is on the left, with a reversed x-axis. 
+ 
+    <a href="twospecplot.html">TWOSPECPLOT</a>(F,SXX,SYY,'cartesian') left the same, but now labels the 
+    and right axes as the zonal and meridional spectra, respectively.
+ 
+    <a href="twospecplot.html">TWOSPECPLOT</a>(...,'tides') marks the major tidal with dotted lines.  F is
+    assumed to be in units of *radians* per hour.
+ 
+    <a href="twospecplot.html">TWOSPECPLOT</a>(LAT,F,SPP,SNN) also marks the Coriolis frequency at 
+    latitude LAT, using a red line, on both sides of the spectrum.
+ 
+    H=<a href="twospecplot.html">TWOSPECPLOT</a>(...) also returns the handle to the subplots.
+ 
+    The input quantities F, SPP, and SNN or F, SXX, and SYY may be cell
+    arrays.  See 'Cell array input / output' under <a href="mspec.html">MSPEC</a> for details.
+ 
+    See also <a href="mspec.html">MSPEC</a>, <a href="sleptap.html">SLEPTAP</a>.
+ 
+    Usage: <a href="twospecplot.html">twospecplot</a>(f,spp,snn)
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2012--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

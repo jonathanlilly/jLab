@@ -1,0 +1,82 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>JLAB_HIGHLIGHTS is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="jlab_highlights.html">JLAB_HIGHLIGHTS</a>  Introduction to some of the most useful routines.
+ 
+    <a href="jlab_highlights.html">JLAB_HIGHLIGHTS</a>  Highlights from the <a href="jLab.html">JLAB</a> toolbox.
+ 
+    <a href="twodstats.html">TWODSTATS</a>, <a href="twodmed.html">TWODMED</a>, <a href="twodhist.html">TWODHIST</a>.  Examining temperature mean and standard
+    deviation over a lat/lon grid, or current speed as a function of say
+    temperature and salinity, or any analysis of multivariate datasets, is
+    faster and easier than you ever imagined.  If you are working with 
+    data and not using these routines, you should seriously take five 
+    minutes right now and try them out.  As of Matlab 2015b, these take 
+    advantage of improvements in Matlab and are even faster than before, 
+    and now support parallelization as well. 
+ 
+    <a href="mspec.html">MSPEC</a>.  If you analyze time series, you need a method you can rely on.
+    There are many compelling reasons to prefer the "multitaper" method.
+    In this method, a set of estimates from optimally concentrated tapers
+    or window functions are averaged together, reducing variance while 
+    minimizing bias.  <a href="mspec.html">MSPEC</a> makes using the multitaper straightforward.  
+    Just call <a href="sleptap.html">SLEPTAP</a> first to generate the tapers.  <a href="mspec.html">MSPEC</a> features support
+    for cross spectra and rotary spectra, as well as 'adaptive' estimation.
+    
+    <a href="wavetrans.html">WAVETRANS</a>.  A lot of work and original research has gone into this 
+    continuous wavelet transform routine, which I believe is the best you 
+    will find anywhere, and it's free.  Features natural integration with
+    the generalized Morse wavelets (see below), choice of conditions at 
+    the signal endpoints, support for multiple wavelets or mulit-component
+    data, and convenient handling of real-valued or complex-valued data.
+ 
+    <a href="morsewave.html">MORSEWAVE</a>.  A detailed analysis of types of continuous wavelets 
+    (Lilly and Olhede, 2009) points to a super-family, the generalized 
+    Morse wavelets, that should answer your questions about which wavelet
+    to employ. Pick the generalized Morse wavelet with parameter gamma=3 
+    unless you have a very good reason to do otherwise.  This wavelet is
+    'like' the Morlet in spirit, but without the Morlet's serious flaws at
+    narrow time-domain settings---which is when you most want to employ a 
+    wavelet anyway.  Use <a href="morsespace.html">MORSESPACE</a> to easily determine frequency bins.
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>.  If your time series data contains signals that oscillate
+    but also change in time, the wavelet transform can be used as the basis
+    for a remarkably powerful analysis that connects time-varying 
+    properties to spectral structure.  The starting place for this analysis
+    is <a href="ridgewalk.html">RIDGEWALK</a>.  This advanced algorithm incorporates original research 
+    from Lilly & Olhede (2010a+b, 2011).  A key innovation is the ability 
+    to view *multivariate* and univariate time series within the same 
+    framework as modulated oscillations.
+ 
+    <a href="polysmooth.html">POLYSMOOTH</a>.  Need to map scattered data, for example, temperature as a 
+    function of X and Y?  <a href="polysmooth.html">POLYSMOOTH</a>, short for "Polynomial Smoothing", 
+    is a powerful and quite general mapping algorithm.  Features choice of 
+    order of the fit, choice of local weighting function, support for 
+    spherical geometry, options for constant fit radius or constant number
+    of data points with variable radius.  This algorithm was implemented
+    for the forthcoming Aquarius Sea Surface Salinity satellite.
+ 
+    <a href="jGraph.html">JGRAPH</a>.  Finessing figures in Matlab can be a total hassle.  Which
+    would you prefer to type, version (a) or  version (b) ? 
+ 
+       (a)  z=peaks;
+            plot(z(:,1),'linewidth',3,'<a href="linestyle.html">linestyle</a>','-','color','b'),hold on
+            plot(z(:,2),'linewidth',2,'<a href="linestyle.html">linestyle</a>','--','color','r')
+ 
+       (b)  z=peaks;plot(z(:,1:2)), linestyle 3b- 2r--
+ 
+    They are identical.  JLAB's <a href="linestyle.html">LINESTYLE</a> will save you a lot of time.  
+    It includes natural syntax for grayscale, as in "linestyle 3k- 2G-.",
+    where the letter G stands for the shade of gray, between A and K. 
+    The <a href="jGraph.html">JGRAPH</a> module contains many similar time-saving functions, such as
+    <a href="ylog.html">YLOG</a> and <a href="ylin.html">YLIN</a>, <a href="yoffset.html">YOFFSET</a>, <a href="flipy.html">FLIPY</a>, <a href="outticks.html">OUTTICKS</a>, <a href="flipmap.html">FLIPMAP</a>, etc.
+ 
+    <a href="packfig.html">PACKFIG</a>.  Are your multiple subplots too far away from each other?  
+    Don't like having to set the axes properties by hand each time?  Try  
+    this function.  For example, "<a href="packfig.html">packfig</a>(3,4)" will squish your 3 rows and 
+    4 columns so they are right next to each other, removing the redundant
+    x- and y-axes labels.
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

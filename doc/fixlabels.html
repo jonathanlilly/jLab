@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>FIXLABELS is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="fixlabels.html">FIXLABELS</a>  Specify precision of axes labels.
+ 
+    <a href="fixlabels.html">FIXLABELS</a>(PREC) rewrites the X and Y axis labels of the current axes tp
+    precision PREC.  PREC denotes the tenths place of the highest-precision
+    digit, so PREC=-2 includes the hundredths place.
+ 
+    Unlike standard matlab labelling, <a href="fixlabels.html">FIXLABELS</a> uses zeros instead of blank
+    spaces to the right of the decimal point.
+ 
+    <a href="fixlabels.html">FIXLABELS</a>([XPREC,YPREC]) uses different precision for the X and Y axes. 
+ 
+    <a href="fixlabels.html">FIXLABELS</a>(H,PREC) rewrites the labels of axes H.  H may also be a
+    vector of axes handles, in which case PREC may either be a scalar or a
+    vector PREC=[X1PREC Y1PREC X2PREC ...] .
+ 
+    <a href="fixlabels.html">FIXLABELS</a> with no arguments rewrites all X and Y axis labels of the
+    current figure to the default (current) precision for that axis, but 
+    using zeros instead of blank spaces to the right of the decimal point.
+ 
+    Note: make sure the tickmarks are where you want them in the hardcopy 
+    before calling <a href="fixlabels.html">FIXLABELS</a> (since it sets the 'TICKMODE' and 
+    'TICKLABELMODE' properties to 'MANUAL').
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 1999--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

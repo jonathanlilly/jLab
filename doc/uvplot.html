@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>UVPLOT is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="uvplot.html">UVPLOT</a>  Plots the real and imaginary parts of a signal on the same axis.
+ 
+    <a href="uvplot.html">UVPLOT</a>(T,CV) plots the real and imaginary components of the
+    complex-valued data CV=U+iV versus time T.  Here T is a column
+    vector and CV is a matrix with LENGTH(T) rows.
+ 
+    <a href="uvplot.html">UVPLOT</a>(T,CV,STY1,STY2) optionally plots the real components of CV,
+    U, using style STY1, and the imaginary components V using STY2.
+    STY1 and STY2 are strings following the format in <a href="linestyle.html">LINESTYLE</a>.
+ 
+    <a href="uvplot.html">UVPLOT</a>(T,CV,STY) uses STY for the linestyles of both lines.
+ 
+    <a href="uvplot.html">UVPLOT</a>(T,U,V,...), where U and V are real matrices, also works.  
+ 
+    [H1,H2]=<a href="uvplot.html">UVPLOT</a>(...) returns handles to the line plots of U and V.
+ 
+    As an example,
+ 
+         load bravo94
+         cv=<a href="vfilt.html">vfilt</a>(bravo.rcm.cv(:,3),24);
+         num=yf2num(bravo.rcm.yearf)-datenum(1994,1,1);
+         <a href="uvplot.html">uvplot</a>(num,cv,'2b','r-.'),xlim([120 340])
+ 
+    returns a color version of Fig.4b of Lilly and Rhines JPO 2001.
+  
+    Usage:  <a href="uvplot.html">uvplot</a>(t,cv);
+            <a href="uvplot.html">uvplot</a>(t,cv,sty1,sty2);
+            <a href="uvplot.html">uvplot</a>(t,cv,sty1,sty2,dy);
+            <a href="uvplot.html">uvplot</a>(t,u,v,sty1,sty2,dy);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2000--2012 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

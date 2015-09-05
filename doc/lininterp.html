@@ -1,0 +1,55 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>LININTERP is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="lininterp.html">LININTERP</a>  Fast linear interpolation for arbitrary-sized arrays.
+ 
+    <a href="lininterp.html">LININTERP</a> is a low-level function called by <a href="ridgeinterp.html">RIDGEINTERP</a>.
+ 
+    XI=<a href="lininterp.html">LININTERP</a>(T1,T2,X1,X2,TI) interpolates a function X within an 
+    independent variable T using a linear algorithm.
+ 
+    The function values X1 and X2 may be arrays of any size provided they
+    are the same size.  The "time" values T1 and T2 may be scalars, or 
+    arrays of the same size as X1 and X2.
+ 
+    If T1 and T2 and X1 and X2 are non-scalar arrays, T should either be
+    a scalar or an array of the same size as the other arguments.
+ 
+    If T1 and T2 and X1 and X2 are all scalars, T may be of any size, and
+    XI will have the same size as T.
+ 
+    The function values X1 and X2 may be real or complex.
+ 
+    <a href="lininterp.html">LININTERP</a> uses the exact algebraic expressions to operate looplessly
+    on matrices, thus it is very fast.    
+    __________________________________________________________________
+ 
+    Locating x-intercept
+ 
+    <a href="lininterp.html">LININTERP</a> can also be used to find the x-intercept value of X(T).
+  
+    TO=<a href="lininterp.html">LININTERP</a>(T1,T2,X1,X2) with only four input arguments returns TO,
+    the time at which X(T) vanishes.
+ 
+    TO is the same size as the input arrays.
+    __________________________________________________________________
+ 
+    Algorithm details
+ 
+    Let X and T be related as
+ 
+               X = A*T + B 
+ 
+    The coefficients A and B are uniquely determined by two (T,X) pairs.  
+    <a href="lininterp.html">LININTERP</a> solves for these coefficients and uses the result to 
+    interpolate X to any other value of T.   
+    __________________________________________________________________
+ 
+    See also <a href="quadinterp.html">QUADINTERP</a>, CUBINTERP.
+   
+    Usage:   x=<a href="lininterp.html">lininterp</a>(t1,t2,x1,x2,t);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2011--2012 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

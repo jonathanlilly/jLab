@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TWODHIST is the <a href="jStats.html">jStats</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="twodhist.html">TWODHIST</a>  Two-dimensional histogram.
+    __________________________________________________________________
+ 
+    <img src="../figures/twodhist.png">
+    __________________________________________________________________
+ 
+    MAT=<a href="twodhist.html">TWODHIST</a>(X,Y,XBIN,YBIN) where X and Y are arrays of the same
+    length, creates a two-dimensional histogram MAT with bin edges
+    specified by XBIN and YBIN. 
+ 
+    If XBIN and YBIN are length N and M, respectively, then MAT is of
+    size M-1 x N-1.  XBIN and YBIN must be monotonically increasing. 
+ 
+    [MAT,XMID,YMID]=<a href="twodhist.html">TWODHIST</a>(...) optionally returns the midpoints XMID
+    and YMID of the bins.
+ 
+    <a href="twodhist.html">TWODHIST</a>, <a href="twodstats.html">TWODSTATS</a>, and <a href="twodmed.html">TWODMED</a> are three related functions for 
+    computing statistics as a function two variables using very fast
+    algorithms that avoid any loops through efficient use of indexing.
+ 
+    X and Y can also be cell arrays of numerical arrays, in which case 
+    all data values are concatented prior to finding the histogram.
+    __________________________________________________________________
+ 
+    Automatic bin calculation
+ 
+    <a href="twodhist.html">TWODHIST</a> can compute appropriate bins internally.
+ 
+    [MAT,XMID,YMID]=TWODIST(X,Y,N) uses N bins in the X and Y directions,
+    linearly spaced between the minimum and maximum values, and returns the
+    bin midpoints in XMID and YMID.  MAT is N-1 x N-1.
+ 
+    [MAT,XMID,YMID]=TWODIST(X,Y,[XMIN XMAX],[YMIN YMAX],N) similarly uses N
+    bins, linearly spaced between the designated X and Y values.  
+    __________________________________________________________________
+  
+    Algorithms
+ 
+    By default, <a href="twodhist.html">TWODHIST</a> now works with an internal call to Matlab's
+    HISTCOUNTS2 function, available as of Matlab 2015b.  This is much 
+    faster than the previous algorithm.
+ 
+    If HISTCOUNTS2 is not available, <a href="twodhist.html">TWODHIST</a> uses loopless algorithm that
+    is in turn much faster than an explicit loop.  <a href="twodhist.html">TWODHIST</a>(...,'<a href="jLab.html">jLab</a>') 
+    uses this algorithm, while <a href="twodhist.html">TWODHIST</a>(...,'slow') uses the explicit loop.
+    These options are mostly used for testing purposes.
+    __________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="twodhist.html">TWODHIST</a>(...,'parallel') parallelizes the computation using the fast 
+    algorithm together with SPMD.  This requires that Matlab's Parallel
+    Computing Toolbox be installed.  While <a href="twodhist.html">TWODHIST</a> is already very fast,
+    parallelization may be useful for extremely large datasets.
+    __________________________________________________________________
+ 
+    See also <a href="twodmed.html">TWODMED</a>, <a href="twodstats.html">TWODSTATS</a>.
+ 
+    '<a href="twodhist.html">twodhist</a> --f' generates the sample figure shown above.
+    '<a href="twodhist.html">twodhist</a> --t' runs some tests.
+ 
+    Usage: [mat,xmid,ymid]=<a href="twodhist.html">twodhist</a>(x,y,N);
+           [mat,xmid,ymid]=<a href="twodhist.html">twodhist</a>(x,y,[xmin xmax],[ymin ymax],N);
+           mat=<a href="twodhist.html">twodhist</a>(x,y,xbin,ybin);
+           [mat,xmid,ymid]=<a href="twodhist.html">twodhist</a>(x,y,xbin,ybin,'parallel');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

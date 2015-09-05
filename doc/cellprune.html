@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLPRUNE is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellprune.html">CELLPRUNE</a>  Removes all empty cells, or cells less than a specified length.
+ 
+    Y=<a href="cellprune.html">CELLPRUNE</a>(X), where X is a cell array, returns Y which is the same 
+    as X but excluding any empty cells.  
+ 
+    An example of an input cell array X and the output Y is as follows:
+ 
+        X{1} = [1 2 3 4 nan]';    X{2}=[]';    X{3}=[1 2];
+        Y{1} = [1 2 3 4]';                     Y{2}=[1 2];
+ 
+    Y=<a href="cellprune.html">CELLPRUNE</a>(X,M) will remove all cells with a length of less than M 
+    points. In the above example, Y=<a href="cellprune.html">CELLPRUNE</a>(X,3) gives Y{1}=[1 2 3 4]'.
+ 
+    [Y1,Y2,...YN]=<a href="cellprune.html">CELLPRUNE</a>(X1,X2,...XN) or <a href="cellprune.html">CELLPRUNE</a>(X1,X2,...XN,M) with
+    multiple input arguments, all of the same size, also works.  
+ 
+    <a href="cellprune.html">CELLPRUNE</a>(X1,X2,...XN); or <a href="cellprune.html">CELLPRUNE</a>(X1,X2,...XN,M);  with no output 
+    arguments overwrites the original input variables.  
+ 
+    '<a href="cellprune.html">cellprune</a> --t' runs a test.
+ 
+    Usage: y=<a href="cellprune.html">cellprune</a>(x);
+           [y1,y2,y3]=<a href="cellprune.html">cellprune</a>(x1,x2,x3);
+           [y1,y2,y3]=<a href="cellprune.html">cellprune</a>(x1,x2,x3,M);
+           <a href="cellprune.html">cellprune</a>(x1,x2,x3,M);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

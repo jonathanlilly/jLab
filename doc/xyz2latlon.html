@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>XYZ2LATLON is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="xyz2latlon.html">XYZ2LATLON</a>  Converts 3D Cartesian coordinates into latitude and longitude.
+ 
+    [LAT,LON]=<a href="xyz2latlon.html">XYZ2LATLON</a>(X,Y,Z) converts Cartesian coordinates of a
+    vector in three dimensions into latitude and longitude. 
+ 
+    LAT and LON are in degrees, and X, Y, and Z can be in any units.  The 
+    output LON will be in the range [-180,180].
+ 
+    The length of the vector (X,Y,Z) does not matter since X, Y, and Z are 
+    rescaled in order to lie on the unit sphere.
+ 
+    The Cartesian coordinate system is a right-handed system whose origin
+    lies at the center of the sphere.  It is oriented with the Z-axis 
+    passing though the poles and the X-axis passing through LAT=0, LON=0.  
+ 
+    <a href="xyz2latlon.html">XYZ2LATLON</a> is inverted by <a href="latlon2xyz.html">LATLON2XYZ</a>.
+ 
+    See <a href="jSphere.html">JSPHERE</a> for related functions.
+ 
+    '<a href="xyz2latlon.html">xyz2latlon</a> --t' runs a test.
+ 
+    Usage: [lat,lon]=<a href="xyz2latlon.html">xyz2latlon</a>(x,y,z);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,30 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>DISCRETECOLORBAR is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="discretecolorbar.html">DISCRETECOLORBAR</a>  Plots a colorbar with discrete variation.
+ 
+    In filled contour plots one has discrete values of color (or of
+    shading), but the colorbar resulting from Matlab's COLORBAR command    
+    has a continuous spectrum of color.                                   
+                                                                          
+    <a href="discretecolorbar.html">DISCRETECOLORBAR</a>(HC,CAX,CI) where HC is a handle to a colorbar axis   
+    (i.e. from calling HC=COLORBAR), CAX=[CMIN CMAX] are the color axis   
+    limits, and CI is a vector of contour intervals, redraws the colorbar 
+    with discrete breaks at values CI and axis limits CAX.    
+ 
+    HC=<a href="discretecolorbar.html">DISCRETECOLORBAR</a>(...) also outputs the handle to teh .....
+                                                                          
+    <a href="discretecolorbar.html">DISCRETECOLORBAR</a>(HC,CAX,CI,STR) where STR is either 'hori' or 'vert'  
+    specifies whether the colorbar should have a horizontal or vertical   
+    orientation; STR defaults to 'vert'.                                  
+                                                                          
+    Make sure to set the color axis of the contour plot is also is set    
+    to CAX [via CAXIS(CAX)].        
+ 
+    Usage:  <a href="discretecolorbar.html">discretecolorbar</a>(hc,cax,ci);
+            <a href="discretecolorbar.html">discretecolorbar</a>(hc,cax,ci,str);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2001--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details  
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

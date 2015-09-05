@@ -1,0 +1,99 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>READTOPO is the <a href="jdata.html">jdata</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="readtopo.html">READTOPO</a>  Read one-minute topography data from Smith and Sandwell. 
+    _______________________________________________________________________
+    
+    <img src="../figures/readtopo.png">
+    _______________________________________________________________________
+ 
+    [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>(REGION) extracts regional topography from the
+    the one-minute Smith and Sandwell global database version 18.1.  This 
+    file is included with <a href="jData.html">JDATA</a>, available from at http://www.jmlilly.net.
+ 
+    REGION is an array of the form REGION=[WEST EAST SOUTH NORTH] which  
+    indicates the *edges* of the desired domain.  Longitudes can be 
+    specified either on the interval [0,360] or the interval [-180,180]. 
+ 
+    The region may overlap the prime meridian or the dateline.  Region
+    boundaries are interpreted to exclude the poles. 
+  
+    TOPO is a matrix of topography in units of kilometers and is positive 
+    for above sea level, and negative for below sea level.  
+ 
+    LON is a row vector of longitudes and LAT a column vector of latitudes.
+ 
+    LAT and LON output by <a href="readtopo.html">READTOPO</a> are *grid-centered*, that is, they
+    indicate midpoints of the topography cells. LON is uniformly spaced, 
+    but LAT is non-uniformly spaced, with bin sizes decreasing poleward.
+ 
+    Note that the Smith and Sandwell database is defined only for latitudes 
+    between -80.738 and 80.738.
+ 
+    Topography at higher northern latitudes is found in the IBCAO dataset,
+    see <a href="about_ibcao.html">ABOUT_IBCAO</a>.  A merged 1/6th degree version of both datasets,
+    called JTOPO, is is distributed with JLAB; see <a href="about_jtopo.html">ABOUT_JTOPO</a> for details.
+    __________________________________________________________________
+ 
+    Interpolation
+ 
+    [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>(REGION,DLAT,DLON) optionally linearly 
+    interpolates the one-minute (1/60 degree) topographic data to a 
+    different resolution, specified by DLAT and DLON, in degrees.   
+ 
+    <a href="readtopo.html">READTOPO</a>(REGION,DLAT) with DLON omitted sets DLON=DLAT.
+ 
+    This is useful for interpolating the high-resolution Smith and Sandwell
+    dataset to a coarser resolution. 
+    __________________________________________________________________
+ 
+    Alternate path
+ 
+    By default, <a href="readtopo.html">READTOPO</a> looks for the topography file topo_18.1.img in 
+    the <a href="jLab.html">JLAB</a> directory.  
+ 
+    [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>(DIRNAME,REGION...) alternatively specifies  
+    DIRNAME as the path to the parent directory of the file topo_18.1.img. 
+    __________________________________________________________________
+ 
+    Data and documentation
+ 
+    The original location for the Smith and Sandwell Global Topography
+     Dataset v. 18.1, file 'topo_18.1.img' is
+ 
+        http://topex.ucsd.edu/WWW_html/mar_topo.html.
+ 
+    The reference for the Smith and Sandwell Database is
+ 
+       Smith, W. H. F., and D. T. Sandwell, Global seafloor topography 
+       from satellite altimetry and ship TOPO soundings, Science, v. 277, 
+       p. 1957-1962, 26 Sept., 1997.
+    __________________________________________________________________
+ 
+    License and Copyright 
+ 
+    The data file topo_18.1.img is distributed with <a href="jData.html">JDATA</a> for RESEARCH AND 
+    NON-PROFIT <a href="use.html">USE</a> ONLY, in accordance with the copyright statement for the
+    Smith and Sandwell dataset.  For details, type 'help <a href="topo_copyright.html">topo_copyright</a>'.
+ 
+    You are free to use and redistribute <a href="readtopo.html">READTOPO</a> under the terms in the
+    <a href="jLab.html">JLAB</a> license, http://www.jmlilly.net/doc/jlab/jlab_license.html.
+ 
+    <a href="readtopo.html">READTOPO</a> is self-contained, although tests and sample figure require 
+    <a href="jLab.html">JLAB</a> to run.  <a href="jLab.html">JLAB</a> is available from http://www.jmlilly.net.
+ 
+    Send comments, questions, and bug reports to 'eponym@jmlilly.net'.
+    __________________________________________________________________
+     
+    See also <a href="about_ibcao.html">ABOUT_IBCAO</a>, and JTOPO, <a href="regionplot.html">REGIONPLOT</a>, and <a href="topoplot.html">TOPOPLOT</a> in <a href="jLab.html">JLAB</a>.
+ 
+    '<a href="readtopo.html">readtopo</a> --f' generates the sample figure shown above.
+    '<a href="readtopo.html">readtopo</a> --t' runs some tests.
+ 
+    Usage: [topo,lat,lon]=<a href="readtopo.html">readtopo</a>([west east south north]);
+           [topo,lat,lon]=<a href="readtopo.html">readtopo</a>(dirname,[west east south north]);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

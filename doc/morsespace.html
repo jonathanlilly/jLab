@@ -1,0 +1,97 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSESPACE is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morsespace.html">MORSESPACE</a>  Logarithmically-spaced frequencies for generalized Morse wavelets.
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) generates a frequency array for the 
+    generalized Morse wavelet transform of an N-point time series. The 
+    wavelets are specified by GAMMA and BETA.  
+ 
+    LOG(F) is uniformly spaced, following convention for wavelet analysis.
+ 
+    F has units of *radians* per sample point, and is a column vector with 
+    the frequencies arranged in decending order. 
+    
+    In this usage, the frequencies F are determined using default settings,
+    described below, which should be appropriate for most applications.  
+ 
+    Additional control over the frequency array F can be obtained using the
+    following alternate usages.
+    __________________________________________________________________
+ 
+    High- and low-frequency specification
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,LOW) explicitly sets the high-frequency
+    and low-frequency cutoffs for the frequency array.  
+ 
+    The first (largest) value of F is then just smaller than HIGH and the 
+    smallest is just larger than LOW.
+ 
+    HIGH and LOW have units of *radian* per unit sample point.
+    __________________________________________________________________
+ 
+    High-frequency cutoff
+ 
+    The highest frequency can be set to be the minimum of a specified value
+    and a cutoff frequency based on a Nyquist overlap condition.
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,{ALPHA,HIGH},LOW) sets the highest frequency 
+    to be the minimum of the specified value HIGH, and the largest 
+    frequency for which the wavelet will satisfy the threshold level ALPHA. 
+ 
+    Here ALPHA be a number between zero and one specifying the ratio of a
+    frequency-domain wavelet at the Nyquist frequency to its peak value.
+ 
+    Note that in this usage, {ALPHA,HIGH} is a cell array with two entries.
+ 
+    The simplified usage F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) corresponds to the 
+    choice ALPHA=0.1, so that by default, the highest-frequency wavelet 
+    will decay to at least 10% of its peak value at the Nyquist frequency.
+    __________________________________________________________________
+ 
+    Low-frequency cutoff
+ 
+    The lowest frequency can be set to a cutoff frequency based on an 
+    endpoint overlap condition.
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{R,N}) sets the lowest frequency such that
+    the lowest-frequency wavelet will reach R times its central window
+    width at the ends of the time series. 
+   
+    A choice of R=SQRT(2) corresponds to roughly 95% of the time-domain 
+    wavelet energy being contained within the time series endpoints for a
+    wavelet at the center of the domain.
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{R,N,LOW}) alternately chooses the maximum 
+    of the R-level cutoff frequency, and a specified low frequency LOW.
+    
+    The simplified usage F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) corresponds to the
+    default value R=5*SQRT(2).  At the lowest frequency, five wavelets will
+    then fit into the time series, with 5% energy overlap between them.
+    __________________________________________________________________
+ 
+    Wavelet density
+ 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,LOW,D) controls the number of points in 
+    the frequency array through the 'density' D. 
+ 
+    Higher values of D mean more overlap in the frequency domain. The
+    default value of the density is D=4.
+ 
+    When D=1, the peak of one wavelet is located at the half-power points 
+    of the adjacent wavelet. D=4 means that four other wavelets will occur 
+    between the peak of one wavelet and its half-power point. 
+    __________________________________________________________________
+ 
+    See also <a href="morsewave.html">MORSEWAVE</a>, <a href="wavetrans.html">WAVETRANS</a>.
+   
+    Usage: f=<a href="morsespace.html">morsespace</a>(ga,be,N);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,high,low,D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},low,D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},{r,N},D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},{r,N,low},D);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2009--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

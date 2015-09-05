@@ -1,0 +1,31 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TO_GRAB_FROM_CALLER is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="to_grab_from_caller.html">TO_GRAB_FROM_CALLER</a>  Returns a string to grab variable values from caller.
+ 
+    <a href="to_grab_from_caller.html">TO_GRAB_FROM_CALLER</a> is used from within an m-file function which is
+    called with a set of variable names, and having input VARARGIN.  
+ 
+    STR=<a href="to_grab_from_caller.html">TO_GRAB_FROM_CALLER</a> then returns a string STR such that EVAL(STR) 
+    within the m-file will 'grab' all input variables from the calling 
+    workspace.  That is, if an m-file is called as follows
+ 
+          MFILE V1 V2 V3
+     
+    then after EVAL(TO_GRAB_FROM_CALLER) within the m-file, the m-file
+    workspace will contain variables named V1, V2, and V3 whose values are
+    the same as in the calling workspace.
+ 
+    <a href="to_grab_from_caller.html">TO_GRAB_FROM_CALLER</a>(INDEX) where INDEX is e.g. [1 2 3] grabs only the
+    values of the Nth the specified input variables, in this example the
+    first throught the third.
+ 
+    See also <a href="to_overwrite.html">TO_OVERWRITE</a>.
+ 
+    Usage: eval(to_grab_from_caller)
+           eval(<a href="to_grab_from_caller.html">to_grab_from_caller</a>(index))
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
