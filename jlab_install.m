@@ -7,8 +7,8 @@
 %
 %   The second line adds all the JLAB subdirectories to your search path. 
 %
-%   If you have downloaded from GitHub, you will need to change the top
-%   level directory to be 'jlab' instead of 'jLab-master'.  
+%   If you have downloaded from GitHub or Mathworks, you will need to 
+%   change the name of the top level directory to be 'jlab'.  
 %  
 %   Then please type 'jlab_runtests' at the Matlab command prompt and copy
 %   and paste the output to me at eponym@jmlilly.net.  
