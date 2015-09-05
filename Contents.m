@@ -5,6 +5,9 @@
 %  analysis, signal processing, mapping, and oceanographic applications.
 %
 %  Requires Matlab version 2014b or later. 
+%
+%  Homepage: http://www.jmlilly.net/software 
+%  GitHub: https://github.com/jonathanlilly/jLab
 %  ________________________________________________________________________  
 %
 % General purpose modules

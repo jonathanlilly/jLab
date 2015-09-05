@@ -2,6 +2,8 @@
 %
 %   Changes new in version 1.6.1
 %
+%   jLab is now on GitHub at https://github.com/jonathanlilly/jLab.
+%
 %   WAVETRANS now supports parallelization.
 %   LINECOLOR bugfix for colormaps of lengths different from 64.
 %   CELLFIRST now also supports a 'last' flag to return the last element.
