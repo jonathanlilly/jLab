@@ -1,8 +1,8 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>CELLFIRST is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="cellfirst.html">CELLFIRST</a>  Returns the first element of each entry in a cell array.
+<div><h1>CELLFIRST is the <a href="jcell.html">jcell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellfirst.html">CELLFIRST</a>  Returns the first (or last) element of each entry in a cell array.
  
     Y=<a href="cellfirst.html">CELLFIRST</a>(X), where X is a cell array of N numeric arrays, returns a
     length N array Y containing the first element of each of the N cells.
@@ -18,10 +18,13 @@
     <a href="cellfirst.html">CELLFIRST</a>(X1,X2,...XN); with no output arguments overwrites the 
     original input variables.   
  
+    <a href="cellfirst.html">CELLFIRST</a>(...,'last') optionally returns the last element in each cell.
+ 
     '<a href="cellfirst.html">cellfirst</a> --t' runs a test.
  
     Usage: y=<a href="cellfirst.html">cellfirst</a>(x);
            [y1,y2]=<a href="cellfirst.html">cellfirst</a>(x1,x2);
+           [y1,y2]=<a href="cellfirst.html">cellfirst</a>(x1,x2,'last');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details

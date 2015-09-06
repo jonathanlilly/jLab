@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>PACKFIG is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>PACKFIG is the <a href="jgraph.html">jgraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="packfig.html">PACKFIG</a>  Squeeze together rows and/or columns of the current figure.
    
     <a href="packfig.html">PACKFIG</a>(M,N) squeezes together all rows and columns in the current 
@@ -26,15 +26,15 @@
  
     Use with AXIS EQUAL
  
-    <a href="packfig.html">PACKFIG</a>, PACKROWS, and PACKCOLS may not work when AXIS EQUAL and
-    AXIS([A B C D]) are used together because of the way Matlab constricts
-    the figure with AXIS EQUAL. Consider altering the aspect ratio with 
+    <a href="packfig.html">PACKFIG</a> may not work when AXIS EQUAL and AXIS([A B C D]) are used 
+    together because of the way Matlab constricts the figure with AXIS 
+    EQUAL. Consider altering the aspect ratio with 
  
-        set(gcf,'paperposition',[ left, bottom, width, height]) 
+        set(gcf,'paperposition',[left bottom width height]) 
  
     or
  
-        set(gcf,'position',[ left, bottom, width, height]) 
+        set(gcf,'position',[left bottom width height]) 
  
     in order to obtain the desired result.  
     [Thanks to <a href="jLab.html">JLAB</a> user Rodrigo Duran for this note.]

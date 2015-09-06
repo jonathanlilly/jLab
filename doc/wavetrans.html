@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>WAVETRANS is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>WAVETRANS is the <a href="jwavelet.html">jwavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="wavetrans.html">WAVETRANS</a>  Continuous wavelet transform.
     _______________________________________________________________________
  
@@ -118,6 +118,13 @@
     which converts WX and WY to WP and WN using a matrix multiplication
     with the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
     ___________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="wavetrans.html">WAVETRANS</a>(...,'parallel') parallelizes the wavelet transform using a 
+    PARFOR loop, when the data X contains multiple columns.  This requires 
+    that Matlab's Parallel Computing Toolbox be installed. 
+    __________________________________________________________________
  
     See also <a href="morsespace.html">MORSESPACE</a>, <a href="ridgewalk.html">RIDGEWALK</a>, <a href="wavespecplot.html">WAVESPECPLOT</a>.
  

@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>LATRATIO is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>LATRATIO is the <a href="jsphere.html">jsphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="latratio.html">LATRATIO</a>  Set plot aspect ratio for latitude / longitude plot.
  
     <a href="latratio.html">LATRATIO</a>(LAT) sets the aspect ratio of the current axis correctly a 
@@ -21,11 +21,19 @@
     AR=<a href="latratio.html">LATRATIO</a>(LAT) alternately returns the correct aspect ratio in a 
     two-element array AR, without modifying any plots. 
  
+    Note when used with QUIVER, one should multiply the u-velocity input to
+    QUIVER by AR(1) in order to obtain a correct scaling.  For example,
+    
+       figure,axis([-5 5 55 65]);hold on
+       <a href="latratio.html">latratio</a>(60);ar=<a href="latratio.html">latratio</a>(60);quiver(0,60,ar(1)*1,1);
+   
+    produces an arrow oriented to the northeast, as expected. 
+ 
     Usage: <a href="latratio.html">latratio</a>(lat,h);
            <a href="latratio.html">latratio</a>(lat);
            latratio;
-           ar=<a href="latratio.html">latratio</a>n(lat);
+           ar=<a href="latratio.html">latratio</a>(lat);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2007--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2007--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
