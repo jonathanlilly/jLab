@@ -65,7 +65,7 @@ end
 % 'spectral' setting on http://colorbrewer2.org/ set to 11 colors
 % It is modified a little to make the brightest yellow a little less bright.
 function[cmap] = colorm(varargin)
-n = 100;
+n = varargin{1};
 %frac=1;
 frac=.95; % Slight modification from colorbrewer here to make the yellows in the center just a bit darker
 cmapp = [158, 1, 66; 213, 62, 79; 244, 109, 67; 253, 174, 97; 254, 224, 139; 255*frac, 255*frac, 191*frac; 230, 245, 152; 171, 221, 164; 102, 194, 165; 50, 136, 189; 94, 79, 162];
