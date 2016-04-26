@@ -23,11 +23,13 @@ function[mat,xmid,ymid,num,stdz]=twodstats(varargin)
 %
 %   MZ=TWODSTATS(X,Y,Z,XBIN,YBIN) where X, Y and Z are arrays of the same
 %   length, forms the mean of Z over the XY plane.  
+%
+%   X and Y must be real-valued, but Z may be complex-valued.
 %  
 %   If XBIN and YBIN are length N and M, respectively, then MZ is of 
 %   size M-1 x N-1.  Bins with no data are assigned a value of NAN.
 %
-%   XBIN and YBIN must be monotonically increasing. 
+%   XBIN and YBIN must be monotonically increasing.
 %
 %   MZ=TWODSTATS(X,Y,Z,N) uses N bins in the X and Y directions, linearly
 %   spaced between the minimum and maximum values.  MZ is N-1 x N-1.
@@ -131,8 +133,11 @@ end
 if ~aresame(size(xdata),size(ydata))
      error('X and Y should have the same size.')
 end
-if ~isreal(xdata)||~isreal(ydata)||~isreal(zdata)
-    error('X, Y, and Z must be real-valued.');
+%if ~isreal(xdata)||~isreal(ydata)||~isreal(zdata)
+%    error('X, Y, and Z must be real-valued.');
+%end
+if ~isreal(xdata)||~isreal(ydata)
+    error('X and Y must be real-valued.');
 end
 
 vcolon(xdata,ydata);
@@ -265,6 +270,9 @@ if ~isempty(index)
     end
 end
 
+if ~isreal(mat)
+    mat(isnan(mat))=nan+1i*nan;
+end
 
 function[mat,num,cov]=twodstats_one(xdata,ydata,zdata,xbin,ybin,stdflag,str)
 

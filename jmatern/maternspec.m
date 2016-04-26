@@ -70,13 +70,11 @@ function[varargout]=maternspec(varargin)
 %   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
 %   returns the spectrum of the four-parameter "extended" Matern process:
 %
-%      S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
-%                                    / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C               
+%      S(F) = SIGMA^2 * BESSELK(ALPHA,SQRT(F^2+LAMBDA^2)/MU)
+%                                    / (SQRT(F^2+LAMBDA^2)/MU)^ALPHA * C               
 %
 %   where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
-%
-%   The additional parameter, MU, has the same units as DT. 1/MU has the 
-%   interpretation of a frequency e-folding scale.
+%   The additional parameter, MU, has units of frequency.
 %
 %   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
 %   extended Matern spectrum to be centered at F=NU rather than F=0.
@@ -99,8 +97,8 @@ function[varargout]=maternspec(varargin)
 %
 %   Composite Matern
 %
-%   [F,SPP,SNN]=MATERNSPEC(SIGMA,ALPHA,LAMBDA,NU,MU,'composite') implements
-%   the "composite" Matern spectrum having the form
+%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') 
+%   implements the "composite" Matern spectrum having the form
 %
 %       SPP(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F-NU)^2 + LAMBDA^2] 
 %       SNN(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F+NU)^2 + LAMBDA^2] 
@@ -131,7 +129,7 @@ function[varargout]=maternspec(varargin)
 %   'maternspec --f' generates some sample figures.
 %   Tests for MATERNSPEC can be found in MATERNCOV.
 %
-%   Usage:  [f,s]=maternspec(N,sigma,alpha,lambda);
+%   Usage:  [f,s]=maternspec(dt,N,sigma,alpha,lambda);
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda);
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu);
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu,mu);
@@ -259,11 +257,11 @@ else
         S=frac(sigma.^2,((omega-nu).^2+lambda.^2).^alpha).*d;
     else
         if alpha==-1/2
-            fact=lambda.*besselk(1,mu.*lambda);
-            S=frac(pi*sigma.^2,fact).*exp(-mu.*sqrt((omega-nu).^2+lambda.^2));
+            fact=lambda.*besselk(1,lambda./mu);
+            S=frac(pi*sigma.^2,fact).*exp(-sqrt((omega-nu).^2+lambda.^2)./mu);
         else
-            fact=sigma.^2.*sqrt(2*pi).*mu.*frac((mu.*lambda).^(alpha-1/2),besselk(abs(alpha-1/2),abs(mu.*lambda)));
-            omnorm=mu.*sqrt((omega-nu).^2+lambda.^2);
+            fact=sigma.^2.*frac(sqrt(2*pi),mu).*frac((lambda./mu).^(alpha-1/2),besselk(abs(alpha-1/2),abs(lambda./mu)));
+            omnorm=sqrt((omega-nu).^2+lambda.^2)./mu;
             S=fact*omnorm.^(-alpha).*besselk(-alpha,omnorm);
         end
     end

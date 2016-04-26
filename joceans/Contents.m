@@ -4,9 +4,8 @@
 %   latlon2uv   - Converts latitude and longitude to horizontal velocity.  
 %   uv2latlon   - Integrates horizontal velocity to give latitude and longitude.  
 %
-% Manipulating Lagrangian trajectories
+% Manipulating Lagrangian trajectories [see also jCell]
 %   trajextract - Extracts Lagrangian trajectory segments within given region.        
-%   trajfill    - Fills float or drifter trajectories with linear interpolation.       
 %   trajunwrap  - Unwraps Lagrangian trajectories from a periodic domain.              
 %   trajwrap    - Wraps Lagrangian trajectories to fit within a periodic domain.       
 %   trajchunk   - Converts cell array data into chunks based on the Coriolis period.
@@ -21,12 +20,18 @@
 %   curvemoments - Centroid, area, and many other moments of a closed curve.          
 %   divgeom      - Geometric decomposition of eddy vorticity flux divergence.     
 %
-%  Plotting tools for mooring data
+% Plotting tools for mooring data
 %   hodograph  - Generate hodograph plots (simple and fancy).                                   
 %   provec     - Generate progressive vector diagrams (simple and fancy).             
 %   stickvect  - Plots "stick vectors" for multicomponent velocity time series. 
 %
-%  Topography tools and data
+% Alongtrack altimetry tools
+%   trackextract  - Extracts alongtrack altimetry segments within given region.
+%
+% NetCDF tools
+%   ncinterp      - Interpolate field from NetCDF file onto specified positions.
+%
+% Topography tools and data
 %   jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.              
 %   topoplot    - Plot regional or global topography at one-sixth degree resolution.
 % 

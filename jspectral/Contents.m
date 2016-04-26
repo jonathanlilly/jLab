@@ -12,7 +12,7 @@
 % Assorted other transforms 
 %   slidetrans  - Sliding-window ('moving-window') Fourier transform.   
 %   anatrans    - Analytic part of signal.                                         
-%   wigdist     - Wigner distribtion (alias-free algorithm).   
+%   wigdist     - Wigner distribution (alias-free algorithm).   
 % 
 % Time series analysis utilities
 %   doublen     - Interpolates a time series to double its length.                 

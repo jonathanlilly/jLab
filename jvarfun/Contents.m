@@ -2,10 +2,10 @@
 %
 %  Sizes and statistics
 %   vsize      - Returns the sizes of multiple arguments.                           
-%   vmean      - Mean over finite elements along a specified dimension.             
-%   vsum       - Sum over finite elements along a specified dimension.              
-%   vstd       - Standard deviation over finite elements along a specfied dimension.
-%   vmoment    - Central moment over finite elements along a specfied dimension.    
+%   vmean      - Mean over non-NaN elements along a specified dimension.             
+%   vsum       - Sum over non-NaN elements along a specified dimension.              
+%   vstd       - Standard deviation over non-NaN elements along a specfied dimension.
+%   vmoment    - Central moment over non-NaN elements along a specfied dimension.    
 %   vmedian    - Median over finite elements along a specified dimension. 
 %
 %  Reshaping, shifting, swapping

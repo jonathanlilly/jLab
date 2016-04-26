@@ -19,7 +19,7 @@ zo=xo(:)'+1i*yo(:)';
 zo=vrep(zo,length(z),1);
 
 figure,
-plot(y+zo*3),axis equal,
-xlabel('Increasing \alpha \rightarrow'),ylabel('Increasing h \rightarrow')
+plot(y+zo*3),axis equal,noxlabels,noylabels
+xlabel('Increasing \alpha \rightarrow'),ylabel('Increasing \lambda \rightarrow')
 set(gca,'xticklabel',[]),set(gca,'xticklabel',[])
 title('Example of Matern Processes')

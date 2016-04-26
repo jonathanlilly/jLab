@@ -1,37 +1,34 @@
 function[varargout]=col2mat(varargin)
 %COL2MAT  Expands 'column-appended' data into a matrix.
 %
-%   M=COL2MAT(C), where C is a column vector of data segments
-%   separated by NANs, expands the data into a matrix such that each
-%   segment has its own column.  For instance, the intervals may
-%   represent CTD casts of various depths, and the NANs mark
-%   transitions between casts.
+%   M=COL2MAT(C), where C is a column vector of data segments separated by
+%   NANs, returns a matrix M in which each segment has its own column.  
 %
-%   M will have enough rows to fit the longest data segment. Segments
-%   are read into columns of M from the top down, leaving empty spaces
-%   at the bottom which are filled in with NANs.
+%   M will have enough rows to fit the longest data segment. Segments are
+%   read into columns of M from the top down, leaving empty spaces at the 
+%   bottom which are filled in with NANs.
 %
 %   If the data is complex, then gaps are filled with NAN+SQRT(-1)*NAN;
 %
-%   [M1,M2,....]=COL2MAT(C1,C2,...), where C1,C2,... are input column
-%   vectors, also works, as does [M1,M2,....]=COL2MAT(MAT), where MAT
-%   is a matrix of column vectors.  In both cases the first column is
-%   used as the reference for the others, so that only the locations
-%   of NANs in the first column matters.
+%   [M1,M2,...,MN]=COL2MAT(C1,C2,...,CN), where the CN are input column
+%   vectors, also works, as does [M1,M2,...,MN]=COL2MAT(MAT), where MAT is 
+%   a matrix of column vectors.  In both cases the locations of NaNs in the 
+%   first column is used as the reference for the others. 
 %
-%   COL2MAT, MAT2COL, and COLBREAKS together form a system for moving
-%   data with segments of nonuniform length rapidly back and forth
-%   between a column format and a padded-matrix format.  CTD or float
-%   data, for instance, can be stored in the (usually much smaller)
-%   column format and converted into the matrix format upon loading.
+%   COL2MAT(C1,C2,...); with no output arguments overwrites the original 
+%   input variables.
 %
-%   COL2MAT(C1,C2,...); with no output arguments overwrites the
-%   original input variables.
+%   COL2MAT, MAT2COL, and COLBREAKS together form a system for moving data
+%   with segments of nonuniform length rapidly back and forth between a 
+%   column format and a padded-matrix format. 
+%
+%   Note that while COL2CELL and CELL2COL work for arrays having multiple
+%   columns, COL2MAT only works with column vectors. 
 %
 %   See also MAT2COL, COLBREAKS, COL2CELL, CELL2COL.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2000--2013 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details
   
 %no loops!
 

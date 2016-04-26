@@ -1,0 +1,66 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>NCINTERP is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ncinterp.html">NCINTERP</a>  Interpolate field from NetCDF file onto specified positions.
+ 
+    X=<a href="ncinterp.html">NCINTERP</a>(FILENAME,NUM,LAT,LON,VARNAME) interpolates the field VARNAME
+    from the NetCDF file FILENAME onto positions given by date numbers NUM,
+    latitudes LAT, and longitudes LON, and returns the results in X.
+ 
+    The interpolation is linear interpolation performed with INTERP3.
+    Longitude boundaries and near-polar latitudes are both accommodated.
+ 
+    The NetCDF file must a have a particular format.  The field VARNAME has
+    three dimensions, latitude, longitude, and time, in that order.  The 
+    file also has variables named 'lat', 'lon', and 'num' which give the 
+    values along the dimensions.  Both lat and lon are oriented in order of
+    increasing values.  The time NUM is given in Matlab's DATENUM format.   
+ 
+    <a href="ncinterp.html">NCINTERP</a> detects if longitude in FILENAME spans 360 degrees, and if so,
+    interpolation across the longitudinal boundaries is correctly handled.
+ 
+    NUM, LAT, and LON are all arrays of the same size, or else cell arrays
+    of numeric arrays.  In the latter case, X will also be a cell array.
+ 
+    [X1,X2,...,XN]=<a href="ncinterp.html">NCINTERP</a>(FILENAME,NUM,LAT,LON,NAME1,NAME2,...,NAMEN),
+    with multiple variable names input, also works, for example:
+ 
+         [uwnd,vwnd]=<a href="ncinterp.html">ncinterp</a>(filename,num,lat,lon,'uwnd','vwnd');
+ 
+    FILENAME should specify a file on the Matlab search path, or should
+    include the full pathname, e.g. FILENAME='/Volumes/Data/ncep_winds.nc'.  
+ 
+    Failures in the interpolation, for example, if the data falls outside 
+    the region covered by the NetCDF file, are set to values of INF.
+    __________________________________________________________________
+ 
+    Algorithms
+   
+    <a href="ncinterp.html">NCINTERP</a> has two different approaches to reading the data.  The default
+    behavior is to load in time chunks such that each double-precision 
+    variable read in is smaller than a specified size, chosen as 16 GB.
+ 
+    <a href="ncinterp.html">NCINTERP</a>(...,M) instead uses M gigabytes as the cutoff for the chunk. 
+    This method tends to be relatively fast.
+ 
+    <a href="ncinterp.html">NCINTERP</a>(...,'loop') alternatively reads each time slice invididually
+    This method is very slow and is recommended only for testing purposes.
+    __________________________________________________________________
+ 
+    Handling domain edges
+ 
+    If the NetCDF file spans 360 degrees of longitude, the first and last
+    longitude are periodically wrapped to provide continuous interpolation.
+ 
+    To prevent the interpolation from failing very near the poles, the
+    first and last latitudes are also repeated, provided the last latitude
+    is within one latitude spacing interval of the pole. 
+    __________________________________________________________________
+ 
+    Usage: x=<a href="ncinterp.html">ncinterp</a>(filename,num,lat,lon,varname);
+           [x1,x2]=<a href="ncinterp.html">ncinterp</a>(filename,num,lat,lon,varname1,varname2);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

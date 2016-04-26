@@ -51,8 +51,9 @@
 % Filling bad data points
 %   fillbad    - Linearly interpolate over bad data points.  
 %
-% Date and time
+% Date, time, and units
 %  yearfrac    - Converts a DATENUM into 'year.fraction' and 'month.fraction'.
+%  cms2kmd     - Converts centimeters per second to kilometers per day.
 
 %   Low-level functions
 %   reporttest - Reports the result of an m-file function auto-test.                

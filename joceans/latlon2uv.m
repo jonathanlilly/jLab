@@ -1,17 +1,14 @@
-function[u,v]=latlon2uv(varargin)
+function[cv,ca]=latlon2uv(varargin)
 %LATLON2UV  Converts latitude and longitude to horizontal velocity.
 %
-%   [U,V]=LATLON2UV(NUM,LAT,LON) where NUM is the data in DATENUM format
+%   CV=LATLON2UV(NUM,LAT,LON) where NUM is the data in DATENUM format
 %   and LAT and LON are the latitude and longitude in degrees, outputs the
-%   eastward and northward velocity components U and V in cm/s, computed
-%   using the first central difference.
-%
-%   CV=LATLON2UV(...) with one output argument returns the complex- valued
-%   velocity CV=U+SQRT(-1)*V. NANs in LAT or LON become NAN+SQRT(-1)*NAN.
+%   complex-valued velocity CV=U+SQRT(-1)*V in cm/s, computed using the 
+%   first central difference.  
 %
 %   NUM is a column vector or a matrix of the same size as LAT and LON.  
-%   LAT and LON are matices having SIZE(NUM,1) rows.  U and V are the same 
-%   size as LAT and LON.  
+%   LAT and LON are matices having SIZE(NUM,1) rows.  CV is the same size
+%   as LAT and LON. NANs in LAT or LON become NAN+SQRT(-1)*NAN.
 %  
 %   LATLON2UV computes the velocity components from the distance travelled
 %   across the surface of the sphere and the heading, taking account of 
@@ -22,6 +19,11 @@ function[u,v]=latlon2uv(varargin)
 %   respectively, the first forward and first backward difference.  
 %
 %   The radius of the earth is given by the function RADEARTH.
+%
+%   [CV,CA]=LATLON2UV(...,'acceleration') also returns CA, a measure of the
+%   complex-valued acceleration based on the difference between the first
+%   forward difference velocity and the first backward difference velocity.
+%   The units of acceleration are centimeters per inverse second squared.
 %   ___________________________________________________________________
 %
 %   Cell array input / output
@@ -38,18 +40,22 @@ function[u,v]=latlon2uv(varargin)
 %   By default, LATLON2UV uses a first central difference algorithm which 
 %   is defined to be the average of a forward and a backward difference.
 %
-%   LATLON2UV(...,'forward') uses a first forward difference.  Velocity is
-%   computed based on the great circle distance and bearing from each point
-%   to the next point.  
+%   CV=LATLON2UV(...,'forward') instead uses a first forward difference. 
+%   Velocity is computed based on the great circle distance and bearing 
+%   from each point to the next point.  
 %
-%   LATLON2UV(...,'backward') uses a first backward difference.  Velocity 
-%   is computed based on the great circle distance and bearing from each
-%   point to the previous point.  This is equivalent to the first forward
-%   difference computed backward in time.
+%   CV=LATLON2UV(...,'backward') instead uses a first backward difference.  
+%   Velocity is computed based on the great circle distance and bearing 
+%   from each point to the previous point.  This is equivalent to the first 
+%   forward difference computed backward in time.
 %
 %   The first forward and first backward difference can be thought of as 
 %   giving the Cartesian velocities of a departing and arriving particle,
 %   respectively.
+%
+%   Note that acceleration is not output when the 'forward' or 'backward'
+%   algorithms are specified, as acceleration is computed as a part of the 
+%   first central difference operation.
 %   ___________________________________________________________________
 %
 %   Parallelization
@@ -61,8 +67,8 @@ function[u,v]=latlon2uv(varargin)
 %
 %   See also XY2LATLON, LATLON2XY, UV2LATLON.
 %
-%   Usage:  [u,v]=latlon2uv(num,lat,lon);
-%           cv=latlon2uv(num,lat,lon);
+%   Usage:  cv=latlon2uv(num,lat,lon);
+%           [cv,ca]=latlon2uv(num,lat,lon);
 %
 %   'latlon2uv --t' runs a test.
 %   _________________________________________________________________
@@ -74,23 +80,23 @@ if strcmpi(varargin, '--t')
     latlon2uv_test,return
 end
 
-num=varargin{1};
-lat=varargin{2};
-lon=varargin{3};
-varargin=varargin(4:end);
-
 str='centered';
 cores='serial';
 
-for i=1:length(varargin)
+for i=1:2
     if ischar(varargin{end})
-        if strcmpi(varargin{i}(1:3),'par')||strcmpi(varargin{i}(1:3),'ser')
+        if strcmpi(varargin{end}(1:3),'par')||strcmpi(varargin{end}(1:3),'ser')
             cores=varargin{end};
         else
             str=varargin{end};
         end
     end
 end
+
+num=varargin{1};
+lat=varargin{2};
+lon=varargin{3};
+varargin=varargin(4:end);
 
 if strcmpi(cores(1:3),'par')
     if exist('parpool')~=2
@@ -100,66 +106,79 @@ if strcmpi(cores(1:3),'par')
     end
 end
 
+if nargout==2
+    str='acc';  %Output acceleration
+end
 
-nout=nargout;  %NARGOUT is not supported in PARFOR loops in Matlab 2015b
 if ~iscell(num)
-    [u,v]=latlon2uv_celloop(nargout,num,lat,lon,str);
+    [cv,ca]=latlon2uv_celloop(num,lat,lon,str);
 else
     if strcmpi(cores(1:3),'ser')
         for i=1:length(num)
-            [u{i,1},v{i,1}]=latlon2uv_celloop(nout,num{i},lat{i},lon{i},str);
+            [cv{i,1},ca{i,1}]=latlon2uv_celloop(num{i},lat{i},lon{i},str);
         end
     elseif strcmpi(cores(1:3),'par')
         parfor i=1:length(num)
-            [u{i,1},v{i,1}]=latlon2uv_celloop(nout,num{i},lat{i},lon{i},str);
+            [cv{i,1},ca{i,1}]=latlon2uv_celloop(num{i},lat{i},lon{i},str);
         end
     end
 end
 
-
-function[u,v]=latlon2uv_celloop(N,num,lat,lon,str)
-
-
-if size(num,1)==1
-  if size(num')==size(lat)
-      num=num';
-  end
-end
-if size(num,2)==1
-      num=vrep(num,size(lat,2),2);
+if ~strcmpi(str(1:3),'acc')
+    clear ca
 end
 
-if length(lat)==1
-    u=nan;
-    v=nan;
+
+function[cv,ca]=latlon2uv_celloop(num,lat,lon,str)
+
+ca=[];
+     
+if length(lat)<=2
+    cv=nan+0*lat;
+    ca=nan+0*lat;
 else
-    if strfind(str,'cen')
-        [u1,v1]=latlon2uv_celloop_one(N,num,lat,lon,'forward');
-        [u2,v2]=latlon2uv_celloop_one(N,num,lat,lon,'backward');
+    if size(num,1)==1
+        if size(num')==size(lat)
+            num=num';
+        end
+    end
+    if size(num,2)==1
+        num=vrep(num,size(lat,2),2);
+    end
+    if strcmpi(str(1:3),'cen')||strcmpi(str(1:3),'acc')
+        [u1,v1]=latlon2uv_celloop_one(num,lat,lon,'forward');
+        [u2,v2]=latlon2uv_celloop_one(num,lat,lon,'backward');
         
         %Correction for first and last points
         u2(1,:)=u1(1,:);
         v2(1,:)=v1(1,:);
         u1(end,:)=u2(end,:);
         v1(end,:)=v2(end,:);
-        
-        u=frac(1,2)*(u1+u2);
-        v=frac(1,2)*(v1+v2);
+   
+        cv=frac(1,2)*(u1+u2)+1i*frac(1,2)*(v1+v2);
+   
+        if strfind(str,'acc')
+            dt=vdiff(num*24*3600,1,1);
+            ca=((u1-u2)+1i*(v1-v2))./dt;
+            %Correction for first and last points
+            ca([1 end],:)=ca([2 end-1],:);
+        end
     else
-        [u,v]=latlon2uv_celloop_one(N,num,lat,lon,str);
+        [u,v]=latlon2uv_celloop_one(num,lat,lon,str);
+        cv=u+1i*v;
     end
 end
 
 
-function[u,v]=latlon2uv_celloop_one(N,num,lat,lon,str)
+function[u,v]=latlon2uv_celloop_one(num,lat,lon,str)
 
 
 if strfind(str,'old')
-    [dr,dt,gamma]=latlon2uv_old(N,num,lat,lon,str);
+    [dr,dt,gamma]=latlon2uv_old(num,lat,lon,str);
 elseif strfind(str,'for')
-    [dr,dt,gamma]=latlon2uv_forward(N,num,lat,lon,str);
+    [dr,dt,gamma]=latlon2uv_forward(num,lat,lon,str);
 elseif strfind(str,'bac')
-    [dr,dt,gamma]=latlon2uv_forward(N,flip(num,1),flip(lat,1),flip(lon,1),str);
+    [dr,dt,gamma]=latlon2uv_forward(flip(num,1),flip(lat,1),flip(lon,1),str);
     dr=flip(dr,1);
     dt=flip(dt,1);
     gamma=flip(gamma,1);
@@ -175,14 +194,8 @@ if ~isempty(index)
     u(index)=nan;
     v(index)=nan;
 end 
-if N==1
-   u=u+sqrt(-1)*v;
-end
 
-
-
-
-function[dr,dt,gamma]=latlon2uv_old(N,num,lat,lon,str)
+function[dr,dt,gamma]=latlon2uv_old(num,lat,lon,str)
 %Former version of a first central difference algorithm
 
 %[phi,th]=jdeg2rad(lat,lon);
@@ -224,16 +237,23 @@ dr(end,:)=spheredist(lat(end-1,:),lon(end-1,:),lat(end,:),lon(end,:));
 gamma=imlog(dy3+sqrt(-1)*dz3);
 
 
-function[dr,dt,gamma]=latlon2uv_forward(N,num,lat,lon,str)
+function[dr,dt,gamma]=latlon2uv_forward(num,lat,lon,str)
 
+%lon=degunwrap(lon);
 %First forward difference
 dt=diff(num*24*3600,1,1);
 
 [lat2,lon2]=vshift(lat,lon,1,1);
 dr=spheredist(lat,lon,lat2,lon2); %figure,plot(dr)
 
+xx=sind(lon2-lon).*cosd(lat2);
+yy=cosd(lat).*sind(lat2)-sind(lat).*cosd(lat2).*cosd(lon2-lon);
 
-gamma=atan2(cosd(lat).*sind(lat2)-sind(lat).*cosd(lat2).*cosd(lon2-lon),sind(lon2-lon).*cosd(lat2));
+gamma=atan2(yy,xx);
+%figure,uvplot(diff(rot(gamma)))
+%gamma2=imag(log(xx+1i*yy));
+%aresame(gamma,gamma2,1e-10)
+
 %From http://www.movable-type.co.uk/scripts/latlong.html
 %ATAN2(COS(lat1)*SIN(lat2)-SIN(lat1)*COS(lat2)*COS(lon2-lon1),SIN(lon2-lon1)*COS(lat2)) 
 %But note, that source actually reverses the inputs to the inverse tangent function 
@@ -270,12 +290,9 @@ num=[-1+0*lato;0*lato;1+0*lato];
 index=find(max(lat)<90&min(lat)>-90);
 vindex(num,lat,lon,dlat,index,2);
 
-u1=0*dlat;
-v1=100*1000*2*pi*radearth/360.*dlat/(3600*24);
-
-[u,v]=latlon2uv(num,lat,lon);
-
-b=aresame(u(2,:),u1,tol) && aresame(v(2,:),v1,tol);
+cv1=0*dlat+1i*100*1000*2*pi*radearth/360.*dlat/(3600*24);
+cv2=latlon2uv(num,lat,lon);
+b=aresame(cv2(2,:),cv1,tol);
 reporttest('LATLON2UV small delta latitude',b);
 
 
@@ -297,12 +314,9 @@ lon=[lono-dlon;lono;lono+dlon];
 
 num=[-1+0*lato;0*lato;1+0*lato];
 
-u1=100*1000*2*pi*radearth/360.*dlon/(3600*24).*cos(jdeg2rad(lato));
-v1=0*lato;
-
-[u,v]=latlon2uv(num,lat,lon);
-
-b=aresame(u(2,:),u1,tol) && aresame(v(2,:),v1,tol);
+cv1=100*1000*2*pi*radearth/360.*dlon/(3600*24).*cos(jdeg2rad(lato))+1i*0*lato;
+cv2=latlon2uv(num,lat,lon);
+b=aresame(cv2(2,:),cv1,tol);
 reporttest('LATLON2UV small delta longitude',b);
 
 
@@ -328,13 +342,11 @@ vindex(num,lat,lon,dlat,dlon,lato,index,2);
 
 u1=100*1000*2*pi*radearth/360.*dlon/(3600*24).*cos(jdeg2rad(lato));
 v1=100*1000*2*pi*radearth/360.*dlat/(3600*24);
+cv1=u1+1i*v1;
+cv=latlon2uv(num,lat,lon);
 
-[u,v]=latlon2uv(num,lat,lon);
-
-%maxmax(abs(u(2,:)+sqrt(-1)*v(2,:)-u1-sqrt(-1)*v1))
-b=aresame(u(2,:),u1,tol) && aresame(v(2,:),v1,tol);
+b=aresame(cv(2,:),cv1,tol);
 reporttest('LATLON2UV small displacements',b);
-
 
 function[]=latlon2uv_displacement_test
 
@@ -346,9 +358,9 @@ lon=2*pi*rand(N,1)-pi;
 lat=pi*rand(N,1)-pi/2;
 
 num=(1:N)';
-[u,v]=latlon2uv(num,lat,lon);
+cv=latlon2uv(num,lat,lon);
 
-dr=sqrt(u.^2+v.^2).*(3600.*24)./(100*1000);
+dr=abs(cv).*(3600.*24)./(100*1000);
 
 [lat1,lon1]=vshift(lat,lon,1,1);
 [lat2,lon2]=vshift(lat,lon,-1,1);
@@ -403,6 +415,18 @@ cv4=latlon2uv(num,lat,lon,'old');
 b=aresame(cv3(2:end-1,:),cv4(2:end-1,:),0.02);
 reporttest('LATLON2UV central difference matches old algorithm for NPG2006 data',b);
 
+
+% cx=10*rot([0:0.001:4*pi]');
+% [lat,lon]=xy2latlon(cx,65,0);
+% num=[1:length(cx)]'/24/100;
+% cv=latlon2uv(num,lat,lon);
+% ca=latlon2uv(num,lat,lon,'acc');
+% ca2=vdiff(cv,1)./(1/24/100*24*3600);
+% 
+% uvplot(num,ca), hold on, uvplot(num,ca2)
+%
+%But there is a problem with eastward acceleration for very small amplitude
+%circles.  Keep an eye out for noise coming from latlon2uv.  
 
 function[]=latlon2uv_testformer
 

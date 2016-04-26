@@ -18,8 +18,9 @@ function [fm,fe,fi,cf] = morsefreq(ga,be)
 %   or some may be matrices and the others scalars.   
 %
 %   For BETA=0, the "wavelet" becomes an analytic lowpass filter, and FM 
-%   is not defined in the usual way.  Instead the 1/2 power point of the
-%   analytic bandpass filter is returned for FM. 
+%   is not defined in the usual way.  Instead the square root of the second
+%   frequency-domain moment is used.  For the Gaussian or GAMMA=2 case,   
+%   this gives MORSEFREQ(2,0)=1/SQRT(2). 
 %
 %   For details see
 %
@@ -33,7 +34,7 @@ function [fm,fe,fi,cf] = morsefreq(ga,be)
 %          [fm,fe,fi,cf] = morsefreq(ga,be);  
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J. M. Lilly and F. Rekibi
+%   (C) 2004--2016 J. M. Lilly and F. Rekibi
 %                         --- type 'help jlab_license' for details    
 
 %   'morsefreq --f' generates a sample figure, but I'm hiding this since
@@ -45,14 +46,25 @@ if strcmpi(ga,'--f')
   return
 end
 
+arrayify(be,ga);
 %fm=frac(be,ga).^frac(1,ga)
 fm=exp(frac(1,ga).*(log(be)-log(ga)));
-fm(be==0)=(log(2)).^frac(1,ga(be==0)); %Half-power point
+fm(be==0)=sqrt(3)*sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));
 
+
+%fm(be==0)=(log(2)).^frac(1,ga(be==0)); %Half-power point
+%length(find(be==0))
+%fm(be==0)=sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));
+%sqrt(frac(gamma(frac(3,ga1)),gamma(frac(1,ga1))))
 %Oher possibilities for zero beta case
-%    fm=frac(be+1,ga).^frac(1,ga);%Peak of next wavelet
-%    fm=frac(ga-1,ga).^frac(1,ga);%Most rapidly decreasing point
+%fm(be==0)=frac(be(be==0)+1,ga(be==0)).^frac(1,ga(be==0));%Peak of next wavelet
+%    fm=frac(ga-1,ga).^frac(1,ga);%Most rapidly decreasing point ---this moves to higher frequencies!
+%    fm=exp(frac(1,ga).*(log(be)-log(ga)));
+%    fm(be==0)=sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));%Second moment
 
+%Instead the frequency-domain half-
+%   power point is used, reflecting the bawidth of the filter.  
+% 
 if nargout>1
     fe=frac(1,2.^frac(1,ga)).*frac(gamma(frac(2*be+2,ga)),gamma(frac(2*be+1,ga)));
 end
@@ -83,4 +95,3 @@ if 0
         fw=frac(1,2).*(fmax-fmin);
     end
 end
-

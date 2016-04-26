@@ -1,7 +1,7 @@
 function[varargout]=orbitbreaks(varargin)
 %ORBITBREAKS  Separate orbit into passes based on turning points.
 %
-%   ORBITBREAKS is a level function called by ABOUT_ALONGTRACK.
+%   ORBITBREAKS is a low-level function called by ABOUT_TPJAOS.
 %
 %   [LAT,LON]=ORBITBREAKS(LAT,LON), where LAT and LON are column vectors
 %   representing a satellite orbital groundtrack, is used to separate 

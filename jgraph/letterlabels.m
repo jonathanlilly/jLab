@@ -24,7 +24,7 @@ function[h]=letterlabels(arg1,arg2,arg3)
 %   nonstandard order, do this by reordering H.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(arg1,'--t')
@@ -40,12 +40,17 @@ firstlet=real('a');
 i=1;
 axhand=flipud(get(gcf,'children'));
 
-
 for j=1:nargin
     xx=eval(['arg' int2str(j)]);
-    if ischar(xx)
+    isaxhandle=false;
+    if ishandle(xx)
+        if strcmp(get(xx,'Type'),'axes')
+            isaxhandle=true;
+        end
+    end
+    if ischar(xx)&~isaxhandle
         firstlet=real(xx);
-    elseif length(xx)==1 && floor(xx)==xx
+    elseif (length(xx)==1)&&~isaxhandle
         i=xx;
     else
         axhand=xx;

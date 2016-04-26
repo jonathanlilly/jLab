@@ -55,14 +55,14 @@ for i=1:length(varargin)
         temp=varargin{i}{j};
         if  length(find(~isnan(temp)))==0
             bool{j}(:,i)=false;
-            varargout{i}{j}=[];
+            varargout{i}{j,1}=[];
         else
             bool{j}(:,i)=~isnan(temp);
             index=find(bool{j}(:,i));
             if length(temp)>1
-               varargout{i}{j}=interp1(index,temp(index),[1:length(temp)]',str);
+               varargout{i}{j,1}=interp1(index,temp(index),[1:length(temp)]',str);
             else
-               varargout{i}{j}=temp(index);
+               varargout{i}{j,1}=temp(index);
             end
         end
     end

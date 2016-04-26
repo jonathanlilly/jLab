@@ -17,7 +17,7 @@ function[a]=morseafun(varargin)
 %   appropriate for the Kth-order wavelet.  The default choice is K=1.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1},'--t')
       morseafun_test;return
@@ -55,7 +55,7 @@ function[]=morseafun_test
 ga1=(2:1:9);
 be1=(1:1:10);
 [ga,be]=meshgrid(ga1,be1);
-om=morsefreq(ga,be);
+om=reshape(morsefreq(ga,be),10,8);
 
 dom=0.01;
 omgrid=permute((0:dom:20)',[3 2 1]);

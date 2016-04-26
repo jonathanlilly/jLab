@@ -24,7 +24,7 @@ function[Ro]=ellrossby(lat,lambda,omega)
 %   Usage: ro=ellrossby(lat,lambda,omega);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2011--2014 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2011--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(lat, '--t')
     ellrossby_test,return

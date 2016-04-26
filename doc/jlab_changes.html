@@ -4,9 +4,61 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.6.2 (current)
+ 
+    New functions
+ 
+    <a href="ncinterp.html">ncinterp</a>      - Interpolate field from NetCDF file onto specified positions.
+    <a href="cellget.html">cellget</a>       - Indexes a cell array of numerical arrays by ID number.
+    <a href="cellimit.html">cellimit</a>      - Limits the ranges of times in a cell array of numerical arrays.
+    <a href="cellstd.html">cellstd</a>       - Standard deviation of each element a cell array.
+    <a href="degunwrap.html">degunwrap</a>     - Unwraps arrays given in degrees.
+    <a href="trackextract.html">trackextract</a>  - Extracts alongtrack altimetry segments within given region.
+ 
+    Changes and improvements
+ 
+    DRIFTERS.MAT is now update with data through December 2015.
+    <a href="about_drifters.html">ABOUT_DRIFTERS</a> contains updated and simplified internal processing.
+    TPJAOS.MAT updated through November 2015.
+ 
+    <a href="polysmooth.html">POLYSMOOTH</a> corrected to account for missing data values in sorted input.
+    <a href="trackextract.html">TRACKEXTRACT</a> now strips out any empty tracks in the region.
+    <a href="jpcolor.html">JPCOLOR</a> now works for non-uniformly spaced axis arrays.
+    <a href="ncinterp.html">NCINTERP</a> is now greatly accelerated by loading large chunks into memory.
+    <a href="periodindex.html">PERIODINDEX</a> updated to handle new format output but <a href="ridgewalk.html">RIDGEWALK</a>.
+    <a href="cellplot.html">CELLPLOT</a> bugfix to handle empty cells.
+    <a href="yearfrac.html">YEARFRAC</a> modified to handle potential empty cells.
+    <a href="ridgewalk.html">RIDGEWALK</a> output formats simplified.
+    <a href="cell2col.html">CELL2COL</a> and <a href="col2cell.html">COL2CELL</a> now work with arrays having multiple columns.
+    <a href="letterlabels.html">LETTERLABELS</a> updated for recent changes to handle graphics conventions.
+    <a href="topoplot.html">TOPOPLOT</a> now supports linestyles in <a href="linestyle.html">LINESTYLE</a> format.
+    <a href="topoplot.html">TOPOPLOT</a> bugfix for x-axis limits exceeding 360 degrees.
+    <a href="topoplot.html">TOPOPLOT</a> bugfix when contours are input. 
+    <a href="cellfill.html">CELLFILL</a> bugfix to prevent transposition of cell arrays.
+    <a href="cellgrid.html">CELLGRID</a>, <a href="cellmean.html">CELLMEAN</a>, <a href="cellstd.html">CELLSTD</a>, and <a href="sampletimes.html">SAMPLETIMES</a> now support parallelization.
+    <a href="cellgrid.html">CELLGRID</a> bugfix for data containing some or all NANs.  
+    <a href="cellgrid.html">CELLGRID</a> now uses the 'pchip' method by default, as does <a href="cellfill.html">CELLFILL</a>.
+    CELLPACK bugfix to address inaccurate report of points filled.
+    <a href="latlon2uv.html">LATLON2UV</a> now optionally returns the acceleration.
+    <a href="latlon2uv.html">LATLON2UV</a> bugfix for empty or length one datasets.
+    <a href="latlon2uv.html">LATLON2UV</a> now longer has the option to return U and V separately. 
+    <a href="lansey.html">LANSEY</a> bugfix for returning specified size of colormap.
+    TRAJFILL has been removed.  Use <a href="cellfill.html">CELLFILL</a> instead. 
+    <a href="trajextract.html">TRAJEXTRACT</a> can now handle input numerical arrays such as ID number.
+    <a href="trajextract.html">TRAJEXTRACT</a> input argument order change.
+    <a href="trajextract.html">TRAJEXTRACT</a> now supports variable overwriting.
+    <a href="trajchunk.html">TRAJCHUNK</a> bugfix for length one or zero cell elements. 
+    <a href="trajchunk.html">TRAJCHUNK</a> can now handle input numerical arrays such as ID number. 
+    <a href="twospecplot.html">TWOSPECPLOT</a> changes to <a href="make.html">make</a> it easier to overlay spectral plots.
+    <a href="maternchol.html">MATERNCHOL</a> bugfix for numerical noise in imaginary part of matrix.
+    <a href="vmean.html">VMEAN</a>, <a href="vsum.html">VSUM</a>, <a href="vmoment.html">VMOMENT</a>, and <a href="vstd.html">VSTD</a> speed improvements.
+    <a href="vmean.html">VMEAN</a>, <a href="vsum.html">VSUM</a>, <a href="vmoment.html">VMOMENT</a>, and <a href="vstd.html">VSTD</a> now no longer exclude Infs, only NaNs.
+ 
     Changes new in version 1.6.1
  
     <a href="jLab.html">jLab</a> is now on GitHub at https://github.com/jonathanlilly/jLab.
+ 
+    Changes and improvements
  
     <a href="wavetrans.html">WAVETRANS</a> now supports parallelization.
     <a href="linecolor.html">LINECOLOR</a> bugfix for colormaps of lengths different from 64.

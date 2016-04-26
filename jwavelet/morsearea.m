@@ -19,7 +19,7 @@ function A = morsearea(C,ga,be)
 %   Usage: A = morsearea(C,ga,be);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 F. Rekibi and J. M. Lilly 
+%   (C) 2004--2016 F. Rekibi and J. M. Lilly 
 %                         --- type 'help jlab_license' for details  
 
 if strcmpi(C,'--f')
@@ -30,5 +30,11 @@ end
 
 r=((2*be)+1)./ga;
 A=pi*(C-1).*gamma(r+1-(1./ga)).*gamma(r+(1./ga))./(ga.*gamma(r).^2);
+
+%omtilde=frac(1,2.^(1./ga)).*frac(gamma((2*be+2)./ga),gamma((2*be+1)./ga));
+%ttilde=frac(2.^(1./ga),2).*frac(gamma((2*be+ga)./ga),gamma((2*be+1)./ga));
+%A2=2*pi*(C-1)./ga.*omtilde.*ttilde;
+%aresame(A,A2,1e-8)
+
 %Note this differs from Olhede and Walden by a factor of 1/2
 

@@ -4,7 +4,7 @@
 <div><h1>TRAJEXTRACT is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="trajextract.html">TRAJEXTRACT</a>  Extracts Lagrangian trajectory segments within given region.
  
-    [LAT,LON]=<a href="trajextract.html">TRAJEXTRACT</a>(REGION,LAT,LON) where the input LAT and LON are 
+    [LAT,LON]=<a href="trajextract.html">TRAJEXTRACT</a>(LAT,LON,REGION) where the input LAT and LON are 
     cell arrays of columns vectors of latitude and longitude, outputs new
     cell arrays with LAT and LON of the segments contained within REGION.
  
@@ -18,29 +18,46 @@
     The region may overlap the prime meridian (LON=0) or the dateline
     (LON=180).  Region boundaries are interpreted to exclude the poles. 
  
-    REGION is passed directly to the function <a href="inregion.html">INREGION</a>.  Thus, REGION can
-    also be a cell array built up from serveral region boxes.  See INREGION
-    for more details on this option.
- 
     If an input LAT and LON record contains more than one segment passing 
     through REGION, these are split into separate entries in the output.
  
-    [LAT,LON,X1,X2,...,XN]=<a href="trajextract.html">TRAJEXTRACT</a>(REGION,LAT,LON,X1,X2,...,XN) also
+    <a href="trajextract.html">TRAJEXTRACT</a> with no output arguments overwrites the original named
+    output variables. 
+    __________________________________________________________________
+ 
+    Multiple input arguments
+ 
+    [LAT,LON,X1,X2,...,XN]=<a href="trajextract.html">TRAJEXTRACT</a>(LAT,LON,X1,X2,...,XN,REGION) also
     returns the portions of the cell array variables X1,X2,...,XN within
     the region.  The input XN are the same size as the input LAT and LON.
  
-    [LAT,LON,...]=<a href="trajextract.html">TRAJEXTRACT</a>(LMIN,REGION,LAT,LON,...) only returns those 
-    segments containing LMIN or more points. The default is LMIN=2.
+    Any of the input XN may also be numerical arrays of the same length as 
+    LAT and LON, rather than cell arrays.  The corresponding output 
+    variable will then also be a numerical array.  An example of such a
+    field is the identification number used in FLOATS.MAT and DRIFTERS.MAT.  
+    __________________________________________________________________
  
-    See also <a href="inregion.html">INREGION</a>, <a href="regionplot.html">REGIONPLOT</a>. 
+    Specifying length cutoff
+ 
+    [LAT,LON,...]=<a href="trajextract.html">TRAJEXTRACT</a>(LAT,LON,,...,REGION,LMIN) only returns those 
+    segments containing LMIN or more points. The default is LMIN=2.
+    __________________________________________________________________
+ 
+    REGION is passed directly to the function <a href="inregion.html">INREGION</a>.  Thus, REGION can
+    also be a cell array built up from several region boxes.  See INREGION
+    for more details on this option.
+ 
+ 
+    See also <a href="inregion.html">INREGION</a>, <a href="regionplot.html">REGIONPLOT</a>, <a href="trackextract.html">TRACKEXTRACT</a>.
  
     '<a href="trajextract.html">trajextract</a> --t' runs a test.
     '<a href="trajextract.html">trajextract</a> --f' generates a sample figure.
  
-    Usage: [lat,lon]=<a href="trajextract.html">trajextract</a>(region,lat,lon);
-           [lat,lon,num,id]=<a href="trajextract.html">trajextract</a>(region,lat,lon,num,id);
-           [lat,lon,num,id]=<a href="trajextract.html">trajextract</a>(200,region,lat,lon,num,id);
+    Usage: [lat,lon]=<a href="trajextract.html">trajextract</a>(lat,lon,region);
+           [lat,lon,num,id]=<a href="trajextract.html">trajextract</a>(lat,lon,num,id,region);
+           [lat,lon,num,id]=<a href="trajextract.html">trajextract</a>(lat,lon,num,id,region,200);
+           <a href="trajextract.html">trajextract</a>(lat,lon,num,id,region,200);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2014--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

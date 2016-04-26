@@ -1,11 +1,11 @@
 function[varargout] = vmoment(varargin)
-%VMOMENT Central moment over finite elements along a specfied dimension.
+%VMOMENT Central moment over non-NaN elements along a specfied dimension.
 %
-%   Y=VMOMENT(X,N,DIM) finds the Nth central moment of all finite elements 
+%   Y=VMOMENT(X,N,DIM) finds the Nth central moment of all non-NaN elements 
 %   of X along dimension DIM. 
 %                                                                         
-%   [Y,NUM]=VMOMENT(X,N,DIM) also outputs the number of good data points NUM, 
-%   which has the same dimension as X.                                
+%   [Y,NUM]=VMOMENT(X,N,DIM) also outputs the number of non-NaN data points
+%   NUM, which has the same dimension as X.                                
 %
 %   [Y1,Y2,...YN]=VMOMENT(X1,X2,...XN,N,DIM) also works.
 %
@@ -13,7 +13,7 @@ function[varargout] = vmoment(varargin)
 %   original input variables.      
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2012 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2015 J.M. Lilly --- type 'help jlab_license' for details    
     
 if strcmpi(varargin{1}, '--t')
   vmoment_test,return

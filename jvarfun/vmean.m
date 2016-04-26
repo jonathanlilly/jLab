@@ -1,11 +1,11 @@
 function[varargout] = vmean(varargin)
-%VMEAN  Mean over finite elements along a specified dimension.
+%VMEAN  Mean over non-NaN elements along a specified dimension.
 %
-%   Y=VMEAN(X,DIM) takes the mean of all finite elements of X along      
+%   Y=VMEAN(X,DIM) takes the mean of all non-NaN elements of X along      
 %   dimension DIM. 
 %                                                                         
-%   [Y,NUM]=VMEAN(X,DIM) also outputs the number of good data points NUM, 
-%   which has the same dimension as X.              
+%   [Y,NUM]=VMEAN(X,DIM) also outputs the number of non-NaN data points 
+%   NUM, which has the same dimension as X.              
 %
 %   [Y1,Y2,...YN]=VMEAN(X1,X2,...XN,DIM) or also works, where all the XN
 %   are the same size.  

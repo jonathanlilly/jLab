@@ -6,7 +6,8 @@ function[evalme]=make(varargin)
 %
 %       NAME.V1, NAME.V2, ... NAME.VN
 %  
-%   The original variables are not deleted.
+%   The original variables are not deleted.  If structure NAME has any
+%   existing fields, the new fields are appended after the existing fields.
 %
 %   MAKE(CELL), where CELL is a cell array of strings such that 
 %   CELL{1}=NAME, CELL{2}=V1, ... CELL{N}=VN, also works.
@@ -18,7 +19,7 @@ function[evalme]=make(varargin)
 %   See also USE, MATSAVE.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2014 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details        
  
 
 nargs=length(varargin);
@@ -43,7 +44,7 @@ while i<nargs
 end
 
 if nargout==0
-evalin('caller',evalme)
+   evalin('caller',evalme)
    clear evalme
 end
 

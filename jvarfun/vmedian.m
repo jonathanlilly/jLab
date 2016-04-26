@@ -13,10 +13,10 @@ function[varargout] = vmedian(varargin)
 %   number of values to be the average of the two middle elements.
 %
 %   VMEDIAN uses a fast algorithm which can be several times faster 
-%   than MEDIAN, but unlike MEDIAN, excludes INFs and NANs.
+%   than MEDIAN, but unlike MEDIAN, excludes both INFs and NANs.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1}, '--t')
   vmedian_test,return
@@ -35,7 +35,6 @@ end
 eval(to_overwrite(nargin-1))
 
 function[med]=vmedian1(data,dim)
-
 
 numel=sum(isfinite(data),dim);
 med=vzeros(size(numel),'nan');
@@ -59,14 +58,6 @@ indexeven2=sub2ind(size(sorted),ii(booleven),numel(booleven)./2+1);
 med(boolodd)=sorted(indexodd);
 med(booleven)=sorted(indexeven1)./2+sorted(indexeven2)./2;
 
-% Believe it or not, the above implements the following with no loops
-% for i=1:length(numel(:));
-%     if iseven(numel(i))
-%        med(i)=frac(1,2)*(sorted(i,numel(i)./2)+sorted(i,numel(i)./2+1));
-%     else 
-%        med(i)=sorted(i,(numel(i)+1)./2);
-%     end
-% end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[]=vmedian_test

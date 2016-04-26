@@ -19,7 +19,7 @@ function[varargout]=arrayify(varargin)
 %   Usage: [o1,o2,o3]=arrayify(i1,i2,i3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     arrayify_test,return

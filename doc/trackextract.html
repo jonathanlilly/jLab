@@ -1,0 +1,68 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TRACKEXTRACT is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="trackextract.html">TRACKEXTRACT</a>  Extracts alongtrack altimetry segments within given region.
+ 
+    <a href="trackextract.html">TRACKEXTRACT</a> is designed to extract alongtrack altimeter data from 
+    the file TPJAOS.MAT within a specified latigude and longitude region. 
+    See <a href="about_tpjaos.html">ABOUT_TPJAOS</a> for more details on that dataset.
+  
+    [LAT,LON]=<a href="trackextract.html">TRACKEXTRACT</a>(LAT,LON,REGION) where the input LAT and LON are
+    matrices of latitude and longitude, outputs the sub-matrices LAT and 
+    LON that are contained entirely within REGION.
+  
+    REGION is an array with the format [WEST EAST SOUTH NORTH]. Longitudes 
+    may either be specified on the interval [-180, 180] or on [0, 360].
+ 
+    Locations of the input LAT and LON within REGION are found on a column-
+    by-column basis.  Those columns having data within the region are
+    included in the output LAT and LON, while the others are excluded.  
+ 
+    The columns of the output are padded with NaNs at their trailing end
+    to make them all the same length.  Their length is such that the column
+    having the most number of data points in REGION will contain no NaNs.
+ 
+    <a href="trackextract.html">TRACKEXTRACT</a> with no output arguments overwrites the original named
+    output variables. 
+    __________________________________________________________________
+ 
+    Additional input arguments
+ 
+    [LAT,LON,SSH]=<a href="trackextract.html">TRACKEXTRACT</a>(LAT,LON,SSH,REGION) where SSH is a 3D array
+    with its first two dimensions matching the input LAT and LON, also
+    extracts the corresponding portions of this array.  
+ 
+    In this case, the output SSH will have the same number of rows and 
+    columns as the output LAT and LON, and the same number of "pages" or 
+    elements in the third dimension as the input SSH.    
+ 
+    [LAT,LON,X1,X2,...,XN]=<a href="trackextract.html">TRACKEXTRACT</a>(LAT,LON,X1,X2,...,XN,REGION) with
+    multiple input arguments also works.
+    __________________________________________________________________
+ 
+    Composite regions
+ 
+    REGION is passed directly to the function <a href="inregion.html">INREGION</a>.  Thus, REGION can
+    also be a cell array built up from several region boxes.  See INREGION
+    for more details on this option.
+    __________________________________________________________________
+ 
+    Specifying length cutoff
+ 
+    [LAT,LON,...]=<a href="trackextract.html">TRACKEXTRACT</a>(LAT,LON,,...,REGION,LMIN) only returns those 
+    track segments containing LMIN or more points. The default is LMIN=0.
+    __________________________________________________________________
+ 
+    See also <a href="inregion.html">INREGION</a>, <a href="regionplot.html">REGIONPLOT</a>, <a href="trajextract.html">TRAJEXTRACT</a>.
+ 
+    '<a href="trackextract.html">trackextract</a> --f' generates a sample figure for the Labrador Sea.  
+ 
+    Usage: [lat,lon]=<a href="trackextract.html">trackextract</a>(lat,lon,region);
+           [lat,lon,ssh]=<a href="trackextract.html">trackextract</a>(lat,lon,ssh,region);
+           [lat,lon,ssh,mss,atd]=<a href="trackextract.html">trackextract</a>(lat,lon,ssh,mss,atd,region,200);
+           <a href="trackextract.html">trackextract</a>(lat,lon,ssh,region,200);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

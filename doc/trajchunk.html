@@ -8,14 +8,17 @@
     the length of each chunk is a fixed multiple of the average Coriolis
     frequency. This is useful in spectral analysis. 
  
-    [NUMO,LATO]=<a href="trajchunk.html">TRAJCHUNK</a>(NUM,LAT,P), where NUM and LAT are arrays of date
-    number and latitude for float or drifter data, re-organizes these into 
+    [NUMO,LATO]=<a href="trajchunk.html">TRAJCHUNK</a>(NUM,LAT,P), where NUM and LAT are date number and
+    latitude for Lagangian float or drifter data, re-organizes these into 
     chunks such that the average Coriolis frequency f_C in each chunk is at 
     least P times the Rayleigh frequency f_R for that chunk.
  
     Recall that the Rayleigh frequency is f_R=2*pi/(DT*N), in units of 
     radians per unit time, where DT is the sample interval and N is the
     number of samples.
+ 
+    The input fields NUM and LAT may either be numerical arrays, or 
+    cell arrays of numerical arrays, e.g. NUM{1}=NUM1, NUM{2}=NUM2, etc.
  
     The output variables NUM and LAT are now cell arrays of numerical
     arrays, with each cell is truncated such that its length is just long
@@ -25,26 +28,26 @@
     discarded, as are short residual segments at the end of trajectories.   
  
     Each input trajectory is thus split into zero, one, or more than one
-    cells in the output variables.   
+    cells in the output variables.     
+ 
+    <a href="trajchunk.html">TRAJCHUNK</a>(...,P,LMIN) additionally specifies a mininum number of points
+    LMIN for each chunk.  
     __________________________________________________________________
  
-    Additional options
+    Multiple input arguments
  
     [NUMO,LATO,Y1,Y2,...,YM]=<a href="trajchunk.html">TRAJCHUNK</a>(NUM,LAT,X1,X2,...XM,N) chunks the M
     input arrays X1, X2,... XM in the same manner, and returns these as Y1,
-    Y2,... YM.  The YM are cell arrays of the same size as NUMO.
+    Y2,... YM.  The input variables may either all be numerical arrays of 
+    all the same size, or cell arrays of numerical arrays. 
  
-    <a href="trajchunk.html">TRAJCHUNK</a>(...,P,LMIN) also specifies a mininum number of points LMIN
-    for each chunk.      
+    In the case of cell array input, some of the XM may be numerical arrays
+    of the same length as the cells NUM and LAT.  The corresponding output 
+    variable will then also be a numerical array.  An example of such a
+    field is the identification number used in FLOATS.MAT and DRIFTERS.MAT. 
  
     <a href="trajchunk.html">TRAJCHUNK</a> with no output arguments overwrites the original named output
     variables. 
- 
-    [..,II]=<a href="trajchunk.html">TRAJCHUNK</a>(...), with an extra final output argument, 
-    outputs a cell array II of indices to the original time series. 
- 
-    As an example, LAT(II{1}) gives the latitudes of the data in the first 
-    cell of the output, LATO{1}.
     __________________________________________________________________
     
     Keeping short data segments
@@ -58,24 +61,6 @@
  
     This preserves the number of data points, while favoring a requested 
     length, if possible, from each trajectory. 
-    __________________________________________________________________
- 
-    Cell array input 
- 
-    The input variables NUM and LAT are cell arrays of numerical arrays,
-    with one trajectory per cell, as with FLOATS.MAT and DRIFTERS.MAT.  For
-    details on these datasets, see <a href="about_floats.html">ABOUT_FLOATS</a> and <a href="about_drifters.html">ABOUT_DRIFTERS</a>.
- 
-    In this case, the output variables are still 1D cell arrays of numeric
-    arrays.  Chunks drawn from each successive trajectory are appended to 
-    the end of the output cell arrays.   
- 
-    [...,II,KK]=<a href="trajchunk.html">TRAJCHUNK</a>(...) in this case also outputs the indices of
-    the data locations within the input cells.  KK is not a cell array
-    like the other output arguments, but rather a row array of LENGTH(II).
- 
-    As an example, LAT(KK(1))(II{1}) gives the latitudes of the data in the 
-    first cell of the output, LATO{1}.
     __________________________________________________________________
     
     Overlap

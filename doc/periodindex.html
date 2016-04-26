@@ -20,8 +20,9 @@
     the last value of INDEX is not larger than the length of OMEGA minus
     N times the last value of 2*pi/OMEGA.
  
-    OMEGA can have interior NANS, in which case the first and last N 
-    periods of each contiguous block of non-NAN data are omitted as above.
+    If NaNs are found within the OMEGA, this is interpreted as being
+    separate ridges output by <a href="ridgewalk.html">RIDGEWALK</a>.  Then INDEX will be a cell array 
+    with the period index for each ridge of OMEGA in a separate cell.
  
     INDEX=<a href="periodindex.html">PERIODINDEX</a>(OMEGA,N) also works, in which case DT is taken to be
     as unity.  Thus OMEGA must have units of radians per sample interval.
@@ -38,6 +39,10 @@
     numerical arrays, then INDEX will also be cell arrays of length K.  
  
     In this case DT may be either a scalar, or an array of length K.
+ 
+    If the cells of OMEGA are found to contain NaNs, these are interpreted
+    as separating individual ridges, and INDEX will in this case be a cell
+    array of length OMEGA with each element containing one cell per ridge.
     ___________________________________________________________________
  
     See also <a href="ellipseplot.html">ELLIPSEPLOT</a>.
@@ -45,5 +50,5 @@
     Usage: index=<a href="periodindex.html">periodindex</a>(dt,omega,N);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2011--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2011--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

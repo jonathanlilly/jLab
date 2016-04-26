@@ -21,13 +21,14 @@ t=1:size(d1,1);t=t-mean(t);
 ci=logspace(-2,0,10);
 
 figure
+set(gcf,'defaulttextinterpreter','latex')
 subplot(221)
 plot(t,[real(w1) imag(w1) abs(w1)])
 linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
 xlabel('Time')
-title('Morlet Wavelet with \omega_\nu=1.5, P_{\nu}^2=3')
+title('Morlet Wavelet with $\omega_\nu=1.5$, $P_{\nu}^2=3$')
 xlim([-80 80]),ylim([-.15 .15])
 xtick((-60:20:60))
 fixlabels([0 -2])
@@ -38,7 +39,7 @@ linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
 xlabel('Time')
-title('Morse Wavelet with \gamma=3 and \beta=1, P_{\beta,\gamma}^2=3')
+title('Morse Wavelet with $\gamma=3$ and $\beta=1$, $P_{\beta,\gamma}^2=3$')
 xlim([-80 80]),ylim([-.15 .15])
 xtick((-60:20:60))
 
@@ -46,7 +47,7 @@ xtick((-60:20:60))
 subplot(223)
 contourf(t,1000*f1,abs(d1'),ci),hold on
 hlines(0,'k:')
-ylabel('Cyclic Frequency x 10^3')
+ylabel('Cyclic Frequency x $10^3$')
 xlabel('Time')
 xlim([-80 80])
 xtick((-60:20:60))
@@ -88,14 +89,14 @@ t=1:size(d1,1);t=t-mean(t);
 ci=logspace(-2,0,10);
 
 figure
-
+set(gcf,'defaulttextinterpreter','latex')
 subplot(221)
 plot(t,[real(w1) imag(w1) abs(w1)])
 linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
 xlabel('Time')
-title('Morlet Wavelet with \omega_\nu=5.5, P_{\nu}^2=30')
+title('Morlet Wavelet with $\omega_\nu=5.5$, $P_{\nu}^2=30$')
 xlim([-80 80]*2.75),ylim([-.1 .1]),xtick((-60:20:60)*3)
 fixlabels([0 -2])
 
@@ -105,13 +106,13 @@ linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
 xlabel('Time')
-title('Morse Wavelet with \gamma=3 and \beta=10, P_{\beta,\gamma}^2=30')
+title('Morse Wavelet with $\gamma=3$ and $\beta=10$, $P_{\beta,\gamma}^2=30$')
 xlim([-80 80]*2.75),ylim([-.1 .1]),xtick((-60:20:60)*3)
 
 subplot(223)
 contourf(t,1000*f1,abs(d1'),ci),hold on
 hlines(0,'k:')
-ylabel('Cyclic Frequency x 10^3')
+ylabel('Cyclic Frequency x $10^3$')
 xlabel('Time')
 xlim([-80 80]*2.75),xtick((-60:20:60)*3),ytick((6:2:14))
 plot(t,1000*om1/2/pi,'w','linewidth',3)
@@ -152,12 +153,13 @@ t=1:size(d1,1);t=t-mean(t);
 ci=logspace(-2,0,10);
 
 figure
+set(gcf,'defaulttextinterpreter','latex')
 subplot(231)
 plot(t,[real(w1) imag(w1) abs(w1)])
 linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
-title('Morse with \gamma=2 and \beta=6')
+title('Morse with $\gamma=2$ and $\beta=6$')
 ylim([-.13 .13]),xlim([-190 190]),fixlabels([0 -2])
 xtick((-200:40:200))
 
@@ -166,7 +168,7 @@ plot(t,[real(w2) imag(w2) abs(w2)])
 linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
-title('Morse with \gamma=3 and \beta=4')
+title('Morse with $\gamma=3$ and $\beta=4$')
 ylim([-.13 .13]),xlim([-190 190])
 xtick((-150:50:150))
 
@@ -175,14 +177,14 @@ plot(t,[real(w3) imag(w3) abs(w3)])
 linestyle k- k-- 2k
 hlines(0,'k:')
 ylabel('Amplitude')
-title('Morse with \gamma=4 and \beta=3')
+title('Morse with $\gamma=4$ and $\beta=3$')
 ylim([-.13 .13]),xlim([-190 190])
 xtick((-150:50:150))
 
 subplot(234)
 contourf(t,1000*f1,abs(d1'),ci),hold on
 hlines(0,'k:')
-ylabel('Cyclic Frequency x 10^3')
+ylabel('Cyclic Frequency x $10^3$')
 ylim([0 19])
 xlim([-190 190])
 xtick((-150:50:150))

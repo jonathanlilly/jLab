@@ -59,9 +59,16 @@ function[varargout]=materncov(varargin)
 %   the autocovariance of the composite Matern process.  See MATERNSPEC for
 %   more details.
 %
-%   This autocovariance does not have a simple analytic form, but is 
-%   computed in approximate form from inverse Fourier tranforming the
-%   spectrum with 10x oversampling and a length 100 x N. 
+%   This autocovariance does not have an analytic form, but is approximated 
+%   to high precision by inverse Fourier transforming the spectrum with 
+%   10 x oversampling over a 10 x longer time period, and then decimating.  
+%
+%   MATERNCOV(...,'composite',M,P) specifies the numerical oversampling 
+%   parameters used in the numerical calculation.  The spectrum is computed
+%   over a time window of M times the duration required, and P times the 
+%   required sampling density, for a total of M*P time more points.  These
+%   flags may set to optimize the tradeoff between speed and accuracy.  
+%   The default behavior corresponds to M=10 and P=10.
 %
 %   This computation method is expected to minimize aliasing effects and
 %   resolution errors.  
@@ -100,6 +107,8 @@ end
 sid='one';
 model='forward';
 
+M=10;  %Specifying oversampling rates for composite model
+P=10;
 for i=1:3
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
@@ -108,6 +117,13 @@ for i=1:3
             sid=varargin{end};
         end
         varargin=varargin(1:end-1);
+    elseif ischar(varargin{end-2})  %For inputting M and P for testing
+        if strcmpi(varargin{end-2}(1:3),'com')
+            model=varargin{end-2};
+            M=varargin{end-1};
+            P=varargin{end};
+            varargin=varargin(1:end-3);
+        end
     end
 end
 
@@ -139,7 +155,7 @@ R=zeros(N,length(lambda));
 
 for i=1:length(lambda)
     if ~sigma(i)==0
-        R(:,i)=materncov_one(tau,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
+        R(:,i)=materncov_one(tau,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,M,P);
     end
 end
 
@@ -151,18 +167,15 @@ varargout{1}=tau;
 varargout{2}=R;
 
 
-function[R]=materncov_one(tau,sigma,alpha,lambda,nu,mu,model)
+function[R]=materncov_one(tau,sigma,alpha,lambda,nu,mu,model,M,P)
 
 %sigma,alpha,lambda,mu,model
-
 if strcmpi(model(1:3),'com')
-    M=10;
-    P=10;
     N=length(tau);
     dt=tau(2)-tau(1);
     [f,Spp,Snn]=maternspec(dt,M*N*P,sigma,alpha,lambda/P,nu/P,mu/P,'composite');
     %[f,Spp,Snn]=maternspec(dt,M*N,sigma,alpha,lambda,nu,mu,'composite');
-    S=[flipud(Snn(2:end));Spp];
+    S=[flipud(Snn(2:end));Spp];%figure,plot(S)
     Ri=ifft(ifftshift(S))./dt;  %Make sure it's ifftshift not fftshift
     Ri=Ri(1:P:end);
     R=Ri(1:N);
@@ -172,12 +185,12 @@ else
         R=fact.*((lambda*tau).^(alpha-1/2)).*besselk(abs(alpha-1/2),lambda*tau);
     else
         if alpha==-1/2
-            tnorm=sqrt(tau.^2+mu.^2);
-            fact=besselk(1,mu.*lambda);
-            R=frac(1,fact).*frac(mu,tnorm).*besselk(1,lambda.*tnorm);
+            tnorm=sqrt(tau.^2+(1./mu).^2);
+            fact=besselk(1,lambda./mu);
+            R=frac(1,fact).*frac(1,mu.*tnorm).*besselk(1,lambda.*tnorm);
         else
-            tnorm=lambda.*sqrt(tau.^2+mu.^2);
-            fact=1./(abs(mu.*lambda)).^(alpha-1/2)./besselk(abs(alpha-1/2),abs(mu.*lambda));
+            tnorm=lambda.*sqrt(tau.^2+(1./mu).^2);
+            fact=1./(abs(lambda./mu)).^(alpha-1/2)./besselk(abs(alpha-1/2),abs(lambda./mu));
             %/maternfun(alpha(i),lambda(i).*sqrt(G(i).^2));
             R=fact*tnorm.^(alpha-1/2).*besselk(abs(alpha-1/2),tnorm);
         end
@@ -188,6 +201,7 @@ else
     R(tau==0)=1;
     R=R.*sigma.^2;
 end
+
 
 
 %             M=10;
@@ -267,8 +281,8 @@ reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case composite Matern
 % reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N, reverse Matern',b1&&b2)
 
 N=1000;
-[tau,R]=materncov(1,N,sigma,-1/2,h,0,alpha*10);
-[f,Spp,Snn]=maternspec(1,N,sigma,-1/2,h,0,alpha*10);
+[tau,R]=materncov(1,N,sigma,-1/2,h,0,1./(alpha*10));
+[f,Spp,Snn]=maternspec(1,N,sigma,-1/2,h,0,1./(alpha*10));
 [f,Spp2,Snn2]=blurspec(1,R,'aliased');
 
 
@@ -280,8 +294,8 @@ reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible 
 
 N=1000;
 dt=7;
-[tau,R]=materncov(dt,N,sigma,-1/2,h/dt,0,alpha*10*dt);
-[f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,h/dt,0,alpha*10*dt);
+[tau,R]=materncov(dt,N,sigma,-1/2,h/dt,0,1./(alpha*10*dt));
+[f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,h/dt,0,1./(alpha*10*dt));
 [f,Spp2,Snn2]=blurspec(dt,R,'aliased');
 
 
@@ -292,8 +306,8 @@ reporttest('MATERNCOV Fourier transforms to MATERNSPEC ..., even N, exponential,
 
 
 
-[tau,R]=materncov(1,1000,7,1.5,1/10,0,20);
-[f,Spp,Snn]=maternspec(1,1000,7,1.5,1/10,0,20);
+[tau,R]=materncov(1,1000,7,1.5,1/10,0,1/20);
+[f,Spp,Snn]=maternspec(1,1000,7,1.5,1/10,0,1/20);
 [f,Spp2,Snn2]=blurspec(1,R,'aliased');
 
 
@@ -303,10 +317,9 @@ b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-10);
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N, extended Matern',b1&&b2)
 
 dt=7;
-[tau,R]=materncov(dt,1000,7,1.5,1/10/dt,0,20*dt);
-[f,Spp,Snn]=maternspec(dt,1000,7,1.5,1/10/dt,0,20*dt);
+[tau,R]=materncov(dt,1000,7,1.5,1/10/dt,0,1/20/dt);
+[f,Spp,Snn]=maternspec(dt,1000,7,1.5,1/10/dt,0,1/20/dt);
 [f,Spp2,Snn2]=blurspec(dt,R,'aliased');
-
 
 b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-10);
 b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-10);

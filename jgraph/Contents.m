@@ -53,7 +53,8 @@
 % Low-level functions
 %   axeshandles - Returns handles to all axes children.
 %   crop        - Gets rid of whitespace around an image. [by A. Bliss]             
-%   linehandles - Finds all line and patch handles from a given set of axes.      
+%   linehandles - Finds all line and patch handles from a given set of axes.
+%   linestyleparse - Parses the input string to LINESTYLE.
                 
 help jGraph
          

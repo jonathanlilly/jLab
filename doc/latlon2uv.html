@@ -4,17 +4,14 @@
 <div><h1>LATLON2UV is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="latlon2uv.html">LATLON2UV</a>  Converts latitude and longitude to horizontal velocity.
  
-    [U,V]=<a href="latlon2uv.html">LATLON2UV</a>(NUM,LAT,LON) where NUM is the data in DATENUM format
+    CV=<a href="latlon2uv.html">LATLON2UV</a>(NUM,LAT,LON) where NUM is the data in DATENUM format
     and LAT and LON are the latitude and longitude in degrees, outputs the
-    eastward and northward velocity components U and V in cm/s, computed
-    using the first central difference.
- 
-    CV=<a href="latlon2uv.html">LATLON2UV</a>(...) with one output argument returns the complex- valued
-    velocity CV=U+SQRT(-1)*V. NANs in LAT or LON become NAN+SQRT(-1)*NAN.
+    complex-valued velocity CV=U+SQRT(-1)*V in cm/s, computed using the 
+    first central difference.  
  
     NUM is a column vector or a matrix of the same size as LAT and LON.  
-    LAT and LON are matices having SIZE(NUM,1) rows.  U and V are the same 
-    size as LAT and LON.  
+    LAT and LON are matices having SIZE(NUM,1) rows.  CV is the same size
+    as LAT and LON. NANs in LAT or LON become NAN+SQRT(-1)*NAN.
    
     <a href="latlon2uv.html">LATLON2UV</a> computes the velocity components from the distance travelled
     across the surface of the sphere and the heading, taking account of 
@@ -25,6 +22,11 @@
     respectively, the first forward and first backward difference.  
  
     The radius of the earth is given by the function <a href="radearth.html">RADEARTH</a>.
+ 
+    [CV,CA]=<a href="latlon2uv.html">LATLON2UV</a>(...,'acceleration') also returns CA, a measure of the
+    complex-valued acceleration based on the difference between the first
+    forward difference velocity and the first backward difference velocity.
+    The units of acceleration are centimeters per inverse second squared.
     ___________________________________________________________________
  
     Cell array input / output
@@ -41,18 +43,22 @@
     By default, <a href="latlon2uv.html">LATLON2UV</a> uses a first central difference algorithm which 
     is defined to be the average of a forward and a backward difference.
  
-    <a href="latlon2uv.html">LATLON2UV</a>(...,'forward') uses a first forward difference.  Velocity is
-    computed based on the great circle distance and bearing from each point
-    to the next point.  
+    CV=<a href="latlon2uv.html">LATLON2UV</a>(...,'forward') instead uses a first forward difference. 
+    Velocity is computed based on the great circle distance and bearing 
+    from each point to the next point.  
  
-    <a href="latlon2uv.html">LATLON2UV</a>(...,'backward') uses a first backward difference.  Velocity 
-    is computed based on the great circle distance and bearing from each
-    point to the previous point.  This is equivalent to the first forward
-    difference computed backward in time.
+    CV=<a href="latlon2uv.html">LATLON2UV</a>(...,'backward') instead uses a first backward difference.  
+    Velocity is computed based on the great circle distance and bearing 
+    from each point to the previous point.  This is equivalent to the first 
+    forward difference computed backward in time.
  
     The first forward and first backward difference can be thought of as 
     giving the Cartesian velocities of a departing and arriving particle,
     respectively.
+ 
+    Note that acceleration is not output when the 'forward' or 'backward'
+    algorithms are specified, as acceleration is computed as a part of the 
+    first central difference operation.
     ___________________________________________________________________
  
     Parallelization
@@ -64,8 +70,8 @@
  
     See also <a href="xy2latlon.html">XY2LATLON</a>, <a href="latlon2xy.html">LATLON2XY</a>, <a href="uv2latlon.html">UV2LATLON</a>.
  
-    Usage:  [u,v]=<a href="latlon2uv.html">latlon2uv</a>(num,lat,lon);
-            cv=<a href="latlon2uv.html">latlon2uv</a>(num,lat,lon);
+    Usage:  cv=<a href="latlon2uv.html">latlon2uv</a>(num,lat,lon);
+            [cv,ca]=<a href="latlon2uv.html">latlon2uv</a>(num,lat,lon);
  
     '<a href="latlon2uv.html">latlon2uv</a> --t' runs a test.
     _________________________________________________________________

@@ -3,9 +3,15 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
+%   'jlab_makefigs matern':
+%   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2015). 
+%      Damped fractional Brownian motion, with application to particle
+%      motion in fluid turbulence. Submitted to IEEE Transactions on 
+%      Information Theory.
+%
 %   'jlab_makefigs superfamily':
 %   Lilly, J. M., and S. C. Olhede (2012). Generalized Morse wavelets as a
-%      superfamily of analytic wavelets. IEEE Transactions on Signal
+%      superfamily of analytic wavelets.  IEEE Transactions on Signal
 %      Processing 60 (11), 6036--6041.
 %
 %   'jlab_makefigs multivariate':
@@ -53,7 +59,7 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   .eps files in the current diretory, e.g. 'jlab_makefigs ridges print'. 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details     
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details     
  
 if nargin==1
     str='noprint';
@@ -69,6 +75,7 @@ jj=jj+1;names{jj}='trivariate';
 jj=jj+1;names{jj}='vortex';
 jj=jj+1;names{jj}='multivariate';
 jj=jj+1;names{jj}='superfamily';
+jj=jj+1;names{jj}='matern';
 
 %cd(jlab_settings('dirnames.figures'))
 
@@ -84,7 +91,14 @@ else
     end
 end
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function[varargout]=jlab_makefigs_matern(str) 
+
+
+%END of jlab_makefigs_matern
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 function[varargout]=jlab_makefigs_superfamily(str)
 
 %/************************************************************
@@ -396,7 +410,17 @@ for i=1:length(lat)
     cx{i}=fillbad(latlon2xy(lat{i},lon{i},lato,lono));   
     [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{1,ga(i),be(i),fs{i},'bandpass'},'mirror');
     dt=num{i}(2)-num{i}(1);
-    [ir{i},jr{i},wxr{i},wyr{i},fxr{i},fyr{i},bxr{i},byr{i},cxr{i},cyr{i}]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*ppsi(i),0});  
+    [ir{i},jr{i},wr,fr,br,cr]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*ppsi(i),0}); 
+    
+    if length(wr)>0
+        wxr{i}=wr(:,1);wyr{i}=wr(:,2);
+        fxr{i}=fr(:,1);fyr{i}=fr(:,2);
+        bxr{i}=br(:,1);byr{i}=br(:,2);
+        cxr{i}=cr(:,1);cyr{i}=cr(:,2);
+    else
+        [wxr{i},wyr{i},fxr{i},fyr{i},bxr{i},byr{i},cxr{i},cyr{i}]=vempty;
+    end
+    
 end
 
 
@@ -569,22 +593,26 @@ fs=morsespace(ga,be,{.2 pi},pi./300,8);
 make vortex.drifters wx wy
 clear ir jr kr xr fr fbar kappa lambda theta phi R V
 for k=1:size(x,2),
-   disp(['Wavelet ridge analysis for drifter #' int2str(k) ' of 101.'])
-   %The physical cutoff is 400/1000 km = 0.4 km
-   [ir{k},jr{k},xr{k},yr{k},fxr{k},fyr{k}]=ridgewalk(dt,wx(:,:,k),wy(:,:,k),fs,{2*morseprops(ga,be)/pi,L*1e-3});
-   
-   %Keep track of which number drifter we're on, for future reference
-   kr{k}=celladd(k,cellmult(0,ir{k}));
-   
-   %This is the joint instantaneous frequency, see Lilly and Olhede (2010)
-   fbar{k}=fxr{k};
-   for j=1:length(xr{k})
-       fbar{k}{j}=vmean([fxr{k}{j} fyr{k}{j}],2,squared([xr{k}{j} yr{k}{j}])); 
-   end
-   %Calculate ellipse parameters from ridges
-   [kappa{k},lambda{k},theta{k},phi{k}]=ellparams(xr{k},yr{k});
-   R{k}=ellrad(kappa{k},lambda{k},phi{k});
-   V{k}=ellvel(dt*24*3600,kappa{k},lambda{k},theta{k},phi{k},1e5);
+    disp(['Wavelet ridge analysis for drifter #' int2str(k) ' of 101.'])
+    %The physical cutoff is 400/1000 km = 0.4 km
+    [ir{k},jr{k},wr,fr]=ridgewalk(dt,wx(:,:,k),wy(:,:,k),fs,{2*morseprops(ga,be)/pi,L*1e-3});
+    
+    if length(wr)>0
+        xr{k}=wr(:,1);yr{k}=wr(:,2);
+        fxr{k}=fr(:,1);fyr{k}=fr(:,2);
+        fbar{k}=vmean([fxr{k} fyr{k}],2,squared([xr{k} yr{k}]));
+    else
+        [xr{k},yr{k},fxr{k},fyr{k},fbar{k}]=vempty;
+    end
+    
+    %Keep track of which number drifter we're on, for future reference
+    kr{k}=k+0*ir{k};
+    
+    %This is the joint instantaneous frequency, see Lilly and Olhede (2010)
+    %Calculate ellipse parameters from ridges
+    [kappa{k},lambda{k},theta{k},phi{k}]=ellparams(xr{k},yr{k});
+    R{k}=ellrad(kappa{k},lambda{k},phi{k});
+    V{k}=ellvel(dt*24*3600,kappa{k},lambda{k},theta{k},phi{k},1e5);
 end
 make vortex.ridges ir jr kr xr yr fxr fyr fbar kappa lambda theta phi R V
 %\************************************************************************
@@ -614,30 +642,16 @@ yres=y-vswap(yhat,nan,0);
 xresr=ir;
 yresr=ir;
 for k=1:size(x,2)
-    for j=1:length(ir{k})
-        xresr{k}{j}=xres(ir{k}{j},k);
-        yresr{k}{j}=yres(ir{k}{j},k);
-    end
+    xresr{k}=xres(ir{k}(~isnan(ir{k})),k);
+    yresr{k}=yres(ir{k}(~isnan(ir{k})),k);
 end
 
 x(abs(x-vshift(x,1,1))>L*pi)=nan;
 xres(abs(xres-vshift(xres,1,1))>L*pi)=nan;
 
-make vortex.ridges xresr yresr 
+make vortex.ridges ir jr kr xr yr fxr fyr fbar kappa lambda theta phi R V xresr yresr
 make vortex.drifters x y xres yres xhat yhat
 %\************************************************************************
-
-
-%/************************************************************************
-%Reshape ridges to match older format
-use vortex.ridges
-for k=1:length(ir)
-    [ir{k},jr{k},kr{k},xr{k},yr{k},fxr{k},fyr{k},fbar{k},kappa{k},lambda{k},theta{k},phi{k},R{k},V{k},xresr{k},yresr{k}]=...
-        cell2col(ir{k},jr{k},kr{k},xr{k},yr{k},fxr{k},fyr{k},fbar{k},kappa{k},lambda{k},theta{k},phi{k},R{k},V{k},xresr{k},yresr{k});
-end
-make vortex.ridges ir jr kr xr yr fxr fyr fbar kappa lambda theta phi R V xresr yresr
-%\************************************************************************
-
 
 %That's the end of the processing, on to the figure making
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1499,8 +1513,8 @@ for i=1:size(xra,2)
     
     subplot(M,N,i+N)
     contourf(num,2*pi./fs,abs(wx(:,:,i)'),ci),caxis([1 25]),colormap gray,flipmap,flipy,ylog,hold on,nocontours
-    plot(num(ir{i}{1}),2*pi./fs(jr{i}{1}),'w','linewidth',4)
-    plot(num(ir{i}{1}),2*pi./fs(jr{i}{1}),'k','linewidth',2)
+    plot(num(ir{i}(~isnan(ir{i}))),2*pi./fs(jr{i}(~isnan(ir{i}))),'w','linewidth',4)
+    plot(num(ir{i}(~isnan(ir{i}))),2*pi./fs(jr{i}(~isnan(ir{i}))),'k','linewidth',2)
     ytick([2 4 8 16 32])
     if i==1,ylabel('Period in Days'),end
     
@@ -1583,11 +1597,10 @@ fs=morsespace(ga,be,{0.2,fmax},fmin,8);
 %[wp,wn]=vectmult(tmat,wx,wy);
 
 %Form ridges of component time series
-[ir,jr,wrx,wry,frx,fry]=ridgewalk(dt,wx,wy,fs,{3,0});   
+[ir,jr,wr,fr]=ridgewalk(dt,wx,wy,fs,{3,0});   
 
 %Map into time series locations
-[wrx,frx]=ridgemap(length(cx),wrx,frx,ir);
-[wry,fry]=ridgemap(length(cx),wry,fry,ir);
+[wrx,wry,frx,fry]=ridgemap(length(cx),wr(:,1),wr(:,2),fr(:,1),fr(:,2),ir);
 
 %Convert xy transforms to ellipse forms
 [kappa,lambda,theta,phi]=ellparams(wrx,wry);
@@ -1792,7 +1805,14 @@ for i=1:length(lat)
     cx{i}=fillbad(latlon2xy(lat{i},lon{i},lato,lono));   
     [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{1,ga(i),be(i),fs{i},'bandpass'},'mirror');
     dt=num{i}(2)-num{i}(1);
-    [ir{i},jr{i},wxr{i},wyr{i},fxr{i},fyr{i}]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*morseprops(ga(i),be(i)),0});  
+    [ir{i},jr{i},wr,fr]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*morseprops(ga(i),be(i)),0}); 
+    
+    if length(wr)>0
+        wxr{i}=wr(:,1);wyr{i}=wr(:,2);
+        fxr{i}=fr(:,1);fyr{i}=fr(:,2);
+    else
+        [wxr{i},wyr{i},fxr{i},fyr{i}]=vempty;
+    end
 end
 
 %for i=1:length(ir),length(find(isnan(ir{i}))),
@@ -1801,13 +1821,6 @@ end
 clear xhatr yhatr fxhat fyhat xres lathat lonhat latres lonres kap lam the phi fbar rm vm vg
 for i=1:length(lat)
     [xhatr{i},yhatr{i},fxhat{i},fyhat{i}]=ridgemap(length(cx{i}),wxr{i},wyr{i},fxr{i},fyr{i},ir{i});
-end
-
-
-%Reshape ridges to match older format
-for k=1:length(ir)
-    [ir{k},jr{k},wxr{k},wyr{k},fxr{k},fyr{k}]=...
-        cell2col(ir{k},jr{k},wxr{k},wyr{k},fxr{k},fyr{k});
 end
 
 for i=1:length(lat)
@@ -2218,10 +2231,10 @@ cv=npg2006.cv;  %Annoyingly, I have to set cv by hand because of a Matlab bug wi
 [iry,jry,wry,fry]=ridgewalk(dt,wy,fs,{12,0,'phase'});    
 
 %Map into time series locations
-[wrx,frx]=ridgemap(length(cx),wrx,cellmult(1/(2*pi),frx),irx);
-[wry,fry]=ridgemap(length(cx),wry,cellmult(1/(2*pi),fry),iry);
-[wrp,frp]=ridgemap(length(cx),wrp,cellmult(1/(2*pi),frp),irp);
-[wrn,frn]=ridgemap(length(cx),wrn,cellmult(1/(2*pi),frn),irn);
+[wrx,frx]=ridgemap(length(cx),wrx,frx/2/pi,irx);
+[wry,fry]=ridgemap(length(cx),wry,fry/2/pi,iry);
+[wrp,frp]=ridgemap(length(cx),wrp,frp/2/pi,irp);
+[wrn,frn]=ridgemap(length(cx),wrn,frn/2/pi,irn);
 
 %Convert xy transforms to ellipse forms
 [kappa,lambda,theta,phi]=ellparams(wrx,wry);
@@ -2455,3 +2468,6 @@ end
 
 %END of jlab_makefigs_ridges
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

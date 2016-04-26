@@ -25,11 +25,13 @@
  
     MZ=<a href="twodstats.html">TWODSTATS</a>(X,Y,Z,XBIN,YBIN) where X, Y and Z are arrays of the same
     length, forms the mean of Z over the XY plane.  
+ 
+    X and Y must be real-valued, but Z may be complex-valued.
    
     If XBIN and YBIN are length N and M, respectively, then MZ is of 
     size M-1 x N-1.  Bins with no data are assigned a value of NAN.
  
-    XBIN and YBIN must be monotonically increasing. 
+    XBIN and YBIN must be monotonically increasing.
  
     MZ=<a href="twodstats.html">TWODSTATS</a>(X,Y,Z,N) uses N bins in the X and Y directions, linearly
     spaced between the minimum and maximum values.  MZ is N-1 x N-1.

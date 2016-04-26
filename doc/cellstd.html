@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLSTD is the <a href="jcell.html">jcell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellstd.html">CELLSTD</a>  Standard deviation of each element a cell array.
+ 
+    SIG=<a href="cellstd.html">CELLSTD</a>(X) where X is a cell array of N arrays,
+ 
+        X{1}=X1, X{2}=X2,..., X{N}=XN
+  
+    returns the N x 1 array of standard deviation values SIG such that
+   
+       SIG(1)=STD(X1(:)),  SIG(2)=STD(X2(:)),...,  SIG(N)=STD(XN(:)).
+ 
+    In taking the standard deviation, non-finite values are ignored, as in
+    <a href="vstd.html">VSTD</a>. The output SIG is a column vector of the same length as X.  
+ 
+    [SIG1,SIG2,...,SIGP]=<a href="cellstd.html">CELLSTD</a>(X1,X2,...,XP) also works for P different 
+    input arguments. 
+ 
+    <a href="cellstd.html">CELLSTD</a>(X1,X2,...XP);  with no output arguments overwrites the 
+    original input variables.
+    __________________________________________________________________   
+ 
+    Parallelization
+ 
+    <a href="cellstd.html">CELLSTD</a>(...,'parallel') parallelizes the computation using a PARFOR 
+    loop.  This requires that Matlab's Parallel Computing Toolbox be 
+    installed, and is useful for very large datasets.
+    __________________________________________________________________   
+ 
+    See also <a href="jCell.html">JCELL</a>, VTOOLS.
+ 
+    Usage: sig=<a href="cellstd.html">cellstd</a>(x);
+           [sig1,sig2,sig3]=<a href="cellstd.html">cellstd</a>(x1,x2,x3);
+           <a href="cellstd.html">cellstd</a>(x1,x2,x3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

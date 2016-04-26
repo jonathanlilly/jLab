@@ -70,20 +70,19 @@ if length(varargin)==2
     lon2=varargin{2}(2:end,:);
     %d=spheredist(lat1,lon1,lat2,lon2,R);
 else
-    lat1=varargin{1}(:); 
-    lon1=varargin{2}(:);
+    lat1=varargin{1}; 
+    lon1=varargin{2};
     lat2=varargin{3};
     lon2=varargin{4};
 end
 
-
- 
 if ~aresame(size(lat1),size(lon1))
    error('LAT1 and LON1 must be the same size.')
 end
 if ~aresame(size(lat2),size(lon2))
    error('LAT2 and LON2 must be the same size.')
 end
+%vsize(lat1,lon1,lat2,lon2) 
 if (~aresame(size(lat1),size(lat2)) && (~isscalar(lat1) && ~isscalar(lat2)))
    error('LAT1 and LON1 must be the same size as LAT1 and LON1, or one pair must be scalars.')
 end
@@ -146,15 +145,24 @@ if strcmpi(flag(1:3),'sph')
     d=R.*acos(cosd(lat1).*cosd(lat2).*cosd(lon1-lon2)+sind(lat1).*sind(lat2));
 else
     %disp('Haversine formula')
-    lat1=jdeg2rad(lat1);
-    lat2=jdeg2rad(lat2);
-    lon1=jdeg2rad(lon1);
-    lon2=jdeg2rad(lon2);
 
+    %This gives bad values when lon1 and lon2 are both near zero...
     %Haversin formula from http://www.movable-type.co.uk/scripts/latlong.html
-    a=squared(sin(frac(lat2-lat1,2)))+cos(lat1).*cos(lat2).*squared(sin(frac(lon2-lon1,2)));
+    a1=squared(sind(frac(lat2-lat1,2)));
+    a2=cosd(lat1).*cosd(lat2).*squared(sind(frac(lon2-lon1,2)));
+    a=squared(sind(frac(lat2-lat1,2)))+cosd(lat1).*cosd(lat2).*squared(sind(frac(lon2-lon1,2)));
     d=R.*2.*atan2(sqrt(a),sqrt(1-a));
+    %a3=squared(sind(frac(lon2-lon1,2)));
+    %a3=frac(1,2)*(cosd(lat1-lat2)+cosd(lat1+lat2)).*squared(sind(frac(lon2-lon1,2)));
+    %figure,plot([a(1:end-1) a2(1:end-1) a3(1:end-1) ])
+    %figure,plot([lon2-lon1])
 end
+
+%cosAcosB=cos(A-B)+cos(A+B)
+%e A+B = eA eB = cA+isA cB+isB = cAcB-sAsB = cA+B
+%e A-B = eA e-B = cA+isA cB-isB = cAcB-sAsB =cA-B
+%cA+B/2 +cA-B/2 = cAcB
+
 
 %Sometimes there is a very small complex portion
 d=real(d);

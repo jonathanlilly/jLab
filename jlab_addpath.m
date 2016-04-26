@@ -33,4 +33,4 @@ for k=1:2
     end
 end
 
-clear i dirlist jlab_path fullpath
+clear i j k dirlist dirlisti jlab_path fullpath 

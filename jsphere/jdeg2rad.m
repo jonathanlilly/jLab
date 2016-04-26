@@ -1,13 +1,13 @@
 function[varargout]=jdeg2rad(varargin)
 %JDEG2RAD  Converts degrees to radians.
 %
-%   [R1,R2,...RN]=JDEG2RAD(D1,D2,...DN) converts the input angles from
+%   [R1,R2,...,RN]=JDEG2RAD(D1,D2,...,DN) converts the input angles from
 %   degrees to radians.  Output angles are in the range [-pi,pi), that
 %   is, +/-180 degrees is defined to corresponds to -pi radians.
 %
 %   NANs and INFs in the input arguments are preserved.
 %
-%   See also JRAD2DEG, DEG180, DEG360. 
+%   See also JRAD2DEG, DEG180, DEG360, DEGUNWRAP.
 % 
 %   'jdeg2rad --t' runs a test.
 %   __________________________________________________________________

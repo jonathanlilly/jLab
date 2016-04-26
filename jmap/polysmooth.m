@@ -188,7 +188,7 @@ function[varargout]=polysmooth(varargin)
 %           [zhat,weight,beta]=polysmooth(ds,xs,ys,zs,b,p,'sphere');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     polysmooth_test,return
@@ -253,6 +253,21 @@ elseif strcmpi(str(1:3),'loo')
     end
 end
 
+
+%This does in fact speed things up, by about a factor of two.
+%However, it is not strictly necessary.  If you don't sort, then you end
+%up doing a lot of extra operations, because you can't truncate the matrix.
+if anyany(isnan(z))&~strcmpi(str(1:3),'loo')
+    disp('Detecting NaNs in Z...  sorting to exclude these points.')
+    d(isnan(z))=inf;
+    [d,kk]=sort(d,3);
+    ii=vrep(vrep([1:size(d,1)]',size(d,2),2),size(d,3),3);
+    jj=vrep(vrep([1:size(d,2)],size(d,1),1),size(d,3),3);
+    index=sub2ind(size(d),ii,jj,kk);
+    x=x(index);y=y(index);z=z(index);
+    disp('Sorting complete.')
+end
+
 if strcmpi(str(1:3),'loo')
     [beta,weight,B]=polysmooth_slow(x,y,z,w,xo,yo,B,R,varstr,kernstr,geostr);
 elseif strcmpi(str(1:3),'spe')
@@ -273,7 +288,6 @@ varargout{2}=weight;
 varargout{3}=beta;
 varargout{4}=B;
 
-
 %for k=1:max(size(beta,3),nargout)
 %    varargout{k}=squeeze(beta(:,:,k));
 %end
@@ -288,65 +302,60 @@ if strcmpi(varstr(1:3),'con')
         B=vrep(B,M,1);
     end
 else
-%%Earlier version before weighting
-%     if ndims(d)<3
-%         B=d(B);
-%     else
-%         B=squeeze(d(:,:,B));
-%     end
-
-     N=B;
-     %Compute number of data points with potential for weighted points
-     if  ndims(d)<3
-         B=nan;
-         cumw=cumsum(double(w),1);
-         index=find(cumw>=N,1,'first');
-         if ~isempty(index)
-              B=squeeze(d(index));
-         end
-     else
-         B=nan*zeros(size(d,1),size(d,2));
-         cumw=cumsum(double(w),3);
-         for i=1:size(d,1);
-             for j=1:size(d,2)
-                 index=find(cumw(i,j,:)>=N,1,'first');
-                 if ~isempty(index)
-                      B(i,j)=squeeze(d(i,j,index));
-                 end
-             end
-         end
-     end
+    N=B;
+    w(~isfinite(d))=0; %Important line, makes us handle missing data correctly
+    %Compute number of data points with potential for weighted points
+    if  ndims(d)<3
+        B=nan;
+        cumw=cumsum(double(w),1);
+        index=find(cumw>=N,1,'first');
+        if ~isempty(index)
+            B=squeeze(d(index));
+        end
+    else
+        B=nan*zeros(size(d,1),size(d,2));
+        cumw=cumsum(double(w),3);
+        for i=1:size(d,1);
+            for j=1:size(d,2)
+                index=find(cumw(i,j,:)>=N,1,'first');
+                if ~isempty(index)
+                    B(i,j)=squeeze(d(i,j,index));
+                end
+            end
+        end
+    end
 end
 
 function[beta,weight,B]=polysmooth_fast(ds,xs,ys,zs,ws,B,R,varstr,kernstr)
+
 tol=1e15;
 
 M=size(xs,1);
 N=size(xs,2);
+ds(~isfinite(zs))=inf;
 
-B=polysmooth_bandwidth(varstr,B,M,N,ds,ws);
+B=polysmooth_bandwidth(varstr,B,M,N,ds,ws);%figure,jpcolor(B)
 B=vrep(B,size(xs,3),3);
 
 P=sum(0:R+1);
 
 matcond=zeros(M,N);
 
-
 beta=nan*zeros(size(xs,1),size(xs,2),P);
 weight=nan*zeros(size(xs,1),size(xs,2));
 %Initial search to exclude right away points too far away
-ds(isnan(zs)|ds>B)=nan;
-numgood=squeeze(sum(sum(~isnan(ds),2),1));
-index=find(numgood~=0,1,'last'); 
+ds(ds>B)=nan;
+numgood=squeeze(sum(sum(isfinite(ds),2),1));
+index=find(numgood~=0,1,'last');
 
 if ~isempty(index)
-    vindex(ds,xs,ys,zs,ws,B,1:index,3);    
+    vindex(ds,xs,ys,zs,ws,B,1:index,3);
     W=polysmooth_kern_dist(ds,B,kernstr).*ws;  %ws for weighted data ponts
-    vswap(ds,xs,ys,zs,W,nan,0);
+    vswap(ds,xs,ys,zs,W,nan,0);%okay
     weight=sum(W,3);
     
     X=polysmooth_xmat(xs,ys,R);
- 
+    
     XtimesW=X.*vrep(W,P,4);
     mat=zeros(M,N,P,P);
     vect=zeros(M,N,P);
@@ -354,44 +363,44 @@ if ~isempty(index)
         mat(:,:,:,i)=squeeze(sum(XtimesW.*vrep(X(:,:,:,i),P,4),3));
     end
     vect=squeeze(sum(XtimesW.*vrep(zs,P,4),3));
-  
+    
     for i=1:N
-         for j=1:M
-                 matcond(j,i)=cond(squeeze(mat(j,i,:,:)));
-                 if R==1
-                    if matcond(j,i).^2>tol
-                           mat(j,i,:,:)=nan;
-                    end
-                 elseif R==2
-                    if matcond(j,i)>tol
-                           mat(j,i,:,:)=nan;
-                    end
-                 end
-         end
+        for j=1:M
+            matcond(j,i)=cond(squeeze(mat(j,i,:,:)));
+            if R==1
+                if matcond(j,i).^2>tol
+                    mat(j,i,:,:)=nan;
+                end
+            elseif R==2
+                if matcond(j,i)>tol
+                    mat(j,i,:,:)=nan;
+                end
+            end
+        end
     end
- 
+    
     if P==1
         vswap(mat,0,nan);
         beta=vect./mat;
     else
         
         beta=matmult(matinv(mat),vect,3);
-                
-%         sizemat=size(mat);
-%         mat=reshape(mat,size(mat,1).*size(mat,2),size(mat,3),size(mat,4));
-%         vect=reshape(vect,size(vect,1).*size(vect,2),size(vect,3));
-%         nonnani=~isnan(sum(sum(mat,2),3));
-%         beta=nan*zeros(size(mat,1),size(mat,2)); 
-%         
-%         vindex(mat,vect,nonnani,1); 
-%         size(mat)
-%         beta(nonnani,:)=matmult(matinv(mat),vect,2);
-%         beta=reshape(beta,sizemat(1),sizemat(2),sizemat(3));
-%         vsize(beta,beta1)
-%         
-%         aresame(beta1,beta,1e-6)
-%         toc
-    end    
+        
+        %         sizemat=size(mat);
+        %         mat=reshape(mat,size(mat,1).*size(mat,2),size(mat,3),size(mat,4));
+        %         vect=reshape(vect,size(vect,1).*size(vect,2),size(vect,3));
+        %         nonnani=~isnan(sum(sum(mat,2),3));
+        %         beta=nan*zeros(size(mat,1),size(mat,2));
+        %
+        %         vindex(mat,vect,nonnani,1);
+        %         size(mat)
+        %         beta(nonnani,:)=matmult(matinv(mat),vect,2);
+        %         beta=reshape(beta,sizemat(1),sizemat(2),sizemat(3));
+        %         vsize(beta,beta1)
+        %
+        %         aresame(beta1,beta,1e-6)
+        %         toc
+    end
 end
 weight=matcond;
 B=B(:,:,1);
@@ -403,7 +412,7 @@ P=sum(0:R+1);
 
 M=size(x,1);
 N=size(x,2);
-    
+
 B=polysmooth_bandwidth(varstr,B,M,N,d,w);
 
 beta=nan*zeros(M,N,P);
@@ -414,14 +423,14 @@ for j=1:M
         [dist,xd,yd,zd,wd]=vsqueeze(d(j,i,:),x(j,i,:),y(j,i,:),z(j,i,:),w(j,i,:));
         
         W=polysmooth_kern_dist(dist,B(j,i),kernstr);
-       
-        index=find(W~=0&~isnan(zd));       
+        
+        index=find(W~=0&~isnan(zd));
         if ~isempty(index)
             vindex(xd,yd,zd,wd,index,1);
             
             weight(j,i)=sum(W(index));
             W=diag(W(index).*wd);  %Times wd for weighted dat points
-                
+            
             X=squeeze(polysmooth_xmat(xd,yd,R));
             
             XW=conj(X')*W;
@@ -440,7 +449,7 @@ function[beta,weight,B]=polysmooth_slow(x,y,z,w,xo,yo,B0,R,varstr,kernstr,geostr
 %Explicit loop without pre-sorting, for testing purposes only
 M=length(yo);
 N=length(xo);
-    
+
 vsize(x,y,z,xo,yo,B0,R);
 
 tol=1e-10;
@@ -456,7 +465,7 @@ for j=1:M
     disp(['Polysmooth computing map for row ' int2str(j) '.'])
     for i=1:N
         if strcmpi(geostr(1:3),'sph')
-            [xd,yd,dist]=latlon2xy(x,y,xo(i),yo(j));            
+            [xd,yd,dist]=latlon2xy(x,y,xo(i),yo(j));
         else
             xd=x-xo(i);
             yd=y-yo(j);
@@ -468,11 +477,11 @@ for j=1:M
         [sortdist,sorter]=sort(dist);
         B(j,i)=polysmooth_bandwidth(varstr,B0,1,1,sortdist,wd(sorter));
         W=polysmooth_kern_dist(dist,B(j,i),kernstr);
-
+        
         %size(W),size(zd)
-        index=find(W~=0&~isnan(zd));       
+        index=find(W~=0&~isnan(zd));
         if ~isempty(index)
-                  
+            
             vindex(xd,yd,zd,wd,index,1);
             X=squeeze(polysmooth_xmat(xd,yd,R));
             
@@ -492,8 +501,8 @@ end
 
 if strcmpi(geostr(1:3),'sph')
     beta=permute(beta,[2 1 3]);
-    weight=permute(weight,[2 1]); 
-    B=permute(B,[2 1]); 
+    weight=permute(weight,[2 1]);
+    B=permute(B,[2 1]);
 end
 
 function[X]=polysmooth_xmat(x,y,R)
@@ -505,14 +514,14 @@ if R>0
 end
 if R>1
     X(:,:,:,4)=frac(1,2)*x.^2;   %See writeup
-    X(:,:,:,5)=x.*y;   
+    X(:,:,:,5)=x.*y;
     X(:,:,:,6)=frac(1,2)*y.^2;   %See writeup
 end
 
 
 % function[W]=polysmooth_kern_xy(x,y,Binv,kernstr);
-% 
-% 
+%
+%
 % if size(Binv,4)==1
 %     xp=Binv.*x;
 %     yp=Binv.*y;
@@ -523,9 +532,9 @@ end
 % %    xp=Binv(1,1).*x+Binv(1,2).*y;
 %  %   yp=Binv(2,1).*x+Binv(2,2).*y;
 % end
-% 
+%
 % distsquared=abs(xp).^2+abs(yp).^2;
-% 
+%
 % if strcmpi(kernstr(1:3),'epa')
 %    W=frac(2,pi).*(1-distsquared).*(1+sign(1-sqrt(distsquared)));
 % elseif strcmpi(lower(kernstr(1:3)),'gau')
@@ -545,21 +554,21 @@ N=3;
 dist=frac(dist,B);
 
 if strcmpi(kernstr(1:3),'epa')
-   W=frac(2,pi).*(1-dist.^2).*(1+sign(1-dist));
+    W=frac(2,pi).*(1-dist.^2).*(1+sign(1-dist));
 elseif strcmpi(kernstr(1:3),'gau')
-   W=frac(2,pi.*B.^2).*exp(-frac(dist.^2,2)).*(1+sign(1-dist./N));
+    W=frac(2,pi.*B.^2).*exp(-frac(dist.^2,2)).*(1+sign(1-dist./N));
 end
 
 W=vswap(W,nan,0);
-        
+
 function[]=polysmooth_test
- 
+
 polysmooth_test_cartesian;
 polysmooth_test_sphere;
 
 
 function[]=polysmooth_test_cartesian
- 
+
 %Use peaks for testing... random assortment
 [x,y,z]=peaks;
 index=randperm(length(z(:)));
@@ -677,7 +686,7 @@ reporttest('POLYSMOOTH speed and memory methods are identical for constant 10-po
 % figure
 % contourf(lono,lato,zhat0,[0:1/2:50]),nocontours,caxis([0 45]),
 % latratio(30),[h,h2]=secondaxes;topoplot continents,
-% title('Standard Deviation of SSH from ALONGTRACK.MAT, mapped using 200~km smoothing')
+% title('Standard Deviation of SSH from TPJAOS.MAT, mapped using 200~km smoothing')
 % hc=colorbar('EastOutside');axes(hc);ylabel('SSH Standard Deviation (cm)')
 % set(h,'position',get(h2,'position'))
 % 

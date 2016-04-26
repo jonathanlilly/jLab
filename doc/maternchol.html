@@ -2,16 +2,22 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>MATERNCHOL is the <a href="jmatern.html">jmatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="maternchol.html">MATERNCHOL</a>  Cholesky decomposition of the Matern covariance and variations.
+ <a href="maternchol.html">MATERNCHOL</a>  Cholesky decomposition of Matern and fBm covariances.
  
     <a href="maternchol.html">MATERNCHOL</a> is a low-level function called by <a href="maternoise.html">MATERNOISE</a>.
  
-    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) returns the Cholesky 
-    decomposition of the N x N autocovariance matrix of an extended Matern
-    process, and its special cases.  See <a href="materncov.html">MATERNCOV</a> for details.
+    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA) returns the Cholesky 
+    decomposition of the N x N autocovariance matrix of a Matern process.
  
-    T=<a href="maternchol.html">MATERNCHOL</a>(...,'composite') does the same, but for the composite 
-    Matern process.
+    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) does the same, but for the
+    extended Matern process.   See <a href="materncov.html">MATERNCOV</a> for details.
+ 
+    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') does the same, 
+    but for the composite Matern process.  See <a href="materncov.html">MATERNCOV</a> for details.
+ 
+    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,A,ALPHA,0) returns the Cholesky decomposition for
+    fractional Brownian motion.  In this case, the third input argument is
+    the spectral amplitude A, not the standard deviation SIGMA.
     __________________________________________________________________
  
     Non positive-definiteness adjustment

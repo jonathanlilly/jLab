@@ -13,6 +13,9 @@ function[h]=twospecplot(varargin)
 %   TWOSPECPLOT(LAT,F,SPP,SNN) also marks the Coriolis frequency at 
 %   latitude LAT, using a red line, on both sides of the spectrum.
 %
+%   TWOSPECPLOT(...,STR) sets the line style by passing the style string
+%   STR to LINESTYLE.
+%
 %   H=TWOSPECPLOT(...) also returns the handle to the subplots.
 %
 %   The input quantities F, SPP, and SNN or F, SXX, and SYY may be cell
@@ -29,6 +32,8 @@ str='rotary';
 xlims=[];
 ylims=[];
 linestr='notides';
+stylestr=[];
+
 for i=1:4
     if ischar(varargin{end-1})&&~ischar(varargin{end})
         if strcmpi(varargin{end-1}(1:3),'xli')
@@ -38,10 +43,16 @@ for i=1:4
         end
         varargin=varargin(1:end-2); 
     elseif ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'tid')||strcmpi(varargin{end}(1:3),'not')
-            linestr=varargin{end};
+        if length(varargin{end})<3
+             stylestr=varargin{end};
         else
-            str=varargin{end};
+            if strcmpi(varargin{end}(1:3),'tid')||strcmpi(varargin{end}(1:3),'not')
+                linestr=varargin{end};
+            elseif strcmpi(varargin{end}(1:3),'rot')||strcmpi(varargin{end}(1:3),'car')
+                str=varargin{end};
+            else
+                stylestr=varargin{end};
+            end
         end
         varargin=varargin(1:end-1);
     end
@@ -75,11 +86,14 @@ end
 
 h(1)=subplot(1,2,1);
 if ~iscell(snn)
-    plot(f,snn)
+    hl=plot(f,snn);
 else
-    cellplot(f,snn)
+    hl=cellplot(f,snn);
 end
-flipx,xlog,ylog,axis tight,ylim(ylims),xlim(xlims),boxon
+if ~isempty(stylestr)
+    linestyle(hl,stylestr);
+end
+set(gca,'xdir','reverse'),xlog,ylog,axis tight,ylim(ylims),xlim(xlims),boxon,hold on
 if strcmpi(linestr(1:3),'tid')
     vlines(tidefreq,':'),
 end
@@ -87,18 +101,21 @@ if ~isempty(lat)
     vlines(abs(corfreq(lat)),'r')
 end
 if strcmpi(str(1:3),'rot')
-    title('Negative rotary spectra')
+    title('Negative Rotary Spectra')
 else
-    title('Zonal spectra')
+    title('Zonal Spectra')
 end
 
 h(2)=subplot(1,2,2);
 if ~iscell(spp)
-    plot(f,spp)
+    hl=plot(f,spp);
 else
-    cellplot(f,spp)
+    hl=cellplot(f,spp);
 end
-xlog,ylog,axis tight,ylim(ylims),xlim(xlims),boxon
+if ~isempty(stylestr)
+    linestyle(hl,stylestr);
+end
+set(gca,'YAxisLocation','right'),xlog,ylog,axis tight,ylim(ylims),xlim(xlims),boxon,hold on
 if strcmpi(linestr(1:3),'yes')
     vlines(tidefreq,':'),
 end
@@ -106,11 +123,11 @@ if ~isempty(lat)
     vlines(abs(corfreq(lat)),'r')
 end
 if strcmpi(str(1:3),'rot')
-    title('Positive rotary spectra')
+    title('Positive Rotary Spectra')
 else
-    title('Meridional spectra')
+    title('Meridional Spectra')
 end
-h=packfig(1,2,'columns');
+%h=packfig(1,2,'columns');
 
 if nargout==0
     clear h

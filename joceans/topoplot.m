@@ -78,10 +78,8 @@ function[h,hc]=topoplot(varargin)
 %          [h,hc]=topoplot(region,v,vc,'2m--','m_map');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
  
-
-%
 %   TOPOPLOT with no input arguments sets REGION to the axis limits of the
 %   current plot using the default value of V=[0 -1/2 -1]. 
 %
@@ -118,6 +116,7 @@ for i=1:3
 end
 ax=[];
 region=[];
+[linewidth,linestyle,linecolor]=linestyleparse(sty);
 
 if length(varargin)>0
     region=varargin{1};
@@ -136,11 +135,17 @@ if isempty(region)
 end
 ax=region;
 
-if ~bnewplot&&((ax(2)-ax(1))<360-1/3)
-    region(1)=region(1)-1/6;
-    region(2)=region(2)+1/6;
+if ~bnewplot
     region(3)=region(3)-1/6;
     region(4)=region(4)+1/6;
+    if (ax(2)-ax(1))<360-1/3
+        region(1)=region(1)-1/6;
+        region(2)=region(2)+1/6;
+    elseif (ax(2)-ax(1))>360
+        region(1)=(ax(2)+ax(1))/2-180;
+        region(2)=(ax(2)+ax(1))/2+180;
+        xlim([region(1) region(2)])
+    end
 end
 
 depths=[];
@@ -217,9 +222,9 @@ else
             if length(depthsc)==1
                 depthsc=[depthsc depthsc];
             end
-            [c,hc]=m_contour(lon,lat,topo,depthsc);
-            hh=get(hc,'children');
-            linestyle(hh,sty);
+            [c,hc]=m_contour(lon,lat,topo,depthsc,linestyle);
+            set(hc,'LineColor',linecolor)
+            set(hc,'LineWidth',linewidth)
         end
     else
         if ~isempty(depths)
@@ -232,15 +237,17 @@ else
             if length(depthsc)==1
                 depthsc=[depthsc depthsc];
             end
-            [c,hc]=contour(lon,lat,topo,depthsc);
-            hh=get(hc,'children');
-            linestyle(hh,sty);
+            [c,hc]=contour(lon,lat,topo,depthsc,linestyle);
+            set(hc,'LineColor',linecolor)
+            set(hc,'LineWidth',linewidth)
         end
         if ~isempty(ax)
             axis(ax);
         end
     end
-    caxis([min(depths) max(depths)]);
+    if ~isempty(depths)
+        caxis([min(depths) max(depths)]);
+    end
 end
 
 
@@ -282,3 +289,7 @@ end
 % 
 % figure,cellplot(lon,lat),latratio,axis tight
 % topoplot(region,[],[-4 -2 ],'2g'),
+
+
+
+

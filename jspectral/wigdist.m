@@ -1,5 +1,5 @@
 function[d,f]=wigdist(x,nmin,nmax,N2,s)
-% WIGDIST  Wigner distribtion (alias-free algorithm).
+% WIGDIST  Wigner distribution (alias-free algorithm).
 %
 %   D=WIGDIST(X,NMIN,NMAX) returns the Wigner distrution of column vector X
 %   at Fourier frequencies [NMIN/N:1/N:NMAX/N] where N equals LENGTH(X). 
@@ -26,7 +26,7 @@ function[d,f]=wigdist(x,nmin,nmax,N2,s)
 %           [d,f]=wigdist(x,nmin,nmax,m);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details        
  
 if strcmpi(x,'--t')
    wigdist_test;return

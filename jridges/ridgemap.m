@@ -5,14 +5,16 @@ function[varargout]=ridgemap(varargin)
 %   along the ridge, maps the values of XR to their correct row locations 
 %   in a time series of length N, and returns the result in the array X.
 %
-%   If IR and XR contain L ridges in L separate cells, as output by
+%   If IR and XR contain L different ridges separated by NaNs, as output by
 %   RIDGEWALK, then X is N x L with the values of XR from each ridge in a 
 %   separate column. Values not specified by the IR are left as INFs. 
 %
 %   [X1,X2,...,XM]=RIDGEMAP(N,X1R,X2R,...,XPR,IR) also works for any P
 %   different ridge quantities X1R--XPR.
 %
-%   The XR and IR quantities are assumed to have been created by RIDGEWALK.
+%   When using RIDGEWALK's joint ridges algorithm, in which some quantities
+%   have more than one column, they should be passed to RIDGEMAP 
+%   individually, for example [X1,X2]=RIDGEMAP(N,X(:,1),X(:,2),IR).
 %   __________________________________________________________________
 %
 %   Collapsing 
@@ -38,7 +40,7 @@ function[varargout]=ridgemap(varargin)
 %            [x,f,mult]=ridgemap(N,xr,fr,ir);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
     ridgemap_test,return
@@ -59,10 +61,9 @@ varargin=varargin(1:end-1);
 
 if ~isempty(ir)
     for i=1:length(varargin)
-        [irtemp,coltemp]=cell2col(ir,varargin{i});
-        [irtemp,varargin{i}]=col2mat(irtemp,coltemp);
+        [irtemp,varargin{i}]=col2mat(ir,varargin{i});
     end
-    ir=col2mat(cell2col(ir));
+    ir=col2mat(ir);
     for i=1:length(varargin)
         varargout{i}=nan*zeros(N,size(ir,2));
         for k=1:size(ir,2)
@@ -118,11 +119,10 @@ fs=2*pi./(logspace(log10(10),log10(100),50)');
 
 %Form ridges of component time series
 [ir,jr,wr,fr]=ridgewalk(dt,wn,fs,{0,0,'phase'}); 
-
 [wa,fa,mult]=ridgemap(length(wn),wr,fr,ir);
-reporttest('RIDGEMAP has one column per ridge, non-joint ridges',size(fa,2)==size(wa,2)&&size(fa,2)==length(find(~isfinite(cell2col(ir)))))
+reporttest('RIDGEMAP has one column per ridge, non-joint ridges',size(fa,2)==size(wa,2)&&size(fa,2)==length(find(~isfinite(ir))))
 
-[ir,jr,wpr,wnr,fpr,fnr]=ridgewalk(dt,wp,wn,fs,{0,0});   
-[wpa,wna,fpa,fna,mult]=ridgemap(length(wn),wpr,wnr,fpr,fnr,ir);
+%[ir,jr,wpr,wnr,fpr,fnr]=ridgewalk(dt,wp,wn,fs,{0,0});   
+%[wpa,wna,fpa,fna,mult]=ridgemap(length(wn),wpr,wnr,fpr,fnr,ir);
 
 

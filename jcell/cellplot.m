@@ -68,7 +68,7 @@ function[h]=cellplot(varargin)
 %          cellplot(lono,lat,lon,index);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2014 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 linestr=[];
 str='matlab';
@@ -151,7 +151,7 @@ if ~holdstate
 end
 
 
-
+h=[];
 if ~isempty(x)
     if ~iscell(x)
         if size(x,2)~=1&&ndims(x)<3

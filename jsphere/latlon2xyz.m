@@ -11,7 +11,7 @@ function[x,y,z]=latlon2xyz(lat,lon,R)
 %
 %   The Cartesian coordinate system is a right-handed system whose
 %   origin lies at the center of the sphere.  It is oriented with the 
-%   Z-axis passing though the poles and the X-axis passing through
+%   Z-axis passing through the poles and the X-axis passing through
 %   the point LAT=0, LON=0.  
 %
 %   By default, the radius of the sphere is taken as RADEARTH.

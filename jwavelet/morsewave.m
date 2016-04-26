@@ -81,7 +81,7 @@ function[varargout]=morsewave(varargin)
 %          [psi,psif]=morsewave(N,K,ga,be,fs,'bandpass');
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly and F. Rekibi
+%   (C) 2004--2016 J.M. Lilly and F. Rekibi
 %                         --- type 'help jlab_license' for details  
  
 

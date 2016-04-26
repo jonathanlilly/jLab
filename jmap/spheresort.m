@@ -66,9 +66,9 @@ function[varargout]=spheresort(varargin)
 %   With Matlab's Parallel Computing Toolbox installed, SPHERESORT can 
 %   take advantage of multiple cores to speed up operations.
 %
-%   SPHERESORT('parallel',NWORKERS) parallelizes the computation with the
-%   number of workers set to NWORKERS.  Choose this as the number of 
-%   independent processors on your machine. 
+%   SPHERESORT(...'parallel') parallelizes the computation with the
+%   maximum possible number of workers for your system.  To set the number
+%   of workers explicitly, use SPHERESORT(...,'parallel',NWORKERS).
 %
 %   As the additional efficiency is not dramatic, this is typically only an 
 %   advantage for very large datasets.  Due to the nature of the
@@ -89,7 +89,7 @@ function[varargout]=spheresort(varargin)
 %          [ds,xs,ys,z1s,z2s]=spheresort(lat,lon,z1,z2,lato,lono,cutoff);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 
 if strcmpi(varargin{1}, '--t')
@@ -111,11 +111,21 @@ for i=1:2
         Nworkers=varargin{end};
         varargin=varargin(1:end-2);
     elseif ischar(varargin{end})
-        algstr=varargin{end};
+        if strcmpi(varargin{end}(1:3),'par')
+            str=varargin{end};
+        else
+            algstr=varargin{end};
+        end
         varargin=varargin(1:end-1);
     end
 end
 
+if strcmpi(str(1:3),'par')
+    if isempty(Nworkers)
+         myCluster = parcluster('local');
+         Nworkers = myCluster.NumWorkers;
+    end
+end
 P=inf;
     
 lato=varargin{end-2};

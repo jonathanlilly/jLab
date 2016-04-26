@@ -62,9 +62,16 @@
     the autocovariance of the composite Matern process.  See <a href="maternspec.html">MATERNSPEC</a> for
     more details.
  
-    This autocovariance does not have a simple analytic form, but is 
-    computed in approximate form from inverse Fourier tranforming the
-    spectrum with 10x oversampling and a length 100 x N. 
+    This autocovariance does not have an analytic form, but is approximated 
+    to high precision by inverse Fourier transforming the spectrum with 
+    10 x oversampling over a 10 x longer time period, and then decimating.  
+ 
+    <a href="materncov.html">MATERNCOV</a>(...,'composite',M,P) specifies the numerical oversampling 
+    parameters used in the numerical calculation.  The spectrum is computed
+    over a time window of M times the duration required, and P times the 
+    required sampling density, for a total of M*P time more points.  These
+    flags may set to optimize the tradeoff between speed and accuracy.  
+    The default behavior corresponds to M=10 and P=10.
  
     This computation method is expected to minimize aliasing effects and
     resolution errors.  

@@ -61,7 +61,7 @@ if strcmpi(varargin{1},'--t')
     anatrans_test,return
 end
 
-% antrans is basically the same as Matlab's Hilbert:
+% anatrans is basically the same as Matlab's Hilbert:
 % if isreal(x)
 %     zp=x+sqrt(-1)*hiltrans(x);
 % else
@@ -88,7 +88,7 @@ function[zp]=anatrans_one(x,str,dim)
 
 M0=size(x,dim);
 
-mx=vmean(x,dim);
+mx=mean(x,dim);
 x=x-vrep(mx,M0,dim);
 x=timeseries_boundary(x,dim,str,'nodetrend');
 M=size(x,dim);

@@ -6,10 +6,14 @@
  
     [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,U,V,LATO,LONO) where NUM is the data in DATENUM
     format, integates velocities U and V from intial location (LATO,LONO)
-    to form a trajectory on the earth described by LAT and LON.
+    to form a trajectory on the earth described by LAT and LON.  
  
     LATO and LONO are an initial latitude and longitude in degrees,
     and U and V are eastward and northward velocity components in cm/s. 
+ 
+    NUM, U, and V may be column vectors, in which aase LATO and LONO are 
+    both scalars.  Alternatively, NUM, U, and V may be matrices with time 
+    oriented in rows.  LATO and LONO are then arrays of length SIZE(NUM,1). 
  
     [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,CV,LATO,LONO), where CV is the complex-valued
     velocity CV=U+SQRT(-1)*V, also works.

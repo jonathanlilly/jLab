@@ -1,0 +1,38 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLIMIT is the <a href="jcell.html">jcell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellimit.html">CELLIMIT</a>  Limits the ranges of times in a cell array of numerical arrays.
+ 
+    NUMO=<a href="cellimit.html">CELLIMIT</a>(NUM,A,B), where NUM is a cell array of times, and A and B
+    are minimum and maximum times, returns NUMO in which each element is
+    limited to times not less than A and not greater than B.
+ 
+    As an example, with NUM given by 
+ 
+        NUM{1} = [1 2 3 4 5 6]';   NUM{2}=[3 4 5 6 7]';   NUM{3}=[5 6]';
+ 
+    calling NUMO=<a href="cellimit.html">CELLIMIT</a>(NUMI,4,6) will return
+ 
+        NUMO{1} = [4 5 6]';        NUMO{2}=[4 5 6]';      NUMO{3}=[5 6]';
+ 
+    such that that ranges of each element of NUMO are now between A and B.
+ 
+    A and B may also be arrays with the same number of elements as NUM.  In 
+    this case, the Nth entries A(N) and B(N) will set the range for NUM{N}.
+    
+    [NUMO,Y1,Y2,...,YN]=<a href="cellimit.html">CELLIMIT</a>(NUM,X1,X2,...,XN,A,B), with multiple input 
+    arguments, all cell arrays of numerical arrays having identical sizes
+    to NUM, will limit these to the same points as NUM. Thus Y1,Y2,...,YN
+    will be all of identical sizes to NUMO.
+ 
+    <a href="cellimit.html">CELLIMIT</a>(X1,X2,...XN); with no output arguments overwrites the 
+    original input variables.   
+ 
+    Usage: num=<a href="cellimit.html">cellimit</a>(num,a,b);
+           [num,y1,y2,y3]=<a href="cellimit.html">cellimit</a>(num,x1,x2,x3,a,b);
+           <a href="cellimit.html">cellimit</a>(num,x1,x2,x3,a,b);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

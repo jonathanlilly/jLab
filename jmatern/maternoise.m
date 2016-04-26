@@ -1,5 +1,5 @@
 function[varargout]=maternoise(varargin)
-%MATERNOISE  Realizations of the Matern random process and variations.  [with A. Sykulski]
+%MATERNOISE  Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
 %
 %   Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA) simulates a length N complex-
 %   valued Matern random process Z having variance SIGMA^2, slope parameter
@@ -17,12 +17,19 @@ function[varargout]=maternoise(varargin)
 %
 %   Note that the process Z is explicitly set to have zero temporal mean. 
 %
+%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
+%   "Lagrangian time series models for ocean surface drifter trajectories."
+%   __________________________________________________________________
+%
+%   Special cases
+%
+%   Z=MATERNOISE(DT,N,A,ALPHA,0) generates realizations of fractional
+%   Brownian motion.  In this case, the third input argument is the 
+%   spectral amplitude A, not the standard deviation SIGMA.
+%
 %   Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) simulates extensions of 
 %   the Matern process.  MATERNOISE(...,'composite') also works.  See 
 %   MATERNSPEC for details on these options.
-%
-%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-%   "Lagrangian time series models for ocean surface drifter trajectories."
 %   __________________________________________________________________
 %
 %   Multiple parameter values
@@ -36,6 +43,13 @@ function[varargout]=maternoise(varargin)
 %   Z=MATERNOISE(DT,[N M],SIGMA,ALPHA,...) then gives Z of size N x M x K.
 %   __________________________________________________________________
 %
+%   Fractional Brownian motion
+%
+%   Z=MATERNOISE(DT,N,A,ALPHA,0) simulates a length N complex-valued
+%   fractional Brownian motion, or fBm, process Z having spectral level A^2 
+%   and slope parameter ALPHA. 
+%   __________________________________________________________________
+%
 %   Algorithm
 %
 %   MATERNOISE uses a Cholesky matrix decomposition method which makes the
@@ -47,19 +61,6 @@ function[varargout]=maternoise(varargin)
 %   generating very long time series (>2000 points or so) may be slow.
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNCOV, MATERNIMP.
-%
-%   'maternoise --t' runs some tests.
-%   'maternoise --f' generates a sample figure.
-%
-%   Usage: z=maternoise(dt,N,sigma,alpha,lambda);
-%          z=maternoise(dt,[N,M],sigma,alpha,lambda,nu,mu);
-%   __________________________________________________________________
-%   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015  A.M. Sykulski and J.M. Lilly
-%                                 --- type 'help jlab_license' for details
- 
-%   THe fast algorithm is not currently working.
 %   Fast algorithm 
 %
 %   MATERNOISE(...,'fast') uses a fast, highly accurate approximate 
@@ -67,15 +68,29 @@ function[varargout]=maternoise(varargin)
 %   analytic form for the Matern impulse response function.
 %
 %   In the fast algorithm, oversampling is used to ensure that the 
-%   structure of the Green's function is accurately resolved.  Note that
-%   the fast algorithm is only accurate for ALPHA>=1.
+%   structure of the Green's function is accurately resolved. 
 %
 %   [Z,ERR]=MATERNOISE(...,'fast') also returns the error ERR involved in 
 %   the fast algorithm's approximation of the autocovariance sequence.  
-%  
-%   See the sample figures for a test of the fast algorithm.
+%   Note that this is for testing purposes only, as it substantially slows
+%   down the algorithm. 
 %   __________________________________________________________________
 %
+%   See also MATERNSPEC, MATERNCOV, MATERNIMP.
+%
+%   'maternoise --t' runs some tests.
+%   'maternoise --f' generates a sample figure.
+%
+%   Usage: z=maternoise(dt,N,sigma,alpha,lambda);
+%          z=maternoise(dt,N,sigma,alpha,lambda,'fast');
+%          z=maternoise(dt,[N,M],sigma,alpha,lambda,nu,mu);
+%          z=maternoise(dt,N,A,alpha,0);
+%   __________________________________________________________________
+%   This is part of JLAB --- type 'help jlab' for more information
+%   (C) 2013--2015  A.M. Sykulski and J.M. Lilly
+%                                 --- type 'help jlab_license' for details
+
+
 
 if strcmpi(varargin{1}, '--t')
     maternoise_test,return
@@ -121,25 +136,6 @@ end
 
 %dt, N, sigma, alpha, nu
 
-%if strcmpi(model(1:3),'com')||strcmpi(model(1:3),'ext')
-%H=real(varargin{4})*dt;
-%nu=-imag(varargin{4})*dt;
-%   G=varargin{5};
-%    if strcmpi(model(1:3),'com')
-%        G=G.*dt;
-%%    elseif strcmpi(model(1:3),'ext')
-%%        G=G/dt;
-%    end
-%else
-% G=zeros(size(sigmama));
-%  H=real(varargin{4});
-%   nu=-imag(varargin{4});
-%end
-
-%H=real(varargin{4})*dt;
-%nu=-imag(varargin{4})*dt;
-%sigma=sigma.*dt.^(alpha-1/2);
-
 if length(N)>1
     M=N(2);
     N=N(1);
@@ -150,28 +146,10 @@ end
 arrayify(sigma,alpha,lambda,mu,nu);
 
 if anyany(lambda==0)&&strcmpi(alg(1:3),'fas')
-    disp('Sorry, MATERNOISE cannot use fast algorithm with fBm case of H=0.')
+    disp('Sorry, MATERNOISE cannot use fast algorithm with fBm case of LAMBDA=0.')
     disp('Reverting to Cholesky algorithm.')
     alg='chol';
 end
-% if anyany(alpha<1)&&strcmpi(alg(1:3),'fas')
-%     disp('Sorry, MATERNOISE cannot use fast algorithm for ALPHA<1.')
-%     disp('Reverting to Cholesky algorithm.')
-%     alg='chol';
-% end
-%if lambda(1)==0&&(anyany(alpha<1/2)||anyany(alpha>1.5))
-%    error('Sorry, alpha must be between 1/2 and 3/2 for fBm case of H=0.')
-%end
-
-if strcmpi(model(1:3),'rev')&&strcmpi(alg(1:3),'fas')
-    error('Sorry, MATERNOISE cannot accept both the FAST and REVERSE options.')
-end
-
-if strcmpi(model(1:3),'rev')&&anyany(lambda==0)
-    error('Sorry, MATERNOISE employ REVERSE option with H set to zero.')
-end
-
-
 
 z=zeros(N,M,length(sigma));
 err=nan*zeros(size(sigma));
@@ -194,27 +172,29 @@ varargout{1}=squeeze(z);
 varargout{2}=err;
 
 function [z]=sim_noise(dt,N,M,sigma,alpha,lambda,nu,mu,model)
+%dt,N,M,sigma,alpha,lambda,nu,mu
+
 T=maternchol(dt,N,sigma,alpha,lambda,nu,mu,model);
 Z=frac(1,sqrt(2))*(randn(N,M)+sqrt(-1)*randn(N,M));
 z=T*Z;
 
 function [z,err]=sim_noise_fast(dt,N,M,sigma,alpha,lambda,nu,str)
+%dt,N,M,sigma,alpha,lambda,nu
+
 epsilon=0.01;
 
 lambda=lambda*dt;
 nu=nu*dt;
 
 Ne=ceil(maternedge(alpha,lambda,epsilon));
-
 %Error increases as N*lambda increases
 %Make sure N > 20 / h ... otherwise, super-resolve
 fact=max(ceil(frac(lambda*N,20)),1);
 N2=(N+Ne).*fact;
 
 [t,g]=maternimp(N2,alpha,(lambda-1i*nu)./fact);
-%sqrt(frac(materncfun(alpha),lambda.^(2*alpha-1)))
-%frac(1,fact).^(alpha-1)
-%g=g*(1,fact).^(alpha-1);
+g=g.*sqrt(fact);  %Modify variance on account of oversampling
+%g=g.*(fact).^(alpha-1);%Rescale amplitude on account of new sample times
 Z=frac(sqrt(N2./fact),sqrt(2))*(randn(N2,M)+sqrt(-1)*randn(N2,M));
 G=sigma*vrep(fft(g),M,2);
 z=ifft(G.*Z);
@@ -223,16 +203,16 @@ z=z(Ne+1:end,:);
 
 err=nan;
 if strcmpi(str(1:3),'err')
-    R1=conv(g,flipud(conj(g))).*(fact).^(2*(alpha-1));
+    R1=conv(g,flipud(conj(g))).*fact;
+    %R1=conv(g,flipud(conj(g)));
     ii=(length(R1)-1)/2+1;
+    %fact
     R1=R1(ii:fact:ii+N*fact-1,:);
     [tau,R]=materncov(dt,N,1,alpha,lambda/dt,nu/dt);
     %    vsize(R,R1)
     %figure,plot(tau,abs([R R1]))
     err=frac(sum(squared(R1-R),1),sum(squared(R),1));
 end
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,7 +299,7 @@ fact=max(ceil(frac(H*N,20)),1);
 N2=(N+Ne).*fact;
 
 [t,g]=maternimp(N2,alpha,(H-1i*nu)./fact);
-g=g.*frac(1,fact).^(alpha-1);
+%g=g.*frac(1,fact).^(alpha-1);
 g=conj(flipud(g)');
 
 rho=1.32;
@@ -369,7 +349,7 @@ function[]=maternoise_test
 
 rng(1);
 N=100;
-alpha=[1 1.5 2 3 4];
+alpha=[0.75 1 1.5 2 3 4];
 h=[0.001 .01 .02 .05 .2];
 [alpha,h]=meshgrid(alpha,h);
 h=h.*alpha;
@@ -460,7 +440,7 @@ for i=[-3:1/2:0];
     [f,Spp,Snn]=maternspec(1,N,sigma,-1/2,(10.^i),0,alpha);
     n=n+1;
     rat(n)=median(Spphat./Spp);
-    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+%    figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
 reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.2))
 
@@ -470,12 +450,12 @@ n=0;
 rng(1);
 dt=3600;
 for i=[-3:1/2:0];
-    z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
+    z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha/dt);
     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
-    [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
+    [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha/dt);
     n=n+1;
     rat(n)=median(Spphat./Spp);
-    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+ %   figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
 reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and non-unit sample rate',allall(abs(rat-1)<0.2))
 
@@ -495,125 +475,4 @@ reporttest('MATERNOISE error between approximated and true autocovariance < 1e-6
 %[z,err]=maternoise(1,N,10,alpha,H,nu,'fast','err');
 %reporttest('MATERNOISE error between approximated and true autocovariance < 1e-6 ALPHAs >=1, larger H',err<1e-6)
 
-
-function[]=maternoise_figure1
- 
-
-% This goes after the script that is now in MAKEFIGS_MATERNOISE
-% Find a better way to show spectra.
-% [psi,lambda]=sleptap(N,8);
-% [f,spp,snn,spn]=mspec(z,psi,lambda,'adaptive');  
-% 
-% [fo,sppo,snno]=maternspec(N,10./sigma,alpha,h);
-% 
-% logfo=log(fo);
-% logfo=logfo./(maxmax(logfo)-minmin(logfo));
-% 
-% zs=vrep(logfo,size(spp,2),2)+sqrt(-1)*unitmax(log(spp));
-% zso=vrep(logfo,size(spp,2),2)+sqrt(-1)*unitmax(log(sppo));
-% 
-% xos=xo(1:size(zs,1),:);
-% 
-% figure,
-% plot(zso+xos*3),axis equal,xlabel('Increasing Delta'),ylabel('Increasing h')
-% title('Spectra of Matern Processes')
-
-
-function[]=maternoise_figure2
- 
-N=1000;
-
-alpha=[1 1.5 2 3 4];
-h=[.01 .02 .05 .2 1];
-[alpha,h]=meshgrid(alpha,h);
-h=h.*alpha;
-
-d=frac(h.^(2*alpha-1),materncfun(alpha));
-
-rng(1);  %set seed
-tic;z=maternoise(1,N,10./sqrt(d),alpha,h);etime1=toc;
-tic;z2=maternoise(1,N,10./sqrt(d),alpha,h,'fast');etime2=toc;
-
-[psi,lambda]=sleptap(N,8);
-[om,spp,snn]=mspec(z,psi,lambda,'adaptive');    
-[om,spp2,snn2]=mspec(z2,psi,lambda,'adaptive');    
-
-[f,sppo,snno]=maternspec(1,N,10./sqrt(d),alpha,h);
-
-disp(['MATERNOISE fast algorithm was ' num2str(etime1./etime2) ' times faster than Cholesky algorithm.'])
-
-figure
-subplot(1,2,1),plot(om,spp),hold on,plot(om,sppo),xlog,ylog,title('Matern process, Cholesky algorithm')
-axis tight,ylim(10.^[-4 14])
-subplot(1,2,2),plot(om,spp2),hold on,plot(om,sppo),xlog,ylog,title('Matern process, Fast algorithm')
-axis tight,ylim(10.^[-4 14])
-
-function[]=maternoise_figure3
- 
-N=1000;
-
-alpha=[1 1.5 2 3 4];
-h=[.01 .02 .05 .2 1];
-
-[alpha,h]=meshgrid(alpha,h);
-h=h.*alpha;
-nu=0.05.*alpha;
-
-d=frac(h.^(2*alpha-1),materncfun(alpha));
-
-rng(1);  %set seed
-tic;z=maternoise(1,N,10./sqrt(d),alpha,h,nu);etime1=toc;
-tic;z2=maternoise(1,N,10./sqrt(d),alpha,h,nu,'fast');etime2=toc;
-
-[psi,lambda]=sleptap(N,8);
-[om,spp,snn]=mspec(z,psi,lambda,'adaptive');    
-[om,spp2,snn2]=mspec(z2,psi,lambda,'adaptive');    
-
-[f,sppo,snno]=maternspec(1,N,10./sqrt(d),alpha,h,nu);
-
-disp(['MATERNOISE fast algorithm was ' num2str(etime1./etime2) ' times faster than Cholesky algorithm.'])
-
-figure
-subplot(1,2,1),plot(om,spp),hold on,plot(om,sppo),xlog,ylog,title('Oscillatory Matern, Cholesky algorithm')
-axis tight,ylim(10.^[-4 14])
-subplot(1,2,2),plot(om,spp2),hold on,plot(om,sppo),xlog,ylog,title('Oscillatory Matern, Fast algorithm')
-axis tight,ylim(10.^[-4 14])
-
-
-function[]=maternoise_figure4
-
-N=1000;
-A=16;
-alpha=1.4;
-h=.1;
-
-rng(1);
-[psi,lambda]=sleptap(N,4);
-z1=maternoise(1,N,A,alpha,h,'fast');
-z2=maternoise(1,N,A,alpha,h);
-[fhat,Spphat,Snnhat]=mspec(z1,psi);
-[fhat2,Spphat2,Snnhat2]=mspec(z2,psi);
-[f,Spp,Snn]=maternspec(1,N,A,alpha,h);
-figure
-subplot(1,2,1),plot(f,Spp),hold on,plot(fhat,Spphat),plot(fhat2,Spphat2),xlog,ylog
-title('Noise spectra and true spectrum, DT=1'),axis tight
-
-dt=3600;
-rng(1);
-[psi,lambda]=sleptap(N,4);
-z1=maternoise(dt,N,A,alpha,h./dt,'fast');
-z2=maternoise(dt,N,A,alpha,h./dt);
-[fhat,Spphat,Snnhat]=mspec(dt,z1,psi);
-[fhat2,Spphat2,Snnhat2]=mspec(dt,z2,psi);
-[f,Spp,Snn]=maternspec(dt,N,A,alpha,h./dt);
-subplot(1,2,2),
-plot(f,Spp),hold on,plot(fhat,Spphat),plot(fhat2,Spphat2),xlog,ylog
-title('Noise spectra and true spectrum, DT=3600'),axis tight
-
-
-% N=1000;
-% sigma=1;
-% alpha=1.5;
-% h=0.1;
-% z=maternoise(N,sigma,alpha,h,h/5-1i*h*5,'composite');
 

@@ -17,8 +17,9 @@ function[index]=periodindex(varargin)
 %   the last value of INDEX is not larger than the length of OMEGA minus
 %   N times the last value of 2*pi/OMEGA.
 %
-%   OMEGA can have interior NANS, in which case the first and last N 
-%   periods of each contiguous block of non-NAN data are omitted as above.
+%   If NaNs are found within the OMEGA, this is interpreted as being
+%   separate ridges output by RIDGEWALK.  Then INDEX will be a cell array 
+%   with the period index for each ridge of OMEGA in a separate cell.
 %
 %   INDEX=PERIODINDEX(OMEGA,N) also works, in which case DT is taken to be
 %   as unity.  Thus OMEGA must have units of radians per sample interval.
@@ -35,6 +36,10 @@ function[index]=periodindex(varargin)
 %   numerical arrays, then INDEX will also be cell arrays of length K.  
 %
 %   In this case DT may be either a scalar, or an array of length K.
+%
+%   If the cells of OMEGA are found to contain NaNs, these are interpreted
+%   as separating individual ridges, and INDEX will in this case be a cell
+%   array of length OMEGA with each element containing one cell per ridge.
 %   ___________________________________________________________________
 %
 %   See also ELLIPSEPLOT.
@@ -42,7 +47,7 @@ function[index]=periodindex(varargin)
 %   Usage: index=periodindex(dt,omega,N);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2011--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2011--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 
 
@@ -61,10 +66,24 @@ if iscell(om)
         dt=dt+zeros(size(om));
     end
     for i=1:length(om)
-        index{i,1}=periodindex_loop(dt(i),abs(om{i}),N);
+        if ~any(isnan(om{i}))
+           index{i,1}=periodindex_loop(dt(i),abs(om{i}),N);
+        else
+           omi=col2cell(om{i});
+           for j=1:length(omi)
+              index{i,1}{j}=periodindex_loop(dt(i),abs(omi{j}),N);
+           end
+        end
     end
 else
-    index=periodindex_loop(dt,abs(om),N);
+    if ~any(isnan(om))
+        index=periodindex_loop(dt,abs(om),N);
+    else
+        om=col2cell(om);
+        for j=1:length(om)
+            index{j}=periodindex_loop(dt,abs(om{j}),N);
+        end
+    end
 end
 
 
@@ -74,35 +93,36 @@ index=[];
 om(om==inf)=nan;
 
 if ~isempty(om)
-  if anyany(~isnan(om))
-    skip=ceil(N*frac(2*pi,om.*dt));     
-    [L,ia,ib]=blocklen(~isnan(skip));
-
-    %alternating ones and zeros
-    % ia,ib,skip(ia),skip(ib)
-    for i=1:length(ia)
-       % i
-        if ~isnan(skip(ia(i)))
-            if ia(i)+skip(ia(i))<= length(skip)
-                first=skip(ia(i)+skip(ia(i)));
-                if ~isnan(first)
-                    index(end+1,1)=ia(i)+skip(ia(i));  
-                    while index(end)+skip(index(end))<ib(i)
-                        %xxx=index(end)
-                        %yyy=skip(index(end))
-                        %zzz=ib(i)
-                      %  skip(index(end))
-                  
-                        index(end+1,1)=index(end)+skip(index(end));
-                    end
-                    if index(end)>ib(i)-skip(ib(i))
-                        index=index(1:end-1);
+    if anyany(~isnan(om))
+        skip=ceil(N*frac(2*pi,om.*dt));
+        [L,ia,ib]=blocklen(~isnan(skip));
+        
+        %alternating ones and zeros
+        % ia,ib,skip(ia),skip(ib)
+        for i=1:length(ia)
+            % i
+            if ~isnan(skip(ia(i)))
+                if ia(i)+skip(ia(i))<= length(skip)
+                    first=skip(ia(i)+skip(ia(i)));
+                    if ~isnan(first)
+                        index(end+1,1)=ia(i)+skip(ia(i));
+                        while index(end)+skip(index(end))<ib(i)
+                            %xxx=index(end)
+                            %yyy=skip(index(end))
+                            %zzz=ib(i)
+                            %  skip(index(end))
+                            
+                            index(end+1,1)=index(end)+skip(index(end));
+                        end
+                        if index(end)>ib(i)-skip(ib(i))
+                            index=index(1:end-1);
+                        end
                     end
                 end
             end
         end
     end
- end
 end
+
 
 %reporttest('PERIODINDEX',aresame())

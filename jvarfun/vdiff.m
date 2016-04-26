@@ -37,7 +37,7 @@ function[varargout]=vdiff(varargin)
 %           x=vdiff(dt,x,dim,'periodic');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2014 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details    
   
 %   I am so irritated by diff
 

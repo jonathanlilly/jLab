@@ -1,8 +1,60 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.6.2 (current)
+%
+%   New functions
+%
+%   ncinterp      - Interpolate field from NetCDF file onto specified positions.
+%   cellget       - Indexes a cell array of numerical arrays by ID number.
+%   cellimit      - Limits the ranges of times in a cell array of numerical arrays.
+%   cellstd       - Standard deviation of each element a cell array.
+%   degunwrap     - Unwraps arrays given in degrees.
+%   trackextract  - Extracts alongtrack altimetry segments within given region.
+%
+%   Changes and improvements
+%
+%   DRIFTERS.MAT is now update with data through December 2015.
+%   ABOUT_DRIFTERS contains updated and simplified internal processing.
+%   TPJAOS.MAT updated through November 2015.
+%
+%   POLYSMOOTH corrected to account for missing data values in sorted input.
+%   TRACKEXTRACT now strips out any empty tracks in the region.
+%   JPCOLOR now works for non-uniformly spaced axis arrays.
+%   NCINTERP is now greatly accelerated by loading large chunks into memory.
+%   PERIODINDEX updated to handle new format output but RIDGEWALK.
+%   CELLPLOT bugfix to handle empty cells.
+%   YEARFRAC modified to handle potential empty cells.
+%   RIDGEWALK output formats simplified.
+%   CELL2COL and COL2CELL now work with arrays having multiple columns.
+%   LETTERLABELS updated for recent changes to handle graphics conventions.
+%   TOPOPLOT now supports linestyles in LINESTYLE format.
+%   TOPOPLOT bugfix for x-axis limits exceeding 360 degrees.
+%   TOPOPLOT bugfix when contours are input. 
+%   CELLFILL bugfix to prevent transposition of cell arrays.
+%   CELLGRID, CELLMEAN, CELLSTD, and SAMPLETIMES now support parallelization.
+%   CELLGRID bugfix for data containing some or all NANs.  
+%   CELLGRID now uses the 'pchip' method by default, as does CELLFILL.
+%   CELLPACK bugfix to address inaccurate report of points filled.
+%   LATLON2UV now optionally returns the acceleration.
+%   LATLON2UV bugfix for empty or length one datasets.
+%   LATLON2UV now longer has the option to return U and V separately. 
+%   LANSEY bugfix for returning specified size of colormap.
+%   TRAJFILL has been removed.  Use CELLFILL instead. 
+%   TRAJEXTRACT can now handle input numerical arrays such as ID number.
+%   TRAJEXTRACT input argument order change.
+%   TRAJEXTRACT now supports variable overwriting.
+%   TRAJCHUNK bugfix for length one or zero cell elements. 
+%   TRAJCHUNK can now handle input numerical arrays such as ID number. 
+%   TWOSPECPLOT changes to make it easier to overlay spectral plots.
+%   MATERNCHOL bugfix for numerical noise in imaginary part of matrix.
+%   VMEAN, VSUM, VMOMENT, and VSTD speed improvements.
+%   VMEAN, VSUM, VMOMENT, and VSTD now no longer exclude Infs, only NaNs.
+%
 %   Changes new in version 1.6.1
 %
 %   jLab is now on GitHub at https://github.com/jonathanlilly/jLab.
+%
+%   Changes and improvements
 %
 %   WAVETRANS now supports parallelization.
 %   LINECOLOR bugfix for colormaps of lengths different from 64.

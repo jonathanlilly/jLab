@@ -1,9 +1,9 @@
 function[varargout]=maternimp(varargin)
 %MATERNIMP  Impulse response function for the Matern random process.
 %
-%   [T,G]=MATERNIMP(N,ALPHA,H) returns first N points for the impulse 
+%   [T,G]=MATERNIMP(N,ALPHA,LAMBDA) returns first N points for the impulse 
 %   response function G for a unit-variance complex-valued Matern process 
-%   with slope parameter ALPHA and damping or range parameter H.
+%   with slope parameter ALPHA and damping or range parameter LAMBDA.
 %
 %   The impulse response function is also known as the Green's function.
 %
@@ -11,15 +11,15 @@ function[varargout]=maternimp(varargin)
 %   a very small number, set to EPSILON=1e-6 to avoid the potential for 
 %   infinite values at T=0 for some parameter settings.  
 %
-%   The sample interval is taken to be unity.  The damping parameter H is 
-%   understood to have units of the inverse of the sample interval.
+%   The sample interval is taken to be unity.  The damping parameter LAMBDA
+%   is understood to have units of the inverse of the sample interval.
 %
-%   Note that for H=0, the case of fractional Brownian motion, G is   
+%   Note that for LAMBDA=0, the case of fractional Brownian motion, G is   
 %   formally defined but is not useful because it does not decay. 
 %
-%   The input parameters ALPHA and H may either be scalars or arrays of the 
-%   same length M.  If the latter, then the output autocovariance function
-%   R will be a matrix with N rows and M columns. 
+%   The input parameters ALPHA and LAMBDA may either be scalars or arrays 
+%   of the same length M.  If the latter, then the output autocovariance
+%   function R will be a matrix with N rows and M columns. 
 %
 %   See MATERNSPEC for a more thorough discussion of the Matern process.
 %
@@ -29,16 +29,16 @@ function[varargout]=maternimp(varargin)
 %
 %   Oscillatory Matern
 %
-%   MATERNIMP(N,ALPHA,C), where C is complex, uses H=REAL(C) for the
+%   MATERNIMP(N,ALPHA,C), where C is complex, uses LAMBDA=REAL(C) for the
 %   damping parameter and also sets a rotation frequency to OMEGA=-IMAG(C). 
 %
 %   The associated oscillatory process undergoes rotations at frequency 
-%   OMEGA in addition to the damping at timescale 1/H.
+%   OMEGA in addition to the damping at timescale 1/LAMBDA.
 %   __________________________________________________________________
 %
 %   Specified times
 %
-%   G=MATERNIMP(T,ALPHA,H) where the first argument is an *array*
+%   G=MATERNIMP(T,ALPHA,LAMBDA) where the first argument is an *array*
 %   rather than a scalar, will alternately return the impulse response at
 %   the specified times T.  Note T is not output again in this case.
 %   __________________________________________________________________
@@ -47,8 +47,8 @@ function[varargout]=maternimp(varargin)
 %
 %   'maternimp --t' runs some tests.
 %
-%   Usage:    [t,G]=maternimp(N,alpha,h);
-%             G=maternimp(t,alpha,h);
+%   Usage:    [t,G]=maternimp(N,alpha,lambda);
+%             G=maternimp(t,alpha,lambda);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2013--2015  J.M. Lilly --- type 'help jlab_license' for details
@@ -78,18 +78,18 @@ if isempty(tau)
 end
 
 alpha=varargin{2};
-H=real(varargin{3});
+lambda=real(varargin{3});
 omegao=-imag(varargin{3});
-arrayify(alpha,omegao,H);
+arrayify(alpha,omegao,lambda);
 
-G=zeros(size(tau,1),length(H));
-if size(tau,2)~=length(H)
-    tau=vrep(tau,length(H),2);
+G=zeros(size(tau,1),length(lambda));
+if size(tau,2)~=length(lambda)
+    tau=vrep(tau,length(lambda),2);
 end
-for i=1:length(H)
+for i=1:length(lambda)
     U=frac(1,2).*(1+sign(tau(:,i)));
-    d=sqrt(frac(H(i).^(2*alpha(i)-1),materncfun(alpha(i))));
-    G(:,i)=d.*U.*(tau(:,i).^(alpha(i)-1)).*exp(-tau(:,i).*H(i)).*exp(sqrt(-1)*omegao(i)*tau(:,i)).*frac(1,gamma(alpha(i)));
+    d=sqrt(frac(lambda(i).^(2*alpha(i)-1),materncfun(alpha(i))));
+    G(:,i)=d.*U.*(tau(:,i).^(alpha(i)-1)).*exp(-tau(:,i).*lambda(i)).*exp(sqrt(-1)*omegao(i)*tau(:,i)).*frac(1,gamma(alpha(i)));
 end
 
 if ~isempty(N)
@@ -98,7 +98,6 @@ if ~isempty(N)
 else
     varargout{1}=G;
 end
-
 
 
 function[]=maternimp_test

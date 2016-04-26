@@ -9,21 +9,19 @@
     appends together all the columns into a vector C in which isolated
     NANs mark the transitions between columns.
  
-    [C1,C2,...]=<a href="mat2col.html">MAT2COL</a>(M1,M2,...) also works for multiple input 
+    [C1,C2,...,CN]=<a href="mat2col.html">MAT2COL</a>(M1,M2,...,MN) also works for multiple input 
     matrices of the same size.  In this case the locations of NANs in 
-    M1 are used as the key for appending all the MI into columns.  
+    M1 are used as the key for appending all the MN into columns.  
    
     <a href="mat2col.html">MAT2COL</a>, <a href="col2mat.html">COL2MAT</a>, and <a href="colbreaks.html">COLBREAKS</a> together form a system for moving
     data with segments of nonuniform length rapidly back and forth
-    between a column format and a padded-matrix format. CTD or float
-    data, for instance, can be stored in the (usually much smaller)
-    column format and converted into the matrix format upon loading.
+    between a column format and a padded-matrix format.
  
-    <a href="mat2col.html">MAT2COL</a>(M1,M2,...); with no output arguments overwrites the
+    <a href="mat2col.html">MAT2COL</a>(M1,M2,...,MN); with no output arguments overwrites the
     original input variables.
  
-    See also <a href="col2mat.html">COL2MAT</a>, <a href="colbreaks.html">COLBREAKS</a>, <a href="col2cell.html">COL2CELL</a>, CELL2COL
+    See also <a href="col2mat.html">COL2MAT</a>, <a href="colbreaks.html">COLBREAKS</a>, <a href="col2cell.html">COL2CELL</a>, <a href="cell2col.html">CELL2COL</a>.
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2000--2013 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+    (C) 2000--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

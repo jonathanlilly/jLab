@@ -2,7 +2,7 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>MATERNOISE is the <a href="jmatern.html">jmatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="maternoise.html">MATERNOISE</a>  Realizations of the Matern random process and variations.  [with A. Sykulski]
+ <a href="maternoise.html">MATERNOISE</a>  Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
  
     Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA) simulates a length N complex-
     valued Matern random process Z having variance SIGMA^2, slope parameter
@@ -20,12 +20,19 @@
  
     Note that the process Z is explicitly set to have zero temporal mean. 
  
+    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
+    "Lagrangian time series models for ocean surface drifter trajectories."
+    __________________________________________________________________
+ 
+    Special cases
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,A,ALPHA,0) generates realizations of fractional
+    Brownian motion.  In this case, the third input argument is the 
+    spectral amplitude A, not the standard deviation SIGMA.
+ 
     Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) simulates extensions of 
     the Matern process.  <a href="maternoise.html">MATERNOISE</a>(...,'composite') also works.  See 
     <a href="maternspec.html">MATERNSPEC</a> for details on these options.
- 
-    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-    "Lagrangian time series models for ocean surface drifter trajectories."
     __________________________________________________________________
  
     Multiple parameter values
@@ -39,6 +46,13 @@
     Z=<a href="maternoise.html">MATERNOISE</a>(DT,[N M],SIGMA,ALPHA,...) then gives Z of size N x M x K.
     __________________________________________________________________
  
+    Fractional Brownian motion
+ 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,A,ALPHA,0) simulates a length N complex-valued
+    fractional Brownian motion, or fBm, process Z having spectral level A^2 
+    and slope parameter ALPHA. 
+    __________________________________________________________________
+ 
     Algorithm
  
     <a href="maternoise.html">MATERNOISE</a> uses a Cholesky matrix decomposition method which makes the
@@ -50,13 +64,30 @@
     generating very long time series (>2000 points or so) may be slow.
     __________________________________________________________________
  
+    Fast algorithm 
+ 
+    <a href="maternoise.html">MATERNOISE</a>(...,'fast') uses a fast, highly accurate approximate 
+    generation algorithm.  This method works by making use of the known
+    analytic form for the Matern impulse response function.
+ 
+    In the fast algorithm, oversampling is used to ensure that the 
+    structure of the Green's function is accurately resolved. 
+ 
+    [Z,ERR]=<a href="maternoise.html">MATERNOISE</a>(...,'fast') also returns the error ERR involved in 
+    the fast algorithm's approximation of the autocovariance sequence.  
+    Note that this is for testing purposes only, as it substantially slows
+    down the algorithm. 
+    __________________________________________________________________
+ 
     See also <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>.
  
     '<a href="maternoise.html">maternoise</a> --t' runs some tests.
     '<a href="maternoise.html">maternoise</a> --f' generates a sample figure.
  
     Usage: z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda);
+           z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda,'fast');
            z=<a href="maternoise.html">maternoise</a>(dt,[N,M],sigma,alpha,lambda,nu,mu);
+           z=<a href="maternoise.html">maternoise</a>(dt,N,A,alpha,0);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2013--2015  A.M. Sykulski and J.M. Lilly

@@ -4,7 +4,8 @@
 %   cellabs    - Absolute value of each element in a cell array.                    
 %   cellmax    - Maximum of each element in a cell array.                           
 %   cellmin    - Minimum of each element in a cell array. 
-%   cellmean   - Mean value of each element a cell array or set of cell arrays.     
+%   cellmean   - Mean value of each element a cell array.  
+%   cellstd    - Standard deviation of each element a cell array.
 %   cellreal   - Real part of each element in a cell array.                         
 %   cellimag   - Imaginary part of each element in a cell array.    
 %   celllog10  - Base ten logarithm of each element in a cell array.
@@ -13,12 +14,14 @@
 %   celldiv    - Division acting on each element in a cell array.
 %
 % Reshaping, indexing, and sizes
-%   cell2col   - Converts cell arrays of column vectors into 'column-appended' data.
-%   col2cell   - Converts 'column-appended' data into cell arrays of column vectors.
+%   cell2col    - Converts cell arrays of numeric arrays into 'column-appended' form.
+%   col2cell    - Converts 'column-appended' data into cell arrays of numeric arrays.
 %   cellindex  - Applies a cell array of indices to a cell array of column vectors. 
 %   cellchunk  - Converts cell array data into uniform length 'chunks'.             
 %   cellength  - Length of each element in a cell array.                            
-%   cellsize   - Size of each element in a cell array along specified dimension.    
+%   cellsize   - Size of each element in a cell array along specified dimension.
+%   cellget    - Indexes a cell array of numerical arrays by ID number.
+%   cellimit   - Limits the ranges of times in a cell array of numerical arrays.
 %
 % Data processing
 %   cellstrip  - Strips NaN values from the beginnings or ends of cell arrays.

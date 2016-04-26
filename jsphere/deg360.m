@@ -1,28 +1,42 @@
 function[varargout]=deg360(varargin)
 %DEG360  Converts degrees to the range [0, 360].
 %
-%   [TH1,TH2,...THN]=DEG360(TH1,TH2,...THN) converts the input
-%   angles, which are measured in degrees, to the range [0, 360].
+%   [D1,D2,...,DN]=DEG360(D1,D2,...,DN) converts the input angles, which 
+%   are measured in degrees, to the range [0, 360].
 %
 %   More precisely, the output range is defined to include 0, but exclude
 %   360, so DEG360(360) is defined as 360-EPS where EPS is 1e-10.
 %
-%   See also DEG180.
+%   DEG360 also works if D1,D2,...,DN are cell arrays of numerical arrays.
+%
+%   See also JDEG2RAD, JRAD2DEG, DEG360, DEGUNWRAP.
 %
 %   'deg360 --t' runs a test.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2013 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     deg360_test,return
 end
- 
+
 varargout=varargin;
 for i=1:nargin;
-    temp=varargin{i};
-    temp(temp==360)=(360-1e-10); %Correct for 360 
-    varargout{i}=mod(temp,360);
+    if ~iscell(varargin{1})
+        temp=varargin{i};
+        temp(temp==360)=(360-1e-10); %Correct for 360
+        varargout{i}=mod(temp,360);
+        bool=~isfinite(varargin{i});
+        varargout{i}(bool)=varargin{i}(bool);
+    else
+        for j=1:length(varargin{1})
+            temp=varargin{i}{j};
+            temp(temp==360)=(360-1e-10); %Correct for 360
+            varargout{i}{j,1}=mod(temp,360);
+            bool=~isfinite(varargin{i}{j});
+            varargout{i}{j}(bool)=varargin{i}{j}(bool);
+        end
+    end
     %temp(temp==-180|temp==)=temp
     
     %th=jrad2deg(jdeg2rad(th));
@@ -31,8 +45,7 @@ for i=1:nargin;
     %    th(index)=th(index)+360;
     %end
     %varargout{i}=th;
-    bool=~isfinite(varargin{i});
-    varargout{i}(bool)=varargin{i}(bool);
+
 end
 
 

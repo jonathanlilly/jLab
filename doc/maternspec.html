@@ -73,13 +73,11 @@
     [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
     returns the spectrum of the four-parameter "extended" Matern process:
  
-       S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
-                                     / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C               
+       S(F) = SIGMA^2 * BESSELK(ALPHA,SQRT(F^2+LAMBDA^2)/MU)
+                                     / (SQRT(F^2+LAMBDA^2)/MU)^ALPHA * C               
  
     where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
- 
-    The additional parameter, MU, has the same units as DT. 1/MU has the 
-    interpretation of a frequency e-folding scale.
+    The additional parameter, MU, has units of frequency.
  
     [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
     extended Matern spectrum to be centered at F=NU rather than F=0.
@@ -102,8 +100,8 @@
  
     Composite Matern
  
-    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(SIGMA,ALPHA,LAMBDA,NU,MU,'composite') implements
-    the "composite" Matern spectrum having the form
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') 
+    implements the "composite" Matern spectrum having the form
  
         SPP(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F-NU)^2 + LAMBDA^2] 
         SNN(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F+NU)^2 + LAMBDA^2] 
@@ -134,7 +132,7 @@
     '<a href="maternspec.html">maternspec</a> --f' generates some sample figures.
     Tests for <a href="maternspec.html">MATERNSPEC</a> can be found in <a href="materncov.html">MATERNCOV</a>.
  
-    Usage:  [f,s]=<a href="maternspec.html">maternspec</a>(N,sigma,alpha,lambda);
+    Usage:  [f,s]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda);
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda);
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu);
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu,mu);

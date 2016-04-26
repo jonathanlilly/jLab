@@ -81,7 +81,12 @@ end
 
 matsave_name=vars{1};
 
-make(vars)
+evalme='make ';
+for i=1:length(vars)
+    evalme=[evalme vars{i} ' '];
+end
+evalin('caller',evalme)
+
 dirname=findpath('/Matfiles');
 
 if isempty(dirname)
@@ -89,7 +94,10 @@ if isempty(dirname)
 end
 
 matsave_fullname=[dirname '/' matsave_name];
-eval('save(matsave_fullname,version,matsave_name)')
-evalin('caller',['load ' matsave_fullname])
+evalin('caller',['save(''' matsave_fullname ''',''' version ''',''' matsave_name ''')'])
+
+%evalin('caller',['save( 'matsave_fullname ',' version ',' matsave_name ')'])
+%evalin('caller','save(matsave_fullname,version,matsave_name)')
+%evalin('caller',['load ' matsave_fullname])
 
 

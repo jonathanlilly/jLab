@@ -2,46 +2,32 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>COL2CELL is the <a href="jcell.html">jcell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="col2cell.html">COL2CELL</a>  Converts 'column-appended' data into cell arrays of column vectors.
+ <a href="col2cell.html">COL2CELL</a>  Converts 'column-appended' data into cell arrays of numeric arrays.
  
-    X=<a href="col2cell.html">COL2CELL</a>(COL) converts the column vector COL of N data blocks into a
-    cell array X containing N column vectors.
- 
-    The column vector COL has a NAN marking the end of each block.  The
-    cell array X exludes the NANs.  
+    X=<a href="col2cell.html">COL2CELL</a>(COL) converts the array COL, which has blocks of data
+    separated by rows of all NaNs, into a cell array, with each cell
+    containing one of the data blocks, excluding the trailing NaNs.
  
     Since NANs mark the end of each block, missing or bad data in COL
     should instead be indicated by INFs.
-    __________________________________________________________________
- 
-    Multiple input /output arguments
  
     [X1,X2,...,XN]=<a href="col2cell.html">COL2CELL</a>(C1,C2,...,CN) also works, where the CN are all 
-    the same size.
-  
-    In this case C1 is the 'key' and the locations of NANs in C1 is used 
-    to break all the CN into cells.   Thus the CN with N>1 may contain
-    additional NANS.
-    __________________________________________________________________
-  
-    Variable overwriting
+    the same size.  In this case the locations of NANs in C1 are used 
+    to break all the other CN into cells.  
  
-    <a href="col2cell.html">COL2CELL</a>(C1,C2,...,CN) with no output arguments overwrites the input
-    variables.
-    __________________________________________________________________
- 
-    Invertibility
+    <a href="col2cell.html">COL2CELL</a>(C1,C2,...,CN); with no output arguments overwrites the 
+    original variables.
  
     <a href="col2cell.html">COL2CELL</a> is inverted by <a href="cell2col.html">CELL2COL</a>.
     __________________________________________________________________
  
-    '<a href="col2cell.html">col2cell</a> --t' runs a test.
- 
     See also <a href="cell2col.html">CELL2COL</a>, <a href="col2mat.html">COL2MAT</a>, <a href="mat2col.html">MAT2COL</a>, <a href="colbreaks.html">COLBREAKS</a>.
+ 
+    '<a href="col2cell.html">col2cell</a> --t' runs a test.
  
     Usage: x=<a href="col2cell.html">col2cell</a>(col);
            [x1,x2,...,xN]=<a href="col2cell.html">col2cell</a>(c1,c2,...,cN);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

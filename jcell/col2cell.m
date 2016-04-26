@@ -1,46 +1,32 @@
 function[varargout]=col2cell(varargin)
-%COL2CELL  Converts 'column-appended' data into cell arrays of column vectors.
+%COL2CELL  Converts 'column-appended' data into cell arrays of numeric arrays.
 %
-%   X=COL2CELL(COL) converts the column vector COL of N data blocks into a
-%   cell array X containing N column vectors.
-%
-%   The column vector COL has a NAN marking the end of each block.  The
-%   cell array X exludes the NANs.  
+%   X=COL2CELL(COL) converts the array COL, which has blocks of data
+%   separated by rows of all NaNs, into a cell array, with each cell
+%   containing one of the data blocks, excluding the trailing NaNs.
 %
 %   Since NANs mark the end of each block, missing or bad data in COL
 %   should instead be indicated by INFs.
-%   __________________________________________________________________
-%
-%   Multiple input /output arguments
 %
 %   [X1,X2,...,XN]=COL2CELL(C1,C2,...,CN) also works, where the CN are all 
-%   the same size.
-% 
-%   In this case C1 is the 'key' and the locations of NANs in C1 is used 
-%   to break all the CN into cells.   Thus the CN with N>1 may contain
-%   additional NANS.
-%   __________________________________________________________________
-% 
-%   Variable overwriting
+%   the same size.  In this case the locations of NANs in C1 are used 
+%   to break all the other CN into cells.  
 %
-%   COL2CELL(C1,C2,...,CN) with no output arguments overwrites the input
-%   variables.
-%   __________________________________________________________________
-%
-%   Invertibility
+%   COL2CELL(C1,C2,...,CN); with no output arguments overwrites the 
+%   original variables.
 %
 %   COL2CELL is inverted by CELL2COL.
 %   __________________________________________________________________
 %
-%   'col2cell --t' runs a test.
-%
 %   See also CELL2COL, COL2MAT, MAT2COL, COLBREAKS.
+%
+%   'col2cell --t' runs a test.
 %
 %   Usage: x=col2cell(col);
 %          [x1,x2,...,xN]=col2cell(c1,c2,...,cN);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2014 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     col2cell_test,return

@@ -21,9 +21,9 @@
         WR     Wavelet transfrom value along the ridge
         FR     Transform frequency values in radian frequency
  
-    All output variables are cell arrays with one ridge per cell.  To plot
-    the ridges, use <a href="cellplot.html">CELLPLOT</a>(IR,JR).  <a href="cell2col.html">CELL2COL</a>(IR,JR,WR,FR) turns these
-    cell arrays into concatenated column vectors. 
+    All output variables are column vectors with the ridges appended one
+    atop the next, separated by a NaN.  Use <a href="col2cell.html">COL2CELL</a>(IR,JR,WR,FR) to 
+    convert these concatenated column vectors into cell arrays.
  
     <a href="ridgewalk.html">RIDGEWALK</a>(DT,W,FS,...) uses a sample rate DT to compute the ridge
     frequency FR.  The default value of DT is unity.  This does not affect
@@ -105,16 +105,12 @@
  
     Joint ridges
  
-    [IR,JR,W1R,W2R,...,WNR,F1R,F2R,...FNR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) 
-    finds the joint ridges of N transforms that all have the same size.  
+    [IR,JR,WR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) finds the joint ridges of N 
+    transforms that all have the same size.  
  
     In this case, there is only one set of ridges but N different values.
-    All of the output fields are again cell arrays of the same size.
- 
-    [IR,JR,WR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS,'mat') specifies an alternate,
-    'matrix' format for joint ridges.  Now WR and FR are cell arrays, each 
-    element of which is a matrix with N columns.  The default 'column' 
-    format splits these N columns into N different output arguments.
+    IR and JR are still column vectors, but WR and FR are now arrays with N 
+    columns, again with different ridges separated by NaNs. 
  
     For details on joint ridges, see
  
@@ -124,17 +120,13 @@
     
     Bias parameters for joint ridges
  
-    [IR,JR,WR,FR,BR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS,'mat') for the case of 
-    joint ridges similarly outputs the two bias parameters along the 
-    ridges, here organized in matrix format.
+    [IR,JR,WR,FR,BR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) for the case of joint
+    ridges similarly outputs the two bias parameters along the ridges BR 
+    and CR, which are the same size as WR and FR
  
     BR and CR are normalized versions of (17) and (18) of Lilly and Olhede 
     (2012). Both BR and CR have been normalized by dividing them by the 
-    modulus of the estimated analytic signal, SQRT(SUM(ABS(WR).^2,2)).
- 
-    [...,B1R,B2R,...,BRN,C1R,C2N,...,CNR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS), the
-    default, uses column format instead.  In this case there will be 2+4*N
-    total output arguments: IR, JR, and N columns of WR, FR, BR, and CR.     
+    modulus of the estimated analytic signal, SQRT(SUM(ABS(WR).^2,2)).   
  
     The bias associated with the estimated signal is small compared to the 
     magnitude of the signal when the modulus of XCR is small.
@@ -160,10 +152,10 @@
     Usage: [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs);
            [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,{L,CHI});
            [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,{L,CHI});
-           [ir,jr,wxr,wyr,fxr,fyr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI});
-           [ir,jr,wr,fr,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI},'mat');
+           [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI});
+           [ir,jr,wr,fr,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,{L,CHI});
            [ir,jr,wr,fr]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,bool,{L,CHI});
     _______________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2004--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

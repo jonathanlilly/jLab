@@ -69,9 +69,9 @@
     With Matlab's Parallel Computing Toolbox installed, <a href="spheresort.html">SPHERESORT</a> can 
     take advantage of multiple cores to speed up operations.
  
-    <a href="spheresort.html">SPHERESORT</a>('parallel',NWORKERS) parallelizes the computation with the
-    number of workers set to NWORKERS.  Choose this as the number of 
-    independent processors on your machine. 
+    <a href="spheresort.html">SPHERESORT</a>(...'parallel') parallelizes the computation with the
+    maximum possible number of workers for your system.  To set the number
+    of workers explicitly, use <a href="spheresort.html">SPHERESORT</a>(...,'parallel',NWORKERS).
  
     As the additional efficiency is not dramatic, this is typically only an 
     advantage for very large datasets.  Due to the nature of the
@@ -92,5 +92,5 @@
            [ds,xs,ys,z1s,z2s]=<a href="spheresort.html">spheresort</a>(lat,lon,z1,z2,lato,lono,cutoff);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

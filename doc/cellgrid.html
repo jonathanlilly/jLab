@@ -16,25 +16,44 @@
         T{1} = [1 2 3  5  6]';   T{2}=[3 7  9 10]';   
         X{1} = [2 4 6 10 12]';   X{2}=[5 9 11 12]';
     
-    [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(1,T,X) will return
+    [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(T,X,1) will return
  
         TO{1} = [1 2 3 4  5  6]';   TO{2} = [3 4 5 6 7 8  9  10]';   
         Y{1}  = [2 4 6 8 10 12]';   Y{2}  = [5 6 7 8 9 10 11 12]';
  
-    By default, <a href="cellgrid.html">CELLGRID</a> uses INTERP1 with linear interpolation. 
-    <a href="cellgrid.html">CELLGRID</a>(...,STR) instead uses the method specified by STR, e.g. 
-    'pchip'.  See INTERP1 for details. 
+    By default, <a href="cellgrid.html">CELLGRID</a> uses INTERP1 with the 'pchip' method of
+    interpolation.  <a href="cellgrid.html">CELLGRID</a>(...,STR) instead uses the method specified by
+    STR, e.g. STR='linear'.  See INTERP1 for details. 
  
     [TO,Y1,Y2,...YN]=<a href="cellgrid.html">CELLGRID</a>(T,X1,X2,...XN,DT) with multiple input
     arguments also works provided the XN are all the same size. 
  
     <a href="cellgrid.html">CELLGRID</a>(X1,X2,...XN); with no output arguments overwrites the 
     original input variables. 
+    __________________________________________________________________
+ 
+    Specifying interpolated times
+ 
+    [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(T,X,DT,A,B) will set TO to TO=A:DT:B, where A and B 
+    are either scalars or an arrays of the same size as X.  Note that DT
+    must be a scalar.
+ 
+    The default behavior is equivalent to choosing A and B as the first and
+    last elements of TO, that is, to setting A=<a href="cellmin.html">CELLMIN</a>(T) and B=<a href="cellmax.html">CELLMAX</a>(T).
+    __________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="cellgrid.html">CELLGRID</a>(...,'parallel') parallelizes the computation using a PARFOR 
+    loop over the various input variables.  This requires that Matlab's 
+    Parallel Computing Toolbox be installed. 
+    __________________________________________________________________
  
     '<a href="cellgrid.html">cellgrid</a> --t' runs a test.
  
     Usage: [to,y]=<a href="cellgrid.html">cellgrid</a>(t,x,dt);
            [to,y1,y2,y3]=<a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt);
+           [to,y1,y2,y3]=<a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt,a,b);
            <a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information

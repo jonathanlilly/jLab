@@ -8,14 +8,16 @@
     along the ridge, maps the values of XR to their correct row locations 
     in a time series of length N, and returns the result in the array X.
  
-    If IR and XR contain L ridges in L separate cells, as output by
+    If IR and XR contain L different ridges separated by NaNs, as output by
     <a href="ridgewalk.html">RIDGEWALK</a>, then X is N x L with the values of XR from each ridge in a 
     separate column. Values not specified by the IR are left as INFs. 
  
     [X1,X2,...,XM]=<a href="ridgemap.html">RIDGEMAP</a>(N,X1R,X2R,...,XPR,IR) also works for any P
     different ridge quantities X1R--XPR.
  
-    The XR and IR quantities are assumed to have been created by <a href="ridgewalk.html">RIDGEWALK</a>.
+    When using RIDGEWALK's joint ridges algorithm, in which some quantities
+    have more than one column, they should be passed to <a href="ridgemap.html">RIDGEMAP</a> 
+    individually, for example [X1,X2]=<a href="ridgemap.html">RIDGEMAP</a>(N,X(:,1),X(:,2),IR).
     __________________________________________________________________
  
     Collapsing 
@@ -41,5 +43,5 @@
              [x,f,mult]=<a href="ridgemap.html">ridgemap</a>(N,xr,fr,ir);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

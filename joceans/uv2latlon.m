@@ -3,10 +3,14 @@ function[lat,lon]=uv2latlon(varargin)
 %
 %   [LAT,LON]=UV2LATLON(NUM,U,V,LATO,LONO) where NUM is the data in DATENUM
 %   format, integates velocities U and V from intial location (LATO,LONO)
-%   to form a trajectory on the earth described by LAT and LON.
+%   to form a trajectory on the earth described by LAT and LON.  
 %
 %   LATO and LONO are an initial latitude and longitude in degrees,
 %   and U and V are eastward and northward velocity components in cm/s. 
+%
+%   NUM, U, and V may be column vectors, in which aase LATO and LONO are 
+%   both scalars.  Alternatively, NUM, U, and V may be matrices with time 
+%   oriented in rows.  LATO and LONO are then arrays of length SIZE(NUM,1). 
 %
 %   [LAT,LON]=UV2LATLON(NUM,CV,LATO,LONO), where CV is the complex-valued
 %   velocity CV=U+SQRT(-1)*V, also works.
@@ -160,6 +164,11 @@ cv=latlon2uv(num,lat,lon,'forward');
 bool1=allall(abs(frac(lon-lon2,lon))<5e-6);
 bool2=allall(abs(frac(lat-lat2,lat))<5e-6);
 reporttest('UV2LATLON inverts LATLON2UV to within 5e-6 for NPG2006 data, forward algorithm',bool1&&bool2)
+
+[lat2,lon2]=uv2latlon([num num],[cv cv],[lat(1) lat(1)],[lon(1) lon(1)],'forward');
+bool1=allall(abs(frac([lon lon]-lon2,lon))<5e-6);
+bool2=allall(abs(frac([lat lat]-lat2,lat))<5e-6);
+reporttest('UV2LATLON inverts LATLON2UV to within 5e-6 for NPG2006 data, forward algorithm, matrix input',bool1&&bool2)
 
 
 use npg2006

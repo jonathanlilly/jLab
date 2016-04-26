@@ -192,7 +192,7 @@ function[varargout]=mspec(varargin)
 %   Parallelization
 %
 %   MSPEC(..., 'parallel') when the input fields X, X and Y, or Z are cell
-%   arrays, parellelizes the spectral estimation by looping over the cells
+%   arrays, parallelizes the spectral estimation by looping over the cells
 %   with a PARFOR loop.  This requires Matlab's Parallel Computing Toolbox.
 %   ______________________________________________________________________
 % 
@@ -303,7 +303,6 @@ if na==3
     y=varargin{2};
 end
 
-
 if iscell(x)||iscell(y)
     %All of this is just to handle cell array input
     if isempty(y)
@@ -361,7 +360,7 @@ end
 if ~isreal(x)&&isempty(y)
     y=conj(x);
 end
-            
+
 if strcmpi(detrendstr(1:3),'det')
     x=detrend(x);
     if ~isempty(y)
@@ -539,11 +538,11 @@ end
 
 function[mmat]=mtrans1(x,psimat)
 
-Nnans=length(find(isnan(x)));
+Nnans=length(find(~isfinite(x)));
 if Nnans>0
-    disp(['MTRANS swapping ' int2str(Nnans) ' NANs for zeros.'])
-    vswap(x,nan,0);
+     disp(['MSPEC finding non-finite data values.  Spectrum will be undefined.'])
 end
+
 x=permute(x,[1 3 2]);
 xmat=vrep(x,size(psimat,2),2);
 mmat=fft(psimat.*xmat,[],1);

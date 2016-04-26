@@ -136,7 +136,7 @@ function[varargout]=wavetrans(varargin)
 %           [wp,wn]=wavetrans(x+i*y,x-i*y,{gamma,beta,f,str},str);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(varargin{1},'--t')

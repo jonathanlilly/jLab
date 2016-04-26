@@ -1,14 +1,20 @@
 function[T,C]=maternchol(varargin)
-%MATERNCHOL  Cholesky decomposition of the Matern covariance and variations.
+%MATERNCHOL  Cholesky decomposition of Matern and fBm covariances.
 %
 %   MATERNCHOL is a low-level function called by MATERNOISE.
 %
-%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) returns the Cholesky 
-%   decomposition of the N x N autocovariance matrix of an extended Matern
-%   process, and its special cases.  See MATERNCOV for details.
+%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA) returns the Cholesky 
+%   decomposition of the N x N autocovariance matrix of a Matern process.
 %
-%   T=MATERNCHOL(...,'composite') does the same, but for the composite 
-%   Matern process.
+%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) does the same, but for the
+%   extended Matern process.   See MATERNCOV for details.
+%
+%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') does the same, 
+%   but for the composite Matern process.  See MATERNCOV for details.
+%
+%   T=MATERNCHOL(DT,N,A,ALPHA,0) returns the Cholesky decomposition for
+%   fractional Brownian motion.  In this case, the third input argument is
+%   the spectral amplitude A, not the standard deviation SIGMA.
 %   __________________________________________________________________
 %
 %   Non positive-definiteness adjustment
@@ -51,9 +57,16 @@ dt=double(varargin{1});
 N=varargin{2};
 sigma=varargin{3};
 alpha=varargin{4};
+
 lambda=varargin{5};
-nu=varargin{6};
-mu=varargin{7};
+nu=0*alpha;
+mu=0*alpha;
+
+if nargin>5
+    nu=varargin{6};
+    mu=varargin{7};
+end
+
 
 %dt,N,sigma,alpha,lambda,nu,mu
 
@@ -82,6 +95,15 @@ else
     [tau,tpz]=materncov(dt,N,sigma,alpha,lambda,nu,mu,model);
     C=toeplitz(tpz);
 end
+
+%Explicitly remove small imaginary parts along diagonal
+for i=1:size(C,1)
+    C(i,i)=real(C(i,i));
+end
+
+%figure,uvplot(diag(C))
+%T=conj(chol(C,'lower'));
+%figure,jpcolor(abs(C))
 
 %Note lower triangular is a causal filter.  Plot rows (not columns).
 try

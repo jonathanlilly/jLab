@@ -1,0 +1,35 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>DEGUNWRAP is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="degunwrap.html">DEGUNWRAP</a>  Unwraps arrays given in degrees.
+ 
+    <a href="degunwrap.html">DEGUNWRAP</a>(D) unwraps array D, given in degrees, along its rows. 
+ 
+    <a href="degunwrap.html">DEGUNWRAP</a>(D,TOL) uses tolerance TOL, also in degrees.  The default
+    value of TOL is 180, corresponding to the value PI used by UNWRAP.
+ 
+    The unwrapping may be reversed by <a href="deg180.html">DEG180</a> or <a href="deg360.html">DEG360</a>.
+ 
+    The input argument D may also be a cell array of numerical arrays. 
+    In this case, each element of D is unwrapped along its rows. 
+ 
+    This is useful for unwrapping longitudes, for example, the surface
+    drifter trajectories in DRIFTERS.MAT described in <a href="about_drifters.html">ABOUT_DRIFTERS</a>.
+    __________________________________________________________________
+    Parallelization
+ 
+    <a href="degunwrap.html">DEGUNWRAP</a>(D,'parallel'), when D is a cell array, parallelizes the 
+    computation using a PARFOR loop.  This requires that Matlab's Parallel 
+    Computing Toolbox be installed, and is useful for very large datasets.
+    __________________________________________________________________
+ 
+    See also <a href="jdeg2rad.html">JDEG2RAD</a>, <a href="jrad2deg.html">JRAD2DEG</a>, <a href="deg180.html">DEG180</a>, <a href="deg360.html">DEG360</a>.
+ 
+    Usage: lon=<a href="degunwrap.html">degunwrap</a>(lon);
+           lon=<a href="degunwrap.html">degunwrap</a>(lon,tol);
+           lon=<a href="degunwrap.html">degunwrap</a>(lon,tol,'parallel');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

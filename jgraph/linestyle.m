@@ -64,7 +64,7 @@ function[]=linestyle(varargin)
 %   Type LINESTYLE with no arguments to see a list of current style sets. 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details        
   
 if nargin==1
     if strcmpi(varargin{1},'--t')
@@ -298,75 +298,8 @@ for j=1:length(h)
 end
 
 
-
-function[widthcell,stylecell,colorcell]=linestyleparse(str)
-%Parse the linestyle input string for cell specifications
-
-defaultwidth=1;
-defaultcolor='k';
-defaultstyle='-';
-colors=linestyle_colors;
-bool=true(size(str));
-
-%/********************************************************
-%linewidth
-index=find(real(str)>47&real(str)<58); %find str is 0-9
-if isempty(index)
-   widthcell=defaultwidth;
-else
-   width=str2num(str(index(1):index(end)));  %encompasss '.'
-   if isempty(width)
-     error('Problem with linestyle string.')
-   else
-     widthcell=width;
-     
-     %remove these entries from string
-     bool(index(1):index(end))=0;     
-     str=str(bool);
-     bool=true(size(str));
-   end
-end
-%\********************************************************
-
-
-%/********************************************************
-%linecolor
-index=find(real(str)>64&real(str)<123&~...
-      (real(str)==real('s')|...
-       real(str)==real('d')|...
-       real(str)==real('v')|...
-       real(str)==real('p')|...
-       real(str)==real('h')|...
-       real(str)==real('o')|...
-       real(str)==real('x')));     %find str is a-Z not  s d v p h o x 
-if isempty(index)
-   colorcell=defaultcolor;
-else
-   color=str(index); 
-   if length(color)>1
-     error('More than one color specified.')
-   else
-     colorcell=getfield(colors,color);
-     
-     %remove these entries from string
-     bool(index)=0;
-     str=str(bool);
-   end
-end
-%\********************************************************   
-
-%/********************************************************
-%linestyle
-if isempty(str)
-   stylecell=defaultstyle;
-else
-   stylecell=str;
-end
-%\********************************************************   
-
 function[widthcell,stylecell,colorcell]=linestyleapply(h,linestyles,name)
 %Apply contents of LINESTYLE definitions to cell arrays
-  
   
 % %account for the fact that LINERING flips the linering
 % %to put the first line on the top
@@ -376,7 +309,7 @@ function[widthcell,stylecell,colorcell]=linestyleapply(h,linestyles,name)
 %    end
 % end
   
-colors=linestyle_colors;
+colors=linestyleparse;
 %h=flipud(linehandles(gca));
 
 colorx=[];
@@ -517,27 +450,3 @@ linestyles.redgreenblue={'rgb',['-';'-';'-'],[1 1 1]};
 linestyles.dots={'bgrcmyk','.',1};
 linestyles.graydots={'D','.',1};
 
-
-function[colors]=linestyle_colors
-%COLORS
-%
-%  User-specified additional colors for use with LINESTYLE.
-colors.k=[0 0 0];
-colors.w=[1 1 1];
-colors.b=[0 0 1];
-colors.g=[0 0.5 0];
-colors.r=[1 0 0];
-colors.c=[0 0.75 0.75];
-colors.m=[0.75 0 0.75];
-colors.y=[0.75 0.75 0];
-colors.A=(1-0)*[1 1 1];
-colors.B=(1-1/10)*[1 1 1];
-colors.C=(1-2/10)*[1 1 1];
-colors.D=(1-3/10)*[1 1 1];
-colors.E=(1-4/10)*[1 1 1];
-colors.F=(1-5/10)*[1 1 1];
-colors.G=(1-6/10)*[1 1 1];
-colors.H=(1-7/10)*[1 1 1];
-colors.I=(1-8/10)*[1 1 1];
-colors.J=(1-9/10)*[1 1 1];
-colors.K=(1-10/10)*[1 1 1];

@@ -7,7 +7,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     cellabs    - Absolute value of each element in a cell array.                    
 %     cellmax    - Maximum of each element in a cell array.                           
 %     cellmin    - Minimum of each element in a cell array. 
-%     cellmean   - Mean value of each element a cell array or set of cell arrays.     
+%     cellmean   - Mean value of each element a cell array.  
+%     cellstd    - Standard deviation of each element a cell array.
 %     cellreal   - Real part of each element in a cell array.                         
 %     cellimag   - Imaginary part of each element in a cell array.    
 %     celllog10  - Base ten logarithm of each element in a cell array.
@@ -16,12 +17,14 @@ function[varargout]=jlab_allhelp(varargin)
 %     celldiv    - Division acting on each element in a cell array.
 %  
 %   Reshaping, indexing, and sizes
-%     cell2col   - Converts cell arrays of column vectors into 'column-appended' data.
-%     col2cell   - Converts 'column-appended' data into cell arrays of column vectors.
+%     cell2col    - Converts cell arrays of numeric arrays into 'column-appended' form.
+%     col2cell    - Converts 'column-appended' data into cell arrays of numeric arrays.
 %     cellindex  - Applies a cell array of indices to a cell array of column vectors. 
 %     cellchunk  - Converts cell array data into uniform length 'chunks'.             
 %     cellength  - Length of each element in a cell array.                            
-%     cellsize   - Size of each element in a cell array along specified dimension.    
+%     cellsize   - Size of each element in a cell array along specified dimension.
+%     cellget    - Indexes a cell array of numerical arrays by ID number.
+%     cellimit   - Limits the ranges of times in a cell array of numerical arrays.
 %  
 %   Data processing
 %     cellstrip  - Strips NaN values from the beginnings or ends of cell arrays.
@@ -90,8 +93,9 @@ function[varargout]=jlab_allhelp(varargin)
 %   Filling bad data points
 %     fillbad    - Linearly interpolate over bad data points.  
 %  
-%   Date and time
-%     yearfrac   - Convert date from 'datenum' format to 'year.fraction'.
+%   Date, time, and units
+%    yearfrac    - Converts a DATENUM into 'year.fraction' and 'month.fraction'.
+%    cms2kmd     - Converts centimeters per second to kilometers per day.
 %   __________________________________________________________________
 % 
 %   jEllipse:  Analysis of modulated elliptical, or bivariate, signals
@@ -178,7 +182,8 @@ function[varargout]=jlab_allhelp(varargin)
 %   Low-level functions
 %     axeshandles - Returns handles to all axes children.
 %     crop        - Gets rid of whitespace around an image. [by A. Bliss]             
-%     linehandles - Finds all line and patch handles from a given set of axes.      
+%     linehandles - Finds all line and patch handles from a given set of axes.
+%     linestyleparse - Parses the input string to LINESTYLE.
 %   __________________________________________________________________
 % 
 %   jMap:  Mapping scattered data using local polynomial fitting
@@ -190,10 +195,8 @@ function[varargout]=jlab_allhelp(varargin)
 % 
 %   jMatern:  Parametric spectral analysis based on the Matern process
 %  
-%   Please note that this toolbox is still in development.  
-%  
 %   Top-level functions
-%     maternoise - Realizations of the Matern random process and variations.  [with A. Sykulski]      
+%     maternoise - Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
 %     maternspec - Fourier spectrum of the Matern random process and variations.                                
 %     materncov  - Autocovariance of the Matern random process and variations.                         
 %     maternimp  - Impulse response function for the Matern random process.                      
@@ -204,7 +207,7 @@ function[varargout]=jlab_allhelp(varargin)
 %  
 %   Low-level Matern functions
 %     materncfun - Returns the normalization function C_ALPHA for a Matern process.
-%     maternchol - Cholesky decomposition of the Matern covariance and variations.
+%     maternchol - Cholesky decomposition of Matern and fBm covariances.
 %     maternedge - Long-time cutoff edge for the Matern impulse response function.               
 %  
 %   See also jSpectral.
@@ -227,9 +230,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     latlon2uv   - Converts latitude and longitude to horizontal velocity.  
 %     uv2latlon   - Integrates horizontal velocity to give latitude and longitude.  
 %  
-%   Manipulating Lagrangian trajectories
+%   Manipulating Lagrangian trajectories [see also jCell]
 %     trajextract - Extracts Lagrangian trajectory segments within given region.        
-%     trajfill    - Fills float or drifter trajectories with linear interpolation.       
 %     trajunwrap  - Unwraps Lagrangian trajectories from a periodic domain.              
 %     trajwrap    - Wraps Lagrangian trajectories to fit within a periodic domain.       
 %     trajchunk   - Converts cell array data into chunks based on the Coriolis period.
@@ -244,12 +246,18 @@ function[varargout]=jlab_allhelp(varargin)
 %     curvemoments - Centroid, area, and many other moments of a closed curve.          
 %     divgeom      - Geometric decomposition of eddy vorticity flux divergence.     
 %  
-%    Plotting tools for mooring data
+%   Plotting tools for mooring data
 %     hodograph  - Generate hodograph plots (simple and fancy).                                   
 %     provec     - Generate progressive vector diagrams (simple and fancy).             
 %     stickvect  - Plots "stick vectors" for multicomponent velocity time series. 
 %  
-%    Topography tools and data
+%   Alongtrack altimetry tools
+%     trackextract  - Extracts alongtrack altimetry segments within given region.
+%  
+%   NetCDF tools
+%     ncinterp      - Interpolate field from NetCDF file onto specified positions.
+%  
+%   Topography tools and data
 %     jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.              
 %     topoplot    - Plot regional or global topography at one-sixth degree resolution.
 %   
@@ -284,7 +292,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   Assorted other transforms 
 %     slidetrans  - Sliding-window ('moving-window') Fourier transform.   
 %     anatrans    - Analytic part of signal.                                         
-%     wigdist     - Wigner distribtion (alias-free algorithm).   
+%     wigdist     - Wigner distribution (alias-free algorithm).   
 %   
 %   Time series analysis utilities
 %     doublen     - Interpolates a time series to double its length.                 
@@ -301,7 +309,8 @@ function[varargout]=jlab_allhelp(varargin)
 %  
 %   Simple lat / lon conversions
 %     deg180     - Converts degrees to the range [-180,180].                        
-%     deg360     - Converts degrees to the range [0, 360].                          
+%     deg360     - Converts degrees to the range [0, 360].
+%     degunwrap  - Unwraps arrays given in degrees.
 %     jdeg2rad   - Converts degrees to radians.                                     
 %     jrad2deg   - Converts radians to degrees.   
 %  
@@ -344,10 +353,10 @@ function[varargout]=jlab_allhelp(varargin)
 %  
 %    Sizes and statistics
 %     vsize      - Returns the sizes of multiple arguments.                           
-%     vmean      - Mean over finite elements along a specified dimension.             
-%     vsum       - Sum over finite elements along a specified dimension.              
-%     vstd       - Standard deviation over finite elements along a specfied dimension.
-%     vmoment    - Central moment over finite elements along a specfied dimension.    
+%     vmean      - Mean over non-NaN elements along a specified dimension.             
+%     vsum       - Sum over non-NaN elements along a specified dimension.              
+%     vstd       - Standard deviation over non-NaN elements along a specfied dimension.
+%     vmoment    - Central moment over non-NaN elements along a specfied dimension.    
 %     vmedian    - Median over finite elements along a specified dimension. 
 %  
 %    Reshaping, shifting, swapping
@@ -399,7 +408,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   See also jRidges, jSpectral, jEllipse.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp
@@ -420,9 +429,10 @@ for i=1:length(dirlist)
     if dirlist(i).isdir
         if ~strcmpi(dirlist(i).name(1),'.')
             if ~strcmpi(dirlist(i).name,'doc')&&~strcmpi(dirlist(i).name,'html')&&~strcmpi(dirlist(i).name,'figures')
-                 eval(['xx=[xx help(''' dirlist(i).name ''') newline]'])
+                 eval(['xx=[xx help(''' dirlist(i).name ''') newline];'])
             end
         end
     end
 end
+xx
 varargout{1}=xx;

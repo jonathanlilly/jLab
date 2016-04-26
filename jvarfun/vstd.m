@@ -1,10 +1,10 @@
 function[varargout] = vstd(varargin)
-%VSTD Standard deviation over finite elements along a specfied dimension.
+%VSTD Standard deviation over non-NaN elements along a specfied dimension.
 %
-%   Y=VSTD(X,DIM) takes the standard deviation of all finite elements of X 
+%   Y=VSTD(X,DIM) takes the standard deviation of all non-NaN elements of X 
 %   along dimension DIM.
 %                                                                         
-%   [Y,NUM]=VSTD(X,DIM) also outputs the number of good data points NUM, 
+%   [Y,NUM]=VSTD(X,DIM) also outputs the number of non-NaN data points NUM, 
 %   which is the same size as X.
 %                                                                         
 %   VSTD uses the "1/N" normalization, where N is the number of data points,
@@ -12,11 +12,11 @@ function[varargout] = vstd(varargin)
 %
 %   [Y1,Y2,...YN]=VSTD(X1,X2,...XN,DIM) also works.
 %
-%   VSTD(X1,X2,...XN,DIM);  with no arguments overwrites the original 
+%   VSTD(X1,X2,...XN,DIM); with no arguments overwrites the original 
 %   input variables.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2012 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2015 J.M. Lilly --- type 'help jlab_license' for details    
   
 if strcmpi(varargin{1}, '--t')
   vstd_test,return
@@ -25,15 +25,8 @@ end
 dim=varargin{end};
 
 for i=1:length(varargin)-1
-  %if all(isreal(varargin{i}))
-     [varargout{i},numi{i}]=vmoment(varargin{i},2,dim);
-%   else
-%      %JML modified Sept 1 2004 to handle complex-valued data
-%      [varargout{i},numi{i}]=vmoment(real(varargin{i}),2,dim);
-%      temp=vmoment(imag(varargin{i}),2,dim);
-%      varargout{i}=varargout{i}+temp;
-%   end
-  varargout{i}=sqrt(varargout{i});
+   [varargout{i},numi{i}]=vmoment(varargin{i},2,dim);
+   varargout{i}=sqrt(varargout{i});
 end
 
 for i=length(varargin):nargout

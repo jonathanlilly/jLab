@@ -30,14 +30,14 @@ function[bool]=inregion(varargin)
 %   several rectangular regions.  
 %   ______________________________________________________________________
 %
-%   See also REGIONPLOT, FLOATREGION, INELLIPSE.
+%   See also REGIONPLOT, INELLIPSE, TRAJEXTRACT, TRACKREGION.
 %
 %   'inregion --t' runs a test.
 %
 %   Usage:  bool=inregion(region,lat,lon);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2014 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2006--2016 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1},'--t')
      inregion_test,return
@@ -46,7 +46,6 @@ end
 region=varargin{1};
 lat=varargin{2};
 lon=varargin{3};
-
 
 if iscell(lat)
     for i=1:length(lat)

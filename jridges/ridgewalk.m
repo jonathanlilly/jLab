@@ -18,9 +18,9 @@ function[varargout]=ridgewalk(varargin)
 %       WR     Wavelet transfrom value along the ridge
 %       FR     Transform frequency values in radian frequency
 %
-%   All output variables are cell arrays with one ridge per cell.  To plot
-%   the ridges, use CELLPLOT(IR,JR).  CELL2COL(IR,JR,WR,FR) turns these
-%   cell arrays into concatenated column vectors. 
+%   All output variables are column vectors with the ridges appended one
+%   atop the next, separated by a NaN.  Use COL2CELL(IR,JR,WR,FR) to 
+%   convert these concatenated column vectors into cell arrays.
 %
 %   RIDGEWALK(DT,W,FS,...) uses a sample rate DT to compute the ridge
 %   frequency FR.  The default value of DT is unity.  This does not affect
@@ -102,16 +102,12 @@ function[varargout]=ridgewalk(varargin)
 %
 %   Joint ridges
 %
-%   [IR,JR,W1R,W2R,...,WNR,F1R,F2R,...FNR]=RIDGEWALK(W1,W2,...,WN,FS) 
-%   finds the joint ridges of N transforms that all have the same size.  
+%   [IR,JR,WR,FR]=RIDGEWALK(W1,W2,...,WN,FS) finds the joint ridges of N 
+%   transforms that all have the same size.  
 %
 %   In this case, there is only one set of ridges but N different values.
-%   All of the output fields are again cell arrays of the same size.
-%
-%   [IR,JR,WR,FR]=RIDGEWALK(W1,W2,...,WN,FS,'mat') specifies an alternate,
-%   'matrix' format for joint ridges.  Now WR and FR are cell arrays, each 
-%   element of which is a matrix with N columns.  The default 'column' 
-%   format splits these N columns into N different output arguments.
+%   IR and JR are still column vectors, but WR and FR are now arrays with N 
+%   columns, again with different ridges separated by NaNs. 
 %
 %   For details on joint ridges, see
 %
@@ -121,17 +117,13 @@ function[varargout]=ridgewalk(varargin)
 %   
 %   Bias parameters for joint ridges
 %
-%   [IR,JR,WR,FR,BR,CR]=RIDGEWALK(W1,W2,...,WN,FS,'mat') for the case of 
-%   joint ridges similarly outputs the two bias parameters along the 
-%   ridges, here organized in matrix format.
+%   [IR,JR,WR,FR,BR,CR]=RIDGEWALK(W1,W2,...,WN,FS) for the case of joint
+%   ridges similarly outputs the two bias parameters along the ridges BR 
+%   and CR, which are the same size as WR and FR
 %
 %   BR and CR are normalized versions of (17) and (18) of Lilly and Olhede 
 %   (2012). Both BR and CR have been normalized by dividing them by the 
-%   modulus of the estimated analytic signal, SQRT(SUM(ABS(WR).^2,2)).
-%
-%   [...,B1R,B2R,...,BRN,C1R,C2N,...,CNR]=RIDGEWALK(W1,W2,...,WN,FS), the
-%   default, uses column format instead.  In this case there will be 2+4*N
-%   total output arguments: IR, JR, and N columns of WR, FR, BR, and CR.     
+%   modulus of the estimated analytic signal, SQRT(SUM(ABS(WR).^2,2)).   
 %
 %   The bias associated with the estimated signal is small compared to the 
 %   magnitude of the signal when the modulus of XCR is small.
@@ -157,12 +149,12 @@ function[varargout]=ridgewalk(varargin)
 %   Usage: [ir,jr,wr,fr]=ridgewalk(w,fs);
 %          [ir,jr,wr,fr]=ridgewalk(w,fs,{L,CHI});
 %          [ir,jr,wr,fr]=ridgewalk(dt,w,fs,{L,CHI});
-%          [ir,jr,wxr,wyr,fxr,fyr]=ridgewalk(dt,wx,wy,fs,{L,CHI});
-%          [ir,jr,wr,fr,br,cr]=ridgewalk(dt,wx,wy,fs,{L,CHI},'mat');
+%          [ir,jr,wr,fr]=ridgewalk(dt,wx,wy,fs,{L,CHI});
+%          [ir,jr,wr,fr,br,cr]=ridgewalk(dt,wx,wy,fs,{L,CHI});
 %          [ir,jr,wr,fr]=ridgewalk(dt,w,fs,bool,{L,CHI});
 %   _______________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 %
 %   Possibly say more about bias last
@@ -264,13 +256,6 @@ fmin=[];
 params=[];
 derivparams=[];
 
-if ischar(varargin{end})
-    str=varargin{end};
-    varargin=varargin(1:end-1);
-else
-    str='col';
-end
-
 if iscell(varargin{end})
     params=varargin{end};
     varargin=varargin(1:end-1);
@@ -356,12 +341,7 @@ br=[];
 cr=[];
 if ~isempty(id)
     [id,ir,jr]=colbreaks(id,ir,jr);
-    
-    if strcmpi(str,'mat')
-        na=nargout-4+1;
-    elseif strcmpi(str,'col')
-        na=(nargout-2)./size(w,3)-2+1;
-    end
+    na=nargout-4+1;
     if na<=0
         [a,om]=instmom(dt,w,'endpoint');
         [wr,fr]=ridgeinterp(fs,rq,ir,jr,w,om);
@@ -386,39 +366,17 @@ if ~isempty(id)
         end
     end
 end
-%\*************************************************************************
-
-
-%/*************************************************************************
-%Re-organizing output
-
-%Using the fact that COL2CELL works for matrices, and for empties
-%vsize(ir,jr,wr,fr,br,cr)
-col2cell(ir,jr,wr,fr,br,cr);
 
 varargout{1}=ir;
 varargout{2}=jr;
 if ~isempty(id)
-    if strcmpi(str,'mat')
-        varargout{3}=wr;
-        varargout{4}=fr;
-        if na>=1
-            varargout{5}=br;
-        end
-        if na>=2
-            varargout{6}=cr;
-        end
-    elseif strcmpi(str,'col')
-        %Put into one-column cell array format
-        N=size(w,3);
-        varargout(3:3+N-1)=splitcells(wr);
-        varargout(3+N:3+2*N-1)=splitcells(fr);
-        if ~isempty(br)&&na>=1
-            varargout(3+2*N:3+3*N-1)=splitcells(br);
-        end
-        if ~isempty(cr)&&na>=2
-            varargout(3+3*N:3+4*N-1)=splitcells(cr);
-        end
+    varargout{3}=wr;
+    varargout{4}=fr;
+    if na>=1
+        varargout{5}=br;
+    end
+    if na>=2
+        varargout{6}=cr;
     end
 end
 %\*************************************************************************
@@ -443,25 +401,25 @@ use npg2006
 %Decide on frequencies
 fs=2*pi./(logspace(log10(10),log10(100),50)');
 
-ga=2;
-be=4;
-
 %Compute wavelet transforms using generalized Morse wavelets
-[wx,wy]=wavetrans(real(cx),imag(cx),{1,ga,be,fs,'bandpass'},'mirror');
+[wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
 [wp,wn]=vectmult(tmat,wx,wy);
 
 %Form ridges of component time series
 [ir,jr,wr,fr]=ridgewalk(dt,wn,fs,{1.5,0,'phase'}); 
 [ir2,jr2,wr2,fr2]=ridgewalk(dt,wn,fs,{1.5,0,'amplitude'});
 
-err=vsum(abs(wr{1}-wr2{1}).^2,1)./vsum(abs(wr{1}).^2,1);
+err=vsum(abs(wr-wr2).^2,1)./vsum(abs(wr).^2,1);
 reporttest('RIDGEWALK phase and amplitude signal estimation error for NPG-06',err<1e-3)
 
-[ir,jr,wpr,wnr]=ridgewalk(dt,wp,wn,fs,{3,0});   
-[ir2,jr2,wxr,wyr]=ridgewalk(dt,wx,wy,fs,{3,0});   
-[wpr2,wnr2]=vectmult(tmat,wxr{1},wyr{1});
+[ir,jr,wrpn,fr]=ridgewalk(dt,wp,wn,fs,{3,0});   
+[ir2,jr2,wrxy,fr2]=ridgewalk(dt,wx,wy,fs,{3,0});   
+[wpr2,wnr2]=vectmult(tmat,wrxy(:,1),wrxy(:,2));
 
-err=vmean((abs([wpr{1} wnr{1}]-[wpr2 wnr2])./sqrt(abs([wpr{1} wnr{1}]).^2+abs([wpr2 wnr2])).^2),1);
+wpr=wrpn(:,1);
+wnr=wrpn(:,2);
+
+err=vmean((abs([wpr wnr]-[wpr2 wnr2])./sqrt(abs([wpr wnr]).^2+abs([wpr2 wnr2])).^2),1);
 reporttest('RIDGEWALK XY vs. PN invariance joint ridge for NPG-06',allall(err<1e-10))
 
 %[ir,jr,wr,fr]=ridgewalk(dt,wn(:,1),fs(1),true(size(wn(:,1))),{1.5,0,'phase'}); 

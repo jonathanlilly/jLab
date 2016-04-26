@@ -5,14 +5,17 @@ function[varargout]=trajchunk(varargin)
 %   the length of each chunk is a fixed multiple of the average Coriolis
 %   frequency. This is useful in spectral analysis. 
 %
-%   [NUMO,LATO]=TRAJCHUNK(NUM,LAT,P), where NUM and LAT are arrays of date
-%   number and latitude for float or drifter data, re-organizes these into 
+%   [NUMO,LATO]=TRAJCHUNK(NUM,LAT,P), where NUM and LAT are date number and
+%   latitude for Lagangian float or drifter data, re-organizes these into 
 %   chunks such that the average Coriolis frequency f_C in each chunk is at 
 %   least P times the Rayleigh frequency f_R for that chunk.
 %
 %   Recall that the Rayleigh frequency is f_R=2*pi/(DT*N), in units of 
 %   radians per unit time, where DT is the sample interval and N is the
 %   number of samples.
+%
+%   The input fields NUM and LAT may either be numerical arrays, or 
+%   cell arrays of numerical arrays, e.g. NUM{1}=NUM1, NUM{2}=NUM2, etc.
 %
 %   The output variables NUM and LAT are now cell arrays of numerical
 %   arrays, with each cell is truncated such that its length is just long
@@ -22,26 +25,26 @@ function[varargout]=trajchunk(varargin)
 %   discarded, as are short residual segments at the end of trajectories.   
 %
 %   Each input trajectory is thus split into zero, one, or more than one
-%   cells in the output variables.   
+%   cells in the output variables.     
+%
+%   TRAJCHUNK(...,P,LMIN) additionally specifies a mininum number of points
+%   LMIN for each chunk.  
 %   __________________________________________________________________
 %
-%   Additional options
+%   Multiple input arguments
 %
 %   [NUMO,LATO,Y1,Y2,...,YM]=TRAJCHUNK(NUM,LAT,X1,X2,...XM,N) chunks the M
 %   input arrays X1, X2,... XM in the same manner, and returns these as Y1,
-%   Y2,... YM.  The YM are cell arrays of the same size as NUMO.
+%   Y2,... YM.  The input variables may either all be numerical arrays of 
+%   all the same size, or cell arrays of numerical arrays. 
 %
-%   TRAJCHUNK(...,P,LMIN) also specifies a mininum number of points LMIN
-%   for each chunk.      
+%   In the case of cell array input, some of the XM may be numerical arrays
+%   of the same length as the cells NUM and LAT.  The corresponding output 
+%   variable will then also be a numerical array.  An example of such a
+%   field is the identification number used in FLOATS.MAT and DRIFTERS.MAT. 
 %
 %   TRAJCHUNK with no output arguments overwrites the original named output
 %   variables. 
-%
-%   [..,II]=TRAJCHUNK(...), with an extra final output argument, 
-%   outputs a cell array II of indices to the original time series. 
-%
-%   As an example, LAT(II{1}) gives the latitudes of the data in the first 
-%   cell of the output, LATO{1}.
 %   __________________________________________________________________
 %   
 %   Keeping short data segments
@@ -55,24 +58,6 @@ function[varargout]=trajchunk(varargin)
 %
 %   This preserves the number of data points, while favoring a requested 
 %   length, if possible, from each trajectory. 
-%   __________________________________________________________________
-%
-%   Cell array input 
-%
-%   The input variables NUM and LAT are cell arrays of numerical arrays,
-%   with one trajectory per cell, as with FLOATS.MAT and DRIFTERS.MAT.  For
-%   details on these datasets, see ABOUT_FLOATS and ABOUT_DRIFTERS.
-%
-%   In this case, the output variables are still 1D cell arrays of numeric
-%   arrays.  Chunks drawn from each successive trajectory are appended to 
-%   the end of the output cell arrays.   
-%
-%   [...,II,KK]=TRAJCHUNK(...) in this case also outputs the indices of
-%   the data locations within the input cells.  KK is not a cell array
-%   like the other output arguments, but rather a row array of LENGTH(II).
-%
-%   As an example, LAT(KK(1))(II{1}) gives the latitudes of the data in the 
-%   first cell of the output, LATO{1}.
 %   __________________________________________________________________
 %   
 %   Overlap
@@ -95,6 +80,19 @@ function[varargout]=trajchunk(varargin)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2014--2015 J.M. Lilly --- type 'help jlab_license' for details
  
+
+
+%
+%   [...,II,KK]=TRAJCHUNK(...) in this case also outputs the indices of
+%   the data locations within the input cells.  KK is not a cell array
+%   like the other output arguments, but rather a row array of LENGTH(II).
+
+%   [..,II]=TRAJCHUNK(...), with an extra final output argument, 
+%   outputs a cell array II of indices to the original time series. 
+%
+%   As an example, LAT(II{1}) gives the latitudes of the data in the first 
+%   cell of the output, LATO{1}.
+
 
 %   Equivalently, this means that the inertial period 2*pi/f_C is just less
 %   than 1/M times the chunk duration DT*N, or 2*pi/f_C < (1/M) * (DT*N). 
@@ -153,12 +151,23 @@ if ~iscell(lat)
             end
         end
     end
-else        
-    %Create ii and kk indices
-    for i=1:length(lat)
-        varargin{na+1}{i}=[1:length(lat{i})]';
-        varargin{na+2}{i}=i+0*lat{i};
+else            
+    %/**************
+    %Put numerical array input into cell arrays
+    bid=false(size(varargin));
+    for i=3:length(bid) %Lat and lon are not allowed to be arrays
+        if ~iscell(varargin{i})
+            bid(i)=true;
+            varargin{i}=celladd(varargin{i},cellmult(0,varargin{1}));
+        end
     end
+    %\**************
+    
+%     %Create ii and kk indices
+%     for i=1:length(lat)
+%         varargin{na+1}{i}=[1:length(lat{i})]';
+%         varargin{na+2}{i}=i+0*lat{i};
+%     end
     index=[];
     for i=1:length(lat)
         if length(lat)>1000
@@ -173,20 +182,27 @@ else
         if ~isempty(index{i})
             for k=1:length(index{i})
                 n=n+1;
-                for j=1:na+2
+                for j=1:na
                     varargout{j}{n,1}=varargin{j}{i}(index{i}{k});
                 end
             end
         end
     end
     
-    %i,j,k,n
-    %Convert cell array kk into numeric array
-    temp=varargout{na+2};
-    varargout{na+2}=zeros(1,length(varargout{na+1}));
-    for i=1:length(varargout{na+1})
-        varargout{na+2}(i)=temp{i}(1);
+    %Return numerical array input back to numerical arrays
+    for i=1:length(bid)
+        if bid(i)
+            varargout{i}=cellfirst(varargout{i});
+        end
     end
+    
+%     %i,j,k,n
+%     %Convert cell array kk into numeric array
+%     temp=varargout{na+2};
+%     varargout{na+2}=zeros(size(varargout{na+1}));
+%     for i=1:length(varargout{na+1})
+%         varargout{na+2}(i)=temp{i}(1);
+%     end
 end
 
 
@@ -197,52 +213,54 @@ eval(to_overwrite(na));
 
 
 function[index]=trajchunk_index(num,lat,N,M,opt,factor)
-
-dt=num(2)-num(1);
-
-fo=abs(corfreq(lat))*24;
-meanfo=frac(cumsum(fo),[1:length(fo)]');
-fr=frac(2*pi,dt*[1:length(fo)]');
+if length(num)<2
+    index=[];
+else  
+    dt=num(2)-num(1);
+    
+    fo=abs(corfreq(lat))*24;
+    meanfo=frac(cumsum(fo),[1:length(fo)]');
+    fr=frac(2*pi,dt*[1:length(fo)]');
+    %aresame(meanfo(end),vmean(fo,1))
+    
+    bdone=false;
+    n=0;
+    
+    x=[1:length(fo)]';
+    index=[];
+    while ~bdone
+        ii=max(find(N*fr<meanfo,1,'first'),M);
+        n=n+1;
+        if isempty(ii)||ii>=length(x)
+            bdone=1;
+        else
+            index{n}=x(1:ii);
+            %N*fr(ii)<meanfo(ii)
+            if ii<length(x)
+                x=x(floor(ii*factor)+1:end);
+                fo=fo(floor(ii*factor)+1:end);
+                %fr=fr(ii+1:end)-fr(ii+1)+frac(2*pi,dt);
+                meanfo=frac(cumsum(fo),[1:length(fo)]');
+                fr=frac(2*pi,dt*[1:length(fo)]');
                 %aresame(meanfo(end),vmean(fo,1))
-
-bdone=false;
-n=0;
-
-x=[1:length(fo)]';
-index=[];
-while ~bdone
-    ii=max(find(N*fr<meanfo,1,'first'),M);
-    n=n+1;
-    if isempty(ii)||ii>=length(x)
-        bdone=1;
-    else
-        index{n}=x(1:ii);
-        %N*fr(ii)<meanfo(ii)
-        if ii<length(x)
-            x=x(floor(ii*factor)+1:end);
-            fo=fo(floor(ii*factor)+1:end);
-            %fr=fr(ii+1:end)-fr(ii+1)+frac(2*pi,dt);
-            meanfo=frac(cumsum(fo),[1:length(fo)]');
-            fr=frac(2*pi,dt*[1:length(fo)]');
-            %aresame(meanfo(end),vmean(fo,1))
+            end
+        end
+    end
+    
+    % if ~isempty(index)
+    %     if strcmpi(opt(1:3),'kee')
+    %         index{end}=index{end}(1):x(end);
+    %     end
+    % end
+    
+    if strcmpi(opt(1:3),'kee')
+        if ~isempty(index)
+            index{end}=index{end}(1):x(end);  %Append leftovers
+        else
+            index{1}=x;  %Keep short segments
         end
     end
 end
-
-% if ~isempty(index)
-%     if strcmpi(opt(1:3),'kee')
-%         index{end}=index{end}(1):x(end);
-%     end
-% end
-
-if strcmpi(opt(1:3),'kee')
-    if ~isempty(index)
-        index{end}=index{end}(1):x(end);  %Append leftovers
-    else
-        index{1}=x;  %Keep short segments
-    end
-end
-
 function[]=trajchunk_test
  
 

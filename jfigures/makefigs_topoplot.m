@@ -17,8 +17,8 @@ load ebasnfloats
 use ebasnfloats
 region=[-40.2800  -17.2400   19.1820   41.1340];
 
-figure,cellplot(lon,lat),latratio,axis tight,hold on
-topoplot(region,[-6:1/4:0],-2,'2w'),
+figure,topoplot(region,[-6:1/4:0],-2,'2w'),hold on
+cellplot(lon,lat),latratio,axis tight,
 title('Eastern Basin floats, with bathymetry')
 xlabel('Longitude'),ylabel('Latitude'),boxon
 h=colorbar;

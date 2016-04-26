@@ -4,9 +4,9 @@
 <div><h1>MATERNIMP is the <a href="jmatern.html">jmatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="maternimp.html">MATERNIMP</a>  Impulse response function for the Matern random process.
  
-    [T,G]=<a href="maternimp.html">MATERNIMP</a>(N,ALPHA,H) returns first N points for the impulse 
+    [T,G]=<a href="maternimp.html">MATERNIMP</a>(N,ALPHA,LAMBDA) returns first N points for the impulse 
     response function G for a unit-variance complex-valued Matern process 
-    with slope parameter ALPHA and damping or range parameter H.
+    with slope parameter ALPHA and damping or range parameter LAMBDA.
  
     The impulse response function is also known as the Green's function.
  
@@ -14,15 +14,15 @@
     a very small number, set to EPSILON=1e-6 to avoid the potential for 
     infinite values at T=0 for some parameter settings.  
  
-    The sample interval is taken to be unity.  The damping parameter H is 
-    understood to have units of the inverse of the sample interval.
+    The sample interval is taken to be unity.  The damping parameter LAMBDA
+    is understood to have units of the inverse of the sample interval.
  
-    Note that for H=0, the case of fractional Brownian motion, G is   
+    Note that for LAMBDA=0, the case of fractional Brownian motion, G is   
     formally defined but is not useful because it does not decay. 
  
-    The input parameters ALPHA and H may either be scalars or arrays of the 
-    same length M.  If the latter, then the output autocovariance function
-    R will be a matrix with N rows and M columns. 
+    The input parameters ALPHA and LAMBDA may either be scalars or arrays 
+    of the same length M.  If the latter, then the output autocovariance
+    function R will be a matrix with N rows and M columns. 
  
     See <a href="maternspec.html">MATERNSPEC</a> for a more thorough discussion of the Matern process.
  
@@ -32,16 +32,16 @@
  
     Oscillatory Matern
  
-    <a href="maternimp.html">MATERNIMP</a>(N,ALPHA,C), where C is complex, uses H=REAL(C) for the
+    <a href="maternimp.html">MATERNIMP</a>(N,ALPHA,C), where C is complex, uses LAMBDA=REAL(C) for the
     damping parameter and also sets a rotation frequency to OMEGA=-IMAG(C). 
  
     The associated oscillatory process undergoes rotations at frequency 
-    OMEGA in addition to the damping at timescale 1/H.
+    OMEGA in addition to the damping at timescale 1/LAMBDA.
     __________________________________________________________________
  
     Specified times
  
-    G=<a href="maternimp.html">MATERNIMP</a>(T,ALPHA,H) where the first argument is an *array*
+    G=<a href="maternimp.html">MATERNIMP</a>(T,ALPHA,LAMBDA) where the first argument is an *array*
     rather than a scalar, will alternately return the impulse response at
     the specified times T.  Note T is not output again in this case.
     __________________________________________________________________
@@ -50,8 +50,8 @@
  
     '<a href="maternimp.html">maternimp</a> --t' runs some tests.
  
-    Usage:    [t,G]=<a href="maternimp.html">maternimp</a>(N,alpha,h);
-              G=<a href="maternimp.html">maternimp</a>(t,alpha,h);
+    Usage:    [t,G]=<a href="maternimp.html">maternimp</a>(N,alpha,lambda);
+              G=<a href="maternimp.html">maternimp</a>(t,alpha,lambda);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2013--2015  J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details

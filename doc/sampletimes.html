@@ -13,6 +13,14 @@
  
     IF NUM is a cell array of numerical arrays, the output of SAMPLETIMES
     will be arrays of size LENGTH(NUM) x 1.
+    __________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="sampletimes.html">SAMPLETIMES</a>(NUM,'parallel') parallelizes the computation using a PARFOR 
+    loop.  This requires that Matlab's Parallel Computing Toolbox be 
+    installed, and is useful for very large datasets.
+    __________________________________________________________________
  
     Usage: dt=<a href="sampletimes.html">sampletimes</a>(num); 
            [dt,sigdt,meddt,maxdt]=<a href="sampletimes.html">sampletimes</a>(num);

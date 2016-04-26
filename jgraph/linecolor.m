@@ -2,7 +2,7 @@ function[varargout]=linecolor(varargin)
 %LINECOLOR  Set line colors based on a property value within a colormap.
 %
 %   LINECOLOR(H,C) set the lines with handles H to the colors C, determined
-%   by looking up the values of C within the 'jet' colormap.  
+%   by looking up the values of C within the 'lansey' colormap.  
 %
 %   H and C should be arrays of the same size.
 %
@@ -18,15 +18,17 @@ function[varargout]=linecolor(varargin)
 %          linecolor(h,c,cmin,cmax,map);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 h=varargin{1};
 c=varargin{2};
+c=vswap(c,nan,inf);
+
 if ischar(varargin{end})
     str=varargin{end};
     varargin=varargin(1:end-1);
 else
-    str='jet';
+    str='lansey';
 end
 varargin=varargin(3:end);
 
@@ -42,7 +44,6 @@ map=colormap(str);
 N=size(map,1);
 
 m=frac(N-1,cmax-cmin);
-
 b=1-m*cmin;
 y=ceil(m*c+b);
 
@@ -50,6 +51,9 @@ y(y>N)=N;
 y(y<1)=1;
 
 set(h,'visible','off')
+%get(h(1))
+%y
+
 for i=1:length(h),
     set(h(i),'color',map(y(i),:));
 end

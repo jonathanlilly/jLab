@@ -2,7 +2,8 @@
 %
 % Simple lat / lon conversions
 %   deg180     - Converts degrees to the range [-180,180].                        
-%   deg360     - Converts degrees to the range [0, 360].                          
+%   deg360     - Converts degrees to the range [0, 360].
+%   degunwrap  - Unwraps arrays given in degrees.
 %   jdeg2rad   - Converts degrees to radians.                                     
 %   jrad2deg   - Converts radians to degrees.   
 %

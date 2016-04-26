@@ -6,23 +6,21 @@ function[varargout]=mat2col(varargin)
 %   appends together all the columns into a vector C in which isolated
 %   NANs mark the transitions between columns.
 %
-%   [C1,C2,...]=MAT2COL(M1,M2,...) also works for multiple input 
+%   [C1,C2,...,CN]=MAT2COL(M1,M2,...,MN) also works for multiple input 
 %   matrices of the same size.  In this case the locations of NANs in 
-%   M1 are used as the key for appending all the MI into columns.  
+%   M1 are used as the key for appending all the MN into columns.  
 %  
 %   MAT2COL, COL2MAT, and COLBREAKS together form a system for moving
 %   data with segments of nonuniform length rapidly back and forth
-%   between a column format and a padded-matrix format. CTD or float
-%   data, for instance, can be stored in the (usually much smaller)
-%   column format and converted into the matrix format upon loading.
+%   between a column format and a padded-matrix format.
 %
-%   MAT2COL(M1,M2,...); with no output arguments overwrites the
+%   MAT2COL(M1,M2,...,MN); with no output arguments overwrites the
 %   original input variables.
 %
-%   See also COL2MAT, COLBREAKS, COL2CELL, CELL2COL
+%   See also COL2MAT, COLBREAKS, COL2CELL, CELL2COL.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2013 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details        
   
 %no loops!
 
