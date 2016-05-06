@@ -2,6 +2,14 @@
 %
 %   Changes new in version 1.6.2 (current)
 %
+%   This is a major new release, which includes the following changes:
+%         
+%   Support for a new publication
+%
+%   Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%       motion, the Matern process, and stochastic modeling of turbulent 
+%       dispersion.  Submitted to IEEE Transactions on Information Theory.   
+%
 %   New functions
 %
 %   ncinterp      - Interpolate field from NetCDF file onto specified positions.
@@ -13,10 +21,12 @@
 %
 %   Changes and improvements
 %
-%   DRIFTERS.MAT is now update with data through December 2015.
+%   DRIFTERS.MAT is now updated with data through December 2015.
 %   ABOUT_DRIFTERS contains updated and simplified internal processing.
 %   TPJAOS.MAT updated through November 2015.
 %
+%   TWOSPECPLOT bugfix for omitting tidal lines.
+%   TWOSPECPLOT bugfix swapping Cartesian spectra.
 %   POLYSMOOTH corrected to account for missing data values in sorted input.
 %   TRACKEXTRACT now strips out any empty tracks in the region.
 %   JPCOLOR now works for non-uniformly spaced axis arrays.

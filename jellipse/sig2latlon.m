@@ -3,7 +3,7 @@ function[latres,lonres,lathat,lonhat]=sig2latlon(x,y,lato,lono)
 %
 %   [LATRES,LONRES]=SIG2LATLON(X,Y,LAT,LON) where X and Y are zonal and
 %   meridional displacements, in kilometers, about some time-varying 
-%   position wiht latitude LAT and longitude LON, returns the residuals
+%   position with latitude LAT and longitude LON, returns the residuals
 %   between the signal and the position curve.
 %
 %   [LATRES,LONRES,DLAT,DLON]=SIG2LATLON(X,Y,LAT,LON) also returns the
@@ -31,7 +31,7 @@ function[latres,lonres,lathat,lonhat]=sig2latlon(x,y,lato,lono)
 %          [latres,lonres,dlat,dlon]=sig2latlon(x,y,lat,lon);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if ~isempty(x)
     if ~iscell(x)
@@ -53,7 +53,9 @@ x=real(x);
 y=real(y);
 
 lathat=frac(360,2*pi)*frac(y,radearth);
-lonhat=frac(360,2*pi)*frac(x,radearth*cosd(lato));
+lonhat=deg180(frac(360,2*pi)*frac(x,radearth*cosd(lato)));
 latres=lato-lathat;
-lonres=frac(360,2*pi)*angle(rot(frac(2*pi,360)*(lono-lonhat)));
+lonres=deg180(frac(360,2*pi)*angle(rot(frac(2*pi,360)*(lono-lonhat))));
 
+    
+    

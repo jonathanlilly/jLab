@@ -148,7 +148,7 @@ end
 na=length(varargin);
 
 k=varargin{1};
-l=varargin{2};
+l=real(varargin{2});
 th=varargin{3};
 
 sty{1}='b';

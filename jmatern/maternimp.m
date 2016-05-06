@@ -23,8 +23,11 @@ function[varargout]=maternimp(varargin)
 %
 %   See MATERNSPEC for a more thorough discussion of the Matern process.
 %
-%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-%   "Lagrangian time series models for ocean surface drifter trajectories."
+%   For details on the Matern process and impulse response function, see:
+%
+%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%        motion, the Matern process, and stochastic modeling of turbulent 
+%        dispersion.  Submitted to IEEE Trans. Info. Theory.
 %   __________________________________________________________________
 %
 %   Oscillatory Matern
@@ -43,7 +46,7 @@ function[varargout]=maternimp(varargin)
 %   the specified times T.  Note T is not output again in this case.
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNCOV, MATERNOISE, MATERNFIT.
+%   See also MATERNSPEC, MATERNCOV, MATERNOISE.
 %
 %   'maternimp --t' runs some tests.
 %
@@ -51,10 +54,9 @@ function[varargout]=maternimp(varargin)
 %             G=maternimp(t,alpha,lambda);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015  J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016  J.M. Lilly --- type 'help jlab_license' for details
 
 
- 
 if strcmpi(varargin{1}, '--t')
     maternimp_test,return
 end

@@ -239,15 +239,14 @@ fs=2*pi./(logspace(log10(10),log10(100),50)');
 
 %Compute wavelet transforms using generalized Morse wavelets
 [wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
-[ir,jr,wxr,wyr]=ridgewalk(dt,wx,wy,fs,{3,0});
-cell2col(ir,jr,wxr,wyr);
+[ir,jr,wxr]=ridgewalk(dt,wx,wy,fs,{3,0});
 
-[kappa,lambda,theta,phi]=ellparams(wxr,wyr);
+[kappa,lambda,theta,phi]=ellparams(wxr(:,1),wxr(:,2));
 [ba,bd,bp]=ellband(kappa,lambda,theta,phi);   
-[a,om,upbar]=instmom([wxr wyr],1,2);
+[a,om,upbar]=instmom(wxr,1,2);
 
 
-wr2=permute([wxr wyr],[3 2 1]);
+wr2=permute(wxr,[3 2 1]);
 [kappa2,lambda2,theta2,phi2]=ellparams(wr2(:,1,:),wr2(:,2,:),3);
 [ba2,bd2,bp2]=ellband(kappa2,lambda2,theta2,phi2,3);   
 [a2,om2,upbar2]=instmom(wr2,3,2);
@@ -256,11 +255,6 @@ bool=aresame([kappa2 lambda2 theta2 phi2 ba2 bd2 bp2 a2 om2 upbar2],...
     [kappa lambda theta phi ba bd bp a om upbar]);
 
 reporttest('ELLBAND time running in pages', bool); 
-
-
-%maxmax(abs([kappa2 lambda2 theta2 phi2 ba2 bd2 bp2 a2 om2 upbar2]-[kappa lambda theta phi ba bd bp a om upbar]))
-
-
 
 vindex(upbar,ba,bd,bp,2:length(upbar)-1,1);
 err=vsum((upbar-sqrt(ba.^2+bd.^2+bp.^2)).^2,1)./vsum(upbar.^2,1);

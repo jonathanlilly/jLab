@@ -37,9 +37,8 @@ end
 
 ga=varargin{1};
 be=varargin{2};
-
 if strcmpi(str(1:3),'ban')
-    om=morsefreq(ga,be);          
+    om=morsefreq(ga,be);     
 %    a=frac(2,(om.^be).*exp(-om.^ga));
     a=frac(2,exp(be.*log(om)-om.^ga));
     a(be==0)=2;

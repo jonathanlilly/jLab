@@ -9,23 +9,25 @@ function[varargout]=maternspec(varargin)
 %   same units as the inverse sample interval 1/DT.
 %
 %   F is an array of one-sided (positive) Fourier frequencies for a time
-%   series of length N, F=FOURIER(N).  Note that F is a *radian* frequency. 
+%   series of length N, F=FOURIER(N), where F is a *radian* frequency. 
 %
 %   The lengths of the output variables F and S are N/2+1 for even N, and
 %   (N+1)/2 for odd N.
 %     
-%   S is the postive rotary spectrum given by
+%   S is the postive or negative rotary spectrum given by
 %
-%        S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * C
+%        S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * LAMBDA^(2*ALPHA-1)/C
 %
-%   where C is a normalizing constant dependent upon ALPHA and LAMBDA.  The
-%   negative rotary spectrum takes the same form.
+%   where C is a normalizing constant dependent upon ALPHA.  
 %
-%   For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
+%   For LAMBDA=0, the Matern spectrum is definedreduces to the spectrum of fractional
 %   Brownian motion.  
 %
-%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-%   "Lagrangian time series models for ocean surface drifter trajectories."
+%   For details on the Matern process and its spectrum, see:
+%
+%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%        motion, the Matern process, and stochastic modeling of turbulent 
+%        dispersion.  Submitted to IEEE Trans. Info. Theory.
 %   __________________________________________________________________
 %
 %   Matrix and cell array output
@@ -63,6 +65,15 @@ function[varargout]=maternspec(varargin)
 %   Uhlenbeck process.
 %
 %   Note that NU has units of radians per sample interval DT.
+%
+%   The oscillatory Matern is described in Lilly et al. (2016).
+%   __________________________________________________________________
+%
+%   Experimental extensions
+%
+%   The remaining features are experimental extensions to the Matern 
+%   process.  They are not yet documented in a publication, and should
+%   be considered as 'beta features' that are to be used with caution.
 %   __________________________________________________________________
 %
 %   Extended Matern
@@ -124,9 +135,10 @@ function[varargout]=maternspec(varargin)
 %   SIGMA^2 be interpreted as an approximation to the inertial variance. 
 %   __________________________________________________________________
 %
-%   See also MATERNCOV, MATERNOISE, MATERNFIT, BLURSPEC.
+%   See also MATERNCOV, MATERNIMP, MATERNOISE, BLURSPEC.
 %
 %   'maternspec --f' generates some sample figures.
+%
 %   Tests for MATERNSPEC can be found in MATERNCOV.
 %
 %   Usage:  [f,s]=maternspec(dt,N,sigma,alpha,lambda);
@@ -135,7 +147,7 @@ function[varargout]=maternspec(varargin)
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu,mu);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   No longer supported, sorry
@@ -175,7 +187,6 @@ for i=1:3
         varargin=varargin(1:end-1);
     end
 end
-
 
 if strcmpi(cores(1:3),'par')
     if exist('parpool')~=2

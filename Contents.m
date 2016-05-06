@@ -4,7 +4,7 @@
 %  A data analysis toolbox for Matlab, including routines for big data
 %  analysis, signal processing, mapping, and oceanographic applications.
 %
-%  Requires Matlab version 2014b or later. 
+%  Requires Matlab version 2015a or later. 
 %
 %  Homepage: http://www.jmlilly.net/jmlsoft.html
 %  GitHub: https://github.com/jonathanlilly/jLab

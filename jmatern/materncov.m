@@ -11,13 +11,6 @@ function[varargout]=materncov(varargin)
 %   TAU is an array of time lags at which R is computed, and is given by 
 %   TAU=DT*[0,1,...,N-1].
 %
-%   The Matern autocovariance is given by
-%
-%      R(TAU) = SIGMA^2 * (LAMBDA|TAU|)^(ALPHA-1/2) 
-%                             * BESSELK(ALPHA-1/2,LAMBDA|TAU|) * C
-%
-%   where C is a normalizing constant dependent upon ALPHA and LAMBDA.
-%
 %   By definition, R is one-sided theoretical autocovariance at 
 %   non-negative time lags.  See below for the relationship between this 
 %   and the full, length (2N-1) theoretical autocovariance function. 
@@ -25,8 +18,8 @@ function[varargout]=materncov(varargin)
 %   Note that for LAMBDA=0, the case of fractional Brownian motion, R will 
 %   contain only INFs because the autocovariance function is unbounded.
 %
-%   The input parameters SIGMA, ALPHA, and LAMBDA, may all either be scalars 
-%   of arrays of the same length M.  If the latter, then the output 
+%   The input parameters SIGMA, ALPHA, and LAMBDA, may all either be 
+%   scalars or arrays of the same length M.  If the latter, then the output 
 %   autocovariance function R will be a matrix with N rows and M columns. 
 %
 %   [TAU,R]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) returns the 
@@ -35,8 +28,11 @@ function[varargout]=materncov(varargin)
 %
 %   See MATERNSPEC for a more thorough discussion of the Matern process.
 %
-%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-%   "Lagrangian time series models for ocean surface drifter trajectories."
+%   For details on the Matern process and its autocovariance function, see:
+%
+%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%        motion, the Matern process, and stochastic modeling of turbulent 
+%        dispersion.  Submitted to IEEE Trans. Info. Theory.
 %   __________________________________________________________________
 %
 %   Relationship to full autocovariance
@@ -74,7 +70,7 @@ function[varargout]=materncov(varargin)
 %   resolution errors.  
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNIMP, MATERNOISE, MATERNFIT.
+%   See also MATERNSPEC, MATERNIMP, MATERNOISE.
 %
 %   'materncov --t' runs some tests.
 %
@@ -83,7 +79,7 @@ function[varargout]=materncov(varargin)
 %          [tau,R]=materncov(dt,N,sigma,alpha,lambda,nu,mu,'composite');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015  J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2016  J.M. Lilly --- type 'help jlab_license' for details
 
 %   No longer supported, sorry
 %   __________________________________________________________________

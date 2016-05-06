@@ -17,8 +17,11 @@ function[varargout]=maternoise(varargin)
 %
 %   Note that the process Z is explicitly set to have zero temporal mean. 
 %
-%   For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-%   "Lagrangian time series models for ocean surface drifter trajectories."
+%   For details, including the fast generation method described below, see:
+%
+%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%        motion, the Matern process, and stochastic modeling of turbulent 
+%        dispersion.  Submitted to IEEE Trans. Info. Theory.
 %   __________________________________________________________________
 %
 %   Special cases
@@ -43,13 +46,6 @@ function[varargout]=maternoise(varargin)
 %   Z=MATERNOISE(DT,[N M],SIGMA,ALPHA,...) then gives Z of size N x M x K.
 %   __________________________________________________________________
 %
-%   Fractional Brownian motion
-%
-%   Z=MATERNOISE(DT,N,A,ALPHA,0) simulates a length N complex-valued
-%   fractional Brownian motion, or fBm, process Z having spectral level A^2 
-%   and slope parameter ALPHA. 
-%   __________________________________________________________________
-%
 %   Algorithm
 %
 %   MATERNOISE uses a Cholesky matrix decomposition method which makes the
@@ -63,9 +59,9 @@ function[varargout]=maternoise(varargin)
 %
 %   Fast algorithm 
 %
-%   MATERNOISE(...,'fast') uses a fast, highly accurate approximate 
-%   generation algorithm.  This method works by making use of the known
-%   analytic form for the Matern impulse response function.
+%   MATERNOISE(...,'fast') uses a fast approximate generation algorithm 
+%   described in Lilly et al. (2016).  This method works by making use of 
+%   the known analytic form for the Matern impulse response function.
 %
 %   In the fast algorithm, oversampling is used to ensure that the 
 %   structure of the Green's function is accurately resolved. 
@@ -87,7 +83,7 @@ function[varargout]=maternoise(varargin)
 %          z=maternoise(dt,N,A,alpha,0);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2016  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details
 
 

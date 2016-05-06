@@ -1,4 +1,4 @@
-% CROP_LICENSE  License statement for CROP by Andrew Bliss
+% CROP_LICENSE  License statement for CROP by Andrew Bliss.
 %
 % Copyright (c) 2008, Andrew Bliss
 % All rights reserved.

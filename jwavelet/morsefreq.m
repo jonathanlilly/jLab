@@ -18,9 +18,8 @@ function [fm,fe,fi,cf] = morsefreq(ga,be)
 %   or some may be matrices and the others scalars.   
 %
 %   For BETA=0, the "wavelet" becomes an analytic lowpass filter, and FM 
-%   is not defined in the usual way.  Instead the square root of the second
-%   frequency-domain moment is used.  For the Gaussian or GAMMA=2 case,   
-%   this gives MORSEFREQ(2,0)=1/SQRT(2). 
+%   is not defined in the usual way.  Instead, FM is defined as the point
+%   at which the filter has decayed to one-half of its peak power. 
 %
 %   For details see
 %
@@ -46,12 +45,15 @@ if strcmpi(ga,'--f')
   return
 end
 
-arrayify(be,ga);
 %fm=frac(be,ga).^frac(1,ga)
 fm=exp(frac(1,ga).*(log(be)-log(ga)));
-fm(be==0)=sqrt(3)*sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));
+fm(be==0)=(log(2)).^frac(1,ga(be==0)); %Half-power point
 
 
+%fm(be==0)=sqrt(3)*sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));
+%Instead the square root of the second
+%%   frequency-domain moment is used.  For the Gaussian or GAMMA=2 case,   
+%   this gives MORSEFREQ(2,0)=1/SQRT(2)
 %fm(be==0)=(log(2)).^frac(1,ga(be==0)); %Half-power point
 %length(find(be==0))
 %fm(be==0)=sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));

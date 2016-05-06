@@ -80,7 +80,10 @@ fs=morsespace(ga,be,{0.2,fmax},fmin,8);
 [wx,wy]=wavetrans(real(cx),imag(cx),{ga,be,fs,'bandpass'},'mirror');
 
 %Form ridges of component time series
-[ir,jr,wxr,wyr,fxr,fyr]=ridgewalk(dt,wx,wy,fs,{3,0});   
+[ir,jr,wx,fx]=ridgewalk(dt,wx,wy,fs,{3,0});   
+
+wxr=wx(:,1);wyr=wx(:,2);
+fxr=fx(:,1);fyr=fx(:,2);
 
 %Map into time series locations
 [wrx,frx]=ridgemap(length(cx),wxr,fxr,ir);

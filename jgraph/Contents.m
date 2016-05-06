@@ -48,7 +48,7 @@
 %   ylog       - Sets y-axis scale to log.        
 %
 % Colormaps
-%  lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+%   lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
 %
 % Low-level functions
 %   axeshandles - Returns handles to all axes children.

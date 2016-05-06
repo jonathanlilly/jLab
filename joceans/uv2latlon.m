@@ -166,8 +166,8 @@ bool2=allall(abs(frac(lat-lat2,lat))<5e-6);
 reporttest('UV2LATLON inverts LATLON2UV to within 5e-6 for NPG2006 data, forward algorithm',bool1&&bool2)
 
 [lat2,lon2]=uv2latlon([num num],[cv cv],[lat(1) lat(1)],[lon(1) lon(1)],'forward');
-bool1=allall(abs(frac([lon lon]-lon2,lon))<5e-6);
-bool2=allall(abs(frac([lat lat]-lat2,lat))<5e-6);
+bool1=allall(abs(frac([lon lon]-lon2,[lon lon]))<5e-6);
+bool2=allall(abs(frac([lat lat]-lat2,[lat lat]))<5e-6);
 reporttest('UV2LATLON inverts LATLON2UV to within 5e-6 for NPG2006 data, forward algorithm, matrix input',bool1&&bool2)
 
 

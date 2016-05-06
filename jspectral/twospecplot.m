@@ -26,7 +26,7 @@ function[h]=twospecplot(varargin)
 %   Usage: twospecplot(f,spp,snn)
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2012--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2012--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 str='rotary';
 xlims=[];
@@ -68,7 +68,13 @@ f=varargin{1};
 spp=varargin{2};
 snn=varargin{3};
 
-
+%If Cartesian is input, flip spectra
+if strcmpi(str(1:3),'car')
+    temp=spp;
+    spp=snn;
+    snn=temp;
+end
+    
 if isempty(xlims)
     if ~iscell(f)
         xlims=[minmin(f) maxmax(f)];
@@ -105,6 +111,7 @@ if strcmpi(str(1:3),'rot')
 else
     title('Zonal Spectra')
 end
+xlabel('Radians per Hour')
 
 h(2)=subplot(1,2,2);
 if ~iscell(spp)
@@ -116,7 +123,7 @@ if ~isempty(stylestr)
     linestyle(hl,stylestr);
 end
 set(gca,'YAxisLocation','right'),xlog,ylog,axis tight,ylim(ylims),xlim(xlims),boxon,hold on
-if strcmpi(linestr(1:3),'yes')
+if strcmpi(linestr(1:3),'tid')
     vlines(tidefreq,':'),
 end
 if ~isempty(lat)
@@ -127,6 +134,8 @@ if strcmpi(str(1:3),'rot')
 else
     title('Meridional Spectra')
 end
+xlabel('Radians per Hour')
+
 %h=packfig(1,2,'columns');
 
 if nargout==0

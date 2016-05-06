@@ -3,12 +3,6 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
-%   'jlab_makefigs matern':
-%   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2015). 
-%      Damped fractional Brownian motion, with application to particle
-%      motion in fluid turbulence. Submitted to IEEE Transactions on 
-%      Information Theory.
-%
 %   'jlab_makefigs superfamily':
 %   Lilly, J. M., and S. C. Olhede (2012). Generalized Morse wavelets as a
 %      superfamily of analytic wavelets.  IEEE Transactions on Signal
@@ -61,6 +55,13 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details     
  
+
+%   'jlab_makefigs matern':
+%   Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%       motion, the Matern process, and stochastic modeling of turbulent 
+%       dispersion.  Submitted to IEEE Transactions on Information Theory.
+
+
 if nargin==1
     str='noprint';
 end
@@ -79,6 +80,13 @@ jj=jj+1;names{jj}='matern';
 
 %cd(jlab_settings('dirnames.figures'))
 
+
+dti=get(0,'defaultTextInterpreter');
+dli=get(0,'defaultTextInterpreter');
+set(0,'defaultTextInterpreter','latex')
+set(0,'defaultLegendInterpreter','latex')
+
+
 if strcmpi(namestr(1:3),'all')
     for i=1:length(names)
         eval(['jlab_makefigs_' names{i} '(''' str ''');'])
@@ -91,10 +99,13 @@ else
     end
 end
 
+set(0,'defaultTextInterpreter',dti)
+set(0,'defaultLegendInterpreter',dli)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_matern(str) 
-
+disp('Sorry, making the figures for "matern" is not yet supported.')
+disp('This will be made available when the paper is accepted for publication.')
 
 %END of jlab_makefigs_matern
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -125,8 +136,8 @@ for i=1:5
         linestyle k k-- 1.5k
         hlines(0,'k:'),vlines([-1/2 1/2],'k:')
         if iseven(i+(5-j+1)*5),set(gca,'color',[1 1 1]*0.9),end
-        if j==1,title(['\gamma=' num2str(ga(i),3)]),end
-        if i==1,ylabel(['\beta=' num2str(be(j),3)]),end
+        if j==1,title(['$\gamma=$' num2str(ga(i),3)]),end
+        if i==1,ylabel(['$\beta=$' num2str(be(j),3)]),end
         set(gca,'xtick',[]),set(gca,'ytick',[]),set(gca,'xcolor','w'),set(gca,'ycolor','w')
         set(get(gca,'ylabel'),'color','k')
         if j==5&&i==1,text(-1.8,-0.6,'(a)'),end
@@ -173,8 +184,8 @@ for i=1:5
         linestyle 2k k-.  k 
         vlines(1/512,'k:')
         if iseven(i+(5-j+1)*5),set(gca,'color',[1 1 1]*0.9),end
-        if j==1,title(['\gamma=' num2str(ga(i),3)]),end
-        if i==5,ylabel(['\beta=' num2str(be(j),3)]),end
+        if j==1,title(['$\gamma=$' num2str(ga(i),3)]),end
+        if i==5,ylabel(['$\beta=$' num2str(be(j),3)]),end
         %if i==1,vlines(0,'k'),end
         if j==5&&i==1,text(.0005,0.25,'(b)'),end
     end
@@ -184,7 +195,7 @@ h=reshape(h,5,5);
 for i=1:5
     for j=1:5
         axes(h(i,j))
-        if i==5,ylabel(['\beta=' num2str(be(j),3)]),end
+        if i==5,ylabel(['$\beta=$' num2str(be(j),3)]),end
         set(gca,'xtick',[]),set(gca,'ytick',[]),set(gca,'xcolor','w'),set(gca,'ycolor','w')
         set(get(gca,'ylabel'),'color','k'),set(gca,'yaxislocation','right')
     end
@@ -326,10 +337,10 @@ fixlabels(-1)
 
 hlines(1./0.55,'D')
 title('Wavelet Inverse Heisenberg Area')
-xlabel('Duration P_{\beta,\gamma}/\pi')
-ylabel('Inverse Area 1/A_{\beta,\gamma}')
+xlabel('Duration $P_{\beta,\gamma}/\pi$')
+ylabel('Inverse Area $1/A_{\beta,\gamma}$')
 text(0.07,0.1,'(a)')
-legend('\gamma=1','\gamma=2','\gamma=3','\gamma=4','\gamma=5','\gamma=6','Morlet','location','southeast');
+legend('$\gamma=1$','$\gamma=2$','$\gamma=3$','$\gamma=4$','$\gamma=5$','$\gamma=6$','Morlet','location','southeast');
 
 set(gcf,'paperposition',[1 1 5 4])
 fontsize 12 12 12 12
@@ -344,13 +355,13 @@ hold on, plot(p_morlet./pi,proj_morlet.^2)
 linestyle k k-- 2k 2k-- k-- k-. 4D
 
 title('Wavelet Envelope Versus Gaussian')
-xlabel('Duration P_{\beta,\gamma}/\pi')
+xlabel('Duration $P_{\beta,\gamma}/\pi$')
 ylabel('Squared Inner Product')
 ytick([.92:.01:1]),fixlabels([-1 -2])
 
 text(0.1,0.925,'(b)')
 
-legend('\gamma=1','\gamma=2','\gamma=3','\gamma=4','\gamma=5','\gamma=6','Morlet','location','southeast');
+legend('$\gamma=1$','$\gamma=2$','$\gamma=3$','$\gamma=4$','$\gamma=5$','$\gamma=6$','Morlet','location','southeast');
 
 set(gcf,'paperposition',[1 1 5 4])
 fontsize 12 12 12 12
@@ -1198,10 +1209,10 @@ plot3([0 0],[0 0 ],[0 3],'k','linewidth',1)
 plot3(x(end),y(end),3,'ko','markersize',10,'markerfacecolor','k')
 
 title('Ellipse Schematic in 3D')
-text(0.35,-2,3,'\alpha')
-text(-0.5,-0.7,1.6,'\beta')
-text(.6,.6,.35,'\theta')
-text(-1,-1.2,-.25,'\phi')
+text(0.35,-2,3,'$\alpha$')
+text(-0.5,-0.7,1.6,'$\beta$')
+text(.6,.6,.35,'$\theta$')
+text(-1,-1.2,-.25,'$\phi$')
 
 fontsize 12 10 10 10
 set(gcf,'paperposition',[1 1 4 4])
@@ -1304,20 +1315,20 @@ xax=[0 1700];
 
 figure,
 subplot(4,1,1),plot(t,real([xr xt z])./1e4),yoffset 5,xlim(xax),ylim([-10 37]*.4)
-ylabel('Signal x(t) (\times 10^4)'),linestyle k k k
+ylabel('Signal x(t) ($\times 10^4$)'),linestyle k k k
 title('Characteristics of a Seismic Record')
 text(30,2,'r'),text(30,7,'t'),text(30,12,'v')
 subplot(4,1,2),plot(t,kappa/1e4,'k'),xlim(xax)
-ylabel('Amplitude \kappa(t) (x 10^4)'),ytick([1:5]),ylim([0 22]*2e3/1e4)
+ylabel('Amplitude $\kappa(t)$ ($\times 10^4$)'),ytick([1:5]),ylim([0 22]*2e3/1e4)
 linestyle 2k k-. k
 subplot(4,1,3),plot(t,lambda,'k'),xlim(xax),ylim([0 1]),ytick([0:.2:1])
-ylabel('Linearity \lambda(t)')
+ylabel('Linearity $\lambda(t)$')
 subplot(4,1,4),plot(t,ombar,'k'),xlim(xax),ylim([0 .7])
 for i=1:4
     subplot(4,1,i),vlines(t([1200 2150]),'k:')
     xtick([0:400:2000])
 end
-ylabel('Frequency \omega(t) (rad/sec)')
+ylabel('Frequency $\omega(t)$ (rad/sec)')
 letterlabels(2)
 packfig(4,1,'rows')
 set(gcf,'paperposition',[1 1 4 8])
@@ -1445,7 +1456,7 @@ for i=1:size(x,1)
     end
 end
 
-hlines(1,'k:'),title('Morse Wavelet Decay with \beta>1, 1<\gamma< 6')
+hlines(1,'k:'),title('Morse Wavelet Decay with $\beta>1$, $1<\gamma< 6$')
 xlabel('Derivative Number at Peak Frequency'),ylabel('Normalized Magnitude')
 
 fontsize jpofigure
@@ -1509,7 +1520,7 @@ for i=1:size(xra,2)
     linestyle  1.5k  G k
     axis([-95 num(end) -10 70 ])
     if i==1,ylabel('Velocity (cm/s)'),end
-    title(['Ridge Analysis with \gamma=' int2str(ga(i)) ', \beta=' num2str(be(i))])
+    title(['Ridge Analysis with $\gamma=$' int2str(ga(i)) ', $\beta=$' num2str(be(i))])
     
     subplot(M,N,i+N)
     contourf(num,2*pi./fs,abs(wx(:,:,i)'),ci),caxis([1 25]),colormap gray,flipmap,flipy,ylog,hold on,nocontours
@@ -1521,7 +1532,7 @@ for i=1:size(xra,2)
     subplot(M,N,i+2*N)
     plot(num,fra(:,i),'k'),hold on,plot(num,bra(:,i),'k--')
     axis([-95  num(end) -.5 1.9]),ytick([0:.5:1.5])
-    if i==1,ylabel('\omega(t) & \upsilon(t)'),fixlabels([0 -1]),end
+    if i==1,ylabel('$\omega(t)$ $\&$ $\upsilon(t)$'),fixlabels([0 -1]),end
     hlines(0,'k:')
     
     subplot(M,N,i+3*N)
@@ -1529,7 +1540,7 @@ for i=1:size(xra,2)
     plot(num,frac(bra(:,i),fra(:,i)).^2),%plot(num,[abs(frac(cra(:,i),fra(:,i).^2)) -abs(frac(cra(:,i),fra(:,i).^2))])
     linestyle k G 2k     
     axis([-95  num(end) -.225 .225]),hlines([-1 1]*c(i),'k:')
-    if i==1,ylabel('\rho_2(t) & \rho_1^2(t)'),end  
+    if i==1,ylabel('$\rho_2(t)$ $\&$ $\rho_1^2(t)$'),end  
     
     xlabel('Day of Year 1986')
 end
@@ -1755,8 +1766,8 @@ plot(1.75*rot(xi),'k');
 
 text(1.5,2.3,'a')
 text(-1,0.8,'b')
-text(0.3,2,'\phi')
-text(1.3,0.5,'\theta')
+text(0.3,2,'$\phi$')
+text(1.3,0.5,'$\theta$')
 
 xtick([-3:3]),ytick([-3:3])
 %fixlabels(-1)
@@ -1967,7 +1978,7 @@ for i=2:3
         plot(t,-100*om./2./pi,'w','linewidth',1)
         plot(t,-100*om./2./pi,'k--','linewidth',1),
         ytick(0:1:3),ylim([0 3.2])
-        ylabel('Frequency \omega/(2 \pi) \times 100')
+        ylabel('Frequency $\omega/(2 \pi) \times 100$')
     end
     xtick(-400:200:400)
 end
@@ -2035,15 +2046,15 @@ for j=1:4
 end
 
 
-subplot(4,5,1),title('Cauchy Family (\gamma=1)')
-subplot(4,5,2),title('Gaussian Family (\gamma=2)')
-subplot(4,5,3),title('Airy Family (\gamma=3)')
-subplot(4,5,4),title('Hyper-Gaussian Family (\gamma=4)')
+subplot(4,5,1),title('Cauchy Family ($\gamma=1$)')
+subplot(4,5,2),title('Gaussian Family ($\gamma=2$)')
+subplot(4,5,3),title('Airy Family ($\gamma=3$)')
+subplot(4,5,4),title('Hyper-Gaussian Family ($\gamma=4$)')
 subplot(4,5,5),title('Frequency Domain')
-subplot(4,5,1),text(-1.8,.9,'\beta=0')
-subplot(4,5,6),text(-1.8,.9,'\beta=1')
-subplot(4,5,11),text(-1.8,.9,'\beta=2')
-subplot(4,5,16),text(-1.8,.9,'\beta=3')
+subplot(4,5,1),text(-1.8,.9,'$\beta=0$')
+subplot(4,5,6),text(-1.8,.9,'$\beta=1$')
+subplot(4,5,11),text(-1.8,.9,'$\beta=2$')
+subplot(4,5,16),text(-1.8,.9,'$\beta=3$')
 
 
 packfig(4,5)
@@ -2111,15 +2122,15 @@ h=contour(p./pi,alpha,ga,[2 3 4],'k','linewidth',2);
 h=contour(p./pi,alpha,ga,[2 3 4],'w','linewidth',1);xlog, 
 [p1,a1]=morseprops(1,[(0:.1:100) (101:1:1000) (1000:10:10000)] );
 plot(p1./pi,a1,'k','linewidth',2);
-ylabel('Demodulate Skewness \Im\{\alpha_{3;\beta,\gamma}\}')
-text(0.55,-2,'(a)  \gamma parameter')
+ylabel('Demodulate Skewness $\Im\{\alpha_{3;\beta,\gamma}\}$')
+text(0.55,-2,'(a)  $\gamma$ parameter')
 
 subplot(2,3,2),contour(p./pi,alpha,be,(1:10).^2,'k');xlog,hold on
 h=contour(p./pi,alpha,be,[2 3 4],'k','linewidth',2);xlog,hold on
 h=contour(p./pi,alpha,be,[2 3 4],'w','linewidth',1);xlog,hold on
 contour(p./pi,alpha,be,[1 1],'k','linewidth',2);
 title('Properties of Generalized Morse Wavelets')
-text(0.55,-2,'(b)  \beta Parameter')
+text(0.55,-2,'(b)  $\beta$ Parameter')
 
 subplot(2,3,3),contour(p./pi,alpha,a,(.52:.01:.59),'k');
 xlog,hold on
@@ -2133,8 +2144,8 @@ x=-(frac(fe-fm,fm));x(x>0.2)=0.2;
 contour(p./pi,alpha,x,(0.025:.025:.2),'k','linewidth',2),%
 contour(p./pi,alpha,x,(0.025:.025:.2),'w:','linewidth',1),%
 contour(p./pi,alpha,x,[0 0],'k','linewidth',2),%
-ylabel('Demodulate Skewness \Im\{\alpha_{3;\beta,\gamma}\}')
-xlabel('Duration P_{\beta,\gamma}/\pi')
+ylabel('Demodulate Skewness $\Im\{\alpha_{3;\beta,\gamma}\}$')
+xlabel('Duration $P_{\beta,\gamma}/\pi$')
 %hold on,nocontours
 text(0.55,-2,'(d)  Energy Freq. / Peak Freq. - 1 ')
 
@@ -2145,7 +2156,7 @@ x=-(frac(fi-fm,fm));x(x>0.2)=0.2;
 contour(p./pi,alpha,x,(0.025:.025:.2),'k','linewidth',2),%
 contour(p./pi,alpha,x,(0.025:.025:.2),'w:','linewidth',1),%
 contour(p./pi,alpha,x,[0 0],'k','linewidth',2),%
-xlabel('Duration P_{\beta,\gamma}/\pi')
+xlabel('Duration $P_{\beta,\gamma}/\pi$')
 text(0.55,-2,'(e)  Inst. Freq. / Peak Freq. - 1')
 
 subplot(2,3,6),
@@ -2155,7 +2166,7 @@ x=-frac(1,2*pi)*(cf);x(x>0.2)=0.2;
 contour(p./pi,alpha,x,(0.025:.025:.2),'k','linewidth',2),%
 contour(p./pi,alpha,x,(0.025:.025:.2),'w:','linewidth',1),%
 contour(p./pi,alpha,x,[0 0],'k','linewidth',2),%
-xlabel('Duration P_{\beta,\gamma}/\pi')
+xlabel('Duration $P_{\beta,\gamma}/\pi$')
 text(0.55,-2,'(f)  Frequency Curvature')
 
 for i=1:6
@@ -2295,7 +2306,7 @@ axis([min(num) max(num) 0 25]),vlines(num([L length(cx)-L]),'k:')
 title('Radius and Temperature') ,
 subplot(212)
 plot(num,[t vfilt(t,12) vfilt(t,12)]),linestyle  0.5k 4w 1.5k  
-xlabel('Day of 2001'),ylabel('Temperature ( ^\circ C)'),
+xlabel('Day of 2001'),ylabel('Temperature ( $^\circ$ C)'),
 axis([min(num) max(num) 12.1 12.86 ]),vlines(num([L length(cx)-L]),'k:')
 
 letterlabels(1)
@@ -2433,8 +2444,8 @@ plot(1.5*rot(xi),'k');
 
 text(2,1,'a')
 text(-1,1.1,'b')
-text(1.2,1.2,'\phi')
-text(1.4,0.35,'\theta')
+text(1.2,1.2,'$\phi$')
+text(1.4,0.35,'$\theta$')
 
 %fixlabels(-1)
 fontsize jpofigure
