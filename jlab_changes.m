@@ -1,13 +1,13 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.6.2 (current)
+%   Changes new in version 1.6.2 
 %
 %   This is a major new release, which includes the following changes:
 %         
-%   Support for a new publication
+%   Support for a new publication, see module jMatern:
 %
-%   Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
-%       motion, the Matern process, and stochastic modeling of turbulent 
+%   Lilly, Sykulski, Early, and Olhede (2016).  Fractional Brownian motion,
+%       the Matern process, and stochastic modeling of turbulent 
 %       dispersion.  Submitted to IEEE Transactions on Information Theory.   
 %
 %   New functions

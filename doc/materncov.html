@@ -14,13 +14,6 @@
     TAU is an array of time lags at which R is computed, and is given by 
     TAU=DT*[0,1,...,N-1].
  
-    The Matern autocovariance is given by
- 
-       R(TAU) = SIGMA^2 * (LAMBDA|TAU|)^(ALPHA-1/2) 
-                              * BESSELK(ALPHA-1/2,LAMBDA|TAU|) * C
- 
-    where C is a normalizing constant dependent upon ALPHA and LAMBDA.
- 
     By definition, R is one-sided theoretical autocovariance at 
     non-negative time lags.  See below for the relationship between this 
     and the full, length (2N-1) theoretical autocovariance function. 
@@ -28,8 +21,8 @@
     Note that for LAMBDA=0, the case of fractional Brownian motion, R will 
     contain only INFs because the autocovariance function is unbounded.
  
-    The input parameters SIGMA, ALPHA, and LAMBDA, may all either be scalars 
-    of arrays of the same length M.  If the latter, then the output 
+    The input parameters SIGMA, ALPHA, and LAMBDA, may all either be 
+    scalars or arrays of the same length M.  If the latter, then the output 
     autocovariance function R will be a matrix with N rows and M columns. 
  
     [TAU,R]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) returns the 
@@ -38,8 +31,11 @@
  
     See <a href="maternspec.html">MATERNSPEC</a> for a more thorough discussion of the Matern process.
  
-    For further details, see Sykulski, Olhede, Lilly, and Danioux (2015),
-    "Lagrangian time series models for ocean surface drifter trajectories."
+    For details on the Matern process and its autocovariance function, see:
+ 
+      Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+         motion, the Matern process, and stochastic modeling of turbulent 
+         dispersion.  Submitted to IEEE Trans. Info. Theory.
     __________________________________________________________________
  
     Relationship to full autocovariance
@@ -77,7 +73,7 @@
     resolution errors.  
     __________________________________________________________________
  
-    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>, MATERNFIT.
+    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>.
  
     '<a href="materncov.html">materncov</a> --t' runs some tests.
  
@@ -86,5 +82,5 @@
            [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu,mu,'composite');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2015  J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2013--2016  J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

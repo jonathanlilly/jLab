@@ -282,7 +282,6 @@ zeps=zeps(1:fact:end,:);
 g=zeps(Ne+1:end,:);
 
 
-
 function [z,g,fact]=sim_noise_fast_asymmetric_former(N,M,A,alpha,nu,H)
 
 epsilon=0.01;

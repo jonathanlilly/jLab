@@ -20,6 +20,6 @@ zo=vrep(zo,length(z),1);
 
 figure,
 plot(y+zo*3),axis equal,noxlabels,noylabels
-xlabel('Increasing \alpha \rightarrow'),ylabel('Increasing \lambda \rightarrow')
+xlabel('Increasing $\alpha \rightarrow$'),ylabel('Increasing $\lambda \rightarrow$')
 set(gca,'xticklabel',[]),set(gca,'xticklabel',[])
 title('Example of Matern Processes')

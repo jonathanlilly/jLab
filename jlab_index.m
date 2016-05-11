@@ -1,15 +1,13 @@
 function[]=jlab_index(varargin)
 %JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.
 %
-%JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.
-%
 % JDATA index
 %   about_drifters - Global surface drifter dataset from the Global Drifter Program. 
-%   about_floats   - Historical dataset of eddy-resolving subsurface floats.          
-%   about_ibcao    - International Bathymetric Chart of the Arctic Ocean topography.  
+%   about_floats  - Historical dataset of eddy-resolving subsurface floats.          
+%   about_ibcao   - International Bathymetric Chart of the Arctic Ocean topography.  
 %   about_sandwell - One minute resolution topography data from Smith and Sandwell.  
-%   about_tpjaos   - Sea surface height anomalies from the Beckley merged dataset.    
-%   readtopo       - Read one-minute topography data from Smith and Sandwell.         
+%   about_tpjaos  - Sea surface height anomalies from the Beckley merged dataset.    
+%   readtopo      - Read one-minute topography data from Smith and Sandwell.         
 %   topo_copyright - Copyright statement for the Smith and Sandwell topography.      
 %
 % JLAB index
@@ -62,7 +60,7 @@ function[]=jlab_index(varargin)
 %   commentlines  - Returns the comment lines from m-files.                                               
 %   corfreq       - Coriolis frequency in radians per hour.                                               
 %   crop          - Gets rid of whitespace around an image. [by A. Bliss]                                 
-%   crop_license  - License statement for CROP by Andrew Bliss                                            
+%   crop_license  - License statement for CROP by Andrew Bliss.                                           
 %   cum2mom       - Convert cumulants to moments.                                                         
 %   curveinterp   - Interpolate a field or its gradient onto a set of curves.                             
 %   curvemoments  - Centroid, area, and many other moments of a closed curve.                             
@@ -158,6 +156,7 @@ function[]=jlab_index(varargin)
 %   makefigs_jpcolor - Makes a sample figure for JPCOLOR.                                                 
 %   makefigs_jtopo - Makes a sample figure for ABOUT_JTOPO.                                               
 %   makefigs_lansey - Makes a sample figure for LANSEY.                                                   
+%   makefigs_matern - Makes all figures for Lilly et al. (2016)a.                                         
 %   makefigs_maternoise - Makes a sample figure for MATERNOISE.                                           
 %   makefigs_maternspec - Makes some sample figures for MATERNSPEC.                                       
 %   makefigs_morlfreq - Makes a sample figure for MORLFREQ.                                               
@@ -323,7 +322,7 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                             
 %   yoffset       - Offsets lines in the y-direction after plotting.                                      
 %   ytick         - Sets locations of y-axis tick marks.                                                  
-%   ztick         - Sets locations of z-axis tick marks.                                                  
+%   ztick         - Sets locations of z-axis tick marks. 
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2015--2016 J.M. Lilly --- type 'help jlab_license' for details

@@ -3,6 +3,11 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
+%   'jlab_makefigs matern':
+%   Lilly, Sykulski, Early, and Olhede (2016).  Fractional Brownian motion,
+%       the Matern process, and stochastic modeling of turbulent 
+%       dispersion.  Submitted to IEEE Transactions on Information Theory.
+%
 %   'jlab_makefigs superfamily':
 %   Lilly, J. M., and S. C. Olhede (2012). Generalized Morse wavelets as a
 %      superfamily of analytic wavelets.  IEEE Transactions on Signal
@@ -56,10 +61,6 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details     
  
 
-%   'jlab_makefigs matern':
-%   Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
-%       motion, the Matern process, and stochastic modeling of turbulent 
-%       dispersion.  Submitted to IEEE Transactions on Information Theory.
 
 
 if nargin==1

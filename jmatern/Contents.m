@@ -8,7 +8,7 @@
 %
 % Other utilities
 %   blurspec   - Returns the blurred and aliased spectrum given the autocovariance.
-%   fminsearchbnd: - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
+%   fminsearchbnd  - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
 %
 % Low-level Matern functions
 %   materncfun - Returns the normalization function C_ALPHA for a Matern process.

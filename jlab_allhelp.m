@@ -94,8 +94,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     fillbad    - Linearly interpolate over bad data points.  
 %  
 %   Date, time, and units
-%    yearfrac    - Converts a DATENUM into 'year.fraction' and 'month.fraction'.
-%    cms2kmd     - Converts centimeters per second to kilometers per day.
+%     yearfrac    - Converts a DATENUM into 'year.fraction' and 'month.fraction'.
+%     cms2kmd     - Converts centimeters per second to kilometers per day.
 %   __________________________________________________________________
 % 
 %   jEllipse:  Analysis of modulated elliptical, or bivariate, signals
@@ -177,7 +177,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     ylog       - Sets y-axis scale to log.        
 %  
 %   Colormaps
-%    lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+%     lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
 %  
 %   Low-level functions
 %     axeshandles - Returns handles to all axes children.
@@ -203,7 +203,7 @@ function[varargout]=jlab_allhelp(varargin)
 %  
 %   Other utilities
 %     blurspec   - Returns the blurred and aliased spectrum given the autocovariance.
-%     fminsearchbnd: - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
+%     fminsearchbnd  - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
 %  
 %   Low-level Matern functions
 %     materncfun - Returns the normalization function C_ALPHA for a Matern process.
@@ -220,6 +220,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     ebasnfloats  - "Meddy" float data analyzed in Lilly and Olhede (2009,10,11,12).
 %     npg2006      - Float data analyzed in Lilly and Gascard (2006).
 %     qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
+%     qgmodelfit   - Parameter fits of Matern model to QG turbulence data.
 %     solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
 %     vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
 %   __________________________________________________________________
