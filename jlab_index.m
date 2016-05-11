@@ -44,6 +44,7 @@ function[]=jlab_index(varargin)
 %   cellmean      - Mean value of each element a cell array.                                              
 %   cellmin       - Minimum of each element in a cell array.                                              
 %   cellmult      - Multiplication acting on each element in a cell array.                                
+%   cellpack      - Removes all NaN values from cell arrays of numeric arrays.
 %   cellplot      - Rapidly plot all elements of a cell array of numeric arrays.                          
 %   cellprune     - Removes all empty cells, or cells less than a specified length.                       
 %   cellreal      - Real part of each element in a cell array.                                            

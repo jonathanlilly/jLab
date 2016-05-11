@@ -30,6 +30,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     cellstrip  - Strips NaN values from the beginnings or ends of cell arrays.
 %     cellsplit  - Splits cell arrays of numeric arrays at data gaps.
 %     cellprune  - Removes all empty cells, or cells less than a specified length.
+%     cellpack   - Removes all NaN values from cell arrays of numeric arrays.
 %     cellfill   - Fills missing data marked by NaNs in a cell array.
 %     cellgrid   - Interpolate a cell array of numeric arrays onto a regular grid.
 %     cellfirst  - Returns the first element of each entry in a cell array.

@@ -1,11 +1,6 @@
 function[varargout]=makefigs_matern(str)
 %MAKEFIGS_MATERN  Makes all figures for Lilly et al. (2016)a.
  
-if strcmp(str, '--t')
-    makefigs_matern_test,return
-end
-
-
 %Sorry, maternfit will not be distributed until the paper is accepted.
 
 % %/*************************************************************************

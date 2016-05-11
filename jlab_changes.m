@@ -16,6 +16,7 @@
 %   cellget       - Indexes a cell array of numerical arrays by ID number.
 %   cellimit      - Limits the ranges of times in a cell array of numerical arrays.
 %   cellstd       - Standard deviation of each element a cell array.
+%   cellpack      - Removes all NaN values from cell arrays of numeric arrays.
 %   degunwrap     - Unwraps arrays given in degrees.
 %   trackextract  - Extracts alongtrack altimetry segments within given region.
 %
