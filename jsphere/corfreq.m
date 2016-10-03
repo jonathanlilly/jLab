@@ -29,7 +29,8 @@ else
 end
 
 function[fc]=corfreq_one(lat)
-omega=7.292e-5;
+% omega=7.292e-5;
+omega = 2*pi/(24*60*60);
 fc=2*sind(lat).*omega.*(3600);
 
 function[]=corfreq_test
