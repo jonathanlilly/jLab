@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TRANSMAXDIST is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="transmaxdist.html">TRANSMAXDIST</a>  Distributions of wavelet transform maxima in noise.
+ 
+    This function is part of 'element analysis' described in Lilly (2017), 
+    "Element analysis: a wavelet-based method for analyzing time-localized
+    events in noisy time series", submitted.  Available at www.jmlilly.net.
+   
+    [COUNT,BINS]=<a href="transmax.html">TRANSMAX</a>DIST(GAMMA,BETA,ALPHA,FS,R,N,M) returns the 
+    histogram of wavelet transform maxima magnitudes, for a length N time 
+    series having spectral slope -2*ALPHA transformed at frequencies FS 
+    using a (GAMMA,BETA) wavelet, based on a simulation having N*M points.
+ 
+    Here GAMMA, BETA, ALPHA, and R are all scalars, or are all arrays of 
+    the same length as FS.  FS is a frequency array computed by <a href="morsespace.html">MORSESPACE</a>.
+ 
+    R is the ratio between each frequency FS and the next.  This will be 
+    constant and greater than one when FS is computed by <a href="morsespace.html">MORSESPACE</a>.  As 
+    as described in Appendix C of Lilly (2017), R=FS(n)./FS(n+1) for all n. 
+ 
+    COUNT is the number of transform maxima observed at each frequency in
+    the magnitude bins BINS.  COUNT is a LENGTH(BINS) x LENGTH(FS) matrix.
+ 
+    Transform maxima values, as output in BINS, are normalized such that
+    the expected squared magnitude of the wavelet transform of noise occurs
+    at unity.  BINS thus corresponds to the normalized event magnitude.  
+ 
+    <a href="transmaxdist.html">TRANSMAXDIST</a> works by simulating a vector whose statistical properties 
+    mimic those of the wavelet transform and the four adjacted points, thus 
+    avoiding the need to explicitly compute the transform.  The choice of
+    e.g. M=1000 simulates a transform 1000 times as long as time series of 
+    interest, which itself is of length N. 
+ 
+    [COUNT,BINS,RATE]=<a href="transmax.html">TRANSMAX</a>DIST(...) also returns the RATE, the
+    normalized reversed cumulative density function.  RATE gives the 
+    expected number of transform maxima occuring in a time series of length
+    N having a magnitude greater than the corresponding bin value.
+ 
+    [COUNT,BINS,RATE,SIGMA]=<a href="transmax.html">TRANSMAX</a>DIST(...) also returns the theoretical 
+    covariance matrix SIGMA from which the Monte Carlo simulations are 
+    constructed.  SIGMA is an array of length 5 x 5 x LENGTH(FS). 
+ 
+    Note that if the covariance matrix is not positive definite, as can 
+    happen due to numerical complications for extreme BETA and GAMMA 
+    choices, then COUNT and RATE will both consist entirely of NaNs.
+    _______________________________________________________________________
+ 
+    Additional options
+ 
+    <a href="transmaxdist.html">TRANSMAXDIST</a>(...,BINS) alternately uses BINS for the bin centers 
+    instead of the default choice, which is set to LINSPACE(0,6,400)'.
+ 
+    By default, <a href="transmaxdist.html">TRANSMAXDIST</a> performs a simulation for each of the scale
+    frequencies in FS.  <a href="transmaxdist.html">TRANSMAXDIST</a>(...,'extrapolate') instead computes
+    the distribution only for the highest scale frequency, then 
+    extrapolates these values to all other scale frequencies with a scaling
+    law.  GAMMA, BETA, ALPHA, and R must all be scalars in this case.
+   
+    For details, see Lilly (2017).
+ 
+    See also <a href="maxprops.html">MAXPROPS</a>, <a href="transmax.html">TRANSMAX</a>, <a href="isomax.html">ISOMAX</a>, <a href="max2eddy.html">MAX2EDDY</a>.
+ 
+    '<a href="transmax.html">transmax</a>dist --t' runs some tests.
+ 
+    Usage: [count,bins]=<a href="transmax.html">transmax</a>dist(ga,be,al,fs,r,N,M); 
+           [count,bins,rate,sigma]=<a href="transmax.html">transmax</a>dist(ga,be,al,fs,r,N,M);
+           [count,bins,rate,sigma]=<a href="transmax.html">transmax</a>dist(ga,be,al,fs,r,N,M,'extrap');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

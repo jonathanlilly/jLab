@@ -1,0 +1,76 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>TRANSMAX is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+  <a href="transmax.html">TRANSMAX</a>  Locates modulus maximum points of wavelet transform.
+ 
+    This function is part of 'element analysis' described in Lilly (2017), 
+    "Element analysis: a wavelet-based method for analyzing time-localized
+    events in noisy time series", submitted.  Available at www.jmlilly.net.
+   
+    [INDEX,WW,FF]=<a href="transmax.html">TRANSMAX</a>(FA,W) gives the indicies INDEX, transform values
+    WW, and scale frequencies FF of all the maxima points in time and scale
+    of the wavelet transform W, which has been performed at frequencies FS.
+ 
+    W is oriented with time in rows and different scales or frequencies in
+    its columns, as output by <a href="wavetrans.html">WAVETRANS</a>.  FS is a length SIZE(W,2) array
+    giving the scale frequencies at which the wavelet transform was taken.
+  
+    The output variables are all column arrays.
+ 
+    <a href="transmax.html">TRANSMAX</a> applies a central difference to both rows and columns to 
+    locate maxima, then applies a quadratic interpolation in columns to 
+    obtain a refined estimate of the scale locations.  The output fields FF 
+    and WW represent interpolated values at these refined scale locations.
+    
+    Note that W can have up to four dimensions.  This is useful for
+    datasets containing many replicate time series. Use 
+  
+            [II,JJ,KK,RR]=IND2SUB(SIZE(W),INDEX)
+ 
+    to convert INDEX into row numbers II, column numbers JJ, and so forth.
+ 
+    <a href="transmax.html">TRANSMAX</a>(...,CHI) returns only those maxima points having magnitudes
+    exceeding CHI, i.e. ABS(W)>CHI.  CHI may be a scalar, or an array of
+    length SIZE(W,2).  In the latter case, different cutoffs are applied 
+    to maximum points located in the different columns of W.
+    _______________________________________________________________________
+ 
+    Missing data fraction
+ 
+    <a href="transmax.html">TRANSMAX</a> can also return a measure of how much each detected transform
+    maximum overlaps periods of interpolated or missing data. 
+ 
+    It is sometimes the case that one is interested in transform maxima for
+    time series that have missing data points or gaps.  In this case, one
+    can just interpolate over all the missing data points, pass the
+    interpolated data to <a href="transmax.html">TRANSMAX</a>, and then find the missing data fraction.
+ 
+    [INDEX,WW,FF,RR]=<a href="transmax.html">TRANSMAX</a>(FS,W,{GAMMA,BETA,BOOL}), where the third 
+    input argument is a cell array, returns the missing data fraction RR.  
+    Here BOOL is a boolean variable of the same length as the analyzed time
+    series, which is true if a datapoint was originally missing.  
+  
+    If GAMMA and BETA are the parameters of the Morse wavelet used in the
+    transform, the wavelet time-domain width at scale frequency FS is
+    approximately L=2*SQRT(2)*SQRT(BETA*GAMMA)./FS, see Lilly (2017).
+ 
+    The missing data fraction RR is defined as the ratio of the number of
+    missing points in a window of half-width ROUND(L/2) centered on each
+    maximum, to the total number of points in the window.  Points in the 
+    window but outside the edges of the time series are considered missing.
+ 
+    The missing data fraction can then be used as a constraint to exclude,
+    for example, transform maxima with RR > 0.1 or 10% missing data.
+    _______________________________________________________________________
+ 
+    See also <a href="maxprops.html">MAXPROPS</a>, <a href="transmaxdist.html">TRANSMAXDIST</a>, <a href="isomax.html">ISOMAX</a>, <a href="max2eddy.html">MAX2EDDY</a>.
+ 
+    Usage: [index,ww,ff]=<a href="transmax.html">transmax</a>(fs,w);
+           [index,ww,ff]=<a href="transmax.html">transmax</a>(fs,w,chi);
+           [index,ww,ff,rr]=<a href="transmax.html">transmax</a>(fs,w,{ga,be,bool});
+           [index,ww,ff,rr]=<a href="transmax.html">transmax</a>(fs,w,{ga,be,bool},chi);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,63 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MORSEREGION is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="morseregion.html">MORSEREGION</a>  Generalized Morse wavelet time-frequency concentration region.
+ 
+    <a href="morseregion.html">MORSEREGION</a> computes two different type of time-frequency concentration
+    regions for the generalized Morse wavelets.
+ 
+    This function is part of 'element analysis' described in Lilly (2017), 
+    "Element analysis: a wavelet-based method for analyzing time-localized
+    events in noisy time series", submitted.  Available at www.jmlilly.net.
+    __________________________________________________________________
+ 
+    Localization regions
+ 
+    [T,F]=<a href="morseregion.html">MORSEREGION</a>(A,GAMMA,BETA,FO) returns the localization region of 
+    the generalized Morse wavelets specified by GAMMA and BETA centered on
+    *radian* frequency FO.  The nonnegative number A sets the region area.
+ 
+    T and F are then a parametric curve such that PLOT(T,F) shows the shape
+    of the time-frequency localization region. 
+ 
+    The localization regions are based on a reconstruction of the signal 
+    from a limited inversion region, see Daubechies and Paul (1988) and 
+    Olhede and Walden (2002, 2003a) for details.  
+  
+    Note that the definition of area used here is one-half of that used in
+    Olhede and Walden (2002, 2003a), as we only count positive frequencies.
+    __________________________________________________________________
+ 
+    Regions of influence
+ 
+    [T,F]=<a href="morseregion.html">MORSEREGION</a>(LAMBDA,GAMMA,BETA,MU,FRHO) with five input arguments 
+    returns the contour at which the energy-normalized wavelet transform of
+    another wavelet falls to a fraction LAMBDA of its peak value.
+ 
+    The wavelet we are taking the transform of has parameters GAMMA and MU,
+    and is characterized by a scale frequency FRHO.  We then take the 
+    wavelet transform of this wavelet with a (GAMMA,BETA) wavelet.  Note
+    that this region assumes a 1/S and not a 1/SQRT(S) normalization.
+ 
+    T and F are then a parametric curve such approximating the region where
+    this transform takes on a fraction LAMBDA of its peak value.  This 
+    approximation is formed analytically through a Taylor series expansion.
+ 
+    Note that FRHO is the frequency of the analyzed wavelet, not the 
+    location of the maximum within the transform, which is given by
+ 
+        FO=FRHO*<a href="morsefreq.html">MORSEFREQ</a>(GAMMA,BETA)/<a href="morsefreq.html">MORSEFREQ</a>(GAMMA,MU)*
+                                       ((MU+1)./BETA)^(1/GAMMA).
+ 
+    For futher details, see Lilly (2017).
+    __________________________________________________________________
+ 
+    '<a href="morseregion.html">morseregion</a> --f' generates a sample figure.
+ 
+    Usage: [t,f]=<a href="morseregion.html">morseregion</a>(A,ga,be,fo);
+           [t,f]=<a href="morseregion.html">morseregion</a>(lambda,ga,be,mu,frho);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2006--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

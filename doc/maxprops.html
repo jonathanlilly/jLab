@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MAXPROPS is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="maxprops.html">MAXPROPS</a>  Returns properties of wavelet transform maxima.
+ 
+    This function is part of 'element analysis' described in Lilly (2017), 
+    "Element analysis: a wavelet-based method for analyzing time-localized
+    events in noisy time series", submitted.  Available at www.jmlilly.net.
+ 
+    [C,RHO,FRHO]=<a href="maxprops.html">MAXPROPS</a>(WW,FF,GAMMA,BETA,MU) returns estimated signal
+    properties as inferred from values of the wavelet the transfrom maxima.
+ 
+    A signal believed to consist of rescaled versions of a (GAMMA,MU)
+    generalized Morse wavelet is transformed with a (GAMMA,BETA) wavelet 
+    at frequency levels FS, as output by <a href="wavetrans.html">WAVETRANS</a>.  The transform maxima
+    have values WW and scale frequencies FF, as output by <a href="transmax.html">TRANSMAX</a>.
+    
+    C is the estimated complex-valued coefficients of the (GAMMA,MU)
+    wavelets that are taken to correspond to these maxima, FRHO are their
+    scale frequencies, and RHO are their scales.
+ 
+    The output fields are all arrays having the same length as JJ and WW.
+ 
+    For details, see Lilly (2017).
+ 
+    See also <a href="transmax.html">TRANSMAX</a>, <a href="isomax.html">ISOMAX</a>, <a href="max2eddy.html">MAX2EDDY</a>.
+ 
+    Usage: [C,rho,frho]=<a href="maxprops.html">maxprops</a>(ww,ff,ga,be,mu);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
