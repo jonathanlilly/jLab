@@ -8,35 +8,40 @@ be1=(1:.1:10);
 [ga,be]=meshgrid(ga1,be1);
 
 ompeak=morsefreq(ga,be);
-ommax=morsehigh(ga,be,0.1,10);
+ommax=morsehigh(ga,be,0.01);
 
 figure
-contourf(ga1,be1,(ompeak./ommax),20),colorbar,nocontours
+contourf(ga1,be1,log2(ommax./ompeak),20),colorbar,nocontours,colormap lansey
 
-title('Morse Wavelet  f_{peak} / f_{0.1} )
+title('Morse Wavelet $f_{0.01}/f_{peak}$' )
 xlabel('Gamma Parameter')
 ylabel('Beta Parameter')
 
-%This is the ratio of the peak frequency to the ALPHA=0.1 frequency,
-%that is, the frequency at which the wavelet has decayed to 0.1 of its
-%peak value.  Large values of this ratio mean long high-frequency tails.
+%This is the ratio of the ETA=0.1 frequency, that is, the frequency at 
+%which the wavelet has decayed to 0.1 of its peak value, to the peak 
+%frequency.  Large values of this ratio mean long high-frequency tails.
 
 %Second figure
 ga=3;
 be=4;
-alpha=0.1;
-ompeak=morsefreq(ga,be);
-N=100;
+eta=0.05;
+fhigh=morsehigh(ga,be,eta);
+[psi,morse]=morsewave(1000,ga,be,fhigh);
 
-dom=ompeak/N+zeros(4*N,1);
-om=cumsum(dom,1);
 
-morse=frac(1,2)*morseafun(ga,be).*(om.^be).*exp(-om.^ga);
-fhigh=morsehigh(ga,be,alpha);
+
+ga=1;
+be=1;
+eta=0.05;
+fhigh=morsehigh(ga,be,eta);
+[psi,morse]=morsewave(1000,ga,be,fhigh);
+
+
+
 figure,
-plot(om,morse),xlabel('Radian frequency')
-title('Morse wavelet high-frequency cutoff with \alpha=0.05')
-vlines(fhigh),hlines(.1)
+plot(linspace(0,2*pi,length(morse))',morse),xlabel('Radian frequency')
+title('Morse wavelet high-frequency cutoff with $\eta=0.05$')
+vlines(pi),hlines(2*eta)
 
 
 %Third figure
@@ -80,7 +85,7 @@ p=reshape(p,length(be1),length(ga1));
 %Fourth figure
 figure
 plot(n./L,sqrt(2)*p)
-xlabel('Number of periods to 95% energy')
+xlabel('Number of periods to 95\% energy')
 ylabel('Wavelet duration x sqrt (2)')
 dlines(1)
 

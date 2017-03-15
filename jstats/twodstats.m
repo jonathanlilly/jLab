@@ -489,6 +489,7 @@ reporttest('TWODSTATS fast vs. slow algorithm, std',bool2)
 reporttest('TWODSTATS fast vs. slow algorithm, num',bool3)
 disp(['TWODSTATS fast algorithm was ' num2str(dt2./dt1) ' times faster than direct algorithm.'])
 
+
 if exist('parpool')==2
     [mat3,xmid,ymid,num3,std3]=twodstats(xdata,ydata,zdata,xbin,ybin,'parallel');
     bool=aresame(mat1,mat3,1e-10);
@@ -525,8 +526,6 @@ if exist('histcounts2')==2
     reporttest('TWODSTATS HISTCOUNTS2 vs. JLAB algorithm, with negative bins and NANs, std',bool2)
     reporttest('TWODSTATS HISTCOUNTS2 vs. JLAB algorithm, with negative bins and NANs, num',bool3)
 end
-
-
 
 % use drifters
 % cell2col(lon,lat,cv);

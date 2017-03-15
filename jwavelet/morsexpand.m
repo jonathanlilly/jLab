@@ -45,11 +45,11 @@ function[psi]=morsexpand(varargin)
 %          psi=morsexpand(n,t,gamma,beta,fs);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 
-%   To remove effects of the Taylor series expansion leading to incorrect
-%   values far from the wavelet center, any coefficients exceeding the
+%   To remove effects of the Taylor series expansion leading to incorrectly
+%   high values far from the wavelet center, any coefficients exceeding the
 %   central maximum value by more than five percent are set to NaNs.
 
 if strcmpi(varargin(1), '--t')
@@ -62,7 +62,7 @@ if ischar(varargin{end})
     varargin=varargin(1:end-1);
 end
 
-if length(varargin{1})==1
+if length(varargin)==5
     nmax=varargin{1};
     varargin=varargin(2:end);
 else 
@@ -72,12 +72,8 @@ end
 t=varargin{1};
 ga=varargin{2};
 be=varargin{3};
-%if anyany(be==0)
-%    error('Sorry, BETA must be greater than zero.')
-%end
-if length(varargin)>3
-    fs=varargin{4};
-end
+fs=varargin{4};
+
 psi=zeros(size(t,1),size(t,2),nmax+1);
 if be~=0
     s=morsefreq(ga,be)./fs;
@@ -132,4 +128,5 @@ psi2=morsexpand(t,gamma,beta,fs,'cum');
 err=vsum(abs(psi-psi2).^2,1);
 reporttest('MORSEXPAND moment vs. cumulant',err<tol)
 
+psi=morsexpand(0,gamma,beta,fs,'mom');
 

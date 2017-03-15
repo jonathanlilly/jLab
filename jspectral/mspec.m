@@ -390,6 +390,8 @@ if isempty(y) %One time series
          var=squared(vstd(x,1)); 
          cellout{2}=adaptspec(abs(mmatx).^2,lambda,var).*dt;
      end
+     cellout{3}=zeros(size(cellout{2}));
+     cellout{4}=zeros(size(cellout{2}));
 else         %Two time series
      if lambda==1
         cellout{2}=real(avgspec(mmatx,mmatx)).*dt;

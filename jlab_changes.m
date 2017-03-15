@@ -1,5 +1,56 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.6.3
+%
+%   This is a major new release, which includes the following changes:
+%
+%   Support for a new publication, see module jWavelet:
+%
+%   Lilly (2017).  Element analysis: a wavelet-based method for analyzing
+%      time-localized events in noisy time series. Submitted.  Available at
+%      http://jmlilly.net/jmlpubs.html.
+%
+%   New functions for element analysis using generalized Morse wavelets:
+%
+%   transmax     - Locates modulus maximum points of wavelet transform.
+%   transmaxdist - Distributions of wavelet transform maxima in noise.
+%   morseregion  - Generalized Morse wavelet time-frequency concentration region.
+%   isomax       - Returns those transform maxima that are isolated from others.
+%   maxprops     - Returns properties of wavelet transform maxima.
+%   max2eddy     - Converts transform maxima into oceanic coherent eddy properties.
+%
+%   New function for fast, accurate remapping of non-plaid grids on the sphere:
+%
+%   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.
+%
+%   Updated datasets
+%
+%   drifters.mat  - The global surface drifter dataset from NOAA's Global
+%        Drifter Program, updated through Sept. 2016.  See about_drifters.
+%   tpjaos.mat    - Alongtrack sea surface height anomalies from the 
+%        Beckley dataset, updated through Oct. 12, 2016.  See about_tpjaos.
+% 
+%   Changes and improvements
+%
+%   JPCOLOR now SQUEEZEs input arguments by default. 
+%   POLYSMOOTH improved organization of output arguments, speed improvments,
+%        and improved documentation.
+%   SPHERESORT fixed a bug in the parallelized version that led to a shift
+%        in output arguments if the output included empty latitude bands.  
+%   LATLON2UV improvemented argument handling for matrix input.
+%   NCINTERP now supports input longitudes as [-180,180] or [0, 360].
+%   YEARFRAC now passes Inf values through, as well as NaNs.
+%   ELLIPSEPLOT and LINESTYLE now support the new Matlab colors.
+%   RIDGEWALK now supports cell array input.
+%   READTOPO bugfix for longitude regions spanning 360 degrees.
+%   MORSEHIGH simplifications.
+%   MORSESPACE minor re-definition of low-frequency cutoff parameter.
+%   VSUM modified for backwards compatibility with earlier Matlab versions.
+%   DAWSON has been renamed JDAWSON, to avoid confusion with Matlab's
+%        version in the Symbolic Math Toolbox. 
+%   SLEPTAP added sign check for non-interpolated data tapers.
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.2 
 %
 %   This is a major new release, which includes the following changes:
@@ -7,8 +58,8 @@
 %   Support for a new publication, see module jMatern:
 %
 %   Lilly, Sykulski, Early, and Olhede (2016).  Fractional Brownian motion,
-%       the Matern process, and stochastic modeling of turbulent 
-%       dispersion.  Submitted to IEEE Transactions on Information Theory.   
+%      the Matern process, and stochastic modeling of turbulent dispersion.
+%      Available at http://jmlilly.net/jmlpubs.html.   
 %
 %   New functions
 %
@@ -61,6 +112,8 @@
 %   VMEAN, VSUM, VMOMENT, and VSTD speed improvements.
 %   VMEAN, VSUM, VMOMENT, and VSTD now no longer exclude Infs, only NaNs.
 %
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.1
 %
 %   jLab is now on GitHub at https://github.com/jonathanlilly/jLab.
@@ -75,6 +128,8 @@
 %   SAMPLETIMES bugfix for time series of length one.
 %   SPHEREDIST bugfix for row vectors input.
 %   TOPOPLOT bugfix for vector of depth contours input.
+%
+%   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.6
 %
@@ -180,7 +235,7 @@
 
 help jlab_changes
 
-%   These were help back from version 0.95.
+%   These were held back from version 0.95.
 %
 %   gaussprofile - Wavelet transform profile of a Gaussian with a Gaussian wavelet.
 %   eddycensus   - Census of coherent eddies from streamfunction snapshots.

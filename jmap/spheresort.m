@@ -21,6 +21,8 @@ function[varargout]=spheresort(varargin)
 %   as the corresponding grid points.
 % 
 %   LAT and LON are arrays of the same size into data point locations.
+%   Any NaN values in LAT/LON are ignored.  
+%
 %   LATO and LONO are arrays of length M and N, say, specifying the
 %   latitudes and longitudes of an M x N matrix of grid points, i.e.
 %
@@ -46,19 +48,45 @@ function[varargout]=spheresort(varargin)
 %   Let's say some additional variables Z1, Z2,...,ZK are given at
 %   the data locations LAT, LON.  Then 
 %   
-%   [DS,XS,YS,Z1S,Z2S,...,ZKS]=
-%
-%                SPHERESORT(LAT,LON,Z1,Z2,...,ZK,LATO,LONO,CUTOFF);
+%       [DS,XS,YS,Z1S,Z2S,...,ZKS]=
+%           SPHERESORT(LAT,LON,Z1,Z2,...,ZK,LATO,LONO,CUTOFF);
 %
 %   also returns the sorted values of these variables.
 %
 %   Z1S, Z2S,...,ZKS are the same size as the other output arguments.  
 %   Z1S then gives the value of Z1 at data points no more than CUTOFF 
 %   kilometers from the (m,n)th grid point, etc.
+%   _________________________________________________________________
 %
-%   To output an index into the data point locations, use
-%  
-%   [DS,XS,YS,INDEX]=SPHERESORT(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF).
+%   One grid, many data fields
+%
+%   It is often the case that the field to be mapped, Z, consists of many 
+%   copies of observations at the same LAT/LON points.  For example, X and
+%   Y could be 1-D arrays, and Z a matrix with LENGTH(Z) rows and many(K)
+%   columns.  In this case, the format SPHERESORT(LAT,LON,Z1,Z2,...,ZK...) 
+%   described above is cumbersome, and may lead to memory problems. 
+%
+%   Instead, one can pre-compute the DS, XS, and YS arrays once, and use
+%   these for all K copies of Z. To do this, call SPHERESORT as
+%
+%       [DS,XS,YS,INDEX]=
+%            SPHERESORT(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF)
+%
+%   which outputs an index INDEX into the data point locations, where INDEX
+%   is the same size as the other output arrays.
+%
+%   Then for each of the K copies of Z at the same LAT/LON locations, form 
+%
+%        ZS=NAN*ZEROS(SIZE(XS))
+%        ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)))
+%   
+%   and then use this ZS together with DS, XS, and YS to call POLYSMOOTH.
+%   In this way, SPHERESORT only needs to be called once and not K times.    
+%
+%   When inputting LAT/LON values for which the corresponding data is 
+%   always undefined (e.g., altimeter tracks over land), once should set 
+%   the LAT/LON coordinates of these points to NaNs such that they will be
+%   omitted from DS, XY, YS, and INDEX.
 %   _________________________________________________________________
 %  
 %   Parellel algorithm
@@ -89,7 +117,7 @@ function[varargout]=spheresort(varargin)
 %          [ds,xs,ys,z1s,z2s]=spheresort(lat,lon,z1,z2,lato,lono,cutoff);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2017 J.M. Lilly --- type 'help jlab_license' for details
  
 
 if strcmpi(varargin{1}, '--t')
@@ -145,7 +173,9 @@ end
 for i=1:nargin
     varargout{i}=[];
 end
+
 indexo=find(isfinite(lat)&isfinite(lon));
+
 if ~isempty(indexo)
     vcolon(lat,lon);
     vindex(lat,lon,indexo,1);
@@ -193,7 +223,6 @@ for k=1:length(args)
     temp(nonnani)=args{k}(indexo(indexd(nonnani)));
     varargout{k+3}=temp;
 end
-
 disp('SPHERESORT finished.')
 
 
@@ -223,13 +252,16 @@ end
 N=max(N);
 
 [d,xd,yd,indexd]=vzeros(length(lato),length(lono),N,nan);
-n=0;
+%vsize(dp,xdp,ydp,indexdp)
+
 for i=1:length(dp)
-    d(n+(1:size(dp{i},1)),:,1:size(dp{i},3))=dp{i};
-    xd(n+(1:size(dp{i},1)),:,1:size(dp{i},3))=xdp{i};
-    yd(n+(1:size(dp{i},1)),:,1:size(dp{i},3))=ydp{i};
-    indexd(n+(1:size(dp{i},1)),:,1:size(dp{i},3))=indexdp{i};
-    n=n+size(dp{i},1);
+%    size(dp{i})
+    if numel(dp{i})>0
+        d(a(i):b(i),:,1:size(dp{i},3))=dp{i};
+        xd(a(i):b(i),:,1:size(dp{i},3))=xdp{i};
+        yd(a(i):b(i),:,1:size(dp{i},3))=ydp{i};
+        indexd(a(i):b(i),:,1:size(dp{i},3))=indexdp{i};
+    end
 end
 
 

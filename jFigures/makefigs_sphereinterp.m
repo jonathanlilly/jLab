@@ -7,7 +7,8 @@ load goldsnapshot, use goldsnapshot
 %generate the initial fields, so these are included in file GOLDSNAPSHOT
 %tic;[dx,dy,index,bool,C]=sphereinterp(geolat,geolon,lat,lon,'parallel','periodic');toc;
 
-tic;[ssh,ssh1]=sphereinterp(dx,dy,index,bool,ssho);toc
+%Note, I am storing dx and dy as single-precision just to save space
+tic;[ssh,ssh1]=sphereinterp(double(dx),double(dy),index,bool,ssho);toc
 
 figure
 subplot(1,2,1),jpcolor(lono,lato,ssho),caxis([-250 250])

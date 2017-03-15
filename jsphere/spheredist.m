@@ -57,7 +57,6 @@ else
    R=radearth;
 end
 
-
 if length(varargin)==2
     if ~isvector(varargin{1})||~isvector(varargin{2})
         if ~(aresame(size(varargin{1}),size(varargin{2}))&&(ndims(varargin{1})==2))
@@ -135,6 +134,9 @@ if ~isempty(lat1)&&~isempty(lat2)
     end
 end
 
+bool=isnan(lat1)|isnan(lat2)|isnan(lon1)|isnan(lon2);
+d(bool)=nan;
+
 
 function[d]=spheredist_one(lat1,lon1,lat2,lon2,R,flag)
 
@@ -151,6 +153,8 @@ else
     a1=squared(sind(frac(lat2-lat1,2)));
     a2=cosd(lat1).*cosd(lat2).*squared(sind(frac(lon2-lon1,2)));
     a=squared(sind(frac(lat2-lat1,2)))+cosd(lat1).*cosd(lat2).*squared(sind(frac(lon2-lon1,2)));
+    %maxmax(a)-1
+    a=min(a,1);%Sometimes a can exceed unity at the level of numerical noise
     d=R.*2.*atan2(sqrt(a),sqrt(1-a));
     %a3=squared(sind(frac(lon2-lon1,2)));
     %a3=frac(1,2)*(cosd(lat1-lat2)+cosd(lat1+lat2)).*squared(sind(frac(lon2-lon1,2)));

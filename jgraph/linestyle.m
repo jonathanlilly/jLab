@@ -11,6 +11,11 @@ function[]=linestyle(varargin)
 %
 %   LINESTYLE's color options supports grayscale colors, denoted by capital
 %   letters A--F, with A being white and K being black.  
+%
+%   Also, the new Matlab colors are denoted by the letters T through Z.
+%
+%   LINESTYLE supports a number of predefined formats. Type LINESTYLE with
+%   no arguments to see a list of current style sets. 
 %  
 %   In general the format is 
 %
@@ -32,14 +37,14 @@ function[]=linestyle(varargin)
 %   are actually patches.  If this is not what is desired, call LINESTYLE
 %   with the explicit handle specification below, or else add contour plots
 %   to the current plot after calling LINESTYLE.
-%   _________________________________________________________________
+%   _______________________________________________________________________
 %
 %   Locking and unlocking 
 %
 %   LINESYTLE LOCK and LINESTYLE UNLOCK lock and unlock all axes in the 
 %   current figure.  When LOCK is on, calls to LINESTYLE or LINERING are 
 %   applied to all lines in the current figure.
-%   _________________________________________________________________
+%   _______________________________________________________________________
 %
 %   Handle specification
 %  
@@ -49,19 +54,6 @@ function[]=linestyle(varargin)
 %   LINESTYLE(HAN,STR) also works.
 %
 %   HAN may also be the handle to a group of contours.
-%   _________________________________________________________________
-%
-%   Customization
-%
-%   LINESTYLE permits the use of user-defined colors, such as grayscale 
-%   (capital letters A--K in order of increasing darkness). See 
-%   JLAB_SETTINGS for more details.
-%
-%   LINESTYLE(NAME) or LINESTYLE NAME applies the style set NAME, specified
-%   in the file JLAB_SETTINGS.  This allows one to predefine useful 
-%   combinations of colors, styles, and widths. 
-%
-%   Type LINESTYLE with no arguments to see a list of current style sets. 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details        
@@ -418,14 +410,20 @@ function[linestyles]=linestyle_linestyles
 %  An ellipsis may be used (for C only) to indicate a repeated
 %  last color, thus 'kbgr...' is equivalent to 'krbrrrrrrr...'.
 
+    
 linestyles.colors={'bgrcmy','-',1};
 linestyles.colors2={'bgrcmy','-',2};
 linestyles.colors3={'bgrcmy','-',3};
 linestyles.colors4={'bgrcmy','-',4};
-linestyles.default={'bgrcmyk','-',1};
-linestyles.default2={'bgrcmyk','-',2};
-linestyles.default3={'bgrcmyk','-',3};
-linestyles.default4={'bgrcmyk','-',4};
+%linestyles.default={'bgrcmyk','-',1};
+%linestyles.default2={'bgrcmyk','-',2};
+%linestyles.default3={'bgrcmyk','-',3};
+%linestyles.default4={'bgrcmyk','-',4};
+linestyles.former={'bgrcmyk','-',1};
+linestyles.default={'TUVWXYZ','-',1};
+linestyles.default2={'TUVWXYZ','-',2};
+linestyles.default3={'TUVWXYZ','-',3};
+linestyles.default4={'TUVWXYZ','-',4};
 linestyles.black={'k','-',1};
 linestyles.just1={'bDDDDDD...','-',[2 1 1 1 1 1 1]};
 linestyles.just2={'bgDDDDD...','-',[2 2 1 1 1 1 1]};
@@ -440,7 +438,7 @@ linestyles.groups7={'kkkkkkkbbbbbbbgggggggrrrrrrr','-',1};
 linestyles.groups8={'kkkkkkkkbbbbbbbbggggggggrrrrrrrr','-',1};
 linestyles.groups9={'kkkkkkkkkbbbbbbbbbgggggggggrrrrrrrrr','-',1};
 linestyles.groups10={'kkkkkkkkkkbbbbbbbbbbggggggggggrrrrrrrrrr','-',1};
-linestyles.thick={'bgrcmyk','-',2};
+linestyles.thick={'TUVWXYZ','-',2};
 linestyles.two={'Ek',['- ';'--'],[2 1]};
 linestyles.three={'kEk',['--';'- ';'- '],[2 2 1]};
 linestyles.four={'EkEk',['--';'--';'- ';'- '],[2 1 2 1]};

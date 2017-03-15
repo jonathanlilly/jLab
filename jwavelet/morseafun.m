@@ -1,7 +1,7 @@
 function[a]=morseafun(varargin)
-%MORSEAFUN  Returns the generalized Morse wavelet amplitude "a".
+%MORSEAFUN  Returns the generalized Morse wavelet amplitude or a-function.
 %
-%   MORSEAFUN is a low-level function called by several of the Morse 
+%   MORSEAFUN is a low-level function called by many a number of the Morse
 %   wavelet functions.
 %
 %   A=MORSEAFUN(GAMMA,BETA) returns the generalized Morse wavelet 
@@ -30,7 +30,7 @@ if ischar(varargin{end})
 end
 
 k=1;
-if length(varargin)==3;
+if length(varargin)==3
     k=varargin{1};
     varargin=varargin(2:end);
 end

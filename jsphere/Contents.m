@@ -29,6 +29,9 @@
 %   spheregrad - Gradient of a field on the surface of a sphere.                  
 %   spherelap  - Laplacian of a field on the surface of a sphere.   
 %
+% Interpolation
+%   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.
+%
 % Plotting tools
 %   latratio   - Set plot aspect ratio for latitude / longitude plot.    
 %   lonshift   - Shifts longitude origin for plotting purposes.                   

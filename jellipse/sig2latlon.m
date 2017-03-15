@@ -54,6 +54,10 @@ y=real(y);
 
 lathat=frac(360,2*pi)*frac(y,radearth);
 lonhat=deg180(frac(360,2*pi)*frac(x,radearth*cosd(lato)));
+
+%vswap(lathat,0,nan);
+%vswap(lonhat,0,nan);
+
 latres=lato-lathat;
 lonres=deg180(frac(360,2*pi)*angle(rot(frac(2*pi,360)*(lono-lonhat))));
 

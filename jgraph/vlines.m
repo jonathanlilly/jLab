@@ -15,7 +15,7 @@ function[h]=vlines(x,sty)
 %   See also HLINES, DLINES.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2008 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details    
 
 if strcmpi(x,'--t')
     return
@@ -26,12 +26,14 @@ if nargin==1
 end
 hold on
 
+
 x=x(:)';  
 ax=axis;
 y1=ax(3)*ones(size(x));
 y2=ax(4)*ones(size(x));
 x=[x;x];
 y=[y1;y2];
+y(y==0)=1e-16;
 h=plot(x,y);
 linestyle(h,sty);
 axis(ax)

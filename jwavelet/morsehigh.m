@@ -1,77 +1,69 @@
 function[f]=morsehigh(varargin)
 %MORSEHIGH  High-frequency cutoff of the generalized Morse wavelets.
 %
-%   MORSEHIGH is a low-level function called by MORSESPACE.
+%   MORSEHIGH is a low-level function called by MORSESPACE in order to 
+%   set the high-frequency cutoff of the wavelet transform.
 %
-%   FALPHA=MORSEHIGH(GAMMA,BETA,ALPHA) returns the high frequency cutoff
-%   FALPHA of the generalized Morse wavelet specified by GAMMA and BETA, 
-%   with cutoff level FALPHA.
+%   FHIGH=MORSEHIGH(GAMMA,BETA,ETA) returns the high-frequency cutoff
+%   FHIGH of the generalized Morse wavelet specified by GAMMA and BETA, 
+%   with cutoff level ETA.
 %
-%   Specifically, if PSI is the wavelet and PSIMAX is its maximum value, 
-%   then FALPHA is the highest *radian* frequency at which 
+%   Specifically, FHIGH will give the highest possible radian frequency 
+%   for which the generalized Morse wavelet MORSEWAVE(N,GAMMA,BETA,FHIGH)
+%   will have a greater than ETA times its maximum value at the Nyquist.
+%   Here N is any choice of wavelet length.
 %
-%      PSI(FALPHA)/PSIMAX > ALPHA.
+%   If F=MORSEFREQ(GAMMA,BETA) is the wavelet peak frequency, then 
 %
-%   This gives a way to choose the high-frequency cutoff in the wavelet
-%   transform.  See Lilly and Olhede (2009d) for details. 
+%      PSI(PI*F/FHIGH) <= ETA * PSI(F) 
+%
+%   is the cutoff condition. See Appendix C of Lilly (2017) for details. 
 %  
 %   The input parameters may either all be scalars, or GAMMA and BETA
-%   may be scalars of the same size with scalar ALPHA.
-%   ___________________________________________________________________
-%
-%   Precision vs. speed
-%
-%   MORSEHIGH(..., N) uses 1/N times the peak frequency MORSEFREQ as the
-%   numerical interval.  N=100 is the default; choose a smaller value
-%   for faster speed but diminished precision. 
-%   ___________________________________________________________________
+%   may be arrays of the same size with scalar ALPHA.
 %  
 %   See also MORSEFREQ, MORSEWAVE.
 %
 %   Usage: falpha=morsehigh(ga,be,alpha);
-%          falpha=morsehigh(ga,be,alpha,N);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2017 J.M. Lilly --- type 'help jlab_license' for details
  
-
-gamma=varargin{1};
-beta=varargin{2};
+ga=varargin{1};
+be=varargin{2};
 alpha=varargin{3};
-if nargin>3
-    N=varargin{4};
-end
+
+N=10000;
+omhigh=linspace(0,pi,N)';
+
+f=0*ga;
+for i=1:length(ga(:))
+    om=morsefreq(ga(i),be(i)).*pi./omhigh;
     
-if nargin~=3&&nargin~=4;
-    error('MORSEHIGH takes either three or four input arguments.')
+    %Use logs to avoid errors for really small gammas
+    %Note that ln(2)'s cancel
+    lnpsi1=frac(be(i),ga(i))*log(frac(exp(1)*ga(i),be(i)));
+    lnpsi2=be(i).*log(om)-om.^ga(i);
+    lnpsi=lnpsi1+lnpsi2;
+    index=find(log(alpha)-lnpsi<0,1,'first');
+    
+    %psi=frac(1,2)*morseafun(ga(i),be(i)).*(om.^be(i)).*exp(-om.^ga(i));
+    %index=find(alpha-psi<0,1,'first');
+    %psi(1)
+    %figure,plot(lnpsi),hlines(log(alpha))
+    %index
+    f(i)=omhigh(index);
 end
 
-ompeak=morsefreq(gamma,beta);
-N=100;
+% Faster but only marginally
+% f2=0*ga;
+% om=pi./omhigh;
+% for i=1:length(ga(:))
+%     psi=(om.^be(i)).*exp(-frac(be(i),ga(i))*(om.^ga(i)-1));
+%     index=find(alpha-psi<0,1,'first');
+%     f2(i)=omhigh(index);
+% end
+% aresame(f,f2)
 
-dom=vrep(ompeak/N,10*N,3);
-dom(:,:,1)=ompeak;
-
-ommat=cumsum(dom,3);
-
-amat=vrep(morseafun(gamma,beta),10*N,3);
-betamat=vrep(beta,10*N,3);
-gammamat=vrep(gamma,10*N,3);
-
-morse=frac(1,2)*amat.*(ommat.^betamat).*exp(-ommat.^gammamat);
-
-%The "+0" is to convert the logical into a numerical value
-kk=vsum(0+(morse>alpha),3);
-%temp=zeros(size(morse));
-%temp(morse>alpha)=1;
-%kk=vsum(temp,3);
-
-ii=vrep((1:size(gamma,1))',size(gamma,2),2);
-jj=vrep(1:size(gamma,2),size(gamma,1),1);
-
-index=sub2ind(size(morse),ii,jj,kk);
-
-%f=frac(ommat(index),ompeak);
-f=ommat(index);
 
 

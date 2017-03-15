@@ -8,7 +8,7 @@ function[gradx,grady]=spheregrad(varargin)
 %   meridional directions, respectively, with units of F per meter.
 %
 %   LAT and LON are vectors specifing an evenly-spaced grid, and F is an 
-%   array of size LENGTH(LON) x LENGTH(LAT) x M, where M is greater than or
+%   array of size LENGTH(LAT) x LENGTH(LON) x M, where M is greater than or
 %   equal to one.  LAT and LON are in degrees.
 %
 %   The radius of the Earth as specified by RADEARTH is used by default.
@@ -48,7 +48,7 @@ function[gradx,grady]=spheregrad(varargin)
 %          [fx,fy]=spheregrad(lat,lon,f,R);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2009 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2016 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     spheregrad_test,return

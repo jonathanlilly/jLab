@@ -220,12 +220,9 @@ nani=(~isnan(xnum)&~isnan(ynum));
 if sum(nani(:))>0
     index(nani)=sub2ind([length(ybin)-1,length(xbin)-1],ynum(nani),xnum(nani));
     [indexsorted,sorter]=sort(index(nani));
-    
     [L,ia]=blocklen(indexsorted);
     mat(indexsorted(ia))=L(ia);
 end
-
-
 
 function[mat]=twodhist_slow(xdata,ydata,xbin,ybin)
 mat=zeros(length(ybin),length(xbin));

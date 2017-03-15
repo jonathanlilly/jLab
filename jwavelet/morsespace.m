@@ -15,6 +15,8 @@ function[fs]=morsespace(varargin)
 %
 %   Additional control over the frequency array F can be obtained using the
 %   following alternate usages.
+%
+%   For details on this calculation, see Lilly (2016).
 %   __________________________________________________________________
 %
 %   High- and low-frequency specification
@@ -33,17 +35,17 @@ function[fs]=morsespace(varargin)
 %   The highest frequency can be set to be the minimum of a specified value
 %   and a cutoff frequency based on a Nyquist overlap condition.
 %
-%   F=MORSESPACE(GAMMA,BETA,{ALPHA,HIGH},LOW) sets the highest frequency 
+%   F=MORSESPACE(GAMMA,BETA,{ETA,HIGH},LOW) sets the highest frequency 
 %   to be the minimum of the specified value HIGH, and the largest 
-%   frequency for which the wavelet will satisfy the threshold level ALPHA. 
+%   frequency for which the wavelet will satisfy the threshold level ETA. 
 %
-%   Here ALPHA be a number between zero and one specifying the ratio of a
+%   Here ETA be a number between zero and one specifying the ratio of a
 %   frequency-domain wavelet at the Nyquist frequency to its peak value.
 %
-%   Note that in this usage, {ALPHA,HIGH} is a cell array with two entries.
+%   Note that in this usage, {ETA,HIGH} is a cell array with two entries.
 %
 %   The simplified usage F=MORSESPACE(GAMMA,BETA,N) corresponds to the 
-%   choice ALPHA=0.1, so that by default, the highest-frequency wavelet 
+%   choice ETA=0.1, so that by default, the highest-frequency wavelet 
 %   will decay to at least 10% of its peak value at the Nyquist frequency.
 %   __________________________________________________________________
 %
@@ -52,20 +54,20 @@ function[fs]=morsespace(varargin)
 %   The lowest frequency can be set to a cutoff frequency based on an 
 %   endpoint overlap condition.
 %
-%   F=MORSESPACE(GAMMA,BETA,HIGH,{R,N}) sets the lowest frequency such that
-%   the lowest-frequency wavelet will reach R times its central window
-%   width at the ends of the time series. 
+%   F=MORSESPACE(GAMMA,BETA,HIGH,{P,N}) sets the lowest frequency such that
+%   the lowest-frequency wavelet will reach some number P times its central 
+%   window width at the ends of the time series. 
 %  
-%   A choice of R=SQRT(2) corresponds to roughly 95% of the time-domain 
-%   wavelet energy being contained within the time series endpoints for a
-%   wavelet at the center of the domain.
+%   P is called the packing number.  A choice of P=1 corresponds to 
+%   roughly 95% of the time-domain wavelet energy being contained within 
+%   the time series endpoints for a wavelet at the center of the domain.
 %
-%   F=MORSESPACE(GAMMA,BETA,HIGH,{R,N,LOW}) alternately chooses the maximum 
+%   F=MORSESPACE(GAMMA,BETA,HIGH,{P,N,LOW}) alternately chooses the maximum 
 %   of the R-level cutoff frequency, and a specified low frequency LOW.
 %   
 %   The simplified usage F=MORSESPACE(GAMMA,BETA,N) corresponds to the
-%   default value R=5*SQRT(2).  At the lowest frequency, five wavelets will
-%   then fit into the time series, with 5% energy overlap between them.
+%   default value P=5.  At the lowest frequency, five wavelets will then
+%   fit into the time series, with 5% energy overlap between them.
 %   __________________________________________________________________
 %
 %   Wavelet density
@@ -85,12 +87,12 @@ function[fs]=morsespace(varargin)
 %  
 %   Usage: f=morsespace(ga,be,N);
 %          f=morsespace(ga,be,high,low,D);
-%          f=morsespace(ga,be,{alpha,high},low,D);
-%          f=morsespace(ga,be,{alpha,high},{r,N},D);
-%          f=morsespace(ga,be,{alpha,high},{r,N,low},D);
+%          f=morsespace(ga,be,{eta,high},low,D);
+%          f=morsespace(ga,be,{eta,high},{p,N},D);
+%          f=morsespace(ga,be,{eta,high},{p,N,low},D);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2014 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   Note then when HIGH and LOW are explicitly input, the time series
@@ -124,7 +126,7 @@ if length(varargin)==3
     N=varargin{3};
     
     %Default choices
-    low={sqrt(2)*5,N};
+    low={5,N};
     high={0.1,pi};
 else
     high=varargin{3};
@@ -139,7 +141,8 @@ end
 
 if iscell(high)
     %Recall pi is Nyquist
-    high=min(high{2},pi*frac(morsefreq(ga,be),morsehigh(ga,be,high{1})));
+    high=min(high{2},morsehigh(ga,be,high{1}));
+    %high
 end
 
 if iscell(low)
@@ -165,7 +168,7 @@ fs=high*ones(N+1,1)./r.^[0:N]';
 function[fmin]=morsespace_low(ga,be,r,N)
 
 p=morseprops(ga,be);
-fmin=frac(2*p*r,N);
+fmin=frac(2*sqrt(2)*p*r,N);
 
 function[]=morsespace_test
 morsespace_hightest;
@@ -176,17 +179,18 @@ function[]=morsespace_hightest
 
 ga=3;
 be=4;
-alpha=0.1;
+eta=0.1;
 ompeak=morsefreq(ga,be);
 N=100;
 
 dom=ompeak/N+zeros(4*N,1);
 om=cumsum(dom,1);
 
-morse=frac(1,2)*morseafun(ga,be).*(om.^be).*exp(-om.^ga);
+%morse=frac(1,2)*morseafun(ga,be).*(om.^be).*exp(-om.^ga);
 
-fhigh=morsehigh(ga,be,0.1);
-reporttest('MORSESPACE high-frequency cutoff',aresame(fhigh,om(find(morse>alpha,1,'last')),1e-4))
+fhigh=morsehigh(ga,be,eta);
+[psi,morse] = morsewave(10000,ga,be,fhigh);
+reporttest('MORSESPACE high-frequency cutoff',aresame(morse(end/2)./2,eta,1e-3))
 
 function[]=morsespace_lowtest
 %Test for low-frequency cutoff
@@ -203,13 +207,13 @@ vcolon(ga,be);
 
 psi=zeros(N,length(ga));
 for i=1:length(ga)
-    fs{i}=morsespace(ga(i),be(i),{0.95,pi},{sqrt(2),N/10},4);
+    fs{i}=morsespace(ga(i),be(i),{0.95,pi},{1,N/10},4);
     psi(:,i)=morsewave(N,ga(i),be(i),fs{i}(end),'energy');
 end
-%plot(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)),1))
+plot(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)),1))
 bool=aresame(median(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)))),0.95,0.01);
 
-reporttest('MORSESPACE low-frequency cutoff, SQRT(2)*P approximates 95% energy',bool)
+reporttest('MORSESPACE low-frequency cutoff, P approximates 95% energy',bool)
 
 %fs=morsespace(2,2,10000);
 %psi=morsewave(10000,2,2,fs(end),'energy');

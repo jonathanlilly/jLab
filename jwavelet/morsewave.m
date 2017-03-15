@@ -502,7 +502,7 @@ morsewave_test_centering
 morsewave_test_scorer
 morsewave_test_cauchy
 morsewave_test_gaussian
-morsewave_test_dawson
+morsewave_test_jdawson
 morsewave_test_admiss
 morsewave_test_fft
 
@@ -589,11 +589,11 @@ function[]=morsewave_test_gaussian
 dt=.1;
 t=(-50:dt:50)';
 psi1=morsewave(length(t),1,2,0,morsefreq(2,1).*dt,'bandpass')./dt;
-psi2=frac(1,2*sqrt(pi)).*(exp(-(t/2).^2)+sqrt(-1)*dawson(t/2)*frac(2,sqrt(pi)));
+psi2=frac(1,2*sqrt(pi)).*(exp(-(t/2).^2)+sqrt(-1)*jdawson(t/2)*frac(2,sqrt(pi)));
 err=vsum(abs(psi1-psi2).^2,1)./vsum(abs(psi1).^2,1);
 reporttest('MORSEWAVE for GAMMA=2 wavelet versus Gaussian function expression',err<1e-1)
 
-function[]=morsewave_test_dawson
+function[]=morsewave_test_jdawson
 dt=0.01;
 t=(-15:dt:15)';
 
@@ -604,7 +604,7 @@ g=exp(-frac(t.^2,4));
 
 [psi1,psi2]=vzeros(length(t),5);
 for k=1:5
-    dk=dawson(t/2,k);
+    dk=jdawson(t/2,k);
     coeffk=frac(1,4*sqrt(pi)).*morseafun(2,k).*frac(sqrt(-1),2).^k;
     tic
     psi1(:,k)=morsewave(length(t),1,2,k,morsefreq(2,k).*dt,'bandpass')./dt;

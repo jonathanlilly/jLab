@@ -35,7 +35,7 @@ function[h]=regionplot(varargin)
 %   i.e. REGIONPLOT(REGION,STY,'M_MAP') or REGIONPLOT(REGION,'M_MAP',STY).
 %   __________________________________________________________________
 %
-%   See also INREGION, TRAJEXTRACT, TRACKREGION, TOPOPLOT.
+%   See also INREGION, TRAJEXTRACT, TOPOPLOT.
 %
 %   'regionplot --f' generates some sample figures.
 %
@@ -109,8 +109,8 @@ if ax(1)>180 || deg180(west)>deg180(east)
     west=deg360(west);
     east=deg360(east);
 else 
-    west=deg180(west);
-    east=deg180(east);
+    %west=deg180(west);
+    %east=deg180(east);
 end
 
 bhold=ishold;

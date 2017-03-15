@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>UV2LATLON is the <a href="joceans.html">joceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>UV2LATLON is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="uv2latlon.html">UV2LATLON</a>  Integrates horizontal velocity to give latitude and longitude.
  
     [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,U,V,LATO,LONO) where NUM is the data in DATENUM
@@ -11,9 +11,11 @@
     LATO and LONO are an initial latitude and longitude in degrees,
     and U and V are eastward and northward velocity components in cm/s. 
  
-    NUM, U, and V may be column vectors, in which aase LATO and LONO are 
-    both scalars.  Alternatively, NUM, U, and V may be matrices with time 
-    oriented in rows.  LATO and LONO are then arrays of length SIZE(NUM,1). 
+    NUM, U, and V may be column vectors, in which case LATO and LONO are 
+    both scalars.  Alternatively U and V may be matrices with time oriented
+    in rows.  NUM is then either an array of length SIZE(U,1), or a matrix
+    of the same size as U and V, while LATO and LONO are either scalars or 
+    arrays of length SIZE(U,2). 
  
     [LAT,LON]=<a href="uv2latlon.html">UV2LATLON</a>(NUM,CV,LATO,LONO), where CV is the complex-valued
     velocity CV=U+SQRT(-1)*V, also works.

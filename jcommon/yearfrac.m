@@ -12,6 +12,8 @@ function[yf,mf]=yearfrac(num)
 %
 %   [YF,MF]=YEARFRAC(NUM) also returns MF, the fraction of the current 
 %   month at each date.  FLOOR(MF) is the standard month number. 
+%
+%   Note NaNs and Infs in NUM are passed through to the same values in YF.
 %  
 %   See also DATENUM, DATEVEC.
 %
@@ -47,6 +49,10 @@ if ~isempty(num)
     if ~isempty(index)
         num(index)=0;
     end
+    infindex=find(isinf(num));
+    if ~isempty(infindex)
+        num(infindex)=0;
+    end
 
     [y,mo,d,h,mi,s] = datevec(num);
     
@@ -64,6 +70,10 @@ if ~isempty(num)
     if ~isempty(index)
       yf(index)=nan;
       mf(index)=nan;
+    end
+    if ~isempty(infindex)
+      yf(infindex)=inf;
+      mf(infindex)=inf;
     end
 end
 

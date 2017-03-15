@@ -66,7 +66,20 @@ function[varargout]=polysmooth(varargin)
 %   Note that SPHERESORT and POLYSMOOTH both assume the sphere to be the 
 %   radius of the earth, as specified by the function RADEARTH.
 %   __________________________________________________________________
-%  
+%
+%   Multiple bandwidths
+%
+%   Note that the bandwidth B may be an array, in which case ZHAT, as well
+%   as the other output fields described below, will have LENGTH(B) 'pages'
+%   along their third dimensions.
+%
+%   This can result in a significant speed improvement compared with 
+%   calling POLYSMOOTH by looping over multiple bandwith values.  The 
+%   reason is that POLYSMOOTH performs a computationally expensive initial
+%   sort to remove non-finite values from the grid.  In calling POLYSMOOTH
+%   with an array-valued B, this sort only need to be performed one time.
+%   __________________________________________________________________
+%
 %   Additional options
 %   
 %   A number of different options are possible, as descibed below.  These  
@@ -90,18 +103,99 @@ function[varargout]=polysmooth(varargin)
 %
 %   2) Gaussian weighting:
 %
-%   POLYSMOOTH(...,'gau') uses a Gaussian weighting function instead, with 
-%   a standard deviation of B and truncated, for numerical reasons, at a 
-%   radius of 3B.  
+%   POLYSMOOTH(...,'gau') uses a Gaussian weighting function instead, again
+%   vanishing outside of radius B, and with a standard deviation of B/3. 
+%   That is, the points more than 3-sigma from the center are set to zero.
+%   __________________________________________________________________
 %
-%   When using the Gaussian weighting function you'll need to call TWODSORT
-%   or SPHERESORT with a cutoff distance of at least 3B.
+%   Additional output arguments
+%
+%   [ZHAT,R,N,C]=POLYSMOOTH(...) returns the weighted average distance R of
+%   all the data points used at each grid point, the number N of such data
+%   points, and the condition number C.  All are the same size as ZHAT.
+%
+%   R is computed using the same weighting function as for the mapping. 
+%   Large R values mean that a typical data point contribution was far from
+%   the current grid point, indicated that ZHAT is potentially biased.   
+%
+%   For uniform data spacing with the Epanechnikov kernel, the weighted 
+%   mean radius R is 0.533*B, while for the Gaussian kernel it is 0.410*B.
+%
+%   Small numbers N of enclosed data points means that little averaging was
+%   involved, indicating that the values of ZHAT may be more subject to
+%   variance, and/or less representative, than at points where N is large.
+%
+%   Note that R includes the effect of the additional weighting factor, if
+%   input as described below, whereaas N does not.
+%
+%   The matrix condition number C is computed by COND.  At points where C
+%   is large, the least squares solution may be unstable, and one should 
+%   consider reverting to a lower-order solution.  Note that for zeroth-
+%   order fit with P=0, the matrix condition number is equal to one. 
+%   __________________________________________________________________
+%
+%   Estimated derivatives
+%
+%   As a part of the least squares problem, derivatives of order P and
+%   lower are estimated as a part of the Pth-order fit. 
+%
+%   [ZHAT,R,N,C,ZX,ZY]=POLYSMOOTH(...) with P>1 returns the estimated X and 
+%   Y, or zonal and meridional, derivatives of Z. 
+%
+%   [ZHAT,R,N,C,ZX,ZY,ZXX,ZXY,ZYY]=POLYSMOOTH(...) with P=2 similarly
+%   returns the estimated second partial derivatives of Z.
+%
+%   Derivative fields are set to values of NaNs if they are not explicitly
+%   computed, so for example, [ZHAT,R,N,C,ZX,ZY]=POLYSMOOTH(...) with P=0 
+%   will lead to ZX and ZY being arrays of NaNs of the same size as ZHAT.
+%   __________________________________________________________________
+%
+%   Variable bandwidth
+%
+%   ZHAT=POLYSMOOTH(...,N,P,'variable') uses the parameter N instead of a
+%   fixed bandwidth.  The bandwidth now varies over the grid such that N
+%   points fall within one bandwidth distance from every grid point.
+%   
+%   [ZHAT,R,B,C]=POLYSMOOTH(...,N,P,'variable') returns as its third output 
+%   argument the bandwidth B at each gridpoint rthat than the total number
+%   of data points N.  All other output arguments are unchanged. 
+%
+%   The variable bandwidth algorithm can give good results when the data
+%   spacing is highly uneven, particularly when used with a higher-order
+%   (P=1 or P=2) fit.  
+%
+%   Derivative fields may also be output in this case, as described above.
+%
+%   When using the variable bandwidth method, be aware that the bandwidth
+%   necessary to include N points may turn out to be larger than CUTOFF,
+%   the maximum distance value given to TWODSORT or SPHERESORT.  
+%   __________________________________________________________________
+%
+%   Weighted data points
+%
+%   POLYSMOOTH can incorporate an additional weighting factor on the data
+%   points. Let W be an array of positive values the same size as the data 
+%   array Z.  Each data point is then treated as if it were W data points.
+%
+%   To use weighted data points, call TWODSORT or SPHERESORT with W added:
+%
+%       [DS,XS,YS,ZS,WS]=TWODSORT(X,Y,Z,W,XO,YO,CUTOFF);           
+%    or [DS,XS,YS,ZS,WS]=SPHERESORT(LAT,LON,Z,W,LATO,LONO,CUTOFF); 
+%    
+%   followed by    ZHAT=POLYSMOOTH(DS,XS,YS,ZS,WS,B,P);
+%            or    ZHAT=POLYSMOOTH(DS,XS,YS,ZS,WS,B,P,'sphere');
+%
+%   for data distributed on the plane or on the sphere, respectively.
+%
+%   For very large datasets, this may be useful in first condensing the 
+%   data into a manageable size, or alternatively it may be used to weight
+%   observations according to a measure of their presumed quality.
 %   __________________________________________________________________
 %
 %   Algorithms 
 %
-%   POLYSMOOTH has two algorithm choices for optimal performance, both of 
-%   which give identical answers.
+%   POLYSMOOTH has several algorithm choices for optimal performance, both  
+%   of which give identical answers.
 %
 %   1) Speed optimization
 %
@@ -114,66 +208,9 @@ function[varargout]=polysmooth(varargin)
 % 
 %   2) Memory optimization
 %
-%   If the data is so large that memory becomes a limiting factor, use
-%
-%       ZHAT=POLYSMOOTH(DS,XS,YS,ZS,B,P,'memory');
-%  
-%   which performs an explicit loop. 
-%   __________________________________________________________________
-%
-%   Weighted data points
-%
-%   POLYSMOOTH can also incorporate a weighting factor on the data points.
-%   Let W be an array of positive values the same size as the data array Z.  
-%   Each data point is then treated as if it were W data points.
-%
-%   To use weighted data points, call TWODSORT or SPHERESORT with W added:
-%
-%       [DS,XS,YS,ZS,WS]=TWODSORT(X,Y,Z,W,XO,YO,CUTOFF);           
-%    or [DS,XS,YS,ZS,WS]=SPHERESORT(LAT,LON,Z,W,LATO,LONO,CUTOFF); 
-%    
-%   followed by    ZHAT=POLYSMOOTH(DS,XS,YS,ZS,WS,B,P);
-%            or    ZHAT=POLYSMOOTH(DS,XS,YS,ZS,WS,B,P,'sphere');
-%
-%   for data distributed on the plane or on the sphere, respectively.
-%
-%   For very large datasets, this is useful in first condensing the data
-%   into a manageable size.
-%   __________________________________________________________________
-%
-%   Additional output arguments
-%
-%   [ZHAT,WEIGHT]=POLYSMOOTH(...) also returns the total weight used in 
-%   the computation at each grid point.  WEIGHT is the same size as ZHAT.
-%
-%   Small weights mean that only few or far away data points contributed
-%   to the calculation; therefore, the values of ZHAT at these points
-%   are less reliable than at points where the total weight is large.
-%
-%   [ZHAT,WEIGHT,BETA]=POLYSMOOTH(...) additionally returns the matrix
-%   of the estimated first P derivatives.  BETA is 3D and is the same 
-%   size as ZHAT and WEIGHT along its first two dimensions.
-%
-%   BETA(:,:,1) is the estimated zeroth derivative, i.e. the surface, so
-%   this is the same as ZHAT.
-%   __________________________________________________________________
-%
-%   Variable bandwidth
-%
-%   ZHAT=POLYSMOOTH(...,N,P,'variable') uses the parameter N instead of a
-%   fixed bandwidth.  The bandwidth now varies over the grid such that N
-%   points fall within one bandwidth distance from every grid point.
-%   
-%   [ZHAT,WEIGHT,BETA,B]=POLYSMOOTH(...,N,P,'variable') returns the 
-%   bandwidth B at each grid point, which is the same size as ZHAT.  
-%
-%   The variable bandwidth algorithm can give good results when the data
-%   spacing is highly uneven, particularly when used with a higher-order
-%   (P=1 or P=2) fit.  
-%
-%   When using the variable bandwidth method, be aware that the bandwidth
-%   necessary to include N points may turn out to be larger than CUTOFF,
-%   the maximum distance value given to TWODSORT or SPHERESORT.  
+%   ZHAT=POLYSMOOTH(DS,XS,YS,ZS,B,P,'memory') performs an explicit loop. 
+%   This is mostly used for testing, purposes, but may also be useful if
+%   the dataset is so large that memory becomes a limiting factor.
 %   __________________________________________________________________
 %
 %   'polysmooth --t' runs some tests.
@@ -182,14 +219,26 @@ function[varargout]=polysmooth(varargin)
 %       above, which may require a relatively powerful computer.
 %
 %   Usage:  [ds,xs,ys,zs]=twodsort(x,y,z,xo,yo,cutoff);  
-%           [zhat,weight,beta]=polysmooth(ds,xs,ys,zs,b,p);
+%           zhat=polysmooth(ds,xs,ys,zs,b,p);
+%           [zhat,R,N,C]=polysmooth(ds,xs,ys,zs,b,p);
 %   --or--
 %           [ds,xs,ys,zs]=spheresort(lat,lon,z,w,lato,lono,cutoff); 
-%           [zhat,weight,beta]=polysmooth(ds,xs,ys,zs,b,p,'sphere');
+%           [zhat,R,N,C]=polysmooth(ds,xs,ys,zs,b,p,'sphere');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2017 J.M. Lilly --- type 'help jlab_license' for details
  
+%   This is not helping.  
+%   3) Parallelization
+%
+%   ZHAT=POLYSMOOTH(DS,XS,YS,ZS,B,P,'parallel') parallelizes the
+%   computation using a PARFOR loop, by calling the speed-optimized 
+%   algorithm on subsets of the data.  Its uses more memory that the non-
+%   parallelized speed algorithm, but it can be much faster. 
+%
+%   This requires that Matlab's Parallel Computing toolbox be installed.
+
+
 if strcmpi(varargin{1}, '--t')
     polysmooth_test,return
 elseif strcmpi(varargin{1}, '--f')
@@ -203,7 +252,7 @@ elseif strcmpi(varargin{1}, '--f2')
 end
 
 str='speed';
-kernstr='epanechnicov';
+kernstr='epanechnikov';
 geostr='cartesian';
 varstr='constant';
 
@@ -214,7 +263,7 @@ for i=1:4
             kernstr=tempstr;
         elseif strcmpi(tempstr(1:3),'car')||strcmpi(tempstr(1:3),'sph')
             geostr=tempstr;
-        elseif strcmpi(tempstr(1:3),'spe')||strcmpi(tempstr(1:3),'loo')||strcmpi(tempstr(1:3),'mem')
+        elseif strcmpi(tempstr(1:3),'spe')||strcmpi(tempstr(1:3),'loo')||strcmpi(tempstr(1:3),'mem')||strcmpi(tempstr(1:3),'par')
             str=tempstr;
         elseif strcmpi(tempstr(1:3),'var')||strcmpi(tempstr(1:3),'con')
             varstr=tempstr;
@@ -228,7 +277,7 @@ B=varargin{end-1};
 
 na=length(varargin)-2;
 
-if strcmpi(str(1:3),'spe')||strcmpi(str(1:3),'mem')
+if strcmpi(str(1:3),'spe')||strcmpi(str(1:3),'mem')||strcmpi(str(1:3),'par')
     d=varargin{1};
     x=varargin{2};
     y=varargin{3};
@@ -254,43 +303,69 @@ elseif strcmpi(str(1:3),'loo')
 end
 
 
-%This does in fact speed things up, by about a factor of two.
-%However, it is not strictly necessary.  If you don't sort, then you end
-%up doing a lot of extra operations, because you can't truncate the matrix.
-if anyany(isnan(z))&~strcmpi(str(1:3),'loo')
+%This can speed things up if you have a lot of missing data. If you don't 
+%sort, then you end up doing a lot of extra operations, because you can't 
+%truncate the matrix.
+
+%bool will be true if current point is finite, but previous is not
+bool1=isnan(z);
+bool2=isnan(vshift(z,-1,3));bool2(:,:,1)=false;
+bool=(sum(~bool1&bool2,3)>0)&~(sum(bool1,3)==size(bool1,3));
+
+if anyany(bool)&~strcmpi(str(1:3),'loo')
     disp('Detecting NaNs in Z...  sorting to exclude these points.')
     d(isnan(z))=inf;
     [d,kk]=sort(d,3);
     ii=vrep(vrep([1:size(d,1)]',size(d,2),2),size(d,3),3);
     jj=vrep(vrep([1:size(d,2)],size(d,1),1),size(d,3),3);
     index=sub2ind(size(d),ii,jj,kk);
-    x=x(index);y=y(index);z=z(index);
+    x=x(index);y=y(index);z=z(index);w=w(index);
     disp('Sorting complete.')
 end
 
-if strcmpi(str(1:3),'loo')
-    [beta,weight,B]=polysmooth_slow(x,y,z,w,xo,yo,B,R,varstr,kernstr,geostr);
-elseif strcmpi(str(1:3),'spe')
-    [beta,weight,B]=polysmooth_fast(d,x,y,z,w,B,R,varstr,kernstr);
-elseif strcmpi(str(1:3),'mem')
-    [beta,weight,B]=polysmooth_memory(d,x,y,z,w,B,R,varstr,kernstr);
-else
-    error(['Algorithm type ' str ' is not supported.'])
+for i=1:length(B)
+    if strcmpi(str(1:3),'loo')
+        [beta,rbar,Bmat,numpoints,C]=polysmooth_slow(x,y,z,w,xo,yo,B(i),R,varstr,kernstr,geostr);
+    elseif strcmpi(str(1:3),'spe')
+        [beta,rbar,Bmat,numpoints,C]=polysmooth_fast(d,x,y,z,w,B(i),R,varstr,kernstr);
+    elseif strcmpi(str(1:3),'par')
+        [beta,rbar,Bmat,numpoints,C]=polysmooth_parallel(d,x,y,z,w,B(i),R,varstr,kernstr);
+    elseif strcmpi(str(1:3),'mem')
+        [beta,rbar,Bmat,numpoints,C]=polysmooth_memory(d,x,y,z,w,B(i),R,varstr,kernstr);
+    else
+        error(['Algorithm type ' str ' is not supported.'])
+    end
+    
+    %Adjustment for complex-valued data
+    if ~allall(isreal(z))
+        beta(isnan(real(beta(:))))=nan+sqrt(-1)*nan;
+    end
+    varargout{1}(:,:,i)=beta(:,:,1);
+    varargout{2}(:,:,i)=rbar;
+    if strcmpi(varstr(1:3),'con')  
+        varargout{3}(:,:,i)=numpoints;
+    else
+        varargout{3}(:,:,i)=Bmat;
+    end
+    varargout{4}(:,:,i)=C;
+    if size(beta,3)>=3
+        varargout{5}(:,:,i)=beta(:,:,2);
+        varargout{6}(:,:,i)=beta(:,:,3);
+    else
+        varargout{5}(:,:,i)=beta(:,:,1)*nan;
+        varargout{6}(:,:,i)=beta(:,:,1)*nan;
+    end
+    if size(beta,3)>=6
+        varargout{7}(:,:,i)=beta(:,:,4);
+        varargout{8}(:,:,i)=beta(:,:,5);
+        varargout{9}(:,:,i)=beta(:,:,6);
+    else
+        varargout{7}(:,:,i)=beta(:,:,1)*nan;
+        varargout{8}(:,:,i)=beta(:,:,1)*nan;
+        varargout{9}(:,:,i)=beta(:,:,1)*nan;
+    end
 end
 
-%Adjustment for complex-valued data
-if ~allall(isreal(z))
-    beta(isnan(real(beta(:))))=nan+sqrt(-1)*nan;
-end
-
-varargout{1}=beta(:,:,1);
-varargout{2}=weight;
-varargout{3}=beta;
-varargout{4}=B;
-
-%for k=1:max(size(beta,3),nargout)
-%    varargout{k}=squeeze(beta(:,:,k));
-%end
 
 function[B]=polysmooth_bandwidth(varstr,B,M,N,d,w)
 
@@ -315,7 +390,7 @@ else
     else
         B=nan*zeros(size(d,1),size(d,2));
         cumw=cumsum(double(w),3);
-        for i=1:size(d,1);
+        for i=1:size(d,1)
             for j=1:size(d,2)
                 index=find(cumw(i,j,:)>=N,1,'first');
                 if ~isempty(index)
@@ -326,9 +401,82 @@ else
     end
 end
 
-function[beta,weight,B]=polysmooth_fast(ds,xs,ys,zs,ws,B,R,varstr,kernstr)
 
-tol=1e15;
+
+
+function[beta,rbar,B,numpoints,C]=polysmooth_parallel(ds,xs,ys,zs,ws,B0,R,varstr,kernstr)
+
+
+M=size(xs,1);
+N=size(xs,2);
+
+P=sum(0:R+1);
+
+beta=nan*zeros(M,N,P);
+[rbar,C,B]=vzeros(M,N,nan);
+numpoints=zeros(M,N);
+
+%This way is actually slower than the fast method
+parfor i=1:M
+  [beta(i,:,:),rbar(i,:),B(i,:),numpoints(i,:),C(i,:)]=...
+      polysmooth_fast(ds(i,:,:),xs(i,:,:),ys(i,:,:),zs(i,:,:),ws(i,:,:),B0,R,varstr,kernstr)
+end
+
+% This way tends to make thigns crash
+% pool=gcp;
+% Nworkers=pool.NumWorkers;
+% for i=1:Nworkers
+%     index{i}=i:Nworkers:N;
+% end
+% 
+% Nworkers
+% parfor i=1:length(index)
+%      jj=index{i};
+%      [beta(i,:,:),rbar(i,:),B(i,:),numpoints(i,:),C(i,:)]=...
+%          polysmooth_fast(ds(:,jj,:),xs(:,jj,:),ys(:,jj,:),zs(:,jj,:),ws(:,jj,:),B0,R,varstr,kernstr);
+% end
+
+
+function[beta,rbar,B,numpoints,C]=polysmooth_parallel_former(ds,xs,ys,zs,ws,B0,R,varstr,kernstr)
+
+M=size(xs,1);
+N=size(xs,2);
+
+P=sum(0:R+1);
+
+beta=nan*zeros(M,N,P);
+[rbar,C,B]=vzeros(M,N,nan);
+numpoints=zeros(M,N);
+
+%Find a good number to parallelize by 
+%We will spilt by columns
+pool=gcp;
+Nworkers=pool.NumWorkers;
+for i=1:Nworkers
+    index{i}=i:Nworkers:N;
+end
+%for i=1:16, i:Nworkers:N,end
+
+clear struct labindex
+spmd
+    %Determine the data to send to each worker
+    jj=index{labindex};
+    [betap,rbarp,Bp,numpointsp,Cp]=...
+        polysmooth_fast(ds(:,jj,:),xs(:,jj,:),ys(:,jj,:),zs(:,jj,:),ws(:,jj,:),B0,R,varstr,kernstr);
+end
+
+for i=1:length(betap)
+    jj=index{i};
+    beta(:,jj,:)=betap{i};
+    rbar(:,jj)=rbarp{i};
+    B(:,jj)=Bp{i};
+    numpoints(:,jj)=numpointsp{i};
+    C(:,jj)=Cp{i};
+end
+
+function[beta,rbar,B,numpoints,C]=polysmooth_fast(ds,xs,ys,zs,ws,B,R,varstr,kernstr)
+
+%tol=1e15;
 
 M=size(xs,1);
 N=size(xs,2);
@@ -339,10 +487,10 @@ B=vrep(B,size(xs,3),3);
 
 P=sum(0:R+1);
 
-matcond=zeros(M,N);
+beta=nan*zeros(M,N,P);
+[rbar,C]=vzeros(M,N,nan);
+numpoints=zeros(M,N);
 
-beta=nan*zeros(size(xs,1),size(xs,2),P);
-weight=nan*zeros(size(xs,1),size(xs,2));
 %Initial search to exclude right away points too far away
 ds(ds>B)=nan;
 numgood=squeeze(sum(sum(isfinite(ds),2),1));
@@ -350,40 +498,60 @@ index=find(numgood~=0,1,'last');
 
 if ~isempty(index)
     vindex(ds,xs,ys,zs,ws,B,1:index,3);
-    W=polysmooth_kern_dist(ds,B,kernstr).*ws;  %ws for weighted data ponts
+    W=polysmooth_kern_dist(ds,B,kernstr).*ws;  %ws for weighted data points
     vswap(ds,xs,ys,zs,W,nan,0);%okay
-    weight=sum(W,3);
+    rbar=sum(W.*ds,3)./sum(W,3);
+    numpoints=sum((W>0),3);
     
     X=polysmooth_xmat(xs,ys,R);
     
     XtimesW=X.*vrep(W,P,4);
     mat=zeros(M,N,P,P);
     vect=zeros(M,N,P);
+
+%    vsize(mat,vect)
     for i=1:size(X,4)
-        mat(:,:,:,i)=squeeze(sum(XtimesW.*vrep(X(:,:,:,i),P,4),3));
+%        mat(:,:,:,i)=squeeze(sum(XtimesW.*vrep(X(:,:,:,i),P,4),3));
+        mat(:,:,:,i)=sum(XtimesW.*vrep(X(:,:,:,i),P,4),3);
     end
-    vect=squeeze(sum(XtimesW.*vrep(zs,P,4),3));
-    
+    %vsize(mat,vect)
+    %size(zs)
+    %vect=sum(XtimesW.*vrep(zs,P,3),4);
+    vect=sum(XtimesW.*vrep(zs,P,4),3);
+    vect=permute(vect,[1 2 4 3]);
+    %vect=squeeze(sum(XtimesW.*vrep(zs,P,4),3));
+    %Kludge to prevent over squeezing when we have just one column
+    %if size(mat,2)==1
+    %    vect=permute(vect,[1 3 2 4]);
+    %end
+    %size(mat)
+    %if size(mat,1)==1
+    %    vect=permute(vect,[4 1 2 3]);
+    %end
+   %       vsize(mat,vect)
+
     for i=1:N
         for j=1:M
-            matcond(j,i)=cond(squeeze(mat(j,i,:,:)));
-            if R==1
-                if matcond(j,i).^2>tol
-                    mat(j,i,:,:)=nan;
-                end
-            elseif R==2
-                if matcond(j,i)>tol
-                    mat(j,i,:,:)=nan;
-                end
-            end
+            C(j,i)=cond(squeeze(mat(j,i,:,:)));
+%             if R==1
+%                 if C(j,i).^2>tol
+%                     mat(j,i,:,:)=nan;
+%                 end
+%             elseif R==2
+%                 if C(j,i)>tol
+%                     mat(j,i,:,:)=nan;
+%                 end
+%             end
         end
     end
+    C(isinf(C))=nan;
     
     if P==1
         vswap(mat,0,nan);
         beta=vect./mat;
     else
         
+    %    vsize(mat,vect)
         beta=matmult(matinv(mat),vect,3);
         
         %         sizemat=size(mat);
@@ -402,12 +570,11 @@ if ~isempty(index)
         %         toc
     end
 end
-weight=matcond;
 B=B(:,:,1);
 
-function[beta,weight,B]=polysmooth_memory(d,x,y,z,w,B,R,varstr,kernstr)
+function[beta,rbar,B,numpoints,C]=polysmooth_memory(d,x,y,z,w,B,R,varstr,kernstr)
 
-tol=1e-10;
+%tol=1e-10;
 P=sum(0:R+1);
 
 M=size(x,1);
@@ -416,9 +583,11 @@ N=size(x,2);
 B=polysmooth_bandwidth(varstr,B,M,N,d,w);
 
 beta=nan*zeros(M,N,P);
-weight=nan*zeros(M,N,2);
+[rbar,C]=vzeros(M,N,nan);
+numpoints=zeros(M,N);
+
 for j=1:M
-    disp(['Polysmooth computing map for row ' int2str(j) '.'])
+    %disp(['Polysmooth computing map for row ' int2str(j) '.'])
     for i=1:N
         [dist,xd,yd,zd,wd]=vsqueeze(d(j,i,:),x(j,i,:),y(j,i,:),z(j,i,:),w(j,i,:));
         
@@ -428,23 +597,25 @@ for j=1:M
         if ~isempty(index)
             vindex(xd,yd,zd,wd,index,1);
             
-            weight(j,i)=sum(W(index));
-            W=diag(W(index).*wd);  %Times wd for weighted dat points
+            rbar(j,i)=sum(W(index).*dist(index).*wd)./sum(W(index).*wd);
+            numpoints(j,i)=sum(W(index)>0);
+            W=diag(W(index).*wd);  %Times wd for weighted data points
             
             X=squeeze(polysmooth_xmat(xd,yd,R));
             
             XW=conj(X')*W;
             mat=XW*X;
-            matcond=rcond(mat);
-            if matcond>tol;
+            C(j,i)=cond(mat);
+            %if C(j,i)>tol;
                 %beta(j,i,:)=inv(mat)*XW*zd;
-                beta(j,i,:)=mat\(XW*zd);  %Following Checkcode's suggestion
-            end
+            beta(j,i,:)=mat\(XW*zd);  %Following Checkcode's suggestion
+            %end
         end
     end
 end
 
-function[beta,weight,B]=polysmooth_slow(x,y,z,w,xo,yo,B0,R,varstr,kernstr,geostr)
+
+function[beta,rbar,B,numpoints,C]=polysmooth_slow(x,y,z,w,xo,yo,B0,R,varstr,kernstr,geostr)
 
 %Explicit loop without pre-sorting, for testing purposes only
 M=length(yo);
@@ -452,17 +623,17 @@ N=length(xo);
 
 vsize(x,y,z,xo,yo,B0,R);
 
-tol=1e-10;
+%tol=1e-10;
 P=sum(0:R+1);
 
 beta=nan*zeros(M,N,P);
-weight=nan*zeros(M,N);
-B=nan*zeros(M,N);
+[rbar,B,C]=vzeros(M,N,nan);
+numpoints=zeros(M,N);
 
 for j=1:M
     %Note that the slow method loops over the other direction for sphere
     %than the memory method
-    disp(['Polysmooth computing map for row ' int2str(j) '.'])
+    %disp(['Polysmooth computing map for row ' int2str(j) '.'])
     for i=1:N
         if strcmpi(geostr(1:3),'sph')
             [xd,yd,dist]=latlon2xy(x,y,xo(i),yo(j));
@@ -485,24 +656,28 @@ for j=1:M
             vindex(xd,yd,zd,wd,index,1);
             X=squeeze(polysmooth_xmat(xd,yd,R));
             
-            weight(j,i)=sum(W(index));
+            rbar(j,i)=sum(W(index).*dist(index).*wd)./sum(W(index).*wd);
+            numpoints(j,i)=sum(W(index)>0);
+
             W=diag(W(index).*wd);  %Times wd for weighted data points
             
             XW=conj(X')*W;
             mat=XW*X;
-            matcond=rcond(mat);
-            if matcond>tol;
-                %beta(j,i,:)=inv(mat)*XW*zd;
-                beta(j,i,:)=mat\(XW*zd); %Following Checkcode's suggestion
-            end
+            C(j,i)=cond(mat);
+            %if C(j,i)>tol;
+            %beta(j,i,:)=inv(mat)*XW*zd;
+            beta(j,i,:)=mat\(XW*zd); %Following Checkcode's suggestion
+            %end
         end
     end
 end
 
 if strcmpi(geostr(1:3),'sph')
     beta=permute(beta,[2 1 3]);
-    weight=permute(weight,[2 1]);
+    rbar=permute(rbar,[2 1]);
+    numpoints=permute(numpoints,[2 1]);
     B=permute(B,[2 1]);
+    C=permute(C,[2 1]);
 end
 
 function[X]=polysmooth_xmat(x,y,R)
@@ -549,25 +724,45 @@ function[W]=polysmooth_kern_dist(dist,B,kernstr)
 % else
 %     N=3;
 % end
-N=3;
-
 dist=frac(dist,B);
-
 if strcmpi(kernstr(1:3),'epa')
-    W=frac(2,pi).*(1-dist.^2).*(1+sign(1-dist));
+    %W=frac(2,pi).*(1-dist.^2).*(1+sign(1-dist));
+    W=(1-dist.^2).*(1+sign(1-dist));
 elseif strcmpi(kernstr(1:3),'gau')
-    W=frac(2,pi.*B.^2).*exp(-frac(dist.^2,2)).*(1+sign(1-dist./N));
+    %W=frac(2,pi.*B.^2).*exp(-frac(dist.^2,2)).*(1+sign(1-dist./N));
+    W=exp(-frac((3*dist).^2,2)).*(1+sign(1-dist));
 end
 
 W=vswap(W,nan,0);
 
 function[]=polysmooth_test
 
+% x1=[-2:.001:2];
+% [xg,yg]=meshgrid(x1,x1);
+% r=sqrt(squared(xg)+squared(yg));
+% W1=polysmooth_kern_dist(r,1,'epa');
+% mean(W1(W1>0).*r(W1>0))./mean(W1(W1>0))
+% W2=polysmooth_kern_dist(r,1,'gau');
+% mean(W2(W2>0).*r(W2>0))./mean(W2(W2>0))
+%figure,plot(W1*pi/2)
 polysmooth_test_cartesian;
 polysmooth_test_sphere;
 
 
 function[]=polysmooth_test_cartesian
+% %Use peaks for testing... random assortment
+% [x,y,z]=peaks;
+% index=randperm(length(z(:)));
+% [xdata,ydata,zdata]=vindex(x(:),y(:),z(:),index,1);
+% 
+% xo=(-3:.1:3);
+% yo=(-3:.1:3);
+% 
+% B=1/4;
+% 
+% [ds,xs,ys,zs]=twodsort(xdata,ydata,zdata,xo,yo,B);    
+% tic;z1=polysmooth(xdata,ydata,zdata,xo,yo,B,0,'epan','loop');etime1=toc;
+% 
 
 %Use peaks for testing... random assortment
 [x,y,z]=peaks;
@@ -581,34 +776,42 @@ yo=(-3:.6:3);
 B=2;
 
 [ds,xs,ys,zs]=twodsort(xdata,ydata,zdata,xo,yo,B);    
-tic;z1=polysmooth(xdata,ydata,zdata,xo,yo,B,0,'epan','loop');etime1=toc;
-tic;z2=polysmooth(ds,xs,ys,zs,B,0,'epan','memory');etime2=toc;
-tic;z3=polysmooth(ds,xs,ys,zs,B,0,'epan','speed');etime3=toc;
+tic;[z1,R1,N1,C1]=polysmooth(xdata,ydata,zdata,xo,yo,B,0,'epan','loop');etime1=toc;
+tic;[z2,R2,N2,C2]=polysmooth(ds,xs,ys,zs,B,0,'epan','memory');etime2=toc;
+tic;[z3,R3,N3,C3]=polysmooth(ds,xs,ys,zs,B,0,'epan','speed');etime3=toc;
+tic;[z4,R4,N4,C4]=polysmooth(ds,xs,ys,zs,B,0,'epan','parallel');etime4=toc;
 
 disp(['POLYSMOOTH was ' num2str(etime1./etime3) ' times faster than loop, constant fit.'])
 disp(['POLYSMOOTH was ' num2str(etime2./etime3) ' times faster than memory method, constant fit.'])
+%disp(['POLYSMOOTH was ' num2str(etime3./etime4) ' times faster with parallelization, constant fit.'])
 
 tol=1e-8;
-b1=aresame(z1,z3,tol);
-b2=aresame(z2,z3,tol);
+b1=aresame(z1,z3,tol)&&aresame(R1,R3,tol)&&aresame(N1,N3,tol)&&aresame(C1,C3,tol);
+b2=aresame(z2,z3,tol)&&aresame(R2,R3,tol)&&aresame(N2,N3,tol)&&aresame(C2,C3,tol);
+b3=aresame(z4,z3,tol)&&aresame(R4,R3,tol)&&aresame(N4,N3,tol)&&aresame(C4,C3,tol);
 
 reporttest('POLYSMOOTH output size matches input size',aresame(size(z1),[size(xs,1) size(xs,2)]))
 reporttest('POLYSMOOTH speed and loop methods are identical for constant fit',b1)
 reporttest('POLYSMOOTH speed and memory methods are identical for constant fit',b2)
+reporttest('POLYSMOOTH speed and parallel methods are identical for constant fit',b3)
 
-tic;[z1,w1,beta1]=polysmooth(xdata,ydata,zdata,xo,yo,B,1,'epan','loop');etime1=toc;
-tic;[z2,w2,beta2]=polysmooth(ds,xs,ys,zs,B,1,'epan','memory');etime2=toc;
-tic;[z3,w3,beta3]=polysmooth(ds,xs,ys,zs,B,1,'epan','speed');etime3=toc;
+tic;[z1,R1,N1,C1,zx1,zy1]=polysmooth(xdata,ydata,zdata,xo,yo,B,1,'epan','loop');etime1=toc;
+tic;[z2,R2,N2,C2,zx2,zy2]=polysmooth(ds,xs,ys,zs,B,1,'epan','memory');etime2=toc;
+tic;[z3,R3,N3,C3,zx3,zy3]=polysmooth(ds,xs,ys,zs,B,1,'epan','speed');etime3=toc;
+tic;[z4,R4,N4,C4,zx4,zy4]=polysmooth(ds,xs,ys,zs,B,1,'epan','parellel');etime4=toc;
 
 disp(['POLYSMOOTH was ' num2str(etime1./etime3) ' times faster than loop, linear fit.'])
 disp(['POLYSMOOTH was ' num2str(etime2./etime3) ' times faster than memory method, linear fit.'])
 
 tol=1e-8;
-b1=aresame(beta1,beta3,tol);
-b2=aresame(beta2,beta3,tol);
+b1=aresame(z1,z3,tol)&&aresame(R1,R3,tol)&&aresame(N1,N3,tol)&&aresame(C1,C3,tol)&&aresame(zx1,zx3,tol)&&aresame(zy1,zy3,tol);
+b2=aresame(z2,z3,tol)&&aresame(R2,R3,tol)&&aresame(N2,N3,tol)&&aresame(C2,C3,tol)&&aresame(zx2,zx3,tol)&&aresame(zy2,zy3,tol);
+b3=aresame(z4,z3,tol)&&aresame(R4,R3,tol)&&aresame(N4,N3,tol)&&aresame(C4,C3,tol)&&aresame(zx4,zx3,tol)&&aresame(zy4,zy3,tol);
+
 
 reporttest('POLYSMOOTH speed and loop methods are identical for linear fit',b1)
 reporttest('POLYSMOOTH speed and memory methods are identical for linear fit',b2)
+reporttest('POLYSMOOTH speed and parallel methods are identical for linear fit',b3)
 
 
 function[]=polysmooth_test_sphere
@@ -631,57 +834,65 @@ B=2000;
 
 [ds,xs,ys,zs,ws]=spheresort(latdata,londata,zdata,wdata,lato,lono,B,'loop');
 
-tic;z1=polysmooth(latdata,londata,zdata,lato,lono,B,0,'epan','sphere','loop');etime1=toc;
-tic;z2=polysmooth(ds,xs,ys,zs,B,0,'epan','memory');etime2=toc;
-tic;z3=polysmooth(ds,xs,ys,zs,B,0,'epan','speed');etime3=toc;
+tic;[z1,R1,N1,C1]=polysmooth(latdata,londata,zdata,lato,lono,B,0,'epan','sphere','loop');etime1=toc;
+tic;[z2,R2,N2,C2]=polysmooth(ds,xs,ys,zs,B,0,'epan','memory');etime2=toc;
+tic;[z3,R3,N3,C3]=polysmooth(ds,xs,ys,zs,B,0,'epan','speed');etime3=toc;
+tic;[z4,R4,N4,C4]=polysmooth(ds,xs,ys,zs,B,0,'epan','parallel');etime4=toc;
 
 disp(['POLYSMOOTH was ' num2str(etime1./etime3) ' times faster than loop, constant fit on a sphere.'])
 disp(['POLYSMOOTH was ' num2str(etime2./etime3) ' times faster than memory method, constant fit on a sphere.'])
 
 tol=1e-8;
-b1=aresame(z1,z3,tol);
-b2=aresame(z2,z3,tol);
+b1=aresame(z1,z3,tol)&&aresame(R1,R3,tol)&&aresame(N1,N3,tol)&&aresame(C1,C3,tol);
+b2=aresame(z2,z3,tol)&&aresame(R2,R3,tol)&&aresame(N2,N3,tol)&&aresame(C2,C3,tol);
+b3=aresame(z4,z3,tol)&&aresame(R4,R3,tol)&&aresame(N4,N3,tol)&&aresame(C4,C3,tol);
+
 
 reporttest('POLYSMOOTH output size matches input size on a sphere',aresame(size(z1),[size(xs,1) size(xs,2)]))
 reporttest('POLYSMOOTH speed and loop methods are identical for constant fit on a sphere',b1)
 reporttest('POLYSMOOTH speed and memory methods are identical for constant fit on a sphere',b2)
+reporttest('POLYSMOOTH speed and parallel methods are identical for constant fit on a sphere',b3)
 
-tic;z1=polysmooth(latdata,londata,zdata,wdata,lato,lono,B,0,'epan','sphere','loop');etime1=toc;
-tic;z2=polysmooth(ds,xs,ys,zs,ws,B,0,'epan','memory');etime2=toc;
-tic;z3=polysmooth(ds,xs,ys,zs,ws,B,0,'epan','speed');etime3=toc;
+tic;[z1,R1,N1,C1]=polysmooth(latdata,londata,zdata,wdata,lato,lono,B,0,'epan','sphere','loop');etime1=toc;
+tic;[z2,R2,N2,C2]=polysmooth(ds,xs,ys,zs,ws,B,0,'epan','memory');etime2=toc;
+tic;[z3,R3,N3,C3]=polysmooth(ds,xs,ys,zs,ws,B,0,'epan','speed');etime3=toc;
+tic;[z4,R4,N4,C4]=polysmooth(ds,xs,ys,zs,ws,B,0,'epan','parallel');etime4=toc;
 
 tol=1e-8;
-b1=aresame(z1,z3,tol);
-b2=aresame(z2,z3,tol);
+b1=aresame(z1,z3,tol)&&aresame(R1,R3,tol)&&aresame(N1,N3,tol)&&aresame(C1,C3,tol);
+b2=aresame(z2,z3,tol)&&aresame(R2,R3,tol)&&aresame(N2,N3,tol)&&aresame(C2,C3,tol);
+b3=aresame(z4,z3,tol)&&aresame(R4,R3,tol)&&aresame(N4,N3,tol)&&aresame(C4,C3,tol);
 
 reporttest('POLYSMOOTH speed and loop methods are identical with heavy data points',b1)
 reporttest('POLYSMOOTH speed and memory methods are identical with heavy data points',b2)
+reporttest('POLYSMOOTH speed and parallel methods are identical with heavy data points',b3)
 
 B0=10;
 
 [ds,xs,ys,zs]=spheresort(latdata,londata,zdata,lato,lono,radearth*pi/4-1e-3);
 
-tic;[z1,weight1,beta1,B1]=polysmooth(latdata,londata,zdata,lato,lono,B0,0,'epan','sphere','variable','loop');etime1=toc;
-tic;[z2,weight2,beta2,B2]=polysmooth(ds,xs,ys,zs,B0,0,'epan','memory','variable');etime2=toc;
-tic;[z3,weight3,beta3,B3]=polysmooth(ds,xs,ys,zs,B0,0,'epan','speed','variable');etime3=toc;
+tic;[z1,R1,N1,C1]=polysmooth(latdata,londata,zdata,lato,lono,B0,0,'epan','sphere','variable','loop');etime1=toc;
+tic;[z2,R2,N2,C2]=polysmooth(ds,xs,ys,zs,B0,0,'epan','memory','variable');etime2=toc;
+tic;[z3,R3,N3,C3]=polysmooth(ds,xs,ys,zs,B0,0,'epan','speed','variable');etime3=toc;
+tic;[z4,R4,N4,C4]=polysmooth(ds,xs,ys,zs,B0,0,'epan','parallel','variable');etime4=toc;
 
 disp(['POLYSMOOTH was ' num2str(etime1./etime3) ' times faster than loop, constant 10-point fit on a sphere.'])
 disp(['POLYSMOOTH was ' num2str(etime2./etime3) ' times faster than memory method, constant 10-point fit on a sphere.'])
 
 tol=1e-8;
-%There are some NANs in z3 that do not appear in z1, for some reason
-b1=aresame(z1(isfinite(z3)),z3(isfinite(z3)),tol);
-b2=aresame(z2,z3,tol);
+b1=aresame(z1,z3,tol)&&aresame(R1,R3,tol)&&aresame(N1,N3,tol)&&aresame(C1,C3,tol);
+b2=aresame(z2,z3,tol)&&aresame(R2,R3,tol)&&aresame(N2,N3,tol)&&aresame(C2,C3,tol);
+b3=aresame(z4,z3,tol)&&aresame(R4,R3,tol)&&aresame(N4,N3,tol)&&aresame(C4,C3,tol);
 %figure,plot(z1,'b'),hold on,plot(z3,'r.')
 
 reporttest('POLYSMOOTH output size matches input size on a sphere',aresame(size(z1),[size(xs,1) size(xs,2)]))
 reporttest('POLYSMOOTH speed and loop methods are identical for constant 10-point fit on a sphere',b1)
 reporttest('POLYSMOOTH speed and memory methods are identical for constant 10-point fit on a sphere',b2)
-
+reporttest('POLYSMOOTH speed and parallel methods are identical for constant 10-point fit on a sphere',b3)
 
 
 % %Zeroth-order fit at 200~km radius
-% [zhat0,weight,beta,b]=polysmooth(ds,xs,ys,zs,200,0,'sphere');
+% [zhat0,rbar,beta,b]=polysmooth(ds,xs,ys,zs,200,0,'sphere');
 % 
 % figure
 % contourf(lono,lato,zhat0,[0:1/2:50]),nocontours,caxis([0 45]),

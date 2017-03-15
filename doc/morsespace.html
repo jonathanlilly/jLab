@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>MORSESPACE is the <a href="jwavelet.html">jwavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>MORSESPACE is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="morsespace.html">MORSESPACE</a>  Logarithmically-spaced frequencies for generalized Morse wavelets.
  
     F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) generates a frequency array for the 
@@ -18,6 +18,8 @@
  
     Additional control over the frequency array F can be obtained using the
     following alternate usages.
+ 
+    For details on this calculation, see Lilly (2016).
     __________________________________________________________________
  
     High- and low-frequency specification
@@ -36,17 +38,17 @@
     The highest frequency can be set to be the minimum of a specified value
     and a cutoff frequency based on a Nyquist overlap condition.
  
-    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,{ALPHA,HIGH},LOW) sets the highest frequency 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,{ETA,HIGH},LOW) sets the highest frequency 
     to be the minimum of the specified value HIGH, and the largest 
-    frequency for which the wavelet will satisfy the threshold level ALPHA. 
+    frequency for which the wavelet will satisfy the threshold level ETA. 
  
-    Here ALPHA be a number between zero and one specifying the ratio of a
+    Here ETA be a number between zero and one specifying the ratio of a
     frequency-domain wavelet at the Nyquist frequency to its peak value.
  
-    Note that in this usage, {ALPHA,HIGH} is a cell array with two entries.
+    Note that in this usage, {ETA,HIGH} is a cell array with two entries.
  
     The simplified usage F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) corresponds to the 
-    choice ALPHA=0.1, so that by default, the highest-frequency wavelet 
+    choice ETA=0.1, so that by default, the highest-frequency wavelet 
     will decay to at least 10% of its peak value at the Nyquist frequency.
     __________________________________________________________________
  
@@ -55,20 +57,20 @@
     The lowest frequency can be set to a cutoff frequency based on an 
     endpoint overlap condition.
  
-    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{R,N}) sets the lowest frequency such that
-    the lowest-frequency wavelet will reach R times its central window
-    width at the ends of the time series. 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{P,N}) sets the lowest frequency such that
+    the lowest-frequency wavelet will reach some number P times its central 
+    window width at the ends of the time series. 
    
-    A choice of R=SQRT(2) corresponds to roughly 95% of the time-domain 
-    wavelet energy being contained within the time series endpoints for a
-    wavelet at the center of the domain.
+    P is called the packing number.  A choice of P=1 corresponds to 
+    roughly 95% of the time-domain wavelet energy being contained within 
+    the time series endpoints for a wavelet at the center of the domain.
  
-    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{R,N,LOW}) alternately chooses the maximum 
+    F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,HIGH,{P,N,LOW}) alternately chooses the maximum 
     of the R-level cutoff frequency, and a specified low frequency LOW.
     
     The simplified usage F=<a href="morsespace.html">MORSESPACE</a>(GAMMA,BETA,N) corresponds to the
-    default value R=5*SQRT(2).  At the lowest frequency, five wavelets will
-    then fit into the time series, with 5% energy overlap between them.
+    default value P=5.  At the lowest frequency, five wavelets will then
+    fit into the time series, with 5% energy overlap between them.
     __________________________________________________________________
  
     Wavelet density
@@ -88,10 +90,10 @@
    
     Usage: f=<a href="morsespace.html">morsespace</a>(ga,be,N);
            f=<a href="morsespace.html">morsespace</a>(ga,be,high,low,D);
-           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},low,D);
-           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},{r,N},D);
-           f=<a href="morsespace.html">morsespace</a>(ga,be,{alpha,high},{r,N,low},D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{eta,high},low,D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{eta,high},{p,N},D);
+           f=<a href="morsespace.html">morsespace</a>(ga,be,{eta,high},{p,N,low},D);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

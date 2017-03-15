@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>SPHERESORT is the <a href="jmap.html">jmap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>SPHERESORT is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="spheresort.html">SPHERESORT</a>  Sorted great circle distances to nearby points on the earth.
  
     Computing great circle distances on the earth between two sets of
@@ -24,6 +24,8 @@
     as the corresponding grid points.
   
     LAT and LON are arrays of the same size into data point locations.
+    Any NaN values in LAT/LON are ignored.  
+ 
     LATO and LONO are arrays of length M and N, say, specifying the
     latitudes and longitudes of an M x N matrix of grid points, i.e.
  
@@ -49,19 +51,45 @@
     Let's say some additional variables Z1, Z2,...,ZK are given at
     the data locations LAT, LON.  Then 
     
-    [DS,XS,YS,Z1S,Z2S,...,ZKS]=
- 
-                 <a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z1,Z2,...,ZK,LATO,LONO,CUTOFF);
+        [DS,XS,YS,Z1S,Z2S,...,ZKS]=
+            <a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z1,Z2,...,ZK,LATO,LONO,CUTOFF);
  
     also returns the sorted values of these variables.
  
     Z1S, Z2S,...,ZKS are the same size as the other output arguments.  
     Z1S then gives the value of Z1 at data points no more than CUTOFF 
     kilometers from the (m,n)th grid point, etc.
+    _________________________________________________________________
  
-    To output an index into the data point locations, use
-   
-    [DS,XS,YS,INDEX]=<a href="spheresort.html">SPHERESORT</a>(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF).
+    One grid, many data fields
+ 
+    It is often the case that the field to be mapped, Z, consists of many 
+    copies of observations at the same LAT/LON points.  For example, X and
+    Y could be 1-D arrays, and Z a matrix with LENGTH(Z) rows and many(K)
+    columns.  In this case, the format <a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z1,Z2,...,ZK...) 
+    described above is cumbersome, and may lead to memory problems. 
+ 
+    Instead, one can pre-compute the DS, XS, and YS arrays once, and use
+    these for all K copies of Z. To do this, call <a href="spheresort.html">SPHERESORT</a> as
+ 
+        [DS,XS,YS,INDEX]=
+             <a href="spheresort.html">SPHERESORT</a>(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF)
+ 
+    which outputs an index INDEX into the data point locations, where INDEX
+    is the same size as the other output arrays.
+ 
+    Then for each of the K copies of Z at the same LAT/LON locations, form 
+ 
+         ZS=NAN*ZEROS(SIZE(XS))
+         ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)))
+    
+    and then use this ZS together with DS, XS, and YS to call <a href="polysmooth.html">POLYSMOOTH</a>.
+    In this way, <a href="spheresort.html">SPHERESORT</a> only needs to be called once and not K times.    
+ 
+    When inputting LAT/LON values for which the corresponding data is 
+    always undefined (e.g., altimeter tracks over land), once should set 
+    the LAT/LON coordinates of these points to NaNs such that they will be
+    omitted from DS, XY, YS, and INDEX.
     _________________________________________________________________
    
     Parellel algorithm
@@ -92,5 +120,5 @@
            [ds,xs,ys,z1s,z2s]=<a href="spheresort.html">spheresort</a>(lat,lon,z1,z2,lato,lono,cutoff);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

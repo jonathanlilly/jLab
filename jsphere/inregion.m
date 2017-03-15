@@ -30,7 +30,7 @@ function[bool]=inregion(varargin)
 %   several rectangular regions.  
 %   ______________________________________________________________________
 %
-%   See also REGIONPLOT, INELLIPSE, TRAJEXTRACT, TRACKREGION.
+%   See also REGIONPLOT, INELLIPSE, TRAJEXTRACT.
 %
 %   'inregion --t' runs a test.
 %

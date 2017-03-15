@@ -20,8 +20,8 @@
       <a href="celldiv.html">celldiv</a>    - Division acting on each element in a cell array.
    
     Reshaping, indexing, and sizes
-      <a href="cell2col.html">cell2col</a>    - Converts cell arrays of numeric arrays into 'column-appended' form.
-      <a href="col2cell.html">col2cell</a>    - Converts 'column-appended' data into cell arrays of numeric arrays.
+      <a href="cell2col.html">cell2col</a>   - Converts cell arrays of numeric arrays into 'column-appended' form.
+      <a href="col2cell.html">col2cell</a>   - Converts 'column-appended' data into cell arrays of numeric arrays.
       <a href="cellindex.html">cellindex</a>  - Applies a cell array of indices to a cell array of column vectors. 
       <a href="cellchunk.html">cellchunk</a>  - Converts cell array data into uniform length 'chunks'.             
       <a href="cellength.html">cellength</a>  - Length of each element in a cell array.                            
@@ -222,9 +222,12 @@
       bravo94      - Labrador Sea mooring data from Lilly et. al (1999).
       drifterbetty - Two-hour resolution drifter trajectory, AOML GDP id #44000.
       ebasnfloats  - "Meddy" float data analyzed in Lilly and Olhede (2009,10,11,12).
+      goldsnapshot - Snapshot from GOLD model, courtesy of Harper Simmons.
+      labseatpjaos - Altimeter data for the Labrador Sea, analyzed in Lilly (2017).
       npg2006      - Float data analyzed in Lilly and Gascard (2006).
       qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
       qgmodelfit   - Parameter fits of Matern model to QG turbulence data.
+      slasnapshot  - Snapshot of AVISO 1/4 degree sea level anomaly on Jan. 1, 2007.
       solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
       vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
     __________________________________________________________________
@@ -341,6 +344,9 @@
       <a href="spheregrad.html">spheregrad</a> - Gradient of a field on the surface of a sphere.                  
       <a href="spherelap.html">spherelap</a>  - Laplacian of a field on the surface of a sphere.   
    
+    Interpolation
+      <a href="sphereinterp.html">sphereinterp</a>  - Fast linear interpolation on the sphere from non-plaid grids.
+   
     Plotting tools
       <a href="latratio.html">latratio</a>   - Set plot aspect ratio for latitude / longitude plot.    
       <a href="lonshift.html">lonshift</a>   - Shifts longitude origin for plotting purposes.                   
@@ -393,25 +399,40 @@
     <a href="jWavelet.html">jWavelet</a>: Continuous wavelet analysis using generalized Morse wavelets
    
     Top-level wavelet transform functions
-      <a href="wavetrans.html">wavetrans</a>  - Continuous wavelet transform.
-      <a href="morsewave.html">morsewave</a>  - Generalized Morse wavelets of Olhede and Walden (2002).              
-      <a href="morsespace.html">morsespace</a> - Logarithmically-spaced frequencies for generalized Morse wavelets.   
+      <a href="wavetrans.html">wavetrans</a>    - Continuous wavelet transform.
+      <a href="morsewave.html">morsewave</a>    - Generalized Morse wavelets of Olhede and Walden (2002).              
+      <a href="morsespace.html">morsespace</a>   - Logarithmically-spaced frequencies for generalized Morse wavelets.   
       <a href="wavespecplot.html">wavespecplot</a> - Plot of wavelet spectra together with time series.
    
     Details of generalized Morse wavelets 
-      <a href="morsearea.html">morsearea</a>  - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]
-      <a href="morsebox.html">morsebox</a>   - Heisenberg time-frequency box for generalized Morse wavelets.        
-      <a href="morsefreq.html">morsefreq</a>  - Frequency measures for generalized Morse wavelets. [with F. Rekibi]  
-      <a href="morseprops.html">morseprops</a> - Properties of the demodulated generalized Morse wavelets.            
-      <a href="morsexpand.html">morsexpand</a> - Generalized Morse wavelets via time-domain Taylor series.
-      <a href="morsederiv.html">morsederiv</a> - Frequency-domain derivatives of generalized Morse wavelets.
+      <a href="morsearea.html">morsearea</a>   - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]
+      <a href="morsebox.html">morsebox</a>    - Heisenberg time-frequency box for generalized Morse wavelets.        
+      <a href="morsefreq.html">morsefreq</a>   - Frequency measures for generalized Morse wavelets. [with F. Rekibi]  
+      <a href="morseprops.html">morseprops</a>  - Properties of the demodulated generalized Morse wavelets.            
+      <a href="morsexpand.html">morsexpand</a>  - Generalized Morse wavelets via time-domain Taylor series.
+      <a href="morsederiv.html">morsederiv</a>  - Frequency-domain derivatives of generalized Morse wavelets.
+   
+    Element analysis using generalized Morse wavelets
+      <a href="transmax.html">transmax</a>     - Locates modulus maximum points of wavelet transform.
+      <a href="transmaxdist.html">transmaxdist</a> - Distributions of wavelet transform maxima in noise.
+      <a href="morseregion.html">morseregion</a>  - Generalized Morse wavelet time-frequency concentration region.
+      <a href="isomax.html">isomax</a>       - Returns those transform maxima that are isolated from others.
+      <a href="maxprops.html">maxprops</a>     - Returns properties of wavelet transform maxima.
+      <a href="max2eddy.html">max2eddy</a>     - Converts transform maxima into oceanic coherent eddy properties.
+     
+    Low-level functions
+      <a href="morseafun.html">morseafun</a>  - Returns the generalized Morse wavelet amplitude or a-function.                 
+      <a href="morsehigh.html">morsehigh</a>  - High-frequency cutoff of the generalized Morse wavelets.
+      <a href="morseproj.html">morseproj</a>  - Projection coefficient for two generalized Morse wavelets.           
+      <a href="morsemom.html">morsemom</a>   - Frequency-domain moments of generalized Morse wavelets. 
+      <a href="jdawson.html">jdawson</a>    - The Dawson function. [By P.J. Acklam]          
    
     Morlet wavelet 
       <a href="morlwave.html">morlwave</a>   - Morlet wavelet.                                                      
       <a href="morlfreq.html">morlfreq</a>   - Compute Morlet wavelet carrier frequency given peak frequency.   
    
-    See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>.
+    See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>.      
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

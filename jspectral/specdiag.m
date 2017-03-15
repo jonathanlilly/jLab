@@ -25,7 +25,7 @@ function[l1,l2,th,nu,z]=specdiag(varargin)
 %          [d1,d2,th,nu]=specdiag(s11,s22,s12);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1},'--t')
    specdiag_test;return
@@ -89,8 +89,12 @@ b=s(2,2,:);
 dets=a.*b-c.^2-d.^2;%figure,plot(abs(squeeze(dets)))
 trs=a+b;
 
+dets(dets<0)=0;  %Sometimes I get negative values of numerical noise
+
+
 l1=squeeze(frac(1,2).*(trs+sqrt(trs.^2-4*dets)));
 l2=squeeze(frac(1,2).*(trs-sqrt(trs.^2-4*dets)));
+
 
 if nargout>4
   z1=jmat2(th);

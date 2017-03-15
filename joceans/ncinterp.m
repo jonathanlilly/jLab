@@ -16,6 +16,7 @@ function[varargout]=ncinterp(varargin)
 %
 %   NCINTERP detects if longitude in FILENAME spans 360 degrees, and if so,
 %   interpolation across the longitudinal boundaries is correctly handled.
+%   Note that longitudes can be specified as [-180,180] or [0,360].
 %
 %   NUM, LAT, and LON are all arrays of the same size, or else cell arrays
 %   of numeric arrays.  In the latter case, X will also be a cell array.
@@ -113,7 +114,7 @@ end
 
 %blatup,blatdown
 
-lon=ncread(filename,'lon');
+lon=deg360(ncread(filename,'lon'));
 
 bperiodic=false;
 if (max(lon)-min(lon)+(lon(2)-lon(1)))==360

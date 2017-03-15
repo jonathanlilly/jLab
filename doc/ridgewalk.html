@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>RIDGEWALK is the <a href="jridges.html">jridges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>RIDGEWALK is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
   <a href="ridgewalk.html">RIDGEWALK</a>  Extract wavelet transform ridges, including bias estimates. 
  
     [IR,JR,WR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W,FS) where W is a wavelet transform matrix
@@ -133,6 +133,27 @@
  
     For more details on the bias parameters for multivariate signals see 
     Lilly and Olhede (2012).
+    _______________________________________________________________________
+ 
+    Cell array input / output 
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a> also works if the input transforms W1,W2,...WN are all cell
+    arrays of transforms, say of length K.  In this case, all output 
+    variables are also cell arrays of length K.
+ 
+    In this case, DT, FMIN, and FMAX may all either be scalars or numeric
+    arrays of length K.  FS may either be a numeric array, or a length K 
+    cell array of numeric arrays.
+ 
+    This is just a convenient way of organizing the ridges for multiple 
+    input time series.
+    ___________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="ridgewalk.html">RIDGEWALK</a>(...,'parallel'), when cell arrays are input, parallelizes the
+    ridge computation using a PARFOR loop over the different time series.
+    This requires that Matlab's Parallel Computing Toolbox be installed. 
     _______________________________________________________________________
  
     Interscale interpolation

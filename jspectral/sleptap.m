@@ -42,7 +42,7 @@ function[v,lambda]=sleptap(varargin)
 %           [psi,lambda]=sleptap(n,p,k); 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2017 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1}, '--t')
   sleptap_test,return
@@ -73,8 +73,8 @@ end
 
 
 
-Nmax=256;
-%Nmax=512;
+%Nmax=256;
+Nmax=512;
 if na==1
 	p=4;
 else
@@ -92,8 +92,7 @@ end
 if anyany(n>=Nmax)
     [v1,d]=sleptap_one(Nmax,p,k);
 end
-
-
+     
 if strcmpi(cores(1:3),'ser')||(length(n)==1)  
     for j=1:length(n)
         if length(n)>1
@@ -108,9 +107,6 @@ if strcmpi(cores(1:3),'ser')||(length(n)==1)
             for i=1:k
                 vi=sinterp(v1(:,i),n(j));
                 vi=vi./sqrt(vi'*vi);
-                if vi(round(end/2))<0
-                    vi=-vi;
-                end
                 v{j,1}(:,i)=vi;
             end
         end
@@ -205,6 +201,13 @@ OPTIONS.maxit=2000;
 [v,d]=eigs(mat,k,'LA',OPTIONS);
 %[v,d]=eigs(double(mat),max(2*p-1,k),'LM',OPTIONS);
 %v=v(:,1:k);d=d(1:k);
+
+
+for i=1:size(v,2)
+    if v(round(end/2),i)<0
+        v(:,i)=-v(:,i);
+    end
+end
 
 
 function[lambda]=sleptap_lambda_one(n,p,k,v)

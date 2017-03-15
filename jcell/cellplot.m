@@ -225,7 +225,7 @@ end
 if ~isempty(linestr)
     linestyle(h,linestr);
 else
-    linestyle(h,'default');
+    %linestyle(h,'default');
 end
 
 if nargout==0

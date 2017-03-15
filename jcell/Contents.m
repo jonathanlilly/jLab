@@ -14,8 +14,8 @@
 %   celldiv    - Division acting on each element in a cell array.
 %
 % Reshaping, indexing, and sizes
-%   cell2col    - Converts cell arrays of numeric arrays into 'column-appended' form.
-%   col2cell    - Converts 'column-appended' data into cell arrays of numeric arrays.
+%   cell2col   - Converts cell arrays of numeric arrays into 'column-appended' form.
+%   col2cell   - Converts 'column-appended' data into cell arrays of numeric arrays.
 %   cellindex  - Applies a cell array of indices to a cell array of column vectors. 
 %   cellchunk  - Converts cell array data into uniform length 'chunks'.             
 %   cellength  - Length of each element in a cell array.                            

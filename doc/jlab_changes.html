@@ -4,6 +4,57 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.6.3
+ 
+    This is a major new release, which includes the following changes:
+ 
+    Support for a new publication, see module <a href="jWavelet.html">jWavelet</a>:
+ 
+    Lilly (2017).  Element analysis: a wavelet-based method for analyzing
+       time-localized events in noisy time series. Submitted.  Available at
+       http://jmlilly.net/jmlpubs.html.
+ 
+    New functions for element analysis using generalized Morse wavelets:
+ 
+    <a href="transmax.html">transmax</a>     - Locates modulus maximum points of wavelet transform.
+    <a href="transmaxdist.html">transmaxdist</a> - Distributions of wavelet transform maxima in noise.
+    <a href="morseregion.html">morseregion</a>  - Generalized Morse wavelet time-frequency concentration region.
+    <a href="isomax.html">isomax</a>       - Returns those transform maxima that are isolated from others.
+    <a href="maxprops.html">maxprops</a>     - Returns properties of wavelet transform maxima.
+    <a href="max2eddy.html">max2eddy</a>     - Converts transform maxima into oceanic coherent eddy properties.
+ 
+    New function for fast, accurate remapping of non-plaid grids on the sphere:
+ 
+    <a href="sphereinterp.html">sphereinterp</a>  - Fast linear interpolation on the sphere from non-plaid grids.
+ 
+    Updated datasets
+ 
+    drifters.mat  - The global surface drifter dataset from NOAA's Global
+         Drifter Program, updated through Sept. 2016.  See <a href="about_drifters.html">about_drifters</a>.
+    tpjaos.mat    - Alongtrack sea surface height anomalies from the 
+         Beckley dataset, updated through Oct. 12, 2016.  See <a href="about_tpjaos.html">about_tpjaos</a>.
+  
+    Changes and improvements
+ 
+    <a href="jpcolor.html">JPCOLOR</a> now SQUEEZEs input arguments by default. 
+    <a href="polysmooth.html">POLYSMOOTH</a> improved organization of output arguments, speed improvments,
+         and improved documentation.
+    <a href="spheresort.html">SPHERESORT</a> fixed a bug in the parallelized version that led to a shift
+         in output arguments if the output included empty latitude bands.  
+    <a href="latlon2uv.html">LATLON2UV</a> improvemented argument handling for matrix input.
+    <a href="ncinterp.html">NCINTERP</a> now supports input longitudes as [-180,180] or [0, 360].
+    <a href="yearfrac.html">YEARFRAC</a> now passes Inf values through, as well as NaNs.
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> and <a href="linestyle.html">LINESTYLE</a> now support the new Matlab colors.
+    <a href="ridgewalk.html">RIDGEWALK</a> now supports cell array input.
+    <a href="readtopo.html">READTOPO</a> bugfix for longitude regions spanning 360 degrees.
+    <a href="morsehigh.html">MORSEHIGH</a> simplifications.
+    <a href="morsespace.html">MORSESPACE</a> minor re-definition of low-frequency cutoff parameter.
+    <a href="vsum.html">VSUM</a> modified for backwards compatibility with earlier Matlab versions.
+    DAWSON has been renamed <a href="jdawson.html">JDAWSON</a>, to avoid confusion with Matlab's
+         version in the Symbolic Math Toolbox. 
+    <a href="sleptap.html">SLEPTAP</a> added sign check for non-interpolated data tapers.
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.2 
  
     This is a major new release, which includes the following changes:
@@ -11,8 +62,8 @@
     Support for a new publication, see module <a href="jMatern.html">jMatern</a>:
  
     Lilly, Sykulski, Early, and Olhede (2016).  Fractional Brownian motion,
-        the Matern process, and stochastic modeling of turbulent 
-        dispersion.  Submitted to IEEE Transactions on Information Theory.   
+       the Matern process, and stochastic modeling of turbulent dispersion.
+       Available at http://jmlilly.net/jmlpubs.html.   
  
     New functions
  
@@ -65,6 +116,8 @@
     <a href="vmean.html">VMEAN</a>, <a href="vsum.html">VSUM</a>, <a href="vmoment.html">VMOMENT</a>, and <a href="vstd.html">VSTD</a> speed improvements.
     <a href="vmean.html">VMEAN</a>, <a href="vsum.html">VSUM</a>, <a href="vmoment.html">VMOMENT</a>, and <a href="vstd.html">VSTD</a> now no longer exclude Infs, only NaNs.
  
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.1
  
     <a href="jLab.html">jLab</a> is now on GitHub at https://github.com/jonathanlilly/jLab.
@@ -79,6 +132,8 @@
     <a href="sampletimes.html">SAMPLETIMES</a> bugfix for time series of length one.
     <a href="spheredist.html">SPHEREDIST</a> bugfix for row vectors input.
     <a href="topoplot.html">TOPOPLOT</a> bugfix for vector of depth contours input.
+ 
+    -----------------------------------------------------------------------
  
     Changes new in version 1.6
  

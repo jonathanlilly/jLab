@@ -404,7 +404,7 @@ for i=[-3:1/2:0];
     rat(n)=median(Spphat./Spp);
     %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for unit sample rate',allall(abs(rat-1)<0.2))
+reporttest('MATERNOISE spectrum matches MATERNSPEC for unit sample rate',allall(abs(rat-1)<0.21))
 
 dt=3600;
 clear rat
@@ -418,7 +418,7 @@ for i=[-3:1/2:0];
     rat(n)=median(Spphat./Spp);
     %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for non-unit sample rate',allall(abs(rat-1)<0.2))
+reporttest('MATERNOISE spectrum matches MATERNSPEC for non-unit sample rate',allall(abs(rat-1)<0.21))
 
 
 N=1000;
@@ -437,7 +437,7 @@ for i=[-3:1/2:0];
     rat(n)=median(Spphat./Spp);
 %    figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.2))
+reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.21))
 
 
 clear rat

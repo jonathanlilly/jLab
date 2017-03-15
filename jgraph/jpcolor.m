@@ -1,4 +1,4 @@
-function[varargout]=jpcolor(x,y,z)
+function[h]=jpcolor(x,y,z)
 %JPCOLOR  Modified version of PCOLOR appropriate for cell-centered grids.
 %
 %   JPCOLOR(XMID,YMID,Z) makes a PCOLOR plot with XMID and YMID marking the
@@ -9,6 +9,9 @@ function[varargout]=jpcolor(x,y,z)
 %
 %   Similarly, unlike PCOLOR, JPCOLOR does not throw away the last row and
 %   column of Z.
+%
+%   JPCOLOR also automatically applies SQUEEZE to Z, which is useful for 
+%   working with slices of multidimensional datasets.
 %   
 %   The default shading for JPCOLOR is FLAT rather than FACETED.  JPCOLOR
 %   also sets the level of the PCOLOR image to the back of the plot.
@@ -18,7 +21,7 @@ function[varargout]=jpcolor(x,y,z)
 %   Usage: jpcolor(x,y,z);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2017 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(x, '--f')
     type makefigs_jpcolor
@@ -50,6 +53,8 @@ y=interp1([1:length(y)]',y,[1:length(y)+1]','pchip','extrap');
 
 %y=[y;y(end)+dy];
 %y=y-dy/2;
+
+z=squeeze(z);
 
 z=[z z(:,end)];
 z=[z; z(end,:)];

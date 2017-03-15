@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>LINESTYLE is the <a href="jgraph.html">jgraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>LINESTYLE is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="linestyle.html">LINESTYLE</a>  Rapidly set color, style, and width properties of lines.
  	    	    	    
     <a href="linestyle.html">LINESTYLE</a> provides an efficient way to set common properties of large
@@ -14,6 +14,11 @@
  
     LINESTYLE's color options supports grayscale colors, denoted by capital
     letters A--F, with A being white and K being black.  
+ 
+    Also, the new Matlab colors are denoted by the letters T through Z.
+ 
+    <a href="linestyle.html">LINESTYLE</a> supports a number of predefined formats. Type <a href="linestyle.html">LINESTYLE</a> with
+    no arguments to see a list of current style sets. 
    
     In general the format is 
  
@@ -35,14 +40,14 @@
     are actually patches.  If this is not what is desired, call LINESTYLE
     with the explicit handle specification below, or else add contour plots
     to the current plot after calling <a href="linestyle.html">LINESTYLE</a>.
-    _________________________________________________________________
+    _______________________________________________________________________
  
     Locking and unlocking 
  
     LINESYTLE LOCK and <a href="linestyle.html">LINESTYLE</a> UNLOCK lock and unlock all axes in the 
     current figure.  When LOCK is on, calls to <a href="linestyle.html">LINESTYLE</a> or <a href="linering.html">LINERING</a> are 
     applied to all lines in the current figure.
-    _________________________________________________________________
+    _______________________________________________________________________
  
     Handle specification
    
@@ -52,19 +57,6 @@
     <a href="linestyle.html">LINESTYLE</a>(HAN,STR) also works.
  
     HAN may also be the handle to a group of contours.
-    _________________________________________________________________
- 
-    Customization
- 
-    <a href="linestyle.html">LINESTYLE</a> permits the use of user-defined colors, such as grayscale 
-    (capital letters A--K in order of increasing darkness). See 
-    JLAB_SETTINGS for more details.
- 
-    <a href="linestyle.html">LINESTYLE</a>(NAME) or <a href="linestyle.html">LINESTYLE</a> NAME applies the style set NAME, specified
-    in the file JLAB_SETTINGS.  This allows one to predefine useful 
-    combinations of colors, styles, and widths. 
- 
-    Type <a href="linestyle.html">LINESTYLE</a> with no arguments to see a list of current style sets. 
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2000--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        

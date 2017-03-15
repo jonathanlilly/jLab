@@ -13,8 +13,8 @@ function[m,n,k,l]=morsemom(p,ga,be)
 %           mp = 1/(2 pi) int omega^p  psi(omega)     d omega 
 %           np = 1/(2 pi) int omega^p |psi(omega)|.^2 d omega 
 %
-%   respectively, where omega is the radian frequency.  These are 
-%   evaluated using the normalization that max(abs(psi(omega)))=2.
+%   respectively, where omega is the radian frequency.  These are evaluated
+%   using the 'bandpass' normalization, which has max(abs(psi(omega)))=2.
 %
 %   The input parameters must either be matrices of the same size, or
 %   some may be matrices and the others scalars.   
@@ -36,7 +36,7 @@ function[m,n,k,l]=morsemom(p,ga,be)
 %           [mp,np,kp,lp]=morsemom(p,ga,be);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(p, '--t')
     morsemom_test,return

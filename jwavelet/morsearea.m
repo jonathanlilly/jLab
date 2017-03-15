@@ -10,7 +10,7 @@ function A = morsearea(C,ga,be)
 % 
 %   MORSEAREA uses the area formula of Olhede and Walden (2002),
 %   "Generalized Morse Wavelets", at the bottom right of page 2664, 
-%   multiplied by a factor of 1/2 to obtain the "one-sided" area.  
+%   multiplied by a factor of 1/2 to obtain a "one-sided" version.  
 %
 %   See also MORSECFUN, MORSEREGION.
 %

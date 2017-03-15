@@ -8,7 +8,7 @@ function[curl,uy,vx]=spherecurl(varargin)
 %   CURL is in inverse seconds.
 %
 %   LAT and LON are vectors specifing an evenly-spaced grid, and U and V
-%   are arrays of size LENGTH(LON) x LENGTH(LAT) x M, where M is greater
+%   are arrays of size LENGTH(LAT) x LENGTH(LON) x M, where M is greater
 %   than or equal to one. LAT and LON are in degrees.
 %
 %   The radius of the Earth as specified by RADEARTH is used by default.
@@ -49,7 +49,7 @@ function[curl,uy,vx]=spherecurl(varargin)
 %          curl=spherecurl(lat,lon,u,v,R);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2017 J.M. Lilly --- type 'help jlab_license' for details
  
 
 %http://en.wikipedia.org/wiki/Del_in_cylindrical_and_spherical_coordinates

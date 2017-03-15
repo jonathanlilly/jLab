@@ -17,8 +17,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     celldiv    - Division acting on each element in a cell array.
 %  
 %   Reshaping, indexing, and sizes
-%     cell2col    - Converts cell arrays of numeric arrays into 'column-appended' form.
-%     col2cell    - Converts 'column-appended' data into cell arrays of numeric arrays.
+%     cell2col   - Converts cell arrays of numeric arrays into 'column-appended' form.
+%     col2cell   - Converts 'column-appended' data into cell arrays of numeric arrays.
 %     cellindex  - Applies a cell array of indices to a cell array of column vectors. 
 %     cellchunk  - Converts cell array data into uniform length 'chunks'.             
 %     cellength  - Length of each element in a cell array.                            
@@ -219,9 +219,12 @@ function[varargout]=jlab_allhelp(varargin)
 %     bravo94      - Labrador Sea mooring data from Lilly et. al (1999).
 %     drifterbetty - Two-hour resolution drifter trajectory, AOML GDP id #44000.
 %     ebasnfloats  - "Meddy" float data analyzed in Lilly and Olhede (2009,10,11,12).
+%     goldsnapshot - Snapshot from GOLD model, courtesy of Harper Simmons.
+%     labseatpjaos - Altimeter data for the Labrador Sea, analyzed in Lilly (2017).
 %     npg2006      - Float data analyzed in Lilly and Gascard (2006).
 %     qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
 %     qgmodelfit   - Parameter fits of Matern model to QG turbulence data.
+%     slasnapshot  - Snapshot of AVISO 1/4 degree sea level anomaly on Jan. 1, 2007.
 %     solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
 %     vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
 %   __________________________________________________________________
@@ -338,6 +341,9 @@ function[varargout]=jlab_allhelp(varargin)
 %     spheregrad - Gradient of a field on the surface of a sphere.                  
 %     spherelap  - Laplacian of a field on the surface of a sphere.   
 %  
+%   Interpolation
+%     sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.
+%  
 %   Plotting tools
 %     latratio   - Set plot aspect ratio for latitude / longitude plot.    
 %     lonshift   - Shifts longitude origin for plotting purposes.                   
@@ -390,27 +396,42 @@ function[varargout]=jlab_allhelp(varargin)
 %   jWavelet: Continuous wavelet analysis using generalized Morse wavelets
 %  
 %   Top-level wavelet transform functions
-%     wavetrans  - Continuous wavelet transform.
-%     morsewave  - Generalized Morse wavelets of Olhede and Walden (2002).              
-%     morsespace - Logarithmically-spaced frequencies for generalized Morse wavelets.   
+%     wavetrans    - Continuous wavelet transform.
+%     morsewave    - Generalized Morse wavelets of Olhede and Walden (2002).              
+%     morsespace   - Logarithmically-spaced frequencies for generalized Morse wavelets.   
 %     wavespecplot - Plot of wavelet spectra together with time series.
 %  
 %   Details of generalized Morse wavelets 
-%     morsearea  - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]
-%     morsebox   - Heisenberg time-frequency box for generalized Morse wavelets.        
-%     morsefreq  - Frequency measures for generalized Morse wavelets. [with F. Rekibi]  
-%     morseprops - Properties of the demodulated generalized Morse wavelets.            
-%     morsexpand - Generalized Morse wavelets via time-domain Taylor series.
-%     morsederiv - Frequency-domain derivatives of generalized Morse wavelets.
+%     morsearea   - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]
+%     morsebox    - Heisenberg time-frequency box for generalized Morse wavelets.        
+%     morsefreq   - Frequency measures for generalized Morse wavelets. [with F. Rekibi]  
+%     morseprops  - Properties of the demodulated generalized Morse wavelets.            
+%     morsexpand  - Generalized Morse wavelets via time-domain Taylor series.
+%     morsederiv  - Frequency-domain derivatives of generalized Morse wavelets.
+%  
+%   Element analysis using generalized Morse wavelets
+%     transmax     - Locates modulus maximum points of wavelet transform.
+%     transmaxdist - Distributions of wavelet transform maxima in noise.
+%     morseregion  - Generalized Morse wavelet time-frequency concentration region.
+%     isomax       - Returns those transform maxima that are isolated from others.
+%     maxprops     - Returns properties of wavelet transform maxima.
+%     max2eddy     - Converts transform maxima into oceanic coherent eddy properties.
+%    
+%   Low-level functions
+%     morseafun  - Returns the generalized Morse wavelet amplitude or a-function.                 
+%     morsehigh  - High-frequency cutoff of the generalized Morse wavelets.
+%     morseproj  - Projection coefficient for two generalized Morse wavelets.           
+%     morsemom   - Frequency-domain moments of generalized Morse wavelets. 
+%     jdawson    - The Dawson function. [By P.J. Acklam]          
 %  
 %   Morlet wavelet 
 %     morlwave   - Morlet wavelet.                                                      
 %     morlfreq   - Compute Morlet wavelet carrier frequency given peak frequency.   
 %  
-%   See also jRidges, jSpectral, jEllipse.
+%   See also jRidges, jSpectral, jEllipse.      
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2017 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp
@@ -436,5 +457,5 @@ for i=1:length(dirlist)
         end
     end
 end
-xx
+disp(xx)
 varargout{1}=xx;

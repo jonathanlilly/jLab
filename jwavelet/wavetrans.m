@@ -26,6 +26,9 @@ function[varargout]=wavetrans(varargin)
 %   W is of size M x J x N x K.  Note that W is always squeezed to remove
 %   singleton dimensions.
 %
+%   X can also be a 3D array of size M x N x K, if the wavelet contains
+%   only one component.  Then W is again of size M x J x N x K.  
+%
 %   [W1,W2,...,WN]=WAVETRANS(X1,X2,...,XN,PSI) also works, where the XN are
 %   all column vectors of the same length.
 %   ___________________________________________________________________
@@ -198,6 +201,12 @@ end
 
 function[T]=wavetrans_one(x,argcell,parstr)
 %This is just so we don't bother with empty columns
+
+xpages=size(x,3);
+if xpages>1
+    x=reshape(x,[size(x,1),size(x,2)*size(x,3)]);
+end
+
 ngood=sum(isfinite(x)+0,1);
 goodindex=find(ngood>1);
 
@@ -210,6 +219,10 @@ else
     T1=wavetrans_continue(x,argcell,parstr);
     T=inf*(1+sqrt(-1)).*zeros(size(T1,1),size(T1,2),size(x,2),size(T1,4));
     T(:,:,goodindex,:)=T1;
+end
+
+if xpages>1
+    T=reshape(T,[size(T,1) size(T,2) size(T,3)./xpages xpages]);
 end
 
 T=squeeze(T);
@@ -389,7 +402,8 @@ wavetrans_test_tooshort;
 
 function[]=wavetrans_test_tooshort
 load npg2006
-use npg2006
+%use npg2006
+cx=npg2006.cx;
 
 %Decide on frequencies
 fs=2*pi./(logspace(log10(10),log10(100),50)');
@@ -413,7 +427,9 @@ reporttest('WAVETRANS returns INFs when signal is too short, mirror',allall(~isf
 
 function[]=wavetrans_test_boundary
 load npg2006
-use npg2006
+%use npg2006
+cx=npg2006.cx;
+cv=npg2006.cv;
 
 %Decide on frequencies
 fs=2*pi./(logspace(log10(10),log10(100),50)');
@@ -452,7 +468,9 @@ reporttest('WAVETRANS real part of transform equals transform with real wavelet,
 
 function[]=wavetrans_test_complex
 load npg2006
-use npg2006
+%use npg2006
+cx=npg2006.cx;
+%cv=npg2006.cv;
 
 %Decide on frequencies
 fs=2*pi./(logspace(log10(10),log10(100),50)');

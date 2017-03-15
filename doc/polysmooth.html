@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>POLYSMOOTH is the <a href="jmap.html">jmap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>POLYSMOOTH is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="polysmooth.html">POLYSMOOTH</a>  Smoothing scattered 2D data with local polynomial fitting.
  
     <a href="polysmooth.html">POLYSMOOTH</a> generates a map from scattered data in two dimensions---
@@ -69,7 +69,20 @@
     Note that <a href="spheresort.html">SPHERESORT</a> and <a href="polysmooth.html">POLYSMOOTH</a> both assume the sphere to be the 
     radius of the earth, as specified by the function <a href="radearth.html">RADEARTH</a>.
     __________________________________________________________________
-   
+ 
+    Multiple bandwidths
+ 
+    Note that the bandwidth B may be an array, in which case ZHAT, as well
+    as the other output fields described below, will have LENGTH(B) 'pages'
+    along their third dimensions.
+ 
+    This can result in a significant speed improvement compared with 
+    calling <a href="polysmooth.html">POLYSMOOTH</a> by looping over multiple bandwith values.  The 
+    reason is that <a href="polysmooth.html">POLYSMOOTH</a> performs a computationally expensive initial
+    sort to remove non-finite values from the grid.  In calling POLYSMOOTH
+    with an array-valued B, this sort only need to be performed one time.
+    __________________________________________________________________
+ 
     Additional options
     
     A number of different options are possible, as descibed below.  These  
@@ -93,18 +106,99 @@
  
     2) Gaussian weighting:
  
-    <a href="polysmooth.html">POLYSMOOTH</a>(...,'gau') uses a Gaussian weighting function instead, with 
-    a standard deviation of B and truncated, for numerical reasons, at a 
-    radius of 3B.  
+    <a href="polysmooth.html">POLYSMOOTH</a>(...,'gau') uses a Gaussian weighting function instead, again
+    vanishing outside of radius B, and with a standard deviation of B/3. 
+    That is, the points more than 3-sigma from the center are set to zero.
+    __________________________________________________________________
  
-    When using the Gaussian weighting function you'll need to call TWODSORT
-    or <a href="spheresort.html">SPHERESORT</a> with a cutoff distance of at least 3B.
+    Additional output arguments
+ 
+    [ZHAT,R,N,C]=<a href="polysmooth.html">POLYSMOOTH</a>(...) returns the weighted average distance R of
+    all the data points used at each grid point, the number N of such data
+    points, and the condition number C.  All are the same size as ZHAT.
+ 
+    R is computed using the same weighting function as for the mapping. 
+    Large R values mean that a typical data point contribution was far from
+    the current grid point, indicated that ZHAT is potentially biased.   
+ 
+    For uniform data spacing with the Epanechnikov kernel, the weighted 
+    mean radius R is 0.533*B, while for the Gaussian kernel it is 0.410*B.
+ 
+    Small numbers N of enclosed data points means that little averaging was
+    involved, indicating that the values of ZHAT may be more subject to
+    variance, and/or less representative, than at points where N is large.
+ 
+    Note that R includes the effect of the additional weighting factor, if
+    input as described below, whereaas N does not.
+ 
+    The matrix condition number C is computed by COND.  At points where C
+    is large, the least squares solution may be unstable, and one should 
+    consider reverting to a lower-order solution.  Note that for zeroth-
+    order fit with P=0, the matrix condition number is equal to one. 
+    __________________________________________________________________
+ 
+    Estimated derivatives
+ 
+    As a part of the least squares problem, derivatives of order P and
+    lower are estimated as a part of the Pth-order fit. 
+ 
+    [ZHAT,R,N,C,ZX,ZY]=<a href="polysmooth.html">POLYSMOOTH</a>(...) with P>1 returns the estimated X and 
+    Y, or zonal and meridional, derivatives of Z. 
+ 
+    [ZHAT,R,N,C,ZX,ZY,ZXX,ZXY,ZYY]=<a href="polysmooth.html">POLYSMOOTH</a>(...) with P=2 similarly
+    returns the estimated second partial derivatives of Z.
+ 
+    Derivative fields are set to values of NaNs if they are not explicitly
+    computed, so for example, [ZHAT,R,N,C,ZX,ZY]=<a href="polysmooth.html">POLYSMOOTH</a>(...) with P=0 
+    will lead to ZX and ZY being arrays of NaNs of the same size as ZHAT.
+    __________________________________________________________________
+ 
+    Variable bandwidth
+ 
+    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(...,N,P,'variable') uses the parameter N instead of a
+    fixed bandwidth.  The bandwidth now varies over the grid such that N
+    points fall within one bandwidth distance from every grid point.
+    
+    [ZHAT,R,B,C]=<a href="polysmooth.html">POLYSMOOTH</a>(...,N,P,'variable') returns as its third output 
+    argument the bandwidth B at each gridpoint rthat than the total number
+    of data points N.  All other output arguments are unchanged. 
+ 
+    The variable bandwidth algorithm can give good results when the data
+    spacing is highly uneven, particularly when used with a higher-order
+    (P=1 or P=2) fit.  
+ 
+    Derivative fields may also be output in this case, as described above.
+ 
+    When using the variable bandwidth method, be aware that the bandwidth
+    necessary to include N points may turn out to be larger than CUTOFF,
+    the maximum distance value given to <a href="twodsort.html">TWODSORT</a> or <a href="spheresort.html">SPHERESORT</a>.  
+    __________________________________________________________________
+ 
+    Weighted data points
+ 
+    <a href="polysmooth.html">POLYSMOOTH</a> can incorporate an additional weighting factor on the data
+    points. Let W be an array of positive values the same size as the data 
+    array Z.  Each data point is then treated as if it were W data points.
+ 
+    To use weighted data points, call <a href="twodsort.html">TWODSORT</a> or <a href="spheresort.html">SPHERESORT</a> with W added:
+ 
+        [DS,XS,YS,ZS,WS]=<a href="twodsort.html">TWODSORT</a>(X,Y,Z,W,XO,YO,CUTOFF);           
+     or [DS,XS,YS,ZS,WS]=<a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z,W,LATO,LONO,CUTOFF); 
+     
+    followed by    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,WS,B,P);
+             or    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,WS,B,P,'sphere');
+ 
+    for data distributed on the plane or on the sphere, respectively.
+ 
+    For very large datasets, this may be useful in first condensing the 
+    data into a manageable size, or alternatively it may be used to weight
+    observations according to a measure of their presumed quality.
     __________________________________________________________________
  
     Algorithms 
  
-    <a href="polysmooth.html">POLYSMOOTH</a> has two algorithm choices for optimal performance, both of 
-    which give identical answers.
+    <a href="polysmooth.html">POLYSMOOTH</a> has several algorithm choices for optimal performance, both  
+    of which give identical answers.
  
     1) Speed optimization
  
@@ -117,66 +211,9 @@
   
     2) Memory optimization
  
-    If the data is so large that memory becomes a limiting factor, use
- 
-        ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,B,P,'memory');
-   
-    which performs an explicit loop. 
-    __________________________________________________________________
- 
-    Weighted data points
- 
-    <a href="polysmooth.html">POLYSMOOTH</a> can also incorporate a weighting factor on the data points.
-    Let W be an array of positive values the same size as the data array Z.  
-    Each data point is then treated as if it were W data points.
- 
-    To use weighted data points, call <a href="twodsort.html">TWODSORT</a> or <a href="spheresort.html">SPHERESORT</a> with W added:
- 
-        [DS,XS,YS,ZS,WS]=<a href="twodsort.html">TWODSORT</a>(X,Y,Z,W,XO,YO,CUTOFF);           
-     or [DS,XS,YS,ZS,WS]=<a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z,W,LATO,LONO,CUTOFF); 
-     
-    followed by    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,WS,B,P);
-             or    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,WS,B,P,'sphere');
- 
-    for data distributed on the plane or on the sphere, respectively.
- 
-    For very large datasets, this is useful in first condensing the data
-    into a manageable size.
-    __________________________________________________________________
- 
-    Additional output arguments
- 
-    [ZHAT,WEIGHT]=<a href="polysmooth.html">POLYSMOOTH</a>(...) also returns the total weight used in 
-    the computation at each grid point.  WEIGHT is the same size as ZHAT.
- 
-    Small weights mean that only few or far away data points contributed
-    to the calculation; therefore, the values of ZHAT at these points
-    are less reliable than at points where the total weight is large.
- 
-    [ZHAT,WEIGHT,BETA]=<a href="polysmooth.html">POLYSMOOTH</a>(...) additionally returns the matrix
-    of the estimated first P derivatives.  BETA is 3D and is the same 
-    size as ZHAT and WEIGHT along its first two dimensions.
- 
-    BETA(:,:,1) is the estimated zeroth derivative, i.e. the surface, so
-    this is the same as ZHAT.
-    __________________________________________________________________
- 
-    Variable bandwidth
- 
-    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(...,N,P,'variable') uses the parameter N instead of a
-    fixed bandwidth.  The bandwidth now varies over the grid such that N
-    points fall within one bandwidth distance from every grid point.
-    
-    [ZHAT,WEIGHT,BETA,B]=<a href="polysmooth.html">POLYSMOOTH</a>(...,N,P,'variable') returns the 
-    bandwidth B at each grid point, which is the same size as ZHAT.  
- 
-    The variable bandwidth algorithm can give good results when the data
-    spacing is highly uneven, particularly when used with a higher-order
-    (P=1 or P=2) fit.  
- 
-    When using the variable bandwidth method, be aware that the bandwidth
-    necessary to include N points may turn out to be larger than CUTOFF,
-    the maximum distance value given to <a href="twodsort.html">TWODSORT</a> or <a href="spheresort.html">SPHERESORT</a>.  
+    ZHAT=<a href="polysmooth.html">POLYSMOOTH</a>(DS,XS,YS,ZS,B,P,'memory') performs an explicit loop. 
+    This is mostly used for testing, purposes, but may also be useful if
+    the dataset is so large that memory becomes a limiting factor.
     __________________________________________________________________
  
     '<a href="polysmooth.html">polysmooth</a> --t' runs some tests.
@@ -185,11 +222,12 @@
         above, which may require a relatively powerful computer.
  
     Usage:  [ds,xs,ys,zs]=<a href="twodsort.html">twodsort</a>(x,y,z,xo,yo,cutoff);  
-            [zhat,weight,beta]=<a href="polysmooth.html">polysmooth</a>(ds,xs,ys,zs,b,p);
+            zhat=<a href="polysmooth.html">polysmooth</a>(ds,xs,ys,zs,b,p);
+            [zhat,R,N,C]=<a href="polysmooth.html">polysmooth</a>(ds,xs,ys,zs,b,p);
     --or--
             [ds,xs,ys,zs]=<a href="spheresort.html">spheresort</a>(lat,lon,z,w,lato,lono,cutoff); 
-            [zhat,weight,beta]=<a href="polysmooth.html">polysmooth</a>(ds,xs,ys,zs,b,p,'sphere');
+            [zhat,R,N,C]=<a href="polysmooth.html">polysmooth</a>(ds,xs,ys,zs,b,p,'sphere');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

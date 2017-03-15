@@ -3,11 +3,17 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
-%   'jlab_makefigs matern':
-%   Lilly, Sykulski, Early, and Olhede (2016).  Fractional Brownian motion,
-%       the Matern process, and stochastic modeling of turbulent 
-%       dispersion.  Submitted to IEEE Transactions on Information Theory.
+%  'jlab_makefigs matern':
+%   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2017).
+%       Fractional Brownian motion, the Matern process, and stochastic 
+%       modeling of turbulent dispersion.  Submitted to Nonlinear Processes
+%       in Geophysics.
 %
+%   'jlab_makefigs element':
+%   Lilly, J. M.  (2017).  Element analysis: a wavelet-based method for
+%       analyzing time-localized events in noisy time series.  In revision 
+%       at Proceedings of the Royal Society of London, Series A.
+
 %   'jlab_makefigs superfamily':
 %   Lilly, J. M., and S. C. Olhede (2012). Generalized Morse wavelets as a
 %      superfamily of analytic wavelets.  IEEE Transactions on Signal
@@ -58,10 +64,8 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   .eps files in the current diretory, e.g. 'jlab_makefigs ridges print'. 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details     
+%   (C) 2000--2017 J.M. Lilly --- type 'help jlab_license' for details     
  
-
-
 
 if nargin==1
     str='noprint';
@@ -77,6 +81,7 @@ jj=jj+1;names{jj}='trivariate';
 jj=jj+1;names{jj}='vortex';
 jj=jj+1;names{jj}='multivariate';
 jj=jj+1;names{jj}='superfamily';
+jj=jj+1;names{jj}='element';
 jj=jj+1;names{jj}='matern';
 
 %cd(jlab_settings('dirnames.figures'))
@@ -105,10 +110,12 @@ set(0,'defaultLegendInterpreter',dli)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_matern(str) 
-disp('Sorry, making the figures for "matern" is not yet supported.')
-disp('This will be made available when the paper is accepted for publication.')
+makefigs_matern(str);
+%disp('Sorry, making the figures for "matern" is not yet supported.')
+%disp('This will be made available when the paper is accepted for publication.')
 
-%END of jlab_makefigs_matern
+function[varargout]=jlab_makefigs_element(str) 
+makefigs_element(str);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function[varargout]=jlab_makefigs_superfamily(str)
@@ -1562,6 +1569,18 @@ if strcmpi(str,'print')
    print -depsc analytic-transforms.eps
 end
 
+% %Reconstructing mean and median estimates
+% for i=1:3
+%      wx(:,:,i)=wavetrans(real(xra(:,i)),{1,ga(i),be(i),fs,'bandpass'},'mirror');
+%     [ir{i},jr{i},xr{i},fr{i},br{i},cr{i}]=ridgewalk(dt,wx(:,:,i),fs,{2*morseprops(ga(i),be(i)),0});  
+%     [xra2(:,i),fra(:,i),bra(:,i),cra(:,i)]=ridgemap(length(cx),xr{i},fr{i},br{i},cr{i},ir{i},'collapse');
+% end
+% 
+% for i=1:3
+%     vmean(squared(xra2(:,i)-xra(:,i))./squared(xra(:,i)),1)
+%     vmedian(squared(xra2(:,i)-xra(:,i))./squared(xra(:,i)),1)
+% end
+
 %END of jlab_makefigs_analytic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[]=jlab_makefigs_bandwidth(str)
@@ -2205,8 +2224,8 @@ function[]=jlab_makefigs_ridges(str)
 load npg2006
 use npg2006
 
-% Please note that this data has not been released for public use.
-% Contact Jean-Claude.Gascard@lodyc.jussieu.fr for details.
+% This data was collected as part of the POMME experiment, see Le Cann,
+% Assenbaum, Gascard, and Reverdin (2005), JGR.  
 
 % num   -  Date in day number of 2001
 % dt    -  Time step in days

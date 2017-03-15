@@ -1,5 +1,5 @@
 function[varargout]=makefigs_matern(str)
-%MAKEFIGS_MATERN  Makes all figures for Lilly et al. (2016)a.
+%MAKEFIGS_MATERN  Makes all figures for Lilly et al. 2017.
  
 %Sorry, maternfit will not be distributed until the paper is accepted.
 
@@ -385,7 +385,7 @@ end
 %\*************************************************************************
 
 load qg6snapshot
-load qg6trajectories
+%load qg6trajectories
 %/*************************************************************************
 figure
 subplot(1,2,1)
@@ -394,7 +394,7 @@ jpcolor(x/1000,y/1000,abs(cv))
 axis equal,axis([-1 1 -1 1]*1250*0.99/1000),hold on,colormap gray,caxis([0 18]),flipmap
 title('Current Speed')
 
-use qg6trajectories
+use qgmodelfit.trajectories.model
 vindex(num,cx,cv,1:1095,1);  %Three years of daily data 1095=365*3
 %Sort by mean spin
 spin=imag(vdiff(cv,1).*conj(cv));%./abs(cv);

@@ -16,8 +16,8 @@ if nargin==0
     str='tests';
 end
 
-disp(['This may take a few minutes.'])
 
+disp(['This may take a few minutes.'])
 
 a=now;
 global BOOL_JLAB_RUNTEST
@@ -108,7 +108,8 @@ if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot')
           end
     end
     if exist('jdata')~=7
-        disp('JDATA directory not found.  Some tests may not execute.')
+        disp('JDATA directory not found.  That''s only a problem if you thought you installed it.')
+        disp('Tests dependent upon the JDATA data will not execute.')
     end
     if vsum(testfailures,1)>0
         disp('    Tests in the following routines did not execute:')
@@ -121,3 +122,4 @@ if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot')
 end
 b=now;
 disp(['JLAB_RUNTESTS took ' num2str((b-a)*24*60) ' minutes running on a ' computer ' running Matlab ' version '.'])
+ver

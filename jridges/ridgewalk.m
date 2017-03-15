@@ -1,4 +1,4 @@
-function[varargout]=ridgewalk(varargin)
+function[ir,jr,wr,fr,br,cr]=ridgewalk(varargin)
 % RIDGEWALK  Extract wavelet transform ridges, including bias estimates. 
 %
 %   [IR,JR,WR,FR]=RIDGEWALK(W,FS) where W is a wavelet transform matrix
@@ -132,6 +132,27 @@ function[varargout]=ridgewalk(varargin)
 %   Lilly and Olhede (2012).
 %   _______________________________________________________________________
 %
+%   Cell array input / output 
+%
+%   RIDGEWALK also works if the input transforms W1,W2,...WN are all cell
+%   arrays of transforms, say of length K.  In this case, all output 
+%   variables are also cell arrays of length K.
+%
+%   In this case, DT, FMIN, and FMAX may all either be scalars or numeric
+%   arrays of length K.  FS may either be a numeric array, or a length K 
+%   cell array of numeric arrays.
+%
+%   This is just a convenient way of organizing the ridges for multiple 
+%   input time series.
+%   ___________________________________________________________________
+%
+%   Parallelization
+%
+%   RIDGEWALK(...,'parallel'), when cell arrays are input, parallelizes the
+%   ridge computation using a PARFOR loop over the different time series.
+%   This requires that Matlab's Parallel Computing Toolbox be installed. 
+%   _______________________________________________________________________
+%
 %   Interscale interpolation
 %   
 %   RIDGEWALK interpolates among discrete scale levels to yield more
@@ -239,7 +260,13 @@ elseif strcmpi(varargin{1}, '--f')
     return
 end
 
-if length(varargin{1})==1
+parstr='serial';
+if ischar(varargin{end})
+    parstr=varargin{end};
+    varargin=varargin(1:end-1);
+end
+
+if (length(varargin{1})==1)||(iscell(varargin{2})&&~iscell(varargin{1}))
     dt=varargin{1};
     varargin=varargin(2:end);
 else
@@ -254,7 +281,6 @@ chi=0;
 fmax=[];
 fmin=[];
 params=[];
-derivparams=[];
 
 if iscell(varargin{end})
     params=varargin{end};
@@ -270,6 +296,19 @@ end
 
 fs=varargin{end};
 varargin=varargin(1:end-1);
+
+
+%If cell array input, we need to rearrange the size
+if ~iscell(varargin{1})
+    winput=varargin;
+else
+    for i=1:length(varargin{1})
+        for j=1:length(varargin)
+            winput{i}{j}=varargin{j}{i};
+        end
+    end
+    %Now winput{1}{1}=wx{1},winput{1}{2}=wy{1}, etc. 
+end
 
 %/********************************************************************
 %Sorting out input params
@@ -296,26 +335,44 @@ end
 %\********************************************************************
 %fmin,fmax,N,chi
 
-%/********************************************************************
-if length(fs)<3
-    %Contingency for short input frequency array
-    for i=1:nargout
-        varargout{i}=[];
+
+if ~iscell(winput{1})  %If I don't have a cell array of cell arrays
+    [ir,jr,wr,fr,br,cr]=ridgewalk_one(winput,N,alg,alpha,chi,dt,fmin,fmax,fs,mask,params);
+else
+    [fmin,fmax,dt]=arrayify(fmin,fmax,dt,zeros(length(winput),1));
+    if ~iscell(fs)
+        fso=fs;
+        clear fs
+        for i=1:length(winput)
+            fs{i}=fso;
+        end
     end
-    return
-    disp('Sorry, RIDGEWALK needs at least three frequencies in the wavelet')
-    disp('transform in order to identify ridges.')
+    
+    if strcmpi(parstr(1:3),'par')
+        parfor i=1:length(winput)
+            [ir{i},jr{i},wr{i},fr{i},br{i},cr{i}]=...
+                ridgewalk_one(winput{i},N,alg,alpha,chi,dt(i),fmin(i),fmax(i),fs{i},mask,params);
+        end
+    else 
+        for i=1:length(winput)
+            [ir{i},jr{i},wr{i},fr{i},br{i},cr{i}]=...
+                ridgewalk_one(winput{i},N,alg,alpha,chi,dt(i),fmin(i),fmax(i),fs{i},mask,params);
+        end
+    end
 end
-%\********************************************************************
 
 
-if length(varargin)>1
-    w=zeros([size(varargin{1},1) size(varargin{1},2) length(varargin)]);
-    for i=1:length(varargin);
-        w(:,:,i,:)=varargin{i};
+function[ir,jr,wr,fr,br,cr]=ridgewalk_one(winput,N,alg,alpha,chi,dt,fmin,fmax,fs,mask,params)
+
+[ir,jr,wr,fr,br,cr]=vempty;
+
+if length(winput)>1
+    w=zeros([size(winput{1},1) size(winput{1},2) length(winput)]);
+    for i=1:length(winput)
+        w(:,:,i,:)=winput{i};
     end
 else
-    w=varargin{1};
+    w=winput{1};
 end
 
 if size(w,3)
@@ -341,42 +398,29 @@ br=[];
 cr=[];
 if ~isempty(id)
     [id,ir,jr]=colbreaks(id,ir,jr);
-    na=nargout-4+1;
-    if na<=0
+    %na=nargout-4+1;
+    %if na<=0
+    %[a,om]=instmom(dt,w,'endpoint');
+    %[wr,fr]=ridgeinterp(fs,rq,ir,jr,w,om);
+    %elseif na>0
+    %Output bandwidth & curvature or deviation vectors
+    if size(w,3)==1
+        %Just normal bandwith and curvature if it's a single time series
+        [a,om,up,curv]=instmom(dt,w,'endpoint');
+        [wr,fr,br,cr]=ridgeinterp(fs,rq,ir,jr,w,om,up,curv);
+    else
+        %Deviation vectors if it's a set of time series
+        w1=vdiff(w,1,'endpoint')./dt;
+        w2=vdiff(w1,1,'nans')./dt;
         [a,om]=instmom(dt,w,'endpoint');
-        [wr,fr]=ridgeinterp(fs,rq,ir,jr,w,om);
-    elseif na>0
-        %Output bandwidth & curvature or deviation vectors
-        if size(w,3)==1
-            %Just normal bandwith and curvature if it's a single time series
-            [a,om,up,curv]=instmom(dt,w,'endpoint');
-            [wr,fr,br,cr]=ridgeinterp(fs,rq,ir,jr,w,om,up,curv);
-        else
-            %Deviation vectors if it's a set of time series
-            w1=vdiff(w,1,'endpoint')./dt;
-            w2=vdiff(w1,1,'nans')./dt;
-            [a,om]=instmom(dt,w,'endpoint');
-            [wr,fr,w1r,w2r]=ridgeinterp(fs,rq,ir,jr,w,om,w1,w2);
-            fbar=vrep(vmean(fr,2,squared(wr)),size(wr,2),2);
-            wrmag=vrep(sqrt(sum(squared(wr),2)),size(wr,2),2);
-            br=(w1r-sqrt(-1)*fbar.*wr)./wrmag;                  %See (17) of L012
-            cr=(w2r-2*sqrt(-1)*fbar.*w1r-fbar.^2.*wr)./wrmag;   %See (18) of L012
-            %Fix for extra nans due to derivative
-            cr(1,:)=cr(2,:);
-        end
-    end
-end
-
-varargout{1}=ir;
-varargout{2}=jr;
-if ~isempty(id)
-    varargout{3}=wr;
-    varargout{4}=fr;
-    if na>=1
-        varargout{5}=br;
-    end
-    if na>=2
-        varargout{6}=cr;
+        [wr,fr,w1r,w2r]=ridgeinterp(fs,rq,ir,jr,w,om,w1,w2);
+        fbar=vrep(vmean(fr,2,squared(wr)),size(wr,2),2);
+        wrmag=vrep(sqrt(sum(squared(wr),2)),size(wr,2),2);
+        br=(w1r-sqrt(-1)*fbar.*wr)./wrmag;                  %See (17) of L012
+        cr=(w2r-2*sqrt(-1)*fbar.*w1r-fbar.^2.*wr)./wrmag;   %See (18) of L012
+        %Fix for extra nans due to derivative
+        cr(1,:)=cr(2,:);
+        %   end
     end
 end
 %\*************************************************************************

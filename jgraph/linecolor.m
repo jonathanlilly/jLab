@@ -20,8 +20,8 @@ function[varargout]=linecolor(varargin)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
 
-h=varargin{1};
-c=varargin{2};
+h=varargin{1}(:);
+c=varargin{2}(:);
 c=vswap(c,nan,inf);
 
 if ischar(varargin{end})

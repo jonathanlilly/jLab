@@ -15,7 +15,9 @@
  
     This dataset is produced by Brian Beckley and collaborators on NASA's
     Ocean Surface Topography Science Team (OSTST).  It contains data from
-    the TOPEX/Poseidon, Jason-1, and OSTM/Jason-2 satelliets.
+    the TOPEX/Poseidon, Jason-1, and OSTM/Jason-2 satellites.
+ 
+    Currently TPJAOS contains data through October 12, 2016.
  
     TPJAOS.MAT is a slightly reorganized matfile version of the NetCDF 
     data distributed at PO.DAAC, and is redistributed with permission as a
@@ -28,23 +30,34 @@
     following fields:
  
       tpjaos.about  Pointer to this document                   
-      tpjaos.num    Cycle start in DATENUM format    [758 x 1]
-      tpjaos.dnum   Days from cycle start date       [3375 x 254]
-      tpjaos.lat    Latitude                         [3375 x 254]
-      tpjaos.lon    Longitude                        [3375 x 254]
-      tpjaos.atd    Along-track distance (km)        [3375 x 254]
-      tpjaos.mss    Mean sea surface height (cm)     [3375 x 254]
-      tpjaos.ssh    Sea surface height anomaly (cm)  [3375 x 254 x 885] 
+      tpjaos.num    Cycle start in DATENUM format     [887 x 1]
+      tpjaos.dnum   Days from cycle start date        [3375 x 254]
+      tpjaos.lat    Latitude                          [3375 x 254]
+      tpjaos.lon    Longitude                         [3375 x 254]
+      tpjaos.atd    Along-track distance (km)         [3375 x 254]
+      tpjaos.dfc    Distance from coast (km)          [3375 x 254]
+      tpjaos.depth  Bathymetry depth (km)             [3375 x 254]
+      tpjaos.mss    Mean sea surface height (cm)      [3375 x 254]
+      tpjaos.ssh    Sea surface height anomaly (cm)   [3375 x 254 x 887] 
+      tpjaos.flag   True if single-frequency          [3375 x 254 x 887] 
    
     The mean sea surface height is given in the PO.DAAC documentation as 
     being the DTU10 Global Gravity field of Anderson (2010). 
  
     Note that sea surface height is here given in centimeters. 
  
+    The along-track distance ATD is computed by <a href="spheredist.html">SPHEREDIST</a>.  Distance from 
+    the coast DFC is provided by the source dataset.  DEPTH is computed by 
+    interpolating the one-minute Smith and Sandwell database, see <a href="readtopo.html">READTOPO</a>.
+ 
+    FLAG is a boolean variable used to indicate when a single-frequency,
+    or Poseidon-type, altimeter is being used.  This has an impact on the 
+    small-scale noise statistics.  
+ 
     The first dimension, of length 3375, is the number of measurements
     along each track.  The second, of dimension 254, is the number of 
     tracks split into their descending and ascending portions.  The third
-    dimension, of length 885, is the number of cycles. 
+    dimension, of length 887, is the number of cycles. 
  
     After 'load tpjaos', type '<a href="use.html">use</a> tpjaos' to map the structure fields into
     named variables in the workspace--num, lat, lon, ssh, etc.
@@ -58,21 +71,25 @@
     software toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
  
     Regional datasets can be extracted with the <a href="jLab.html">JLAB</a> function <a href="trackextract.html">TRACKEXTRACT</a>.
-    __________________________________________________________________
+    _______________________________________________________________________
  
     Time details
   
     NUM is the time at the beginning of each cycle, in Matlab's DATENUM 
     format. DNUM is the mean difference from this time, averaged over all 
-    cycles, for each location along each track.  
+    cycles, for each location along each track. 
  
-    Deviations of the exact time differences from their mean values over
-    all cycles are small, typically 5% of the mean values.   
+    Specifically, NUM is defined as beginning at 4:05 AM on Sept 23, 1992, 
+    and proceeding uniformly with a time interval of 9.915645 days.  This 
+    matches the first time for each cycle to within about two minutes. 
+ 
+    The exact measurement time is approximating by add the NUM value for 
+    each cycle to the DNUM value appropriate for each alongtrack location. 
+    This approximates the exact measurement time to with about one minute.
  
     In order to save space, the exact times for each measurement are not 
-    re-distributed here.  Instead DNUM is deduced from the exact time field
-    available from PO.DAAC.
-    __________________________________________________________________
+    re-distributed here. 
+    _______________________________________________________________________
     
     Organization
  
@@ -124,7 +141,7 @@
     points having a first central difference with a magnitude exceeding
     three times this standard deviation, or 12 cm, are set to NaNs.  This 
     also affects about 3% of the valid data points.  
-    __________________________________________________________________
+    _______________________________________________________________________
  
     Dataset creation
  
@@ -133,7 +150,7 @@
  
         ftp  ftp://podaac-ftp.jpl.nasa.gov
         cd   allData/merged_alt/L2/TP_J1_OSTM/all
-        get Merged_TOPEX_Jason_OSTM_Version_V3.1.nc.gz
+        get Merged_TOPEX_Jason_OSTM_Jason-3_Version_V4.0.nc.gz
    
     For completeness, the m-file TPJAOS also contains the processing 
     steps used in the creation of the corresponding matfile.  This 
@@ -144,7 +161,13 @@
  
     You'll need to make sure to put the directory containing the file on
     your Matlab search path using ADDPATH, e.g. 'addpath ~/Data/tpjaos'.
-    __________________________________________________________________
+    _______________________________________________________________________
+ 
+    Further details
+ 
+    From the handbook, cycles 1--355 are TOPEX/Poseidon, 356--582 are 
+    Jason-1, and 583 and future cycles are OSTM.
+    _______________________________________________________________________
  
     See also <a href="jData.html">JDATA</a>, <a href="about_floats.html">ABOUT_FLOATS</a>, <a href="about_drifters.html">ABOUT_DRIFTERS</a>.
  
@@ -155,5 +178,5 @@
            about_tpjaos --create     
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+    (C) 2014--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -44,7 +44,7 @@ function[]=jlab_index(varargin)
 %   cellmean      - Mean value of each element a cell array.                                              
 %   cellmin       - Minimum of each element in a cell array.                                              
 %   cellmult      - Multiplication acting on each element in a cell array.                                
-%   cellpack      - Removes all NaN values from cell arrays of numeric arrays.
+%   cellpack      - Removes all NaN values from cell arrays of numeric arrays.                            
 %   cellplot      - Rapidly plot all elements of a cell array of numeric arrays.                          
 %   cellprune     - Removes all empty cells, or cells less than a specified length.                       
 %   cellreal      - Real part of each element in a cell array.                                            
@@ -65,7 +65,6 @@ function[]=jlab_index(varargin)
 %   cum2mom       - Convert cumulants to moments.                                                         
 %   curveinterp   - Interpolate a field or its gradient onto a set of curves.                             
 %   curvemoments  - Centroid, area, and many other moments of a closed curve.                             
-%   dawson        - The Dawson function and its derivatives. [With P.J. Acklam]                           
 %   deg180        - Converts degrees to the range [-180,180].                                             
 %   deg360        - Converts degrees to the range [0, 360].                                               
 %   degunwrap     - Unwraps arrays given in degrees.                                                      
@@ -105,7 +104,9 @@ function[]=jlab_index(varargin)
 %   inticks       - Sets the 'tickdir' property of the current axis to 'in'.                              
 %   iseven        - True for even integer values; false otherwise.                                        
 %   isodd         - True for odd integer values; false otherwise.                                         
+%   isomax        - Returns those transform maxima that are isolated from others.                         
 %   isridgepoint  - Finds wavelet ridge points using one of several criterion.                            
+%   jdawson       - The Dawson function and its derivatives. [With P.J. Acklam]                           
 %   jdeg2rad      - Converts degrees to radians.                                                          
 %   jhelp         - Opens linked JLAB help files in Matlab's internal web browser.                        
 %   jlab_addpath  - Adds JLAB and JDATA subdirectories to your Matlab search path.                        
@@ -144,20 +145,21 @@ function[]=jlab_index(varargin)
 %   makefigs_bandwidth - has been moved to JLAB_MAKEFIGS.                                                 
 %   makefigs_closedcurves - Makes a sample figure for CLOSEDCURVES.                                       
 %   makefigs_curvemoments - Makes a sample figure for CURVEMOMENTS.                                       
-%   makefigs_dawson - Makes a sample figure for DAWSON.                                                   
 %   makefigs_dlines - Makes a sample figure for DLINES.                                                   
 %   makefigs_doublen - Makes a sample figure for DOUBLEN.                                                 
 %   makefigs_ecconv - Makes a sample figure for ECCONV.                                                   
+%   makefigs_element - Makes all figures for Lilly (2017), "Element Analysis."                            
 %   makefigs_ellband - Makes a sample figure for ELLBAND.                                                 
 %   makefigs_ellipseplot - Makes a sample figure for ELLIPSEPLOT.                                         
 %   makefigs_ellvel - Makes a sample figure for ELLVEL.                                                   
 %   makefigs_hermfun - Makes a sample figure for HERMFUN.                                                 
 %   makefigs_inellipse - Makes a sample figure for INELLIPSE.                                             
 %   makefigs_instmom - Makes some sample figures for INSTMOM.                                             
+%   makefigs_jdawson - Makes a sample figure for DJAWSON.                                                 
 %   makefigs_jpcolor - Makes a sample figure for JPCOLOR.                                                 
 %   makefigs_jtopo - Makes a sample figure for ABOUT_JTOPO.                                               
 %   makefigs_lansey - Makes a sample figure for LANSEY.                                                   
-%   makefigs_matern - Makes all figures for Lilly et al. (2016)a.                                         
+%   makefigs_matern - Makes all figures for Lilly et al. 2017.                                            
 %   makefigs_maternoise - Makes a sample figure for MATERNOISE.                                           
 %   makefigs_maternspec - Makes some sample figures for MATERNSPEC.                                       
 %   makefigs_morlfreq - Makes a sample figure for MORLFREQ.                                               
@@ -165,6 +167,7 @@ function[]=jlab_index(varargin)
 %   makefigs_morsearea - Makes a sample figure for MORSEAREA.                                             
 %   makefigs_morsebox - Makes a sample figure for MORSEBOX.                                               
 %   makefigs_morsefreq - Makes a sample figure for MORSEFREQ.                                             
+%   makefigs_morseregion - Makes somes sample figures for MORSEREGION.                                    
 %   makefigs_morsespace - Makes some sample figures for MORSESPACE.                                       
 %   makefigs_morsewave - Makes some sample figures for MORSEWAVE.                                         
 %   makefigs_morsies - has been moved to JLAB_MAKEFIGS.                                                   
@@ -180,6 +183,7 @@ function[]=jlab_index(varargin)
 %   makefigs_ridgewalk - Makes a sample figure for RIDGEWALK.                                             
 %   makefigs_simplepdf - Makes a sample figure for SIMPLEPDF.                                             
 %   makefigs_slidetrans - Makes a sample figure for SLIDETRANS.                                           
+%   makefigs_sphereinterp - Makes two sample figure for SPHEREINTERP.                                     
 %   makefigs_stickvect - Makes a sample figure for STICKVECT.                                             
 %   makefigs_superfamily - has been moved to JLAB_MAKEFIGS.                                               
 %   makefigs_topoplot - Makes a sample figure for TOPOPLOT.                                               
@@ -205,12 +209,14 @@ function[]=jlab_index(varargin)
 %   matinv        - Fast inversion of arrays of small matrices.                                           
 %   matmult       - Matrix multiplication for arrays of matrices.                                         
 %   matsave       - Create and save structure of variables as a mat-file.                                 
+%   max2eddy      - Converts transform maxima into oceanic coherent eddy properties.                      
 %   maxmax        - MAXMAX(X)=MAX(X(ISFINITE(X)))                                                         
+%   maxprops      - Returns properties of wavelet transform maxima.                                       
 %   minmin        - MINMIN(X)=MIN(X(ISFINITE(X)))                                                         
 %   mom2cum       - Convert moments to cumulants.                                                         
 %   morlfreq      - Compute Morlet wavelet carrier frequency given peak frequency.                        
 %   morlwave      - Morlet wavelet.                                                                       
-%   morseafun     - Returns the generalized Morse wavelet amplitude "a".                                  
+%   morseafun     - Returns the generalized Morse wavelet amplitude or a-function.                        
 %   morsearea     - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]                 
 %   morsebox      - Heisenberg time-frequency box for generalized Morse wavelets.                         
 %   morsederiv    - Frequency-domain derivatives of generalized Morse wavelets.                           
@@ -219,6 +225,7 @@ function[]=jlab_index(varargin)
 %   morsemom      - Frequency-domain moments of generalized Morse wavelets.                               
 %   morseproj     - Projection coefficient for two generalized Morse wavelets.                            
 %   morseprops    - Properties of the demodulated generalized Morse wavelets.                             
+%   morseregion   - Generalized Morse wavelet time-frequency concentration region.                        
 %   morsespace    - Logarithmically-spaced frequencies for generalized Morse wavelets.                    
 %   morsewave     - Generalized Morse wavelets of Olhede and Walden (2002).                               
 %   morsexpand    - Generalized Morse wavelets via time-domain Taylor series.                             
@@ -263,6 +270,7 @@ function[]=jlab_index(varargin)
 %   spheredist    - Computes great circle distances on a sphere.                                          
 %   spherediv     - Divergence of a vector field on the surface of a sphere.                              
 %   spheregrad    - Gradient of a field on the surface of a sphere.                                       
+%   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.                         
 %   spherelap     - Laplacian of a field on the surface of a sphere.                                      
 %   spheresort    - Sorted great circle distances to nearby points on the earth.                          
 %   squared       - Squares the modulus of its argument:  SQUARED(X)=ABS(X).^2                            
@@ -280,6 +288,8 @@ function[]=jlab_index(varargin)
 %   trajextract   - Extracts Lagrangian trajectory segments within given region.                          
 %   trajunwrap    - Unwraps Lagrangian trajectories from a periodic domain.                               
 %   trajwrap      - Wraps Lagrangian trajectories to fit within a periodic domain.                        
+%   transmax      - Locates modulus maximum points of wavelet transform.                                  
+%   transmaxdist  - Distributions of wavelet transform maxima in noise.                                   
 %   twodhist      - Two-dimensional histogram.                                                            
 %   twodmed       - Median value of a function of two variables.                                          
 %   twodsort      - Distances from data points to nearby grid points.                                     
@@ -323,11 +333,11 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                             
 %   yoffset       - Offsets lines in the y-direction after plotting.                                      
 %   ytick         - Sets locations of y-axis tick marks.                                                  
-%   ztick         - Sets locations of z-axis tick marks. 
+%   ztick         - Sets locations of z-axis tick marks.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2016 J.M. Lilly --- type 'help jlab_license' for details
-
+%   (C) 2015--2017 J.M. Lilly --- type 'help jlab_license' for details
+ 
 if nargin==0
     help jlab_index
 else

@@ -32,7 +32,7 @@ function[v]=ellvel(varargin)
 %   ELLVEL(DT,...,FACT,STR) optionally converts the physical units of 
 %   velocity through a multiplication by FACT, with a default value of 
 %   FACT=1.  For example, FACT=1e5 converts kilometers into centimeters, 
-%   while FACT=1e5/24/3600 converts km/day into cm/sec.
+%   while FACT=1e5/24/3600 converts km/day into cm/sec. 
 %   ____________________________________________________________________
 %   
 %   Cell array input/output

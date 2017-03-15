@@ -29,7 +29,7 @@ else
 end
 
 function[fc]=corfreq_one(lat)
-omega=7.292e-5;
+omega=7.2921159e-5;
 fc=2*sind(lat).*omega.*(3600);
 
 function[]=corfreq_test

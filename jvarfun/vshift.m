@@ -33,7 +33,7 @@ function[varargout]=vshift(varargin)
 %   See also: VINDEX, CIRCSHIFT.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2014 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2016 J.M. Lilly --- type 'help jlab_license' for details    
   
 
 if strcmpi(varargin{1}, '--t')
@@ -88,9 +88,10 @@ end
 
 if nargin==3
 %   Same as using circshift... these are the same speed
-%   array=zeros(max(ndim,numel(size(x))),1);
-%   array(ndim)=-n;
-%   y=circshift(x,array);
+    %array=zeros(max(ndim,numel(size(x))),1);
+    %array(ndim)=-n;
+    %ndim
+ %   y=circshift(x,-n,ndim);
     y=vindex(x,ii,ndim);
 else
     y1=vindex(x,jj,ndim2);

@@ -78,7 +78,8 @@ function[h,indexout]=ellipseplot(varargin)
 %   applied to the multiple columns (if any) of the arrays K, L, TH and Z.
 %
 %   By default, the default line styles are used, so corresponding to 
-%   STY{1}='b'; STY{2}='g'; STY{3}='r'; and so forth.
+%   STY{1}='T'; STY{2}='U'; STY{3}='V'; and so forth.  These are the names
+%   given to the (new) default Matlab colors by LINESTYLE.
 %
 %   For example, STY{1}='2b--'; STY{2}='r-.'; will alternate between thick
 %   blue dashed lines and thin red dash-dotted lines.
@@ -135,7 +136,7 @@ function[h,indexout]=ellipseplot(varargin)
 %          ellipseplot(k,l,th,z,'2r--')
 %   ______________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1},'--f')
    type makefigs_ellipseplot
@@ -151,13 +152,13 @@ k=varargin{1};
 l=real(varargin{2});
 th=varargin{3};
 
-sty{1}='b';
-sty{2}='g';
-sty{3}='r';
-sty{4}='c';
-sty{5}='m';
-sty{6}='y';
-sty{7}='k';
+sty{1}='T';
+sty{2}='U';
+sty{3}='V';
+sty{4}='W';
+sty{5}='X';
+sty{6}='Y';
+sty{7}='Z';
 
 str='matlab';
 
@@ -369,6 +370,7 @@ if ~isempty(index)
         end
     end
 end
+
 
 function[h]=ellipseplot1(kappa,lambda,theta,phi,x,ar1,ar2,npoints,str)
 %kappa,lambda,theta,phi,x,ar1,ar2,npoints

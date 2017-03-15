@@ -8,6 +8,8 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %   Here KAPPA is the RMS ellipse amplitude, LAMBDA is the linearity, 
 %   THETA is the orientation, and PHI is the instantaneous orbital phase.
 %
+%   ELLPARAMS(M), where M is matrix with two columns, also works.
+%
 %   See Lilly and Gascard (2006) and Lilly and Olhede (2010a) for details.
 %
 %   ELLPARAMS is inverted by ELLSIG, which returns the X and Y signals 
@@ -15,7 +17,7 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %
 %   ELLPARAMS(...,DIM) performs the analysis with time running along
 %   dimension DIM, as opposed to the default behavior of DIM=1.    
-%   __________________________________________________________________
+%   _______________________________________________________________________
 %
 %   Trivariate signals
 %
@@ -26,36 +28,40 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %   are all analytic signals, also returns the zenith angle ALPHA and the 
 %   azimuth angle BETA in addition to the other ellipse parameters.
 %
+%   ELLPARAMS(M), where M is matrix with three columns, also works.
+%
 %   See Lilly (2010) for details on the trivariate case.
-%   __________________________________________________________________
+%   _______________________________________________________________________
 %
 %   Cell array input / output
 %
-%   ELLPARAMS also works if the input arguments are cell arrays of numeric
-%   arrays, in which case the output arguments will also be cell arrays of
-%   the same size.
-%   __________________________________________________________________
+%   [KAPPA,LAMBDA,THETA,PHI]=ELLPARAMS(C) also works if C is a cell array
+%   containing, say K different X and Y signals, each as a 2-column matrix,
 %
-%   Alternate form
+%         C{1}(:,1)=X1, C{1}(:,2)=Y1
+%         C{2}(:,1)=X2, C{2}(:,2)=Y2, ...  
+%         C{K}(:,1)=XK, C{2}(:,2)=YK.  
 %
-%   [...]=ELLPARAMS(M) also works, where M is a two-column or three-column
-%   matrix, i.e. M=[X Y] or M=[X Y Z], for bivariate or trivariate signals,
-%   respectively. 
+%   In this case, the output variables will also be length K cell arrays.
+%
+%   The trivariate form described above also works, with each cell now
+%   being a matrix with three columns.
+%
+%   This format works with the cell array output format of RIDGEWALK.
 %   __________________________________________________________________
 %
 %   'ellparams --t' runs a test.
 %
 %   See also ELLSIG, ELLBAND, ELLDIFF, ELLVEL, ELLRAD, KL2AB, AB2KL. 
 %
-%   Usage: [kappa,lambda,theta,phi]=ellparams(M);
-%          [kappa,lambda,theta,phi]=ellparams(x,y);
+%   Usage: [kappa,lambda,theta,phi]=ellparams(x,y);
 %          [kappa,lambda,theta,phi]=ellparams(x,y,dim);
-%          [kappa,lambda,theta,phi]=ellparams([x,y]);
 %          [kappa,lambda,theta,phi,alpha,beta]=ellparams(x,y,z);
 %          [kappa,lambda,theta,phi,alpha,beta]=ellparams([x,y,z]);
+%          [kappa,lambda,theta,phi]=ellparams(C);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2016 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
     ellparams_test,normvect_test,return
@@ -69,53 +75,45 @@ if ~iscell(varargin{end})&&length(varargin{end})==1
 else
     dim=1;
 end
-   
-x=[];
-y=[];
-z=[];
-if length(varargin)==1
-    if ~isempty(varargin{1})
-        if size(varargin{1},2)==2
-            na=2;
-            x=varargin{1}(:,1);
-            y=varargin{1}(:,2);
-        elseif size(varargin{1},2)==3
-            na=3;
-            x=varargin{1}(:,1);
-            y=varargin{1}(:,2);
-            z=varargin{1}(:,3);
-        else
-            error('For ELLPARAMS(X) with one input argument, X must have either two or three columns.')
-        end
-    end
-elseif length(varargin)==2
-    na=2;
-    x=varargin{1};
-    y=varargin{2};
-elseif length(varargin)==3
-    na=3;
-    x=varargin{1};
-    y=varargin{2};
-    z=varargin{3};
-else
-    error('ELLPARAMS must have one, two, or three input arguments.')
-end    
 
-[kappa,lambda,theta,phi,alpha,beta]=vempty;
-if ~isempty(x)
-    if ~iscell(x)
+[z,kappa,lambda,theta,phi,alpha,beta]=vempty;
+if ~isempty(varargin{1})
+    if ~iscell(varargin{1})
+        if length(varargin)==1
+            if  (size(varargin{1},2)~=2)&&(size(varargin{1},2)~=3)
+                error('For ELLPARAMS(M) with one input argument, M must have either two or three columns.')
+            end
+            x=varargin{1}(:,1);
+            y=varargin{1}(:,2);
+            if size(varargin{1},2)==3
+                z=varargin{1}(:,3);
+            end
+        else
+            if length(varargin)>3
+                error('ELLPARAMS must have one, two, or three input arguments.')
+            end
+            x=varargin{1};
+            y=varargin{2};
+            if length(varargin)==3
+                z=varargin{3};
+            end
+        end
         [kappa,lambda,theta,phi,alpha,beta]=ellparams_one(x,y,z,dim);
     else
+        x=varargin{1};
         for i=1:length(x)
-            if isempty(z)
-                [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1}]=ellparams_one(x{i},y{i},[],dim);
+            if ~isempty(x{i})
+                if size(x{i},2)==2
+                    [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1}]=ellparams_one(x{i}(:,1),x{i}(:,2),[],dim);
+                else
+                    [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1},alpha{i,1},beta{i,1}]=...
+                        ellparams_one(x{i}(:,1),x{i}(:,2),x{i}(:,3),dim);
+                end
             else
-                [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1},alpha{i,1},beta{i,1}]=ellparams_one(x{i},y{i},z{i},dim);
+                [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1},alpha{i,1},beta{i,1}]=vempty;
             end
         end
     end
-else
-    kappa=x;lambda=x;theta=x;phi=x;alpha=x;beta=x;
 end
 
 function[kappa,lambda,theta,phi,alpha,beta]=ellparams_one(x,y,z,dim)

@@ -1,7 +1,7 @@
 <html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
-<div><h1>ELLPARAMS is the <a href="jellipse.html">jellipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+<div><h1>ELLPARAMS is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="ellparams.html">ELLPARAMS</a>  Ellipse parameters of a modulated bivariate or trivariate oscillation.
  
     [KAPPA,LAMBDA,THETA,PHI]=<a href="ellparams.html">ELLPARAMS</a>(X,Y) where X and Y are analytic 
@@ -11,6 +11,8 @@
     Here KAPPA is the RMS ellipse amplitude, LAMBDA is the linearity, 
     THETA is the orientation, and PHI is the instantaneous orbital phase.
  
+    <a href="ellparams.html">ELLPARAMS</a>(M), where M is matrix with two columns, also works.
+ 
     See Lilly and Gascard (2006) and Lilly and Olhede (2010a) for details.
  
     <a href="ellparams.html">ELLPARAMS</a> is inverted by <a href="ellsig.html">ELLSIG</a>, which returns the X and Y signals 
@@ -18,7 +20,7 @@
  
     <a href="ellparams.html">ELLPARAMS</a>(...,DIM) performs the analysis with time running along
     dimension DIM, as opposed to the default behavior of DIM=1.    
-    __________________________________________________________________
+    _______________________________________________________________________
  
     Trivariate signals
  
@@ -29,34 +31,38 @@
     are all analytic signals, also returns the zenith angle ALPHA and the 
     azimuth angle BETA in addition to the other ellipse parameters.
  
+    <a href="ellparams.html">ELLPARAMS</a>(M), where M is matrix with three columns, also works.
+ 
     See Lilly (2010) for details on the trivariate case.
-    __________________________________________________________________
+    _______________________________________________________________________
  
     Cell array input / output
  
-    <a href="ellparams.html">ELLPARAMS</a> also works if the input arguments are cell arrays of numeric
-    arrays, in which case the output arguments will also be cell arrays of
-    the same size.
-    __________________________________________________________________
+    [KAPPA,LAMBDA,THETA,PHI]=<a href="ellparams.html">ELLPARAMS</a>(C) also works if C is a cell array
+    containing, say K different X and Y signals, each as a 2-column matrix,
  
-    Alternate form
+          C{1}(:,1)=X1, C{1}(:,2)=Y1
+          C{2}(:,1)=X2, C{2}(:,2)=Y2, ...  
+          C{K}(:,1)=XK, C{2}(:,2)=YK.  
  
-    [...]=<a href="ellparams.html">ELLPARAMS</a>(M) also works, where M is a two-column or three-column
-    matrix, i.e. M=[X Y] or M=[X Y Z], for bivariate or trivariate signals,
-    respectively. 
+    In this case, the output variables will also be length K cell arrays.
+ 
+    The trivariate form described above also works, with each cell now
+    being a matrix with three columns.
+ 
+    This format works with the cell array output format of <a href="ridgewalk.html">RIDGEWALK</a>.
     __________________________________________________________________
  
     '<a href="ellparams.html">ellparams</a> --t' runs a test.
  
     See also <a href="ellsig.html">ELLSIG</a>, <a href="ellband.html">ELLBAND</a>, <a href="elldiff.html">ELLDIFF</a>, <a href="ellvel.html">ELLVEL</a>, <a href="ellrad.html">ELLRAD</a>, <a href="kl2ab.html">KL2AB</a>, <a href="ab2kl.html">AB2KL</a>. 
  
-    Usage: [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(M);
-           [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(x,y);
+    Usage: [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(x,y);
            [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(x,y,dim);
-           [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>([x,y]);
            [kappa,lambda,theta,phi,alpha,beta]=<a href="ellparams.html">ellparams</a>(x,y,z);
            [kappa,lambda,theta,phi,alpha,beta]=<a href="ellparams.html">ellparams</a>([x,y,z]);
+           [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(C);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

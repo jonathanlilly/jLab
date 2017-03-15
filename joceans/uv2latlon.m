@@ -8,9 +8,11 @@ function[lat,lon]=uv2latlon(varargin)
 %   LATO and LONO are an initial latitude and longitude in degrees,
 %   and U and V are eastward and northward velocity components in cm/s. 
 %
-%   NUM, U, and V may be column vectors, in which aase LATO and LONO are 
-%   both scalars.  Alternatively, NUM, U, and V may be matrices with time 
-%   oriented in rows.  LATO and LONO are then arrays of length SIZE(NUM,1). 
+%   NUM, U, and V may be column vectors, in which case LATO and LONO are 
+%   both scalars.  Alternatively U and V may be matrices with time oriented
+%   in rows.  NUM is then either an array of length SIZE(U,1), or a matrix
+%   of the same size as U and V, while LATO and LONO are either scalars or 
+%   arrays of length SIZE(U,2). 
 %
 %   [LAT,LON]=UV2LATLON(NUM,CV,LATO,LONO), where CV is the complex-valued
 %   velocity CV=U+SQRT(-1)*V, also works.
@@ -85,6 +87,16 @@ lato=varargin{1};
 lono=varargin{2};
 
 if ~iscell(num)
+    if ~aresame(size(num),size(u))
+        num=vrep(num(:),size(u,2),2);
+    end
+    if length(lato)==1
+        lato=lato+zeros(size(u(1,:)));
+    end
+    if length(lono)==1
+        lono=lono+zeros(size(u(1,:)));
+    end
+    %vsize(num,lato,lono,u,v)
     [lat,lon]=uv2latlon_one(num,lato,lono,u,v,str);
 else
     if length(lato)==1
@@ -144,7 +156,8 @@ v=v(1:end-1,:);
 u=u*(dt*24*3600)/100/1000;%Now it's km
 v=v*(dt*24*3600)/100/1000;%Now it's km
 
-for i=1:length(u)
+%vsize(lat,lon,u,v)
+for i=1:size(u,1)
     [dx,dy,dz]=sphere2uvw(lat(i,:),lon(i,:),0,u(i,:),v(i,:));
     xo=xo+dx;
     yo=yo+dy;
