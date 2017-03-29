@@ -1,5 +1,5 @@
 function[]=makefigs_sphereinterp
-%MAKEFIGS_SPHEREINTERP  Makes two sample figure for SPHEREINTERP.
+%MAKEFIGS_SPHEREINTERP  Makes two sample figures for SPHEREINTERP.
 
 load goldsnapshot, use goldsnapshot
 
