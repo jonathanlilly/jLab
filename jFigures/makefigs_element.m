@@ -61,8 +61,8 @@ orient landscape
 set(gcf,'paperPosition',[.25 .25 10.5 6])  
 
 if strcmpi(str,'print')
-    %print -djpeg -r1000 timedomainwavelets.jpg
-    print -djpeg timedomainwavelets.jpg
+    print -djpeg -r1000 timedomainwavelets.jpg
+    %print -djpeg timedomainwavelets.jpg
     crop('timedomainwavelets.jpg')
 end
 %\************************************************************************
@@ -207,13 +207,13 @@ orient portrait
 fontsize 11 11 11 11
 set(gcf,'paperposition',[1 1 8*1.5 5*1.5])
 if strcmpi(str,'print')
-    %print -djpeg -r1000 impulses-morsetrain-clean.jpg
-    print -djpeg impulses-morsetrain-dense.jpg
+    print -djpeg -r1000 impulses-morsetrain-dense.jpg
+    %print -djpeg impulses-morsetrain-dense.jpg
     crop('impulses-morsetrain-dense.jpg')
 end
 %--------------------------------------------------------------------------
 %Figure of noisy transforms
-for alpha = [0 1]
+for alpha = [1 0]
     if alpha==0
         use impulses_whitenoiseexample
     elseif alpha==1
@@ -292,14 +292,14 @@ for alpha = [0 1]
 
     if strcmpi(str,'print')
         if alpha ==0  
-            %print -djpeg -r1000 impulses-morsetrain-noisy.jpg
-            print -djpeg impulses-morsetrain-whitenoisy.jpg
+            print -djpeg -r1000 impulses-morsetrain-whitenoisy.jpg
+            %print -djpeg impulses-morsetrain-whitenoisy.jpg
             crop('impulses-morsetrain-whitenoisy.jpg')
             %print -dpng impulses-morsetrain-noisy-bw.png
             %crop('impulses-morsetrain-noisy-bw.png')
         elseif alpha ==1
-            %print -djpeg -r1000 impulses-morsetrain-noisy.jpg
-            print -djpeg impulses-morsetrain-rednoisy.jpg
+            print -djpeg -r1000 impulses-morsetrain-rednoisy.jpg
+            %print -djpeg impulses-morsetrain-rednoisy.jpg
             crop('impulses-morsetrain-rednoisy.jpg')
             %print -dpng impulses-morsetrain-noisy-bw.png
             %crop('impulses-morsetrain-noisy-bw.png')
@@ -346,10 +346,11 @@ fontsize 14 12 12 12
 set(gcf,'paperposition',[1 1 11 4.5])
 
 if strcmpi(str,'print')
-   %print -djpeg -r1000 impulses-spectra.jpg
-   print -djpeg impulses-spectra.jpg
+   print -djpeg -r1000 impulses-spectra.jpg
+   %print -djpeg impulses-spectra.jpg
    crop('impulses-spectra.jpg')
 end
+         
 %--------------------------------------------------------------------------
 %Computation of transform maxima for (2,2) wavelet only
 %Note:  This figure takes about 5 minutes on a powerful machine
@@ -434,16 +435,16 @@ for alpha=[0 1]
     
     if strcmpi(str,'print')
         if alpha==0
-            %print -djpeg -r1000 impulses-noisedist-22.jpg
-            print -djpeg impulses-noisedist-22.jpg
+            print -djpeg -r1000 impulses-noisedist-22.jpg
+            %print -djpeg impulses-noisedist-22.jpg
             crop('impulses-noisedist-22.jpg')
         elseif alpha==1
-            %print -djpeg -r1000 impulses-noisedist-22.jpg
-            print -djpeg impulses-rednoisedist-22.jpg
+            print -djpeg -r1000 impulses-rednoisedist-22.jpg
+            %print -djpeg impulses-rednoisedist-22.jpg
             crop('impulses-rednoisedist-22.jpg')
         end
     end
-end  
+end
 %--------------------------------------------------------------------------
 %Next, determine noise distribution for this particular example
 %Have to create the contours in a roundabout way because of Matlab colormap issues
@@ -572,12 +573,12 @@ for alpha=[0 1]
     
     if strcmpi(str,'print')
         if alpha==0
-            %print -djpeg -r1000 impulses-examplewhitenoisedist.jpg
-            print -djpeg impulses-examplewhitenoisedist.jpg
+            print -djpeg -r1000 impulses-examplewhitenoisedist.jpg
+            %print -djpeg impulses-examplewhitenoisedist.jpg
             crop('impulses-examplewhitenoisedist.jpg')
         elseif alpha==1
-            %print -djpeg -r1000 impulses-examplerednoisedist.jpg
-            print -djpeg impulses-examplerednoisedist.jpg
+            print -djpeg -r1000 impulses-examplerednoisedist.jpg
+            %print -djpeg impulses-examplerednoisedist.jpg
             crop('impulses-examplerednoisedist.jpg')
         end
     end
@@ -658,12 +659,9 @@ set(gcf,'paperPosition',[.25 .25 10.5 6])
 fontsize 12 10 10 10
 
 if strcmpi(str,'print')
-    print -dpng impulses-regionsofinfluence.png
     %print -djpeg impulses-regionsofinfluence.jpg
-    crop('impulses-regionsofinfluence.png')
-    %print -djpeg -r1000 impulses-regionsofinfluence.jpg
-    %print -djpeg impulses-regionsofinfluence.jpg
-    %crop('impulses-regionsofinfluence.jpg')
+    print -djpeg -r1000 impulses-regionsofinfluence.jpg
+    crop('impulses-regionsofinfluence.jpg')
 end
 %\*************************************************************************
 
@@ -806,9 +804,6 @@ fontsize 16 14 14 14
 set(gcf,'paperposition',[1 1 16 10])
 
 if strcmpi(str,'print')
-    %print -djpeg -r1000 impulses-labseathreepanel-bw.png
-    %print -djpeg impulses-labseathreepanel.jpg
-    %crop('impulses-labseathreepanel-bw.png')
     print -djpeg -r1000 impulses-labseathreepanel.jpg
     %print -djpeg impulses-labseathreepanel.jpg
     crop('impulses-labseathreepanel.jpg')
