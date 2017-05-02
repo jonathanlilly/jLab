@@ -2,6 +2,6 @@ function[]=makefigs_stickvect
 %MAKEFIGS_STICKVECT   Makes a sample figure for STICKVECT.
 
 load bravo94
-cv=vfilt(bravo.rcm.cv,100);
+cv=vfilt(bravo94.rcm.cv,100);
 figure
-stickvect(bravo.rcm.yearf,180,cv,300,-30);
+stickvect(yearfrac(bravo94.rcm.num),180,cv,300,-30);

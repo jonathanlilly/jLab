@@ -4,7 +4,8 @@ function[]=makefigs_mspec
 
 %First figure
 load bravo94
-use bravo.rcm
+use bravo94
+use bravo94.rcm
 
 figure
 cv=cv(:,5);
@@ -38,7 +39,7 @@ end
 
 %Former example
 load bravo94
-x=bravo.rcm.cv;
+x=bravo94.rcm.cv;
 vswap(x,nan,0);
 [psi,lambda]=sleptap(length(x),16);
 [f,sp,sn,spn]=mspec(x,psi);
@@ -49,7 +50,7 @@ title('Counterclockwise (blue) and clockwise (red) spectra'),
 linestyle b b b b b b r r r r r r
 
 load bravo94
-x=bravo.rcm.cv;
+x=bravo94.rcm.cv;
 vswap(x,nan,0);
 [psi,lambda]=sleptap(length(x),8);
 
@@ -57,8 +58,9 @@ for i=1:size(x,2)
     [f,Suu,Suu3,Cuu]=mspec(real(x(:,i)),real(x(:,3)),psi);
     gammauu(:,i)=Cuu./sqrt(Suu.*Suu3);
 end
+
 figure,
 plot(f,abs(gammauu)),xlog,yoffset 1,axis tight
-title('Coherence of u(t) at each depth vs. u(t) at #3')
+title('Coherence of u(t) at each depth vs. u(t) at \#3')
 
 

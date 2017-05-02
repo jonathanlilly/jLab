@@ -41,8 +41,8 @@ function[h]=stickvect(arg1,arg2,arg3,arg4,arg5,arg6)
 %   As an example,  
 %  
 %         load bravo94
-%         cv=vfilt(bravo.rcm.cv,100);
-%         stickvect(bravo.rcm.yearf,180,cv,300,-30);
+%         cv=vfilt(bravo94.rcm.cv,100);
+%         stickvect(yearfrac(bravo94.rcm.num),180,cv,300,-30);
 % 
 %   recreates the upper part of Fig. 24 of Lilly et. al JPO 1999. 
 %   This may be run by typing 'stickvect --f'.

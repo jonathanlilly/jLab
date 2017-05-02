@@ -553,7 +553,7 @@ function[]=mspec_test
 
 tol=1e-10;
 load bravo94
-cv=bravo.rcm.cv;
+cv=bravo94.rcm.cv;
 [psi,lambda]=sleptap(length(cv),8);
 
 [f,sxx,syy,sxy]=mspec(real(cv),imag(cv),psi);
@@ -577,11 +577,11 @@ reporttest('MSPEC for (x,y) and (z,z^*) are unitary transforms with matrix T',ar
 
 
 tol=1e-10;
-x=bravo.rcm.cv(:,3);
+x=bravo94.rcm.cv(:,3);
 xo=vfilt(x,24,'nonans');
 %num=yf2num(bravo.rcm.yearf);
 %t=num-yf2num(floor(bravo.rcm.yearf(1)));
-t=bravo.rcm.yearf;
+t=yearfrac(bravo94.rcm.num);
 
 
 [psi,lambda]=sleptap(length(x),8);

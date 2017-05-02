@@ -47,8 +47,8 @@ function[data,h,hc]=provec(varargin)
 %   As an example,
 %  
 %          load bravo94
-%          th=100*detrend(bravo.cat.th(:,3));
-%          [int,h,hc]=provec(bravo.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
+%          th=100*detrend(bravo94.cat.th(:,3));
+%          [int,h,hc]=provec(bravo94.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
 %          caxis([-8 8])
 %
 %   makes part of Figure 6b of Lilly and Rhines (2002) JPO.
@@ -167,8 +167,8 @@ pos=get(gca,'position');
 if bcolor
 	ax=gca;
 	hc=colorbar;
-	posc=get(hc,'position');
-	set(hc,'position',[posc(1) pos(2) posc(3) pos(4)])
+	%posc=get(hc,'position');
+	%set(hc,'position',[posc(1) pos(2) posc(3) pos(4)])
 	%the above doesn't take care of the relative size
 	%problem--- instead, try to change aspect ratio
 	axes(ax)
