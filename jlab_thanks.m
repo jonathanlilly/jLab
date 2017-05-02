@@ -10,9 +10,9 @@
 %   #NNH14CL78C, a Chateaubriand Fellowship from the French government, a 
 %   fellowship from the Conseil Scientifique of the Universite Pierre et 
 %   Marie Curie, NASA Goddard Space Flight Center contract #NNG04HZ12C, and
-%   by awards #0526297, #0751697, #0849371, #1031002, #1235310, and 
-%   #1459347 from the Physical Oceanography program of the National Science
-%   Foundation (NSF).
+%   by awards #0526297, #0751697, #0849371, #1031002, #1235310, #1459347, 
+%   and #1658564 from the Physical Oceanography program of the National
+%   Science Foundation (NSF).
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2007--2017 J.M. Lilly --- type 'help jlab_license' for details        

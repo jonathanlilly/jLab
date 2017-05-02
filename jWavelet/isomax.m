@@ -36,16 +36,18 @@ function[varargout]=isomax(varargin)
 %
 %   See also MAXPROPS, TRANSMAX, TRANSMAXDIST, MAX2EDDY.
 %
-%   'isomax --f' generates a sample figure.
-%
 %   Usage: bool=isomax(siz,index,ww,ff,gamma,beta,mu,lambda);
 %          [bool,z]=isomax(siz,index,ww,ff,gamma,beta,mu,lambda);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details        
 
+
 if strcmpi(varargin{1},'--f')
-    isomax_fig;return
+%   This doesn't work right now.  
+%   'isomax --f' generates a sample figure.
+%    isomax_fig;
+    return
 end
 
 parstr='serial';
@@ -255,8 +257,7 @@ phio=morseafun(ga,be).*frac(gamma(frac(be+mu+1,ga)),gamma(frac(mu+1,ga))).*...
 
 
 load bravo94
-use bravo.rcm
-num=yf2num(yearf);
+use bravo94.rcm
 numo=datenum(1994,1,1)-1;
 
 ga=2;be=1;mu=0;

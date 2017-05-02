@@ -30,7 +30,7 @@ function[varargout]=morsewave(varargin)
 %   MORSEWAVE(...,'bandpass') uses "bandpass normalization", meaning that
 %   the FFT of the wavelet has a peak value of 2 for all frequencies FS. 
 %
-%   MORSEWAVE(...,'energy') uses the unit energy normlization.  The time-
+%   MORSEWAVE(...,'energy') uses the unit energy normalization.  The time-
 %   domain wavelet energy SUM(ABS(PSI).^2,1) is then always unity. 
 %
 %   The bandpass normalization corresponds to having 1/S in the time-domain

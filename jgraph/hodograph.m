@@ -37,8 +37,8 @@ function[h,hc]=hodograph(varargin)
 %   As an example,
 %  
 %          load bravo94
-%          cv=vfilt(bravo.rcm.cv(:,3),24);
-%          th=100*detrend(bravo.cat.th(:,3));
+%          cv=vfilt(bravo94.rcm.cv(:,3),24);
+%          th=100*detrend(bravo94.cat.th(:,3));
 %          [h,hc]=hodograph(cv,th,20+0*th,[1:4000]);
 %          caxis([-8 8])
 %         
@@ -49,7 +49,7 @@ function[h,hc]=hodograph(varargin)
 %          [h,hc]=hodograph(cv,c,s,index);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2000--2012 J.M. Lilly --- type 'help jlab_license' for details  
+%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details  
 
 
   
@@ -105,19 +105,19 @@ end
 u0=max(max(abs(data(:))));
 %ceil(u0/5)*5;
 
-bfixlabels=0;
-if ~ishold
-	h=polar(0,u0);
-	hold on
-	bfixlabels=1;
-else
-	h=gca;
-end
+
 
 
 if isempty(c)
-	h=plot(data);
+    h=polar(angle(data),abs(data));
+	%h=plot(data);
 else 
+    if ~ishold
+        h=polar(0,u0);
+        hold on
+    else
+        h=gca;
+    end
 	bcolor=1;
         vcolon(data,s,c);
 	if any(isnan(s))
@@ -140,8 +140,8 @@ pos=get(gca,'position');
 if bcolor
 	ax=gca;
 	hc=colorbar;
-	posc=get(hc,'position');
-	set(hc,'position',[posc(1) pos(2) posc(3) pos(4)])
+	%posc=get(hc,'position');
+	%set(hc,'position',[posc(1) pos(2) posc(3) pos(4)])
 	%the above doesn't take care of the relative size
 	%problem--- instead, try to change aspect ratio
 	axes(ax)

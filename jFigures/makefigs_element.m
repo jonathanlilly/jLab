@@ -27,7 +27,7 @@ for i=1:length(be)
         psi=morsewave(length(t),1,ga(j),be(i),1/100,'bandpass');
         p=morseprops(ga(j),be(i));
         if be(i)==0
-            p=sqrt(2)*pi./morsefreq(ga(j),be(i))/(2*sqrt(2));
+            p=pi./morsefreq(ga(j),be(i))/2;
         end
         psi=psi./maxmax(psi);
         uvplot(t./p/50,psi),hold on
@@ -35,7 +35,7 @@ for i=1:length(be)
         linestyle k k-- 2k
         axis off,axis([-10 10 -0.85 1.1])
         hlines(0,'k:')
-        vlines(100*sqrt(2)/50*[1 -1],'k:')  %This is L_{\beta,\gamma}
+        vlines(2*sqrt(2)*[1 -1],'k:')  %This is L_{\beta,\gamma}
         %plot(t./p/50,squared(psi),'r')
         if i==1
             vlines(10,'G')

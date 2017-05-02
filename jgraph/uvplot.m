@@ -18,8 +18,8 @@ function[h1,h2]=uvplot(varargin)
 %   As an example,
 %
 %        load bravo94
-%        cv=vfilt(bravo.rcm.cv(:,3),24);
-%        num=yf2num(bravo.rcm.yearf)-datenum(1994,1,1);
+%        cv=vfilt(bravo94.rcm.cv(:,3),24);
+%        num=bravo94.rcm.num-datenum(1994,1,1);
 %        uvplot(num,cv,'2b','r-.'),xlim([120 340])
 %
 %   returns a color version of Fig.4b of Lilly and Rhines JPO 2001.
