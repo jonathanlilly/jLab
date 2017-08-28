@@ -1,0 +1,309 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MATERNFIT is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="maternfit.html">MATERNFIT</a>  Parametric spectral fit to the Matern form. [with A. Sykulski]
+ 
+    <a href="maternfit.html">MATERNFIT</a> performs a parametric fit of the spectrum of a time series to
+    that expected for a Matern process plus optional spin.  
+ 
+    The Matern process plus spin has a spectrum given by, see <a href="maternspec.html">MATERNSPEC</a>, 
+ 
+         SPP(F) = SIGMA^2 / [(F-NU)^2/LAMBDA^2 + 1]^ALPHA 
+                                     / (LAMBDA * MATERNC(ALPHA))
+ 
+    where SIGMA is the standard deviation, NU is a frequency shift, LAMBDA 
+    is a damping coefficient, and ALPHA is 1/2 of the spectral slope.  The
+    coefficient on the second line lets us parameterize the spectrum in 
+    terms of the process variance SIGMA^2.
+ 
+    The optimal parameters are found using a frequency-domain maximum
+    likelihood method, accounting for both aliasing and spectral blurring.
+ 
+    For further details on the parameter inference method method, see
+ 
+      Sykulski, Olhede, Lilly, and Danioux (2016).  Lagrangian time series 
+         models for ocean surface drifter trajectories. Journal of the 
+         Royal Statisical Society, Series C. 65 (1): 29--50.
+ 
+      Sykulski, Olhede, and Lilly (2016). The de-biased Whittle likelihood 
+         for second-order stationary stochastic processes.  ArXiv preprint.
+ 
+    For details on the Matern process and its spectrum, see:
+ 
+      Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
+         motion, the Matern process, and stochastic modeling of turbulent 
+         dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
+    __________________________________________________________________
+ 
+    Usage
+ 
+    FIT=<a href="maternfit.html">MATERNFIT</a>(DT,Z,FO) where Z is a complex-valued time series, returns
+    the result of a fitting the periodogram of Z to a background process
+    having a non-shifted Matern form, fit over all frequencies. The range 
+    of frequencies involved in the fit can be modified, as described below.
+ 
+    DT is the sample interval, which has units of days, while FO is a
+    signed reference frequency in units of radians per day.  FO is used in 
+    determining search ranges and initial guesses.  In oceanographic
+    applications, one would normally choose FO as the Coriolis frequency.
+ 
+    The output argument FIT is a structure which will be described later.
+ 
+    The default search ranges and initial guess values are as follows:
+  
+                     Low  Guess  High 
+         SIGMA   =   [0      1    100] * STD(Z)
+         ALPHA   =   [1/2    1     10] 
+         LAMBDA  =   [1e-3  2e-3   10] * ABS(FO)
+         NU      =   [0      0      0] * ABS(FO)
+ 
+    These can be modified, as described below. 
+    __________________________________________________________________
+ 
+    Output format
+ 
+    The following parameters are output as fields of the structure FIT.
+ 
+       SIGMA     Standard deviation of currents in cm/s
+       ALPHA     Slope parameter 
+       LAMBDA    Damping parameter in rad / day
+       NU        Oscillation frequency in rad /day
+       RANGE     Ranges of fit search for each parameter
+       PARAMS    Sub-structure with fields described below
+ 
+    The associated spectra can be then created from SIGMA, ALPHA, LAMBDA, 
+    and NU using <a href="maternspec.html">MATERNSPEC</a>. 
+ 
+    RANGE is substructure with fields SIGMA, ALPHA, LAMBDA, and NU, such 
+    that RANGE.SIGMA specifies the *dimensional* values of the associated
+    range and initial guess with format [MIN GUESS MAX], and so forth for 
+    all the other parameters. 
+ 
+    PARAMS is a substructure containing various parameter values
+    characterizing the fit itself: 
+ 
+       PARAMS.DT      Sample rate, as input to MATERNFIT
+       PARAMS.FO      Reference frequency, as input to MATERNFIT
+       PARAMS.A       Index into first frequency F(A) used in the fit
+       PARAMS.B       Index into last frequency F(B) used in the fit  
+       PARAMS.P       Number of free parameters used in the fit 
+       LIKE           Negative of the log-likelihood 
+       AICC           Akaike Information Criterion, corrected version 
+       ERR            Normalized error of fit to log spectra 
+       EXITFLAG       The exit flag from the optimization routine
+       ITER           The number of iterations in the optimization routine
+       PARAMS.SIDE    String specifying frequency side options
+       PARAMS.ALG     String specifying algorithm options
+       PARAMS.VER     String specifiying raw or difference option
+       PARAMS.CORES   String specifying series or parallel computation
+   
+    These parameters are described in more detail below.
+    __________________________________________________________________
+    
+    Multiple input time series
+ 
+    FIT=<a href="maternfit.html">MATERNFIT</a>(DT,Z,FO) may have Z being a matrix with N columns, or a 
+    cell array of N different time series.  In both of these cases, DT and 
+    FO may be scalars or length N arrays.
+ 
+    In these cases, the fields SIGMA, ALPHA, LAMBDA, and NU of FIT will 
+    also be arrays with N elements, as will LIKE, AICC, ERR, and EXITFLAG. 
+    The subfields of RANGE will all be N x 3 arrays.  In PARAMS, the fields
+    DT, FO, A, and B will all be length N.   
+    __________________________________________________________________
+    
+    Specifiying frequencies
+   
+    <a href="maternfit.html">MATERNFIT</a>(DT,Z,FO,RA,RB), where RA and RB are both real-valued scalars,
+    applies the fit to only frequencies in the range
+ 
+                ABS(FO)*RA < F < ABS(FO)*RB
+ 
+    with the default behavior corresponding to <a href="maternfit.html">MATERNFIT</a>(DT,Z,FO,0,INF).
+    Thus RA is the smallest permissible ratio of F to the reference 
+    frequency, while RB is similarly the largest permissible ratio.
+ 
+    <a href="maternfit.html">MATERNFIT</a>(DT,Z,FO,RA,[RB,RN]) also works, where the fifth argument is
+    an array of length two. In this case the fit is applied to the range
+    
+                ABS(FO)*RA < F < MIN( ABS(FO)*RB, PI/DT*RN )
+  
+    RB is the largest permissible ratio of F to the reference frequency, 
+    while RN is the largest permissible ratio of F to the Nyquist PI/DT.  
+    The fit extends to the smaller of these two frequencies.  
+ 
+    If RA and RB are imaginary numbers, rather than real numbers, then 
+    the fit is only applied to frequencies in the range
+ 
+                IMAG(RA) < F < IMAG(RB)
+ 
+    that is, the range is found without scaling by the reference frequency. 
+    
+    <a href="maternfit.html">MATERNFIT</a> can create the fit by utilizing both positive and negative 
+    frequency sides of the spectrum, the default behavior, or to only one 
+    side (plus the zero frequency). This is modified as follows:
+  
+       <a href="maternfit.html">MATERNFIT</a>(...,'both',...), the default, uses both sides.
+       <a href="maternfit.html">MATERNFIT</a>(...,'positive',...), uses the side where F/FO is positive.
+       <a href="maternfit.html">MATERNFIT</a>(...,'negative',...), uses the side where F/FO is negative.
+ 
+    Thus, changing the sign of the reference frequency also changes the 
+    side of the spectrum to be fit using the 'postive' or 'negative' flags.
+    __________________________________________________________________
+    
+    Parameter range specification
+    
+    The default search ranges and guess values can be modified.  As an 
+    example, to modify the default range and guess for the SIGMA parameter
+    corresponding to the background flow, use
+ 
+        <a href="maternfit.html">MATERNFIT</a>(...,'range.sigma',[MIN GUESS MAX],...)                   
+   
+    and so forth for other parameters. SIGMA ranges input to <a href="maternfit.html">MATERNFIT</a> 
+    represent *fractions* of the total signal standard deviation.  Thus 
+ 
+        <a href="maternfit.html">MATERNFIT</a>(...,'range.sigma',[0 1 100],...)
+ 
+    corresponds to the default setting.  The upper limit is set very high
+    because occasionally an optimum spectral fit is found that has much 
+    larger total variance than the signal. 
+ 
+    Similarly, ranges of LAMBDA and NU are nondimensional values representing
+    fractions of the magnitude of the reference frequency ABS(FO).  Thus 
+ 
+        <a href="maternfit.html">MATERNFIT</a>(...,'range.lambda',[1/1000 2/1000 1],...)
+ 
+    corresponds to the default range for LAMBDA. 
+ 
+    The slope parameter ALPHA can take on a value of no less than 1/2, so
+    the lower range for ALPHA cannot be less than 1/2.
+ 
+    This approach can be used to omit parameters from the fit, by setting
+    the MIN, GUESS, and MAX values to be identical.  For example,  
+ 
+       <a href="maternfit.html">MATERNFIT</a>(...,'range.alpha',[2 2 2]) 
+    
+    sets the ALPHA parameter to a value of 2.  Fixed parameters are then 
+    not included in the optimization, thus speeding up the fit.  
+    __________________________________________________________________
+    
+    Parameter value specification
+    
+    Parameters can also be set to particular values for each time series. 
+    This is done by setting the 'value' field as follows
+ 
+        <a href="maternfit.html">MATERNFIT</a>(...,'value.sigma',SIGMA,...)
+     
+    and so forth for the other parameters.  
+ 
+    Here SIGMA is an array of the same length as the number of time series
+    in Z.  Thus SIGMA is a scalar if Z is a single array, an array of
+    LENGTH(Z) is Z is a cell array, or of SIZE(Z,2) if Z is a matrix. 
+ 
+    Note that the values specified in this way are actual dimensional 
+    values, not nondimensional values as with setting the range. 
+ 
+    This approach works by internally setting the dimension MIN, GUESS, and
+    MAX to the value specified for each time series, overriding the default 
+    choices. This will be reflected in the output RANGE fields. 
+ 
+    If both ranges and values are specified for the same parameter, the
+    value settings take precedence.
+    __________________________________________________________________
+    
+    Numerical options
+ 
+    <a href="maternfit.html">MATERNFIT</a> has options for specifying numerical details of the fit and 
+    the optimization algorithm. 
+ 
+    <a href="maternfit.html">MATERNFIT</a> can use one of two different optimization algorithms.
+ 
+      <a href="maternfit.html">MATERNFIT</a>(...,'bnd',...), the default, uses <a href="fminsearchbnd.html">FMINSEARCHBND</a> by J. 
+        D'Errico included with <a href="jLab.html">JLAB</a> in accordance with its license terms. 
+        This in turn calls Matlab's FMINSEARCH using Nelder-Mead.
+ 
+      <a href="maternfit.html">MATERNFIT</a>(...,'con',...) alternately uses FMINCON, using the default
+        interior-point algorithm.  This requires Matlab's Optimization 
+        Toolbox to be installed.  Again, this is mainly for testing.
+ 
+    In tests, FMINCON is generally faster, and most of the fits agree
+    closely with those using <a href="fminsearchbnd.html">FMINSEARCHBND</a>.  However, occasionally FMINCON
+    produces fits that are significantly worse than those obtained from 
+    <a href="fminsearchbnd.html">FMINSEARCHBND</a>, which is why the latter is preferred by default.
+ 
+    <a href="maternfit.html">MATERNFIT</a> can employ two different versions of the fit. 
+      
+      <a href="maternfit.html">MATERNFIT</a>(...,'difference',...) estimates the Matern parameters by 
+        fitting the first difference of the time series to the first 
+        difference of a Matern process.  This amounts to a form of pre-
+        whitening, and is the default behavior when a taper is not input.
+      <a href="maternfit.html">MATERNFIT</a>(...,'raw',...) fits the time series directly to a Matern. 
+        This is the default behavior when a taper *is* input.
+ 
+    These choices are reflected in the output fields PARAMS.ALG and 
+    PARAMS.VER, respectively.
+    __________________________________________________________________
+ 
+    Tapering
+ 
+    The default behavior of fitting the first difference of the spectrum 
+    is usually sufficient to account for spectral blurring.  For very steep 
+    spectra or those with a very large dynamic range, this is no longer the
+    case, because leakage from high-energy portions of the spectra will 
+    obscure the structure of low-energy portions. 
+   
+    To addess this, <a href="maternfit.html">MATERNFIT</a> can optionally perform the fit by fitting 
+    to the tapered and aliased spectrum, correctly accounting for the 
+    influence of tapering.  This is accomplished with 
+    
+       <a href="maternfit.html">MATERNFIT</a>(...,'taper',PSI,...)
+ 
+    where PSI is a data taper of the same length as Z.  If Z is a cell
+    array, then PSI is a cell array of data tapers having the same length
+    as the components of Z.  PSI is typically computed by <a href="sleptap.html">SLEPTAP</a>.
+ 
+    When a taper is input, the default behavior is *not* to difference 
+    the time series, corresponding to the 'raw' option.  If both a taper
+    and the 'difference' flag are both input, then the taper length must 
+    be one less than the data length.  
+    __________________________________________________________________
+  
+    Error
+ 
+    While the maximum likelikehood method is not about finding the best 
+    fit in a least squares sense, a measure of the mean squared error 
+    provides a useful measure of evaluating the degree of misfit.
+ 
+    The error ERR returned by <a href="maternfit.html">MATERNFIT</a> is the squared difference between 
+    the *natural log* of the periodogram and that of the fit spectrum, 
+    summed over all frequencies used in the fit, and divided by the sum of 
+    the squared natural log of the periodogram over the same frequencies.
+ 
+    The error is computed over the inertial side, anti-inertial side, or 
+    both sides, depending on which frequency range is used for the fit. 
+ 
+    When the 'difference' behavior is employed, as is the default, ERR will
+    reflect the error between the periodogram of the first difference of 
+    the time series and the spectrum of the first difference of the fit.
+    __________________________________________________________________
+    
+    Parallelization
+ 
+    With Matlab's Parallel Computing toolbox installed, when Z is a cell 
+    array or a matrix, <a href="maternfit.html">MATERNFIT</a>(DT,Z,'parallel') will loop over the 
+    elements of Z using a parallel "parfor" loop to speed things up.
+ 
+    This choice is reflected in the output field PARAMS.CORES, which 
+    will take on the values 'series' (the default) or 'parallel'.
+    __________________________________________________________________
+ 
+    '<a href="maternfit.html">maternfit</a> --t' runs a test.
+ 
+    Usage: fit=<a href="maternfit.html">maternfit</a>(dt,z);
+           fit=<a href="maternfit.html">maternfit</a>(dt,z,fc,a,b);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2017 J.M. Lilly and A.M. Sykulski
+                                 --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
