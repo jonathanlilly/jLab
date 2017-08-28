@@ -1,0 +1,28 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MATERNFUN is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="maternfun.html">MATERNFUN</a>  Returns the Matern function.  
+ 
+    <a href="maternfun.html">MATERNFUN</a> is a low-level function called by <a href="materncov.html">MATERNCOV</a>.
+ 
+    M=<a href="maternfun.html">MATERNFUN</a>(ALPHA,X) returns the value of the Matern function of order
+    ALPHA at location X, with ALPHA>1/2.  The Matern function is defined as
+ 
+       M(X)=C*|X|^(ALPHA-1/2) K_(ALPHA-1/2)(|X|)
+    
+    where K_ALPHA is the modified Bessel function of the second kind of 
+    order ALPHA, and C=2/GAMMA(ALPHA-1/2)./2^(ALPHA-1/2) is a normalizing 
+    constant. This definition implies M(0)=1.
+ 
+    For the special case of ALPHA=1/2, the GAMMA function in C is omitted
+    in order to avoid developing a singularity. This change is acceptable 
+    because this function is used only in ratios for ALPHA<=1/2.  
+ 
+    '<a href="maternfun.html">maternfun</a> --f' generates a sample figure.
+ 
+    Usage:  M=<a href="maternfun.html">maternfun</a>(alpha,x);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
