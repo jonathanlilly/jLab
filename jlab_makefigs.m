@@ -6,14 +6,14 @@ function[varargout]=jlab_makefigs(namestr,str)
 %  'jlab_makefigs matern':
 %   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2017).
 %       Fractional Brownian motion, the Matern process, and stochastic 
-%       modeling of turbulent dispersion.  Submitted to Nonlinear Processes
-%       in Geophysics.
+%       modeling of turbulent dispersion.  Nonlinear Processes in
+%       Geophysics, 24: 481--514.
 %
 %   'jlab_makefigs element':
 %   Lilly, J. M.  (2017).  Element analysis: a wavelet-based method for
-%       analyzing time-localized events in noisy time series.  In revision 
-%       at Proceedings of the Royal Society of London, Series A.
-
+%       analyzing time-localized events in noisy time series.  Proceedings 
+%       of the Royal Society of London, Series A, 473 (2200), 1--28.
+%
 %   'jlab_makefigs superfamily':
 %   Lilly, J. M., and S. C. Olhede (2012). Generalized Morse wavelets as a
 %      superfamily of analytic wavelets.  IEEE Transactions on Signal
@@ -111,8 +111,6 @@ set(0,'defaultLegendInterpreter',dli)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_matern(str) 
 makefigs_matern(str);
-%disp('Sorry, making the figures for "matern" is not yet supported.')
-%disp('This will be made available when the paper is accepted for publication.')
 
 function[varargout]=jlab_makefigs_element(str) 
 makefigs_element(str);

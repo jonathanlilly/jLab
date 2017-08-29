@@ -1,5 +1,5 @@
 function[T,C]=maternchol(varargin)
-%MATERNCHOL  Cholesky decomposition of Matern and fBm covariances.
+%MATERNCHOL  Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]
 %
 %   MATERNCHOL is a low-level function called by MATERNOISE.
 %
@@ -34,7 +34,7 @@ function[T,C]=maternchol(varargin)
 %   Usage: T=maternchol(dt,N,sigma,alpha,lambda,nu,mu);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2017  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details 
 if strcmp(varargin{1}, '--t')
     maternchol_test,return
@@ -69,8 +69,6 @@ end
 
 
 %dt,N,sigma,alpha,lambda,nu,mu
-
-
 
 %/*************************************************************************
 %Error checking

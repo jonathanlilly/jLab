@@ -3,89 +3,88 @@ function[data,h,hc]=provec(varargin)
 %
 %   Simple provecs:
 %
-%     PROVEC(U,V,DELTAT) generates a simple progressive vector diagram
-%     plotting cumsum(U*DELTAT) vs cumsum(V*DELTAT).  U and V are
-%     column vectors, or matrices with time oriented in columns.
-%     DELTAT (optional) must be in units of seconds and defaults to
-%     one hour (3600 s).  U and V must have units of cm/s.
+%     PROVEC(DT,U,V) generates a simple progressive vector diagram plotting
+%     CUMSUM(U*DT) vs CUMSUM(V*DT).  U and V are column vectors, or 
+%     matrices with time oriented in columns. DT is a scalar with units of 
+%     of hours, while U and V must have units of cm/s.
 %  
-%     PROVEC(CV,DELTAT), where CV=U+iV, also works.
+%     PROVEC(DT,CV), where CV=U+iV, also works.
 %
 %     INT=PROVEC(...) outputs the integrated dispacement INT in km.
 %	 
 %   Fancy provecs:
 %
-%     A fancy provec use SCATTER to plot change the color and/or sizes
-%     of the points according to another parameter, say density.  A
-%     colorbar is also plotted.
+%     A fancy provec use SCATTER to plot the color and/or sizes of the 
+%     points according to another parameter, say density or temperature. 
+%     A colorbar is also plotted.
 %
-%     PROVEC(U,V,C,DELTAT) uses C as the symbol color.  The array C
-%     must have the same size as U and V.
+%     PROVEC(DT,U,V,C) uses C, of size SIZE(U), as the symbol color.
 %
-%     PROVEC(U,V,C,S,DELTAT) also uses S as the symbol size.  The
-%     array S must have the same size as U and V.
+%     PROVEC(DT,U,V,C,S) also uses S, of size SIZE(U), as the symbol size. 
 %	
-%     PROVEC(CV,C,DELTAT) and PROVEC(CV,C,S,DELTAT) also work.
+%     PROVEC(DT,CV,C) and PROVEC(DT,CV,C,S) also work.
 %
-%     Note that since SCATTER is slow for large datasets, it is useful
-%     to decimate the data before plotting.  This is accomplished
-%     using PROVEC(...,INDEX,[DELTAT]), where INDEX is placed just
-%     before the optional DELTAT.  Then only the points INT(INDEX,:)
-%     of the integrated trajectory are plotted.
+%     Note that since SCATTER is slow for large datasets, it is useful to
+%     decimate the data after CUMSUMing but before plotting.  This is 
+%     accomplished using PROVEC(...,INDEX).  Then only the points 
+%     INT(INDEX,:) of the integrated trajectory are plotted.
 %
 %     [INT,H,HC]=PROVEC returns the intergrated displacement INT, the
 %     handle H to the data, and the handle HC to the colorbar axis.
-%
-%   PROVEC(DCOL,...), where DCOL is a scalar or a row vector,
-%   specifies that the columns of the data are to by offset by amount
-%   DCOL after plotting, for both simple and fancy provecs.  
-%
-%   If DCOL is a scalar, then successive columns after the first are
-%   offset by amount -DCOL.  If DCOL is a row vector, then it
-%   specifies the offset for each column of the data.
 %
 %   As an example,
 %  
 %          load bravo94
 %          th=100*detrend(bravo94.cat.th(:,3));
-%          [int,h,hc]=provec(bravo94.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
+%          [int,h,hc]=provec(1,bravo94.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
 %          caxis([-8 8])
 %
 %   makes part of Figure 6b of Lilly and Rhines (2002) JPO.
 %         
-%   Usage: int=provec(cv);
-%          [int,h,hc]=provec(cv,c,index);
-%          [int,h,hc]=provec(cv,c,s,index);
-%          [int,h,hc]=provec(cv,c,s,index,deltat);
-%          [int,h,hc]=provec(dcol,cv,c,s,index,deltat);
+%   Usage: int=provec(dt,cv);
+%          [int,h,hc]=provec(dt,cv,c,index);
+%          [int,h,hc]=provec(dt,cv,c,s,index);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 1999--2012 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 1999--2017 J.M. Lilly --- type 'help jlab_license' for details        
+
+%          [int,h,hc]=provec(dcol,cv,c,s,index,deltat);
+%
+
+%   PROVEC(DCOL,...), where DCOL is a scalar or a row vector, specifies 
+%   that the columns of the data are to be offset by amount DCOL after 
+%   plotting, for both simple and fancy provecs.  
+%
+%   If DCOL is a scalar, then successive columns after the first are offset
+%   by amount -DCOL.  If DCOL is a row vector, then it specifies the offset
+%   for each column of the data.
+
 
 inunits=100;
 outunits=1000;
-factor=100*1000;
+factor=100*1000/3600;
 
 bcolor=0;
 defsize=5;
 
-na=nargin;
-deltat=3600;
+deltat=varargin{1};
+varargin=varargin(2:end);
+na=length(varargin);
 
 %/********************************************************
-%Look for initial row vector
+% %Look for initial row vector
 offs=0;
-if isrow(varargin{1}) || isscalar(varargin{1});
-  offs=varargin{1};
-  na=na-1;
-  varargin=varargin(2:end);
-end
-%\********************************************************
+% if isrow(varargin{1}) || isscalar(varargin{1});
+%   offs=varargin{1};
+%   na=na-1;
+%   varargin=varargin(2:end);
+% end
+% %\********************************************************
 
-if length(varargin{end})==1
-  deltat=varargin{end};
-  na=na-1;
-end
+% if length(varargin{end})==1
+%   deltat=varargin{end};
+%   na=na-1;
+% end
 
 index=[];
 if length(varargin{na})~=length(varargin{1})
@@ -131,12 +130,12 @@ if ~(length(offs)==1&&allall(abs(offs)==0))
 end
 
 
-if ~isempty(index);
+if ~isempty(index)
   data=data(index,:);
-  if ~isempty(c);
+  if ~isempty(c)
     c=c(index,:);
   end
-  if ~isempty(s);
+  if ~isempty(s)
     s=s(index,:);
   end
 end
@@ -180,9 +179,7 @@ if nargout ==0
     clear data h hc
 end
   
-  
-  
-  
+
   
 
 

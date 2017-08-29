@@ -16,7 +16,7 @@ function[]=ztick(varargin)
 %   See also XTICK, YTICK.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2014 J.M. Lilly --- type 'help jlab_license' for details  
+%   (C) 2008--2017 J.M. Lilly --- type 'help jlab_license' for details  
 
 h=gca;
 dz=[];

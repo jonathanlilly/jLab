@@ -1,5 +1,5 @@
 function[varargout]=maternoise(varargin)
-%MATERNOISE  Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
+%MATERNOISE  Realizations of the Matern process and variations, including fBm. [with A. Sykulski]
 %
 %   Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA) simulates a length N complex-
 %   valued Matern random process Z having variance SIGMA^2, slope parameter
@@ -19,9 +19,9 @@ function[varargout]=maternoise(varargin)
 %
 %   For details, including the fast generation method described below, see:
 %
-%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%     Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
 %        motion, the Matern process, and stochastic modeling of turbulent 
-%        dispersion.  Submitted to IEEE Trans. Info. Theory.
+%        dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
 %   __________________________________________________________________
 %
 %   Special cases
@@ -51,7 +51,7 @@ function[varargout]=maternoise(varargin)
 %   MATERNOISE uses a Cholesky matrix decomposition method which makes the
 %   autocovariance matrix of the generated process Z have exactly the form 
 %   of a sampled Matern autocovariance function, for nonzero LAMBDA, or of 
-%   fractional Brownian motion for H=0. 
+%   fractional Brownian motion for LAMBDA=0. 
 %
 %   Note that since the Cholesky decomposition requires O(N^3) operations,
 %   generating very long time series (>2000 points or so) may be slow.
@@ -60,30 +60,33 @@ function[varargout]=maternoise(varargin)
 %   Fast algorithm 
 %
 %   MATERNOISE(...,'fast') uses a fast approximate generation algorithm 
-%   described in Lilly et al. (2016).  This method works by making use of 
+%   described in Lilly et al. (2017).  This method works by making use of 
 %   the known analytic form for the Matern impulse response function.
 %
 %   In the fast algorithm, oversampling is used to ensure that the 
 %   structure of the Green's function is accurately resolved. 
 %
-%   [Z,ERR]=MATERNOISE(...,'fast') also returns the error ERR involved in 
-%   the fast algorithm's approximation of the autocovariance sequence.  
-%   Note that this is for testing purposes only, as it substantially slows
-%   down the algorithm. 
+%   [Z,ERR]=MATERNOISE(...,'fast') also returns the fractinal error ERR 
+%   involved in the fast algorithm's approximation of the autocovariance 
+%   sequence.  This is the total squared error between the actual and 
+%   approximated autocovariance sequences, divided by the summed squared
+%   magnitude of the actual autocovariance sequence.  Note that this is for
+%   testing purposes only, as it substantially slows down the algorithm. 
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNCOV, MATERNIMP.
+%   See also MATERNSPEC, MATERNCOV, MATERNIMP, MATERNFIT.
 %
 %   'maternoise --t' runs some tests.
 %   'maternoise --f' generates a sample figure.
 %
 %   Usage: z=maternoise(dt,N,sigma,alpha,lambda);
 %          z=maternoise(dt,N,sigma,alpha,lambda,'fast');
+%          [z,err]=maternoise(dt,N,sigma,alpha,lambda,'fast');
 %          z=maternoise(dt,[N,M],sigma,alpha,lambda,nu,mu);
 %          z=maternoise(dt,N,A,alpha,0);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2016  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2017  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details
 
 
@@ -96,7 +99,6 @@ if strcmpi(varargin{1}, '--f')
     makefigs_maternoise;
     return
 end
-
 
 %Sort out if string is input
 alg='chol';
@@ -137,6 +139,15 @@ if length(N)>1
     N=N(1);
 else
     M=1;
+end
+
+for i=1:length(alpha(:))
+    if alpha(i)==1/2
+        alpha(i)=1/2+1e-10;
+    end
+end
+if anyany(alpha<1/2)
+    error('Sorry, ALPHA must be greater than 1/2.')
 end
 
 arrayify(sigma,alpha,lambda,mu,nu);
@@ -183,38 +194,46 @@ lambda=lambda*dt;
 nu=nu*dt;
 
 Ne=ceil(maternedge(alpha,lambda,epsilon));
-%Error increases as N*lambda increases
-%Make sure N > 20 / h ... otherwise, super-resolve
-fact=max(ceil(frac(lambda*N,20)),1);
-N2=(N+Ne).*fact;
+%Make sure there are at least 10 points per decay timescale
+%That is, make sure k/(lambda*dt) >= 10
 
-[t,g]=maternimp(N2,alpha,(lambda-1i*nu)./fact);
-g=g.*sqrt(fact);  %Modify variance on account of oversampling
-%g=g.*(fact).^(alpha-1);%Rescale amplitude on account of new sample times
-Z=frac(sqrt(N2./fact),sqrt(2))*(randn(N2,M)+sqrt(-1)*randn(N2,M));
+k=ceil(10*lambda);
+N2=(N+Ne).*k;
+
+%I am rescaling the frequencies, which accounts for the sqrt(dt) that
+%should otherwise appear, see note on the evaluation of the oversampled
+%sequence in Lilly et al. (2017).
+[t,g]=maternimp(N2,alpha,(lambda-1i*nu)./k);
+%This makes a unit variance complex sequence of length N2 in the time domain
+Z=frac(sqrt(N2),sqrt(2))*(randn(N2,M)+sqrt(-1)*randn(N2,M));
 G=sigma*vrep(fft(g),M,2);
 z=ifft(G.*Z);
-z=z(1:fact:end,:);
+%figure,plot(std(ifft(Z)))
+z=z(1:k:end,:);
 z=z(Ne+1:end,:);
 
 err=nan;
 if strcmpi(str(1:3),'err')
-    R1=conv(g,flipud(conj(g))).*fact;
-    %R1=conv(g,flipud(conj(g)));
+    R1=conv(g,flipud(conj(g)));
     ii=(length(R1)-1)/2+1;
-    %fact
-    R1=R1(ii:fact:ii+N*fact-1,:);
+    R1=R1(ii:k:ii+N*k-1,:);
     [tau,R]=materncov(dt,N,1,alpha,lambda/dt,nu/dt);
-    %    vsize(R,R1)
-    %figure,plot(tau,abs([R R1]))
+     %   vsize(R,R1)
+    %figure,plot(tau,abs([R R1 abs(R-R1)])),ylog
     err=frac(sum(squared(R1-R),1),sum(squared(R),1));
+    %size(err)
 end
 
+%From earlier version...
+%Error increases as N*lambda increases
+%Make sure N > 20 / lambda^{-1} ... otherwise, super-resolve
+%Choosing (N Delta/ k) * (lambda/Delta) or N lambda/k is at least 20
+%fact=max(ceil(frac(lambda*N,20)),1);
+%N2=(N+Ne).*fact;   %fact=k
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %A few routines I'm experimenting with here
 function [z,err]=sim_noise_circulant(N,M,A,alpha,nu,H,str)
-
 
 N2 = 2*N-2; % Size of N2xN2 circulant matrix
 
@@ -435,7 +454,7 @@ for i=[-3:1/2:0];
     [f,Spp,Snn]=maternspec(1,N,sigma,-1/2,(10.^i),0,alpha);
     n=n+1;
     rat(n)=median(Spphat./Spp);
-%    figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
 reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.21))
 
@@ -445,12 +464,12 @@ n=0;
 rng(1);
 dt=3600;
 for i=[-3:1/2:0];
-    z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha/dt);
+    z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
-    [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha/dt);
+    [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
     n=n+1;
     rat(n)=median(Spphat./Spp);
- %   figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+   %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
 end
 reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and non-unit sample rate',allall(abs(rat-1)<0.2))
 

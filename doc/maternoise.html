@@ -2,7 +2,7 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>MATERNOISE is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="maternoise.html">MATERNOISE</a>  Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
+ <a href="maternoise.html">MATERNOISE</a>  Realizations of the Matern process and variations, including fBm. [with A. Sykulski]
  
     Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA) simulates a length N complex-
     valued Matern random process Z having variance SIGMA^2, slope parameter
@@ -22,9 +22,9 @@
  
     For details, including the fast generation method described below, see:
  
-      Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+      Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
          motion, the Matern process, and stochastic modeling of turbulent 
-         dispersion.  Submitted to IEEE Trans. Info. Theory.
+         dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
     __________________________________________________________________
  
     Special cases
@@ -54,7 +54,7 @@
     <a href="maternoise.html">MATERNOISE</a> uses a Cholesky matrix decomposition method which makes the
     autocovariance matrix of the generated process Z have exactly the form 
     of a sampled Matern autocovariance function, for nonzero LAMBDA, or of 
-    fractional Brownian motion for H=0. 
+    fractional Brownian motion for LAMBDA=0. 
  
     Note that since the Cholesky decomposition requires O(N^3) operations,
     generating very long time series (>2000 points or so) may be slow.
@@ -63,29 +63,32 @@
     Fast algorithm 
  
     <a href="maternoise.html">MATERNOISE</a>(...,'fast') uses a fast approximate generation algorithm 
-    described in Lilly et al. (2016).  This method works by making use of 
+    described in Lilly et al. (2017).  This method works by making use of 
     the known analytic form for the Matern impulse response function.
  
     In the fast algorithm, oversampling is used to ensure that the 
     structure of the Green's function is accurately resolved. 
  
-    [Z,ERR]=<a href="maternoise.html">MATERNOISE</a>(...,'fast') also returns the error ERR involved in 
-    the fast algorithm's approximation of the autocovariance sequence.  
-    Note that this is for testing purposes only, as it substantially slows
-    down the algorithm. 
+    [Z,ERR]=<a href="maternoise.html">MATERNOISE</a>(...,'fast') also returns the fractinal error ERR 
+    involved in the fast algorithm's approximation of the autocovariance 
+    sequence.  This is the total squared error between the actual and 
+    approximated autocovariance sequences, divided by the summed squared
+    magnitude of the actual autocovariance sequence.  Note that this is for
+    testing purposes only, as it substantially slows down the algorithm. 
     __________________________________________________________________
  
-    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>.
+    See also <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternfit.html">MATERNFIT</a>.
  
     '<a href="maternoise.html">maternoise</a> --t' runs some tests.
     '<a href="maternoise.html">maternoise</a> --f' generates a sample figure.
  
     Usage: z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda);
            z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda,'fast');
+           [z,err]=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda,'fast');
            z=<a href="maternoise.html">maternoise</a>(dt,[N,M],sigma,alpha,lambda,nu,mu);
            z=<a href="maternoise.html">maternoise</a>(dt,N,A,alpha,0);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2016  A.M. Sykulski and J.M. Lilly
+    (C) 2013--2017  A.M. Sykulski and J.M. Lilly
                                   --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

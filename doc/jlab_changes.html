@@ -4,6 +4,31 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.6.5
+          
+    Support for a new publication, see module <a href="jMatern.html">jMatern</a>:
+ 
+    Lilly, Sykulski, Early, and Olhede (2017).  Fractional Brownian motion,
+       the Matern process, and stochastic modeling of turbulent dispersion.
+       Nonlinear Processes in Geophysics, 24: 481--514.
+ 
+    New functions:
+ 
+    <a href="maternfit.html">maternfit</a>  - Parametric spectral fit to the Matern form. [with A. Sykulski]
+    
+    Changes and improvements:
+ 
+    <a href="xtick.html">XTICK</a>, <a href="ytick.html">YTICK</a>, <a href="ztick.html">ZTICK</a> bugfix for specifying empty tickmark sets.  
+    <a href="findfiles.html">FINDFILES</a> now has an option to ignore all directories named 'private'.
+    <a href="standalone.html">STANDALONE</a> bugfix for recursive searches and support for files lists.
+    <a href="standalone.html">STANDALONE</a> now uses 'private' sub-directory for dependency files.
+ 
+    Changes new in version 1.6.4
+ 
+    <a href="provec.html">PROVEC</a> now expecting sampling interval as first argument, in hours.
+    <a href="stickvect.html">STICKVECT</a> bugfix for cutting off the end of the time series.
+    <a href="stickvect.html">STICKVECT</a> improved commenting for how to <a href="choose.html">choose</a> the scale factor SCALE.
+     
     Changes new in version 1.6.3
  
     This is a major new release, which includes the following changes:

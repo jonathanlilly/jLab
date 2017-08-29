@@ -68,3 +68,4 @@ uistack(h,'bottom')
 axis([min(x) max(x) min(y) max(y)])
 boxon
 
+if nargout==0, clear h, end

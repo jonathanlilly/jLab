@@ -21,6 +21,9 @@ function[varargout]=findfiles(varargin)
 %   
 %   [FILES,PATHS]=FINDFILES(DIRNAME,...,'recursive') also outputs a cell 
 %   array PATHS specifying the full path name to each file in FILES. 
+%
+%   FINDFILES(DIRNAME,...,'recursive','ignore_private') will ignore any 
+%   directories named 'private' as a part of this recursive search. 
 %   ___________________________________________________________________
 %
 %   Additional options
@@ -61,6 +64,7 @@ if strcmpi(dirname(end),'/'),dirname=dirname(1:end-1);end
 vars=varargin(3:end);
 excludestr=[];
 includestr=[];
+ignorestr='searchprivate';
 recursionstr='norecursion';
 while ~isempty(vars)
     str=vars{1};
@@ -73,6 +77,9 @@ while ~isempty(vars)
     elseif strcmpi(str(1:3),'rec')
         recursionstr=vars{1};
         vars=vars(2:end);
+    elseif strcmpi(str(1:3),'ign')
+        ignorestr=vars{1};
+        vars=vars(2:end);
     end
 end
 
@@ -84,6 +91,20 @@ for i=1:length(dirstruct)
     isdir(i)=dirstruct(i).isdir;
 end
 dirs=files(isdir);
+
+
+bool=true(size(dirs));
+for i=1:length(dirs)
+    if strcmpi(dirs{i},'.')||strcmpi(dirs{i},'..')
+        bool(i)=false;
+    end
+    if ignorestr
+        if strcmpi(dirs{i},'private')
+            bool(i)=false;
+        end
+    end
+end
+dirs=dirs(bool);
 
 bool=false(length(files),1);
 N=length(ext);
@@ -105,10 +126,10 @@ end
 if N~=0
     for i=1:length(files)
         if ~isempty(includestr)
-            bool(i,1)=bool(i,1)&~isempty(strfind(files{i}(1:end-N-1),includestr));
+            bool(i,1)=bool(i,1)&~contains(files{i}(1:end-N-1),includestr);
         end
         if ~isempty(excludestr)
-            bool(i,1)=bool(i,1)&isempty(strfind(files{i}(1:end-N-1),excludestr));
+            bool(i,1)=bool(i,1)&contains(files{i}(1:end-N-1),excludestr);
         end
     end
 end
@@ -127,12 +148,10 @@ end
 
 if strcmpi(recursionstr(1:3),'rec')
     for i=1:length(dirs)
-        if ~strcmpi(dirs{i},'.')&&~strcmpi(dirs{i},'..')
-            %[dirname '/' dirs{i}]
-            [filesi,dirsi]=findfiles([dirname '/' dirs{i}],ext,'include',includestr,'exclude',excludestr,recursionstr);
-            files=[files;filesi];
-            dirs_out=[dirs_out;dirsi];
-        end
+        %[dirname '/' dirs{i}]
+        [filesi,dirsi]=findfiles([dirname '/' dirs{i}],ext,'include',includestr,'exclude',excludestr,recursionstr);
+        files=[files;filesi];
+        dirs_out=[dirs_out;dirsi];
     end
 end
                 

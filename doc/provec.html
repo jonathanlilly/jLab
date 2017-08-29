@@ -6,62 +6,48 @@
  
     Simple provecs:
  
-      <a href="provec.html">PROVEC</a>(U,V,DELTAT) generates a simple progressive vector diagram
-      plotting cumsum(U*DELTAT) vs cumsum(V*DELTAT).  U and V are
-      column vectors, or matrices with time oriented in columns.
-      DELTAT (optional) must be in units of seconds and defaults to
-      one hour (3600 s).  U and V must have units of cm/s.
+      <a href="provec.html">PROVEC</a>(DT,U,V) generates a simple progressive vector diagram plotting
+      CUMSUM(U*DT) vs CUMSUM(V*DT).  U and V are column vectors, or 
+      matrices with time oriented in columns. DT is a scalar with units of 
+      of hours, while U and V must have units of cm/s.
    
-      <a href="provec.html">PROVEC</a>(CV,DELTAT), where CV=U+iV, also works.
+      <a href="provec.html">PROVEC</a>(DT,CV), where CV=U+iV, also works.
  
       INT=<a href="provec.html">PROVEC</a>(...) outputs the integrated dispacement INT in km.
  	 
     Fancy provecs:
  
-      A fancy provec use SCATTER to plot change the color and/or sizes
-      of the points according to another parameter, say density.  A
-      colorbar is also plotted.
+      A fancy provec use SCATTER to plot the color and/or sizes of the 
+      points according to another parameter, say density or temperature. 
+      A colorbar is also plotted.
  
-      <a href="provec.html">PROVEC</a>(U,V,C,DELTAT) uses C as the symbol color.  The array C
-      must have the same size as U and V.
+      <a href="provec.html">PROVEC</a>(DT,U,V,C) uses C, of size SIZE(U), as the symbol color.
  
-      <a href="provec.html">PROVEC</a>(U,V,C,S,DELTAT) also uses S as the symbol size.  The
-      array S must have the same size as U and V.
+      <a href="provec.html">PROVEC</a>(DT,U,V,C,S) also uses S, of size SIZE(U), as the symbol size. 
  	
-      <a href="provec.html">PROVEC</a>(CV,C,DELTAT) and <a href="provec.html">PROVEC</a>(CV,C,S,DELTAT) also work.
+      <a href="provec.html">PROVEC</a>(DT,CV,C) and <a href="provec.html">PROVEC</a>(DT,CV,C,S) also work.
  
-      Note that since SCATTER is slow for large datasets, it is useful
-      to decimate the data before plotting.  This is accomplished
-      using <a href="provec.html">PROVEC</a>(...,INDEX,[DELTAT]), where INDEX is placed just
-      before the optional DELTAT.  Then only the points INT(INDEX,:)
-      of the integrated trajectory are plotted.
+      Note that since SCATTER is slow for large datasets, it is useful to
+      decimate the data after CUMSUMing but before plotting.  This is 
+      accomplished using <a href="provec.html">PROVEC</a>(...,INDEX).  Then only the points 
+      INT(INDEX,:) of the integrated trajectory are plotted.
  
       [INT,H,HC]=<a href="provec.html">PROVEC</a> returns the intergrated displacement INT, the
       handle H to the data, and the handle HC to the colorbar axis.
  
-    <a href="provec.html">PROVEC</a>(DCOL,...), where DCOL is a scalar or a row vector,
-    specifies that the columns of the data are to by offset by amount
-    DCOL after plotting, for both simple and fancy provecs.  
- 
-    If DCOL is a scalar, then successive columns after the first are
-    offset by amount -DCOL.  If DCOL is a row vector, then it
-    specifies the offset for each column of the data.
- 
     As an example,
    
            load bravo94
-           th=100*detrend(bravo.cat.th(:,3));
-           [int,h,hc]=<a href="provec.html">provec</a>(bravo.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
+           th=100*detrend(bravo94.cat.th(:,3));
+           [int,h,hc]=<a href="provec.html">provec</a>(1,bravo94.rcm.cv(:,3),th,20+0*th,[1:10:4000]);
            caxis([-8 8])
  
     makes part of Figure 6b of Lilly and Rhines (2002) JPO.
           
-    Usage: int=<a href="provec.html">provec</a>(cv);
-           [int,h,hc]=<a href="provec.html">provec</a>(cv,c,index);
-           [int,h,hc]=<a href="provec.html">provec</a>(cv,c,s,index);
-           [int,h,hc]=<a href="provec.html">provec</a>(cv,c,s,index,deltat);
-           [int,h,hc]=<a href="provec.html">provec</a>(dcol,cv,c,s,index,deltat);
+    Usage: int=<a href="provec.html">provec</a>(dt,cv);
+           [int,h,hc]=<a href="provec.html">provec</a>(dt,cv,c,index);
+           [int,h,hc]=<a href="provec.html">provec</a>(dt,cv,c,s,index);
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 1999--2012 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+    (C) 1999--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

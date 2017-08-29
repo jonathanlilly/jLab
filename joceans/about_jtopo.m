@@ -7,8 +7,8 @@ function[varargout]=about_jtopo(varargin)
 %   _______________________________________________________________________
 %
 %   JTOPO is a matfile containing smoothed one-sixth degree global 
-%   topography based on the Smith and Sandwell database version together 
-%   with the International Bathymetric Chart of the Arctic Ocean (IBCAO).
+%   topography based on the Smith and Sandwell database together with the
+%   International Bathymetric Chart of the Arctic Ocean (IBCAO).
 %
 %   LOAD JTOPO loads the structure JTOPO, with the following fields:
 %

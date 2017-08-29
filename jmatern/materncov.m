@@ -30,9 +30,9 @@ function[varargout]=materncov(varargin)
 %
 %   For details on the Matern process and its autocovariance function, see:
 %
-%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%     Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
 %        motion, the Matern process, and stochastic modeling of turbulent 
-%        dispersion.  Submitted to IEEE Trans. Info. Theory.
+%        dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
 %   __________________________________________________________________
 %
 %   Relationship to full autocovariance
@@ -70,7 +70,7 @@ function[varargout]=materncov(varargin)
 %   resolution errors.  
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNIMP, MATERNOISE.
+%   See also MATERNSPEC, MATERNIMP, MATERNOISE, MATERNFIT.
 %
 %   'materncov --t' runs some tests.
 %
@@ -79,7 +79,7 @@ function[varargout]=materncov(varargin)
 %          [tau,R]=materncov(dt,N,sigma,alpha,lambda,nu,mu,'composite');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2016  J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2017  J.M. Lilly --- type 'help jlab_license' for details
 
 %   No longer supported, sorry
 %   __________________________________________________________________
@@ -176,50 +176,47 @@ if strcmpi(model(1:3),'com')
     Ri=Ri(1:P:end);
     R=Ri(1:N);
 else
-    if mu==0
-        fact=2*frac(1,gamma(alpha-1/2).*pow2(alpha-1/2));
-        R=fact.*((lambda*tau).^(alpha-1/2)).*besselk(abs(alpha-1/2),lambda*tau);
+    %Looks like I need to handle the mu=0 case separately
+    %if lambda==0
+    %    lambda=1e-6;
+    %end
+    if mu==0 && alpha>1/2
+        %I am only coding this separately because it is somewhat quicker
+        t=lambda.*tau;
+        R=maternfun(alpha,t);
     else
-        if alpha==-1/2
-            tnorm=sqrt(tau.^2+(1./mu).^2);
-            fact=besselk(1,lambda./mu);
-            R=frac(1,fact).*frac(1,mu.*tnorm).*besselk(1,lambda.*tnorm);
-        else
-            tnorm=lambda.*sqrt(tau.^2+(1./mu).^2);
-            fact=1./(abs(lambda./mu)).^(alpha-1/2)./besselk(abs(alpha-1/2),abs(lambda./mu));
-            %/maternfun(alpha(i),lambda(i).*sqrt(G(i).^2));
-            R=fact*tnorm.^(alpha-1/2).*besselk(abs(alpha-1/2),tnorm);
-        end
+        %Make sure to use this version for alpha<1/2
+        t=lambda.*sqrt(tau.^2+mu.^2);  %This is to support the extended Matern form
+        R=frac(maternfun(alpha,t),maternfun(alpha,mu*lambda));
     end
     if nu~=0
-        R=R.*exp(sqrt(-1)*tau*nu);
+        R=R.*exp(sqrt(-1)*tau.*nu);
     end
-    R(tau==0)=1;
-    R=R.*sigma.^2;
 end
+R=R.*sigma.^2;
+
+% Extended Matern form reduces to this Bessel function form, test is below
+% if alpha=-1/2
+%     tnorm=sqrt(tau.^2+mu.^2);
+%     fact=besselk(1,lambda.*mu);
+%     R1=frac(1,fact).*frac(1,tnorm./mu).*besselk(1,lambda.*tnorm);
+% end
 
 
 
-%             M=10;
-%             taui=[0:M*N-1]'./M;
-%             taufull=[-flipud(taui(2:end,:));taui];
-%             R1=maternfun(alpha(i)-1/2,G(i).*abs(taufull));
-%             R2=maternfun(1/2,lambda(i).*abs(taufull)).*exp(sqrt(-1)*taufull*nu(i));
-%             %figure,uvplot(R2),hold on,plot(R1)
-%             Rfull=conv(R1,R2);
-%             a=(length(Rfull)+1)/2-(length(taufull)-1)/2;
-%             b=(length(Rfull)+1)/2+(length(taufull)-1)/2;
-%             Rfull=Rfull(a:b);
-%             Rfull=Rfull((end+1)/2:end);
-%             Rfull=Rfull(1:M:end)./Rfull(1);
-%             R(:,i)=sigma(i).^2.*Rfull;
+% function[]=maternfun_fig
 % 
-%         elseif strcmpi(model(1:3),'rev')
-%             %disp('MATERNCOV computing reverse autocovariance function.')
-%             R(:,i)=sigma(i).^2.*frac(1,1+squared(lambda(i).*abs(tau))).^alpha(i);
-%        
+% alpha=[-4:0.1:4];
+% [tau,R]=materncov(dt,10000,1,alpha,0,0,1000);
+% figure,plot(tau,R)
+% 
+% hold on,h=plot(r1,xi(:,1)); linestyle -h h 3D
+% hold on,h=plot(r1,xi(:,end)); linestyle -h h 3k
+% title('The Matern function from \alpha = 1/2 (gray) to \alpha = 4 (black)')
 
 function[]=materncov_test
+
+tic
 alpha=1.5;
 h=0.1;
 sigma=1;
@@ -263,24 +260,10 @@ b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),2e-2);
 
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case composite Matern with negligible aliasing, even N',b1&&b2)
 
-% [tau,R]=materncov(1,N,sigma,alpha,h,'reverse');
-% [f,Spp,Snn]=maternspec(1,N,sigma,alpha,h,'reverse');
-% R(1)=R(1)/2;
-% S=2*real(fft(R));
-% Spp2=S(1:length(Spp));
-% S=flipud(S);
-% Snn2=[S(end);S(1:length(Snn)-1)];
-% 
-% b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
-% b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
-% 
-% reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N, reverse Matern',b1&&b2)
-
 N=1000;
-[tau,R]=materncov(1,N,sigma,-1/2,h,0,1./(alpha*10));
-[f,Spp,Snn]=maternspec(1,N,sigma,-1/2,h,0,1./(alpha*10));
+[tau,R]=materncov(1,N,sigma,-1/2,h,0,alpha*10);
+[f,Spp,Snn]=maternspec(1,N,sigma,-1/2,h,0,alpha*10);
 [f,Spp2,Snn2]=blurspec(1,R,'aliased');
-
 
 b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
 b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
@@ -290,10 +273,9 @@ reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible 
 
 N=1000;
 dt=7;
-[tau,R]=materncov(dt,N,sigma,-1/2,h/dt,0,1./(alpha*10*dt));
-[f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,h/dt,0,1./(alpha*10*dt));
+[tau,R]=materncov(dt,N,sigma,-1/2,h/dt,0,(alpha*10*dt));
+[f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,h/dt,0,(alpha*10*dt));
 [f,Spp2,Snn2]=blurspec(dt,R,'aliased');
-
 
 b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
 b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
@@ -301,9 +283,8 @@ b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC ..., even N, exponential, non-unit sample rate',b1&&b2)
 
 
-
-[tau,R]=materncov(1,1000,7,1.5,1/10,0,1/20);
-[f,Spp,Snn]=maternspec(1,1000,7,1.5,1/10,0,1/20);
+[tau,R]=materncov(1,1000,7,1.5,1/10,0,20);
+[f,Spp,Snn]=maternspec(1,1000,7,1.5,1/10,0,20);
 [f,Spp2,Snn2]=blurspec(1,R,'aliased');
 
 
@@ -312,9 +293,10 @@ b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-10);
 
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N, extended Matern',b1&&b2)
 
-dt=7;
-[tau,R]=materncov(dt,1000,7,1.5,1/10/dt,0,1/20/dt);
-[f,Spp,Snn]=maternspec(dt,1000,7,1.5,1/10/dt,0,1/20/dt);
+dt=1.3;
+[tau,R]=materncov(dt,1000,7,1.5,1/10/dt,0,20/dt);
+[f,Spp,Snn]=maternspec(dt,1000,7,1.5,1/10/dt,0,20/dt);
+%[f,Spp2,Snn2]=blurspec(dt,R);
 [f,Spp2,Snn2]=blurspec(dt,R,'aliased');
 
 b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-10);
@@ -332,6 +314,30 @@ b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
 b2=aresame(Snn2./maxmax(Spp),Snn./maxmax(Spp),1e-4);
 
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, frequency shift case, odd N',b1&&b2)
+
+N=1000;
+dt=7;
+lambda=h/dt;
+mu=(alpha*10*dt);
+[tau,R]=materncov(dt,N,sigma,-1/2,lambda,0,mu);
+tnorm=sqrt(tau.^2+mu.^2);
+fact=besselk(1,lambda.*mu);%See notes for this form
+R1=frac(1,fact).*frac(1,tnorm./mu).*besselk(1,lambda.*tnorm);
+reporttest('MATERNCOV ALPHA = -1/2 case matches expected form',aresame(R,R1,1e-10))
+
+toc
+% [tau,R]=materncov(1,N,sigma,alpha,h,'reverse');
+% [f,Spp,Snn]=maternspec(1,N,sigma,alpha,h,'reverse');
+% R(1)=R(1)/2;
+% S=2*real(fft(R));
+% Spp2=S(1:length(Spp));
+% S=flipud(S);
+% Snn2=[S(end);S(1:length(Snn)-1)];
+% 
+% b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
+% b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
+% 
+% reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N, reverse Matern',b1&&b2)
 
 
 %Playing around with asymptotic results... which don't work for alpha > 3/2

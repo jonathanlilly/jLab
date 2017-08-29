@@ -197,10 +197,12 @@ function[varargout]=jlab_allhelp(varargin)
 %   jMatern:  Parametric spectral analysis based on the Matern process
 %  
 %   Top-level functions
-%     maternoise - Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
 %     maternspec - Fourier spectrum of the Matern random process and variations.                                
 %     materncov  - Autocovariance of the Matern random process and variations.                         
-%     maternimp  - Impulse response function for the Matern random process.                      
+%     maternimp  - Impulse response function for the Matern random process.    
+%     maternoise - Realizations of the Matern process and variations, including fBm. [with A. Sykulski]
+%     maternfit  - Parametric spectral fit to the Matern form. [with A. Sykulski]
+%     makefigs_matern - Makes all figures for Lilly et al. 2017.
 %  
 %   Other utilities
 %     blurspec   - Returns the blurred and aliased spectrum given the autocovariance.
@@ -208,7 +210,7 @@ function[varargout]=jlab_allhelp(varargin)
 %  
 %   Low-level Matern functions
 %     materncfun - Returns the normalization function C_ALPHA for a Matern process.
-%     maternchol - Cholesky decomposition of Matern and fBm covariances.
+%     maternchol - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]
 %     maternedge - Long-time cutoff edge for the Matern impulse response function.               
 %  
 %   See also jSpectral.
@@ -223,7 +225,6 @@ function[varargout]=jlab_allhelp(varargin)
 %     labseatpjaos - Altimeter data for the Labrador Sea, analyzed in Lilly (2017).
 %     npg2006      - Float data analyzed in Lilly and Gascard (2006).
 %     qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
-%     qgmodelfit   - Parameter fits of Matern model to QG turbulence data.
 %     slasnapshot  - Snapshot of AVISO 1/4 degree sea level anomaly on Jan. 1, 2007.
 %     solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
 %     vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
@@ -428,7 +429,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     morlwave   - Morlet wavelet.                                                      
 %     morlfreq   - Compute Morlet wavelet carrier frequency given peak frequency.   
 %  
-%   See also jRidges, jSpectral, jEllipse.      
+%   See also jRidges, jSpectral, jEllipse.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2015--2017 J.M. Lilly --- type 'help jlab_license' for details
@@ -457,5 +458,7 @@ for i=1:length(dirlist)
         end
     end
 end
-disp(xx)
-varargout{1}=xx;
+%disp(xx)
+%size(xx)
+%xx(1:200)
+%varargout{1}=xx;
