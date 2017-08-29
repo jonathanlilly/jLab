@@ -12,7 +12,7 @@ function[teps]=maternedge(varargin)
 %   TE is approximate because of discretization of time.  It will always be
 %   greater than the actual time at which the EPSILON level is reached.  
 %
-%   See Sykulski, Lilly, Olhede, and Danioux (2013) for details.
+%   See Lilly et al. (2017) for details. 
 %   
 %   MATERNEDGE is a low-level function that is called by MATERNOISE.
 %
@@ -23,7 +23,7 @@ function[teps]=maternedge(varargin)
 %   Usage: te=maternedge(alpha,h,epsilon);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2017 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     maternedge_test,return

@@ -4,41 +4,54 @@
 <div><h1>STANDALONE is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="standalone.html">STANDALONE</a>  Create stand-alone version of an m-file, including dependencies.
  
-    FILES=<a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR) looks in m-file FILENAME for all
+    DEPENDS=<a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR) looks in m-file FILENAME for all
     calls to m-files in directory SOURCEDIR and subdirectories, and returns 
-    a list of m-files called by FILENAME, or called by any m-files called 
-    by those files, and so forth. Commented-out calls are not included. 
- 
-    This list of called m-files is returned in the cell array FILES.  The
-    first element of FILES is the original m-file FILENAME itself. 
+    in cell array DEPENDS a list of m-files called by FILENAME, or called
+    by any m-files called by those files, etc., excluding FILENAME itself.
  
     Thus, in order to create a stand-alone version of FILENAME, one needs
-    to include all the files in FILES from SOURCEDIR and subdirectories.
+    to include all the files in DEPENDS from SOURCEDIR and subdirectories.
+    These files are called the 'dependencies' of FILENAME.
     
     Note that SOURCEDIR must be the full pathname of a directory, e.g.
     SOURCEDIR='/Users/lilly/Desktop/Dropbox/Matlab/jlab'.
-    
-    <a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR,TARGETDIR) on Mac or Unix systems moves
-    all the files to directory TARGETDIR, which is again the full pathname 
-    of a directory.  TARGETDIR is created if does not already exist. 
+ 
+    FILENAME may either be a string, or a cell array of strings containing
+    multiple filenames.  The trailing '.m' extension is not needed.   
+    ___________________________________________________________________
+ 
+    Copying files
+ 
+    <a href="standalone.html">STANDALONE</a>(FILENAME,SOURCEDIR,TARGETDIR) on Mac or Unix systems copies
+    all the files in FILENAME to directory TARGETDIR, which is again the 
+    full pathname of a directory, and copies all files in DEPENDS to a
+    subdirectory within TARGETDIR named 'private'.  
+ 
+    The directories are created if they do not already exist. 
+ 
+    The subdirectory 'private' has a special meaning in Matlab.  Functions
+    in this folder can only be called by functions in the enclosing 
+    directory, or by scripts called by these functions. Thus, the 
+    dependency files cannot be accidentally called by other functions.  
     
     WARNING: This routine will automatically copy potentially large numbers
     of files by directly accessing the 'cp' command.  If you make an error 
     in the input directories, you could end up with a big mess, or even
     overwrite things you don't want to overwrite.  Please use with caution.
  
-    For example, to make standalone version of <a href="standalone.html">STANDALONE</a>, one would type
+    For example, to make a standalone version of this function, type
  
-         <a href="standalone.html">standalone</a>('<a href="standalone.html">standalone</a>.m',....,
+         <a href="standalone.html">standalone</a>('<a href="standalone.html">standalone</a>',....,
                 '/Users/lilly/Desktop/DropBox/Matlab/jlab',...
                 '/Users/lilly/Desktop/DropBox/Matlab/standalone')
  
-    which moves <a href="standalone.html">STANDALONE</a> and all its dependencies into a directory of the
-    same name. 
+    which copies '<a href="standalone.html">standalone</a>.m' into a directory '<a href="standalone.html">standalone</a>', and its
+    dependencies into the subdirectory '<a href="standalone.html">standalone</a>/private'. 
+    ___________________________________________________________________
  
-    Usage: files=<a href="standalone.html">standalone</a>(filename,sourcedir);
+    Usage: depends=<a href="standalone.html">standalone</a>(filename,sourcedir);
            <a href="standalone.html">standalone</a>(filename,sourcedir,targetdir)
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

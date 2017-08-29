@@ -16,7 +16,7 @@ function[]=ytick(varargin)
 %   See also XTICK, ZTICK.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2002--2014 J.M. Lilly --- type 'help jlab_license' for details   
+%   (C) 2002--2017 J.M. Lilly --- type 'help jlab_license' for details   
     
 h=gca;
 dy=[];
@@ -33,7 +33,7 @@ if length(varargin)>=1
 end
 
 y=get(h,'ylim');
-if isempty(dy)
+if nargin==0
     dyguess=[1/12 1/6 1/2 1 2 4 5 10 20 25 50 100];
     index=find(ceil((y(2)-y(1))./dyguess)<10,1,'first');
     dy=dyguess(index);

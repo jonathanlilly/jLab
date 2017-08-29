@@ -21,16 +21,17 @@
  
          S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * LAMBDA^(2*ALPHA-1)/C
  
-    where C is a normalizing constant dependent upon ALPHA.  
+    where C is a normalizing constant dependent upon ALPHA.  Note that the
+    positive and negative spectra are identical for the Matern process.
  
-    For LAMBDA=0, the Matern spectrum is definedreduces to the spectrum of fractional
+    For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
     Brownian motion.  
  
     For details on the Matern process and its spectrum, see:
  
-      Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+      Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
          motion, the Matern process, and stochastic modeling of turbulent 
-         dispersion.  Submitted to IEEE Trans. Info. Theory.
+         dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
     __________________________________________________________________
  
     Matrix and cell array output
@@ -61,7 +62,7 @@
  
     This is accomplished by shifting the spectrum to be centered on F=NU 
     rather than F=0.  SPP and SNN are now the postive rotary and negative
-    rotary spectra,with the spectrum for positive frequencies +F returned
+    rotary spectra, with the spectrum for positive frequencies +F returned
     in SPP, and for negative frequencies -F in SNN.  
  
     With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
@@ -69,7 +70,7 @@
  
     Note that NU has units of radians per sample interval DT.
  
-    The oscillatory Matern is described in Lilly et al. (2016).
+    The oscillatory Matern is described in Lilly et al. (2017).
     __________________________________________________________________
  
     Experimental extensions
@@ -84,16 +85,18 @@
     [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
     returns the spectrum of the four-parameter "extended" Matern process:
  
-       S(F) = SIGMA^2 * BESSELK(ALPHA,SQRT(F^2+LAMBDA^2)/MU)
-                                     / (SQRT(F^2+LAMBDA^2)/MU)^ALPHA * C               
+       S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
+                                     / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C              
  
     where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
-    The additional parameter, MU, has units of frequency.
+    The additional parameter, MU, has units of time.  Here ALPHA can 
+    take on any real value, unlike for the standard Matern case.
  
     [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
     extended Matern spectrum to be centered at F=NU rather than F=0.
  
-    With MU set to zero, this becomes the standard Matern spectrum.
+    As MU becomes large with ALPHA>1/2, this becomes the standard Matern 
+    spectrum.
     __________________________________________________________________
  
     Damped exponential 
@@ -138,7 +141,7 @@
     SIGMA^2 be interpreted as an approximation to the inertial variance. 
     __________________________________________________________________
  
-    See also <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>, <a href="blurspec.html">BLURSPEC</a>.
+    See also <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>, <a href="maternfit.html">MATERNFIT</a>, <a href="blurspec.html">BLURSPEC</a>.
  
     '<a href="maternspec.html">maternspec</a> --f' generates some sample figures.
  
@@ -150,5 +153,5 @@
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu,mu);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2013--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -100,6 +100,7 @@ end
 function[x,y]=ellsig_2D_one(k,l,theta,phi,str,nout)
 
 [a,b]=kl2ab(k,l);
+%figure,plot([a b])
 x=rot(phi).*(a.*cos(theta)+sqrt(-1).*b.*sin(theta));
 y=rot(phi).*(a.*sin(theta)-sqrt(-1).*b.*cos(theta));
 

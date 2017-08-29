@@ -2,7 +2,7 @@ function[varargout]=maternimp(varargin)
 %MATERNIMP  Impulse response function for the Matern random process.
 %
 %   [T,G]=MATERNIMP(N,ALPHA,LAMBDA) returns first N points for the impulse 
-%   response function G for a unit-variance complex-valued Matern process 
+%   response function G for a *unit-variance* complex-valued Matern process 
 %   with slope parameter ALPHA and damping or range parameter LAMBDA.
 %
 %   The impulse response function is also known as the Green's function.
@@ -25,9 +25,9 @@ function[varargout]=maternimp(varargin)
 %
 %   For details on the Matern process and impulse response function, see:
 %
-%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%     Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
 %        motion, the Matern process, and stochastic modeling of turbulent 
-%        dispersion.  Submitted to IEEE Trans. Info. Theory.
+%        dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
 %   __________________________________________________________________
 %
 %   Oscillatory Matern
@@ -46,7 +46,15 @@ function[varargout]=maternimp(varargin)
 %   the specified times T.  Note T is not output again in this case.
 %   __________________________________________________________________
 %
-%   See also MATERNSPEC, MATERNCOV, MATERNOISE.
+%   Use in fast generation
+%
+%   [T,G]=MATERNIMP([],ALPHA,LAMBDA) where the first argument is the empty 
+%   set, evaluates the Green's function at the points T = [0:1:N-1]'+1/2.
+%   This form is utilized in the fast generation method implemented by 
+%   MATERNOISE and discussed in Section 5 of Lilly et al. (2017).
+%   __________________________________________________________________
+%
+%   See also MATERNSPEC, MATERNCOV, MATERNOISE, MATERNFIT.
 %
 %   'maternimp --t' runs some tests.
 %
@@ -54,7 +62,7 @@ function[varargout]=maternimp(varargin)
 %             G=maternimp(t,alpha,lambda);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2016  J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2017 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(varargin{1}, '--t')
@@ -71,9 +79,6 @@ if length(varargin)==3
         tau=varargin{1};
     end
 end
-
-
-
 
 if isempty(tau)
     tau=[0:1:N-1]'+1/2;

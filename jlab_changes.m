@@ -1,5 +1,30 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.6.5
+%         
+%   Support for a new publication, see module jMatern:
+%
+%   Lilly, Sykulski, Early, and Olhede (2017).  Fractional Brownian motion,
+%      the Matern process, and stochastic modeling of turbulent dispersion.
+%      Nonlinear Processes in Geophysics, 24: 481--514.
+%
+%   New functions:
+%
+%   maternfit  - Parametric spectral fit to the Matern form. [with A. Sykulski]
+%   
+%   Changes and improvements:
+%
+%   XTICK, YTICK, ZTICK bugfix for specifying empty tickmark sets.  
+%   FINDFILES now has an option to ignore all directories named 'private'.
+%   STANDALONE bugfix for recursive searches and support for files lists.
+%   STANDALONE now uses 'private' sub-directory for dependency files.
+%
+%   Changes new in version 1.6.4
+%
+%   PROVEC now expecting sampling interval as first argument, in hours.
+%   STICKVECT bugfix for cutting off the end of the time series.
+%   STICKVECT improved commenting for how to choose the scale factor SCALE.
+%    
 %   Changes new in version 1.6.3
 %
 %   This is a major new release, which includes the following changes:

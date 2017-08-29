@@ -200,10 +200,12 @@
     <a href="jMatern.html">jMatern</a>:  Parametric spectral analysis based on the Matern process
    
     Top-level functions
-      <a href="maternoise.html">maternoise</a> - Realizations of the Matern process and variations, including fBm.  [with A. Sykulski]
       <a href="maternspec.html">maternspec</a> - Fourier spectrum of the Matern random process and variations.                                
       <a href="materncov.html">materncov</a>  - Autocovariance of the Matern random process and variations.                         
-      <a href="maternimp.html">maternimp</a>  - Impulse response function for the Matern random process.                      
+      <a href="maternimp.html">maternimp</a>  - Impulse response function for the Matern random process.    
+      <a href="maternoise.html">maternoise</a> - Realizations of the Matern process and variations, including fBm. [with A. Sykulski]
+      <a href="maternfit.html">maternfit</a>  - Parametric spectral fit to the Matern form. [with A. Sykulski]
+      <a href="makefigs_matern.html">makefigs_matern</a> - Makes all figures for Lilly et al. 2017.
    
     Other utilities
       <a href="blurspec.html">blurspec</a>   - Returns the blurred and aliased spectrum given the autocovariance.
@@ -211,7 +213,7 @@
    
     Low-level Matern functions
       <a href="materncfun.html">materncfun</a> - Returns the normalization function C_ALPHA for a Matern process.
-      <a href="maternchol.html">maternchol</a> - Cholesky decomposition of Matern and fBm covariances.
+      <a href="maternchol.html">maternchol</a> - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]
       <a href="maternedge.html">maternedge</a> - Long-time cutoff edge for the Matern impulse response function.               
    
     See also <a href="jSpectral.html">jSpectral</a>.
@@ -226,7 +228,6 @@
       labseatpjaos - Altimeter data for the Labrador Sea, analyzed in Lilly (2017).
       npg2006      - Float data analyzed in Lilly and Gascard (2006).
       qgsnapshot   - Snapshot of f-plane QG turbulence from a simulation by J. Early.
-      qgmodelfit   - Parameter fits of Matern model to QG turbulence data.
       slasnapshot  - Snapshot of AVISO 1/4 degree sea level anomaly on Jan. 1, 2007.
       solomon      - Solomon Islands Earthquake data analyzed in Lilly (2011).
       vortex       - QG model of a barotropic jet on a beta plane, by R. K. Scott.
@@ -431,7 +432,7 @@
       <a href="morlwave.html">morlwave</a>   - Morlet wavelet.                                                      
       <a href="morlfreq.html">morlfreq</a>   - Compute Morlet wavelet carrier frequency given peak frequency.   
    
-    See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>.      
+    See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>.
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2015--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details

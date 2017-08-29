@@ -18,16 +18,17 @@ function[varargout]=maternspec(varargin)
 %
 %        S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * LAMBDA^(2*ALPHA-1)/C
 %
-%   where C is a normalizing constant dependent upon ALPHA.  
+%   where C is a normalizing constant dependent upon ALPHA.  Note that the
+%   positive and negative spectra are identical for the Matern process.
 %
-%   For LAMBDA=0, the Matern spectrum is definedreduces to the spectrum of fractional
+%   For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
 %   Brownian motion.  
 %
 %   For details on the Matern process and its spectrum, see:
 %
-%     Lilly, Sykulski, Early, and Olhede, (2016).  Fractional Brownian
+%     Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
 %        motion, the Matern process, and stochastic modeling of turbulent 
-%        dispersion.  Submitted to IEEE Trans. Info. Theory.
+%        dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
 %   __________________________________________________________________
 %
 %   Matrix and cell array output
@@ -58,7 +59,7 @@ function[varargout]=maternspec(varargin)
 %
 %   This is accomplished by shifting the spectrum to be centered on F=NU 
 %   rather than F=0.  SPP and SNN are now the postive rotary and negative
-%   rotary spectra,with the spectrum for positive frequencies +F returned
+%   rotary spectra, with the spectrum for positive frequencies +F returned
 %   in SPP, and for negative frequencies -F in SNN.  
 %
 %   With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
@@ -66,7 +67,7 @@ function[varargout]=maternspec(varargin)
 %
 %   Note that NU has units of radians per sample interval DT.
 %
-%   The oscillatory Matern is described in Lilly et al. (2016).
+%   The oscillatory Matern is described in Lilly et al. (2017).
 %   __________________________________________________________________
 %
 %   Experimental extensions
@@ -81,16 +82,18 @@ function[varargout]=maternspec(varargin)
 %   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
 %   returns the spectrum of the four-parameter "extended" Matern process:
 %
-%      S(F) = SIGMA^2 * BESSELK(ALPHA,SQRT(F^2+LAMBDA^2)/MU)
-%                                    / (SQRT(F^2+LAMBDA^2)/MU)^ALPHA * C               
+%      S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
+%                                    / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C              
 %
 %   where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
-%   The additional parameter, MU, has units of frequency.
+%   The additional parameter, MU, has units of time.  Here ALPHA can 
+%   take on any real value, unlike for the standard Matern case.
 %
 %   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
 %   extended Matern spectrum to be centered at F=NU rather than F=0.
 %
-%   With MU set to zero, this becomes the standard Matern spectrum.
+%   As MU becomes large with ALPHA>1/2, this becomes the standard Matern 
+%   spectrum.
 %   __________________________________________________________________
 %
 %   Damped exponential 
@@ -135,7 +138,7 @@ function[varargout]=maternspec(varargin)
 %   SIGMA^2 be interpreted as an approximation to the inertial variance. 
 %   __________________________________________________________________
 %
-%   See also MATERNCOV, MATERNIMP, MATERNOISE, BLURSPEC.
+%   See also MATERNCOV, MATERNIMP, MATERNOISE, MATERNFIT, BLURSPEC.
 %
 %   'maternspec --f' generates some sample figures.
 %
@@ -147,7 +150,7 @@ function[varargout]=maternspec(varargin)
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu,mu);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2017 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   No longer supported, sorry
@@ -255,29 +258,33 @@ end
 
 
 function[S]=maternspec_spec(omega,sigma,alpha,lambda,nu,mu,model)
-%This implements the single/composite and forward/reverse/exponential options
+%This implements the single/composite and extended/exponential options
 
 if strcmpi(model(1:3),'com')
     fact=2*sigma.^2.*lambda.*(nu.^2+mu.^2).^alpha;
     S1=frac(fact,(omega.^2+mu.^2).^alpha);
     S2=frac(1,(omega-nu).^2+lambda.^2);
     S=S1.*S2;
-else
-    if mu==0
+else  %using the extended matern form
+    omega=omega-nu;
+    if mu==0 && alpha>1/2
+        %I am only coding this separately because it is somewhat quicker
         d=frac(lambda.^(2*alpha-1),materncfun(alpha));
-        S=frac(sigma.^2,((omega-nu).^2+lambda.^2).^alpha).*d;
+        S=frac(sigma.^2,(omega.^2+lambda.^2).^alpha).*d;
     else
-        if alpha==-1/2
-            fact=lambda.*besselk(1,lambda./mu);
-            S=frac(pi*sigma.^2,fact).*exp(-sqrt((omega-nu).^2+lambda.^2)./mu);
-        else
-            fact=sigma.^2.*frac(sqrt(2*pi),mu).*frac((lambda./mu).^(alpha-1/2),besselk(abs(alpha-1/2),abs(lambda./mu)));
-            omnorm=sqrt((omega-nu).^2+lambda.^2)./mu;
-            S=fact*omnorm.^(-alpha).*besselk(-alpha,omnorm);
-        end
+        %Extended Matern, reduces to the standard Matern form for mu=0
+        omnorm=mu*sqrt(omega.^2+lambda.^2);
+        S1=frac(sigma.^2,lambda.*materncfun(alpha).*(omega.^2/lambda.^2+1).^alpha);
+        S2=frac(maternfun(alpha+1/2,omnorm),maternfun(alpha,lambda*mu));
+        S=S1.*S2;
     end
 end
 
+%Extended Matern form reduces to this exponential form, see notes
+%if alpha==-1/2
+%   fact=lambda.*besselk(1,lambda.*mu);
+%   S=frac(pi*sigma.^2,fact).*exp(-sqrt(omega.^2+lambda.^2).*mu);
+%end
 
 %elseif strcmpi(model(1:3),'rev')
 %    S=2*pi*materncfun(alpha).*frac(sigma.^2,lambda).*maternfun(alpha-1/2,(omega-nu)./lambda);
@@ -293,24 +300,21 @@ end
 %     S2=frac(1,(omega-nu).^2+lambda.^2);
 %     S=S1.*S2;
 
-%fact=frac(2*sigma.^2.*sqrt(pi),gamma(alpha).*2.^(alpha-1/2).*lambda);
-%S=fact.*(abs(omega-nu)./lambda).^(alpha-1/2).*besselk(alpha-1/2,abs(omega-nu)./lambda);
-   
+
  
 %\*************************************************************************
     
-
-%uv=fillbad(uv);
-%uv=uv-mean(uv);
-
-% tr=1/10000;
-% %tr=1;
-% [a,alpha,h] = maternfit(tr,uv);
-% [psi,lambda] = sleptap(length(uv),3);
-% [f,spp,snn,spn] = mspec(tr,uv,psi,lambda,'adaptive');
-% [fm,sppm,snnm] = maternspec(tr,length(uv),a,alpha,h);
 % 
-% clf
-% h=twospecplot(f,[spp sppm],[snn snnm]);
-% axes(h(1)),xlin,axes(h(2)),xlin
+function[]=maternspec_figures;
+
+%[f,s]=maternspec(dt,N,sigma,alpha,lambda);
+%[f,spp,snn]=maternspec(1,1000,1,1,1/10,4/10);
+%figure,plot(f,spp),xlog,ylog
+
+[f,sppo,snno]=maternspec(1,1000,2,1,1/10,0,0);
+%[f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
+[f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
+figure,plot(f,[sppo spp]),xlog,ylog
+
+
 
