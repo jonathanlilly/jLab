@@ -45,7 +45,7 @@ function[varargout]=wavetrans(varargin)
 %   assuming a unit sample rate.  Thus the Nyquist frequency is at pi.
 %   Use MORSESPACE to easily choose the frequency bins.
 %
-%   WAVETRANS(X,{K,GAMMA,BETA,FS) uses the first K orthogonal multi-
+%   WAVETRANS(X,{K,GAMMA,BETA,FS}) uses the first K orthogonal multi-
 %   wavelets to create K different transforms.  The default is K=1,
 %   employing only the first wavelet.  See MORSEWAVE for details.
 %
