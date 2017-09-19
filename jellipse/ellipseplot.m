@@ -43,7 +43,7 @@ function[h,indexout]=ellipseplot(varargin)
 %
 %         ELLIPSEPLOT(K,L,TH,Z, ... ,'skip',SKIP).
 %
-%   This plots ellipses at indicies [SKIP:SKIP:LENGTH(K)-SKIP].
+%   This plots ellipses at indices [SKIP:SKIP:LENGTH(K)-SKIP].
 %
 %   More generally, if the input field are matrices of the same size, each
 %   having N dimensions, then SKIP can be an array with N elements.  Then
