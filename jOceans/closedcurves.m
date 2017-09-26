@@ -4,7 +4,7 @@ function[xc,yc]=closedcurves(varargin)
 %   
 %   *|* closedcurves.png --- Figure of CLOSEDCURVES applied to a QG model. 
 %   Type 'jhelp closedcurves' to view this image. *|*
-%   ______________________________________________________________________
+%   _______________________________________________________________________
 %
 %   [XC,YC]=CLOSEDCURVES(F,FO) returns closed curves of the matrix F at 
 %   level FO, i.e. curves where F=FO, as the cell arrays XC and YC.  

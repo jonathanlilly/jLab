@@ -1,4 +1,4 @@
-function[str]=commentlines(dirname)
+function[]=commentlines(dirname)
 %COMMENTLINES  Returns the comment lines from m-files. 
 %
 %   COMMENTLINES is used to facilitate making 'Contents.m' files.
@@ -127,6 +127,7 @@ else
       str=str(index,:);
   end
 end %m-files found
+disp(str)
 
 %Upcase initial word
 % for i=1:size(str,1)
