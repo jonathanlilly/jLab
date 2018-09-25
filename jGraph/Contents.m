@@ -34,8 +34,15 @@
 %   ytick      - Sets locations of y-axis tick marks.                             
 %   ztick      - Sets locations of z-axis tick marks.
 %
+% Color and colormaps
+%   colorquant - Sets the color axis according to quantiles of the data.
+%   lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+%
+% Printing
+%   printall   - Print and close all open figures.
+%
 % Graphics aliases
-%   boxon      - Sets 'box' property to 'off'.                                    
+%   boxoff     - Sets 'box' property to 'off'.                                    
 %   boxon      - Sets 'box' property to 'on'.                                                                  
 %   flipmap    - Flips the current colormap upside-down.                          
 %   flipx      - Flips the direction of the x-axis                                
@@ -46,9 +53,6 @@
 %   xlog       - Sets x-axis scale to logarithm.                                 
 %   ylin       - Sets y-axis scale to linear.                                      
 %   ylog       - Sets y-axis scale to log.        
-%
-% Colormaps
-%   lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
 %
 % Low-level functions
 %   axeshandles - Returns handles to all axes children.

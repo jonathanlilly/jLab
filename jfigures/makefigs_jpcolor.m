@@ -6,8 +6,8 @@ figure
 mat=zeros(3,3)+randn(3,3)/5;
 mat(2,2)=1;
 subplot(1,2,1)
-pcolor([1:3],[1:3],mat),axis equal,axis tight
+pcolor([1:3],[1:3],mat),axis equal,axis tight,caxis([min(mat(:)) max(mat(:))])
 title('A 3x3 matrix plotted by PCOLOR')
 subplot(1,2,2)
-jpcolor([1:3],[1:3],mat),axis equal,axis tight
+jpcolor([1:3],[1:3],mat),axis equal,axis tight,caxis([min(mat(:)) max(mat(:))])
 title('A 3x3 matrix plotted by JPCOLOR')

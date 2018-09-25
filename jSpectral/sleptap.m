@@ -1,20 +1,20 @@
 function[v,lambda]=sleptap(varargin)
 %SLEPTAP  Calculate Slepian tapers.
 %
-%   [PSI,LAMBDA]=SLEPTAP(N,P,K) calculates the K lowest-order Slepian
-%   tapers PSI of length N and time-bandwidth product P, together with
-%   their eigenvalues LAMBDA. PSI is N x K and LAMBDA is K x 1.
+%   [PSI,LAMBDA]=SLEPTAP(M,P,K) calculates the K lowest-order Slepian
+%   tapers PSI of length M and time-bandwidth product P, together with
+%   their eigenvalues LAMBDA. PSI is M x K and LAMBDA is K x 1.
 %
 %   K is optional and defaults to 2P-1.  
 %   P is optional and defaults to 4.
 %   
-%   For N<=512, SLEPTAP uses the tridiagonal method described in Percival 
-%   and Walden (1993).  For N>512, it first computes tapers for N=512 and 
+%   For M<=512, SLEPTAP uses the tridiagonal method described in Percival 
+%   and Walden (1993).  For M>512, it first computes tapers for M=512 and 
 %   then spline-interpolates.
 %   
-%   N may also be an array of lengths.  In this case PSI is a cell array of 
-%   matrices, with PSI{1} being N(1) x K, PSI{2} being N(2) x K, etc., 
-%   while LAMBDA is K x LENGTH(N).  See 'Cell array input' under MSPEC.
+%   M may also be an array of lengths.  In this case PSI is a cell array of 
+%   matrices, with PSI{1} being M(1) x K, PSI{2} being M(2) x K, etc., 
+%   while LAMBDA is K x LENGTH(M).  See 'Cell array input' under MSPEC.
 %   _____________________________________________________________________
 %
 %   Normalization
@@ -29,7 +29,7 @@ function[v,lambda]=sleptap(varargin)
 %
 %   Parallelization
 %
-%   SLEPTAP(N, ...,'parallel') when N is an array of lengths parallelizes 
+%   SLEPTAP(M, ...,'parallel') when M is an array of lengths parallelizes 
 %   the taper computation using a PARFOR loop.  This requires that Matlab's
 %   Parallel Computing Toolbox be installed.
 %   _____________________________________________________________________

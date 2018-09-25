@@ -112,10 +112,15 @@ if blatdown
     lat=[-90;lat];
 end
 
+lon=ncread(filename,'lon');
+
 %blatup,blatdown
-
-lon=deg360(ncread(filename,'lon'));
-
+%lonold=lon;
+%lon=deg360(ncread(filename,'lon'));
+%if anyany(abs(diff(lon))>180)
+%    lon=lonold;
+%end
+    
 bperiodic=false;
 if (max(lon)-min(lon)+(lon(2)-lon(1)))==360
     disp('NCINTERP detecting 360 degrees of longitude.')
@@ -147,7 +152,13 @@ end
 
 function[xk]=ncinterp_one_fast(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b,M)
 N=ceil(M*frac(1000*1000*1000,length(lat)*length(lon)*8));
-    
+   
+% size(lon)
+% lon(1:10)
+% minmin(diff(lon))
+% figure,plot(lon)
+% return
+
 xk=nan*zeros(size(numi));
 n=0;
 for i=a:N:b
@@ -188,8 +199,9 @@ for i=a:N:b
     Ni=min(N-1,length(num)-i);
     bool=(numi>=num(i-1))&(numi<=num(i+Ni));
     [numk,latk,lonk]=vindex(numi,lati,loni,bool,1);  
-    %vsize(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk)
+    vsize(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk)
     %Note that INTERP3 bizarrely has reversed the first two input arguments
+    minmin(diff(lon)),minmin(diff(lat)),minmin(diff(num((i-1):(i+Ni))))
     xk(bool) = interp3(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk,'linear');
 end
 

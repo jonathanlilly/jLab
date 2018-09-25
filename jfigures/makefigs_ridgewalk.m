@@ -5,31 +5,19 @@ load ebasnfloats
 use ebasnfloats
 
 figure
-len=cellength(lat);
-index=find(len>200);
-lato=30;
-
-id=id(index);num=num(index);lat=lat(index);lon=lon(index);
-p=p(index);t=t(index);
-
-index=24;
-id=id(index);num=num{index};lat=lat{index};lon=lon{index};
-p=p{index};t=t{index};
+num=num{33};lat=lat{33};lon=lon{33};
 dt=num(2)-num(1);
 
-ga=3;be=3;
+ga=3;be=3;P=sqrt(ga*be);
 fs=morsespace(ga,be,{0.05,2*pi/3},2*pi/100,8);
 
 %Compute wavelet transforms using generalized Morse wavelets
 cx=fillbad(latlon2xy(lat,lon,30,-25));
 cv=latlon2uv(num,lat,lon);
 
-wx=wavetrans(real(cx),{1,ga,be,fs,'bandpass'},'mirror');
-wy=wavetrans(imag(cx),{1,ga,be,fs,'bandpass'},'mirror');
-
-[ir,jr,xr,yr,fxr,fyr]=ridgewalk(dt,wx,wy,fs,{2*morseprops(ga,be),0});  
-[xhat,yhat,fxhat,fyhat]=ridgemap(length(cx),xr,yr,fxr,fyr,ir);
-fbar=vmean([fxhat fyhat],2,squared([xhat yhat]));
+[wx,wy]=wavetrans(real(cx),imag(cx),{ga,be,fs,'bandpass'},'mirror');
+[wrx,wry,ir,jr,fr,er]=ridgewalk(dt,wx,wy,fs,P,4./(2*P./pi));  
+fr=ridgemap(length(cx),fr,ir);
 
 ci=(0:5:65);
 numo=datenum(1986,1,1)-1;
@@ -40,8 +28,8 @@ text(-90,15,'(a)')
 
 axes(h(2)),caxis([0 40]),colormap gray,flipmap,ylim([3.6 60]),hold on
 
-plot(num-numo,2*pi./fbar,'w','linewidth',4)
-plot(num-numo,2*pi./fbar,'k','linewidth',2)
+plot(num-numo,2*pi./fr,'w','linewidth',4)
+plot(num-numo,2*pi./fr,'k','linewidth',2)
 
 xlabel('Day of Year 1986'),ylabel('Period in Days')
 set(gca,'ytick',2.^(2:.5:5.5))

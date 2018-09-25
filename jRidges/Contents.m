@@ -6,7 +6,8 @@
 %   instmom    - Univariate and multivariate instantaneous moments.          
 %
 %  Ridge utilities
-%   ridgelen   - Wavelet ridge length expressed as number of full cycles.    
+%   ridgetrim   - Trim edge effect regions from wavelet ridges.
+%   ridgelen    - Wavelet ridge length expressed as number of full cycles.    
 %   periodindex - Returns time index in increments of instantaneous period.  
 %
 %  See also jEllipse, jWavelet.

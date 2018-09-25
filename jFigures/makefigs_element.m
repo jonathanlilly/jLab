@@ -464,7 +464,11 @@ for alpha=[0 1]
     end
     
     ci=[1/1000 1/100 1/10 1 10];
-    [m0,ffun]=morsemom(alpha,ga,be);
+%   [m0,ffun]=morsemom(alpha,ga,be);  %Note that this version, which is
+%    incorrect for alpha not equal to zero, was used to make the figures in
+%    the supplementary text.  Fortunately, this error made only a very
+%    minor difference, not visible by eye.  See Section S3 of Lilly (2017).
+    [m0,ffun]=morsemom(-2*alpha,ga,be);
     [fmat,xmat]=meshgrid(fs,bins);
     a=ffun.*frac(morsefreq(ga,be),fmat).^(2*alpha-1);
     

@@ -4,7 +4,8 @@
 %   ellband    - Bandwidth of modulated elliptical signals in two or three dimensions. 
 %   ellparams  - Ellipse parameters of a modulated bivariate or trivariate oscillation.
 %   ellvel     - Average and instantaneous ellipse velocities.    
-%   ellrad     - Average and instantaneous ellipse radius.                             
+%   ellrad     - Average and instantaneous ellipse radius.  
+%   ellpol     - Polarization parameters of an elliptical signal.
 %
 %  Elliptical signal generation and conversions
 %   ellsig     - Creates a modulated elliptical signal in two or three dimensions.     

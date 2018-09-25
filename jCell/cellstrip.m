@@ -1,21 +1,21 @@
 function[varargout]=cellstrip(varargin)
-%CELLSTRIP  Strips NaN values from the beginnings or ends of cell arrays.
+%CELLSTRIP  Strips INF values from the beginnings or ends of cell arrays.
 %
 %   Y=CELLSTRIP(X) where X is a cell array of numeric arrays, strips any
-%   NaN values at the beginnings or the ends of the cells and returns the 
-%   result in Y.  Thus Y will begin and end with non-NaN values.
+%   INF values at the beginnings or the ends of the cells and returns the 
+%   result in Y.  Thus Y will begin and end with non-INF values.
 %
 %   An example of an input cell array X and the output Y is as follows:
 %
-%       X{1} = [1 2 nan 4 nan]';  X{2}=[nan 2 3]';  X{3}=[1 2];   X{4}=[];
-%       Y{1} = [1 2 nan 4]';      Y{2}=[2 3]';      Y{3}=[1 2];   Y{4}=[];
+%       X{1} = [1 2 inf 4 inf]';  X{2}=[inf 2 3]';  X{3}=[1 2];   X{4}=[];
+%       Y{1} = [1 2 inf 4]';      Y{2}=[2 3]';      Y{3}=[1 2];   Y{4}=[];
 %
 %   CELLSTRIP does not remove empty cells.  This is done by CELLPRUNE.
 %
 %   [Y1,Y2,...YN]=CELLSTRIP(X1,X2,...XN) with multiple input arguments, all
-%   of the same size, strips locations of leading or trailing NaNs that 
+%   of the same size, strips locations of leading or trailing INFs that 
 %   occur in *any* of the input variables.  Thus the output variables will
-%   all be the same size, and none of them will begin or end with a NaN.
+%   all be the same size, and none of them will begin or end with a INF.
 %
 %   CELLSTRIP(X1,X2,...XN); with no output arguments overwrites the 
 %   original input variables.   
@@ -27,7 +27,7 @@ function[varargout]=cellstrip(varargin)
 %          cellstrip(x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     cellstrip_test,return
@@ -46,7 +46,7 @@ for i=1:length(varargin)
         if isempty(varargin{i}{j})
             bool{j}(:,i)=false;
         else
-            bool{j}(:,i)=~isnan(varargin{i}{j});
+            bool{j}(:,i)=~isinf(varargin{i}{j});
         end
     end
 end
@@ -66,7 +66,7 @@ end
 varargout=varargin;
 
 nempty=0;
-%Strip all nans top and bottom
+%Strip all infs top and bottom
 for j=1:length(varargin{1})
     if isempty(index{j})
         nempty = nempty+1;
@@ -91,13 +91,13 @@ function[]=cellstrip_test
 
 x{1}=[1 4 3 2]';
 x{2}=[1 3 2]';
-x{3}=[1 7 10 nan 4 5]';
-x{4}=[1 2 3 nan nan]';
-x{5}=[nan nan nan]';
+x{3}=[1 7 10 inf 4 5]';
+x{4}=[1 2 3 inf inf]';
+x{5}=[inf inf inf]';
 x{6}=[]';
 
 y=x;
-y{2}(1)=nan;
+y{2}(1)=inf;
 
 x1=x;
 y1=y;

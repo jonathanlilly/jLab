@@ -33,7 +33,7 @@ function[]=matsave(varargin)
 %        MATSAVE -V6 NAME X1 ... XN
 %
 %   will create a structure NAME and save it as a Version 6 mat-file; see 
-%   SAVE for allowable version options.
+%   SAVE for allowable version options.  The default is -v7.3.
 %
 %   See also MAKE, USE.
 %
@@ -42,7 +42,7 @@ function[]=matsave(varargin)
 %           matsave -v6 -n var x1 x2 x3
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2018 J.M. Lilly --- type 'help jlab_license' for details
 
 
 version='-v7.3';

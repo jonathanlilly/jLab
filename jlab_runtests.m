@@ -60,19 +60,20 @@ namecode=zeros(length(names),1);
 for i=1:length(names)
     namecode(i)=real(lower(names{i}(1)));
 end
-[namecode,sorter]=sort(namecode);
+[~,sorter]=sort(namecode);
 names=names(sorter);
 dirnames=dirnames(sorter);
 
 testfailures=zeros(length(names),1);
 for i=1:length(names)
+%for i=200:300
     FUNCTION_NUMBER=i;
     if ~strcmpi(names{i},'jlab_runtests')&&~strcmpi(names{i},'Contents') %No recursion please
         fid=fopen([dirnames{i} '/' names{i} '.m'], 'r');   
         filestr=char(fread(fid)');
         fclose(fid);
         if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot')
-            if ~isempty(strfind(filestr,'''--t'''))
+            if contains(filestr,'''--t''')
                 try
                     eval([names{i} '(''--t'');']);
                 catch    
@@ -81,7 +82,7 @@ for i=1:length(names)
             end
         end
         if strcmpi(str(1:3),'fig')||strcmpi(str(1:3),'bot')
-            if ~isempty(strfind(filestr,'''--f'''))            
+            if  contains(filestr,'''--t''')       
                 try
                     disp(['Generating figures for ' names{i} '...'])
                     eval([names{i} '(''--f'');']);
@@ -92,7 +93,6 @@ for i=1:length(names)
     end
 end
 %close all
-
 
 if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot') 
     disp('---------------------------------------------')
@@ -107,18 +107,18 @@ if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot')
               end
           end
     end
-    if exist('jdata')~=7
+    if exist('jData')~=7&&exist('jdata')~=7
         disp('JDATA directory not found.  That''s only a problem if you thought you installed it.')
-        disp('Tests dependent upon the JDATA data will not execute.')
+        %disp('Tests dependent upon the JDATA data will not execute.')
     end
-    if vsum(testfailures,1)>0
-        disp('    Tests in the following routines did not execute:')
-        for i=1:length(names)
-            if testfailures(i)==1
-                disp(['          ' names{i} ' tests did not execute.' ])
-            end
-        end
-    end
+%     if vsum(testfailures,1)>0
+%         disp('    Tests in the following some routines did not execute.')
+%         for i=1:length(names)
+%             if testfailures(i)==1
+%                 disp(['          ' names{i} ' tests did not execute.' ])
+%             end
+%         end
+%     end
 end
 b=now;
 disp(['JLAB_RUNTESTS took ' num2str((b-a)*24*60) ' minutes running on a ' computer ' running Matlab ' version '.'])

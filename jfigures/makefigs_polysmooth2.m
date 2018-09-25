@@ -19,6 +19,7 @@ use tpjaos
 lono=(-180:1:180)';
 lato=(-66:1:66)';
 tic;[ds,xs,ys,index]=spheresort(lat,lon,1:length(lat(:)),lato,lono,200,'parallel');toc
+%tic;[ds,xs,ys,index]=spheresort(lat,lon,1:length(lat(:)),lato,lono,200);toc
 
 make grid lato lono ds xs ys index
 
@@ -28,7 +29,7 @@ zs=nan*zeros(size(xs));
 zs(~isnan(index))=z(index(~isnan(index)));
 
 %Zeroth-order fit with 100 points included
-[zhat0,weight0,beta0,b0]=polysmooth(ds,xs,ys,zs,100,0,'sphere','variable');
+tic;[zhat0,weight0,beta0,b0]=polysmooth(ds,xs,ys,zs,100,0,'sphere','variable');toc
 
 %First-order fit with 70 points included
 [zhat1,weight1,beta1,b1]=polysmooth(ds,xs,ys,zs,70,1,'sphere','variable');

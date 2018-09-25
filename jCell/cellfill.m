@@ -1,21 +1,20 @@
 function[varargout]=cellfill(varargin)
-%CELLFILL  Fills missing data marked by NaNs in a cell array.
+%CELLFILL  Fills missing data marked by INFs in a cell array.
 %
 %   Y=CELLFILL(X) where X is a cell array of numeric arrays, interpolates 
-%   to fill NaN values in the of the cells, and returns the result in Y.  
+%   to fill INF values in the of the cells, and returns the result in Y.  
 %
 %   By default CELLFILL uses the 'pchip' method.  CELLFILL(X,STR) instead
 %   uses the method specified by STR.  See INTERP1 for possible methods. 
 %
 %   An example of an input cell array X and the output Y is as follows:
 %
-%       X{1} = [1 2 nan 4 5]';   X{2}=[2 4 6 nan nan 12]';   
+%       X{1} = [1 2 inf 4 5]';   X{2}=[2 4 6 inf inf 12]';   
 %       Y{1} = [1 2  3  4 5]';   Y{2}=[2 4 6  8  10  12]';   
 %
-%   If NaNs in X are at the beginnings or the ends of cells, some NaNs may 
-%   still be present in Y, depending on the method used.  If all NaNs in X 
-%   are interior NaNs, there will be no NaNs in Y regardless of the method.
-%   See also CELLSTRIP for dealing with leading or trailing NaNs.
+%   If INFs in X are at the beginnings or the ends of cells, some INFs may 
+%   still be present in Y, depending on the method used.  If all INFs in X 
+%   are interior INFs, there will be no INFs in Y regardless of the method.
 %
 %   [Y1,Y2,...YN]=CELLFILL(X1,X2,...XN) with multiple input arguments also
 %   works provided the XN are all the same size. 
@@ -30,7 +29,7 @@ function[varargout]=cellfill(varargin)
 %          cellfill(x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     cellfill_test,return
@@ -44,20 +43,21 @@ end
 
 %Size check
 for i=2:length(varargin)
-    if size(varargin{i})~=size(varargin{1});
+    if size(varargin{i})~=size(varargin{1})
         error('All input arguments must be the same size.')
     end
 end
 
 %Find all nonfinite data
+varargout=varargin;
 for i=1:length(varargin)
-    for j=1:length(varargin{1});
+    for j=1:length(varargin{1})
         temp=varargin{i}{j};
-        if  length(find(~isnan(temp)))==0
+        if  isempty(find(~isinf(temp),1))
             bool{j}(:,i)=false;
             varargout{i}{j,1}=[];
         else
-            bool{j}(:,i)=~isnan(temp);
+            bool{j}(:,i)=~isinf(temp);
             index=find(bool{j}(:,i));
             if length(temp)>1
                varargout{i}{j,1}=interp1(index,temp(index),[1:length(temp)]',str);
@@ -81,9 +81,9 @@ function[]=cellfill_test
 
 x{1}=[1 4 3 2]';
 x{2}=[1 3 2]';
-x{3}=[1 2 nan 4 5]';
-x{4}=conj([2+1i 4+1i 6+1i nan nan 12+1i])';
-x{5}=[nan nan nan]';
+x{3}=[1 2 inf 4 5]';
+x{4}=conj([2+1i 4+1i 6+1i inf inf 12+1i])';
+x{5}=[inf inf inf]';
 x{6}=[]';
 
 y=x;

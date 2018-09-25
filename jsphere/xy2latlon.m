@@ -1,5 +1,5 @@
 function[lat,lon]=xy2latlon(varargin)
-% XY2LATLON  Converts local Cartesian coordinates into latitude and longitude.
+% XY2LATLON  Converts tangent plane coordinates into latitude and longitude.
 %
 %   [LAT,LON]=XY2LATLON(X,Y,LATO,LONO) converts (X,Y) position with units 
 %   of kilometers, specifying a location in a plane tangent to the earth 
@@ -42,14 +42,14 @@ function[lat,lon]=xy2latlon(varargin)
 %           [lat,lon]=xy2latlon(cx,lato,lono);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2005--2014 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2005--2018 J.M. Lilly --- type 'help jlab_license' for details        
   
 na=nargin;
 if ischar(varargin{end})
     str=varargin{end};
     na=na-1;
 else 
-    str='sphere';
+    str='tangent';
 end
 
 if na==3
@@ -106,7 +106,7 @@ end
 
 if strcmpi(str(1:3),'sma')
     [lat,lon]=xy2latlon_cartesian(x,y,lato,lono,R);
-elseif strcmpi(str(1:3),'sph')
+elseif strcmpi(str(1:3),'tan')
     [lat,lon]=xy2latlon_sphere(x,y,lato,lono,R);
 end
 

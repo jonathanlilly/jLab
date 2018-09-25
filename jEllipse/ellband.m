@@ -239,15 +239,18 @@ fs=2*pi./(logspace(log10(10),log10(100),50)');
 
 %Compute wavelet transforms using generalized Morse wavelets
 [wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
-[ir,jr,wxr]=ridgewalk(dt,wx,wy,fs,{3,0});
+[wxr,wyr,ir,jr]=ridgewalk(dt,wx,wy,fs,sqrt(2*4),1);
 
-[kappa,lambda,theta,phi]=ellparams(wxr(:,1),wxr(:,2));
+[kappa,lambda,theta,phi]=ellparams(wxr,wyr);
 [ba,bd,bp]=ellband(kappa,lambda,theta,phi);   
-[a,om,upbar]=instmom(wxr,1,2);
+[a,om,upbar]=instmom([wxr wyr],1,2);
 
 
-wr2=permute(wxr,[3 2 1]);
-[kappa2,lambda2,theta2,phi2]=ellparams(wr2(:,1,:),wr2(:,2,:),3);
+wxr2=permute(wxr,[3 2 1]);
+wyr2=permute(wyr,[3 2 1]);
+clear wr2
+wr2(1,1,:)=wxr2;wr2(1,2,:)=wyr2;
+[kappa2,lambda2,theta2,phi2]=ellparams(wxr2,wyr2,3);
 [ba2,bd2,bp2]=ellband(kappa2,lambda2,theta2,phi2,3);   
 [a2,om2,upbar2]=instmom(wr2,3,2);
 vcolon(kappa2,lambda2,theta2,phi2,ba2,bd2,bp2,a2,om2,upbar2);

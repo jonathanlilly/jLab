@@ -1,20 +1,20 @@
 function[varargout]=cellpack(varargin)
-%CELLPACK  Removes all NaN values from cell arrays of numeric arrays.
+%CELLPACK  Removes all INF values from cell arrays of numeric arrays.
 %
 %   Y=CELLPACK(X) where X is a cell array of numeric arrays, removes any
-%   NaN values occuring within the cells and returns the result in Y.  
+%   INF values occuring within the cells and returns the result in Y.  
 %
 %   An example of an input cell array X and the output Y is as follows:
 %
-%       X{1} = [1 2 nan 4 nan]';  X{2}=[nan 2 3]';  X{3}=[1 2];   X{4}=[];
+%       X{1} = [1 2 inf 4 inf]';  X{2}=[inf 2 3]';  X{3}=[1 2];   X{4}=[];
 %       Y{1} = [1 2 4]';          Y{2}=[2 3]';      Y{3}=[1 2];   Y{4}=[];
 %
 %   CELLPACK does not remove empty cells.  This is done by CELLPRUNE.
 %
 %   [Y1,Y2,...YN]=CELLPACK(X1,X2,...XN) with multiple input arguments, all
-%   of the same size, removes locations of NaNs that occur in *any* of the 
+%   of the same size, removes locations of INFs that occur in *any* of the 
 %   input variables.  The output variables Y1,Y2,...YN will all be the same
-%   size, and none of them will contain any NaNs.
+%   size, and none of them will contain any INFs.
 %
 %   CELLPACK(X1,X2,...XN); with no output arguments overwrites the 
 %   original input variables.   
@@ -26,7 +26,7 @@ function[varargout]=cellpack(varargin)
 %          cellpack(x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     cellpack_test,return
@@ -45,7 +45,7 @@ for i=1:length(varargin)
         if isempty(varargin{i}{j})
             bool{j}(:,i)=false;
         else
-            bool{j}(:,i)=~isnan(varargin{i}{j});
+            bool{j}(:,i)=~isinf(varargin{i}{j});
         end
     end
 end
@@ -59,7 +59,7 @@ end
 varargout=varargin;
 
 nempty=0;
-%Strip all nans top and bottom
+%Strip all infs top and bottom
 for j=1:length(varargin{1})
     if isempty(index{j})
         nempty = nempty+1;
@@ -86,13 +86,13 @@ function[]=cellpack_test
 
 x{1}=[1 4 3 2]';
 x{2}=[1 3 2]';
-x{3}=[1 7 10 nan 4 5]';
-x{4}=[1 2 3 nan nan]';
-x{5}=[nan nan nan]';
+x{3}=[1 7 10 inf 4 5]';
+x{4}=[1 2 3 inf inf]';
+x{5}=[inf inf inf]';
 x{6}=[]';
 
 y=cellmult(2,x);
-y{2}(1)=nan;
+y{2}(1)=inf;
 
 x1{1}=[1 4 3 2]';
 x1{2}=[3 2]';

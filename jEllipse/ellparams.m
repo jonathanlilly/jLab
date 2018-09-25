@@ -16,7 +16,10 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %   given the ellipse parameters.
 %
 %   ELLPARAMS(...,DIM) performs the analysis with time running along
-%   dimension DIM, as opposed to the default behavior of DIM=1.    
+%   dimension DIM, as opposed to the default behavior of DIM=1.   
+%
+%   ELLPARAMS also works if X and Y are cell arrays with each cell holding
+%   a different analytic signal. The output will then also be cell arrays. 
 %   _______________________________________________________________________
 %
 %   Trivariate signals
@@ -31,23 +34,6 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %   ELLPARAMS(M), where M is matrix with three columns, also works.
 %
 %   See Lilly (2010) for details on the trivariate case.
-%   _______________________________________________________________________
-%
-%   Cell array input / output
-%
-%   [KAPPA,LAMBDA,THETA,PHI]=ELLPARAMS(C) also works if C is a cell array
-%   containing, say K different X and Y signals, each as a 2-column matrix,
-%
-%         C{1}(:,1)=X1, C{1}(:,2)=Y1
-%         C{2}(:,1)=X2, C{2}(:,2)=Y2, ...  
-%         C{K}(:,1)=XK, C{2}(:,2)=YK.  
-%
-%   In this case, the output variables will also be length K cell arrays.
-%
-%   The trivariate form described above also works, with each cell now
-%   being a matrix with three columns.
-%
-%   This format works with the cell array output format of RIDGEWALK.
 %   __________________________________________________________________
 %
 %   'ellparams --t' runs a test.
@@ -57,11 +43,9 @@ function[kappa,lambda,theta,phi,alpha,beta]=ellparams(varargin)
 %   Usage: [kappa,lambda,theta,phi]=ellparams(x,y);
 %          [kappa,lambda,theta,phi]=ellparams(x,y,dim);
 %          [kappa,lambda,theta,phi,alpha,beta]=ellparams(x,y,z);
-%          [kappa,lambda,theta,phi,alpha,beta]=ellparams([x,y,z]);
-%          [kappa,lambda,theta,phi]=ellparams(C);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2018 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
     ellparams_test,normvect_test,return
@@ -79,35 +63,23 @@ end
 [z,kappa,lambda,theta,phi,alpha,beta]=vempty;
 if ~isempty(varargin{1})
     if ~iscell(varargin{1})
-        if length(varargin)==1
-            if  (size(varargin{1},2)~=2)&&(size(varargin{1},2)~=3)
-                error('For ELLPARAMS(M) with one input argument, M must have either two or three columns.')
-            end
-            x=varargin{1}(:,1);
-            y=varargin{1}(:,2);
-            if size(varargin{1},2)==3
-                z=varargin{1}(:,3);
-            end
-        else
-            if length(varargin)>3
-                error('ELLPARAMS must have one, two, or three input arguments.')
-            end
-            x=varargin{1};
-            y=varargin{2};
-            if length(varargin)==3
-                z=varargin{3};
-            end
+        x=varargin{1};
+        y=varargin{2};
+        if length(varargin)==3
+            z=varargin{3};
         end
         [kappa,lambda,theta,phi,alpha,beta]=ellparams_one(x,y,z,dim);
     else
         x=varargin{1};
+        y=varargin{2};
         for i=1:length(x)
             if ~isempty(x{i})
-                if size(x{i},2)==2
-                    [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1}]=ellparams_one(x{i}(:,1),x{i}(:,2),[],dim);
+                if length(varargin)==2
+                    [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1}]=ellparams_one(x{i},y{i},[],dim);
                 else
+                    z=varargin{3};
                     [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1},alpha{i,1},beta{i,1}]=...
-                        ellparams_one(x{i}(:,1),x{i}(:,2),x{i}(:,3),dim);
+                        ellparams_one(x{i},x{i},z{3}{i},dim);
                 end
             else
                 [kappa{i,1},lambda{i,1},theta{i,1},phi{i,1},alpha{i,1},beta{i,1}]=vempty;

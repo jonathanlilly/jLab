@@ -12,8 +12,6 @@ function[varargout]=ridgeinterp(varargin)
 %   SIZE(XI,1)=SIZE(IR,1) and SIZE(XI,2)=SIZE(IR,2).  The locations of 
 %   NANs in IR and JR are duplicated in XI. 
 %
-%   NOTE:  IR and JR are now 1-D so the commenting here is not all correct.
-%
 %   X may have more than one 'page' along its third dimension, in which 
 %   case each page is interpolated separately, and SIZE(XI,3)=SIZE(X,3). 
 %
@@ -29,7 +27,8 @@ function[varargout]=ridgeinterp(varargin)
 %   and applies an appropriate correction factor. 
 %
 %   [XI1,XI2,...,XIN]=RIDGEINTERP(FS,RQ,IR,JR,X1,X2,...,XN) also 
-%   interpolates the quantities X1,X2,...,XN, all the same size. 
+%   interpolates the quantities X1,X2,...,XN, all having the same number of 
+%   rows and columns as IR and JR.
 %
 %   RIDGEINTERP uses fast quadratic interpolation via QUADINTERP.  In rare
 %   cases, quadratic interpolation fails for an individual point and 
@@ -40,19 +39,17 @@ function[varargout]=ridgeinterp(varargin)
 %
 %   See also RIDGEWALK, RIDGEQUANTITY, QUADINTERP.
 %
-%   Usage:  xi=ridgeinterp(fs,rq,ir,jr,x);
-%           [xi1,xi2,xi3]=ridgeinterp(fs,rq,ir,jr,x1,x2,x3);
-%           [xi1,xi2,xi3]=ridgeinterp(dt,fs,rq,ir,jr,x1,x2,x3);
+%   Usage:  xi=ridgeinterp(rq,ir,jr,x);
+%           [xi1,xi2,xi3]=ridgeinterp(rq,ir,jr,x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2005--2014 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2005--2018 J.M. Lilly --- type 'help jlab_license' for details    
 
 
-fs=varargin{1};
-rq=varargin{2};
-ir=varargin{3};
-jr=varargin{4};
-varargin=varargin(5:end);
+rq=varargin{1};
+ir=varargin{2};
+jr=varargin{3};
+varargin=varargin(4:end);
 
 if iscell(varargin{end})||isempty(varargin{end})
     derivparams=varargin{end};
@@ -63,14 +60,14 @@ end
 
 index=find(~isnan(ir));
 if ~isempty(index)
-    varargout=ridgeinterp1_quadratic(index,ir,jr,derivparams,fs,rq,varargin);
+    varargout=ridgeinterp1_quadratic(index,ir,jr,derivparams,rq,varargin);
 else
     for i=1:length(varargin)
         varargout{i}=[];
     end
 end
               
-function[outargs]=ridgeinterp1_quadratic(index,ir,jr,derivparams,fs,rq,args)
+function[outargs]=ridgeinterp1_quadratic(index,ir,jr,derivparams,rq,args)
 sizeir=size(ir);
 vcolon(ir,jr);
 vindex(ir,jr,index,1);
@@ -85,7 +82,7 @@ dr=rq(indexr);
 drp=rq(indexr+di);
 drn=rq(indexr-di);
 
-[xmin,jre]=quadinterp(jr-1,jr,jr+1,abs(drn).^2,abs(dr).^2,abs(drp).^2);
+[~,jre]=quadinterp(jr-1,jr,jr+1,abs(drn).^2,abs(dr).^2,abs(drp).^2);
 
 %Rare complete failure of quadratic interpolation associated 
 %with the ridge quantity changing sign between jrp and jrn, yet
@@ -142,7 +139,7 @@ for i=1:length(args)
    else
         xr=(nan+sqrt(-1)*nan)*ones(sizeir(1),size(x,3));
    end
-   for k=1:size(x,3);
+   for k=1:size(x,3)
         xk=x(:,:,k);
         if isempty(derivparams)
             xro=xk(indexr);

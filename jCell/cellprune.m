@@ -29,7 +29,7 @@ function[varargout]=cellprune(varargin)
 %          cellprune(x1,x2,x3,M);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 
 if strcmp(varargin{1}, '--t')

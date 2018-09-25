@@ -23,7 +23,7 @@ function [structout] = maternfit(varargin)
 %        models for ocean surface drifter trajectories. Journal of the 
 %        Royal Statisical Society, Series C. 65 (1): 29--50.
 %
-%     Sykulski, Olhede, and Lilly (2016). The de-biased Whittle likelihood 
+%     Sykulski, Olhede, and Lilly (2018). The de-biased Whittle likelihood 
 %        for second-order stationary stochastic processes.  ArXiv preprint.
 %
 %   For details on the Matern process and its spectrum, see:
@@ -220,9 +220,13 @@ function [structout] = maternfit(varargin)
 %       D'Errico included with JLAB in accordance with its license terms. 
 %       This in turn calls Matlab's FMINSEARCH using Nelder-Mead.
 %
-%     MATERNFIT(...,'con',...) alternately uses FMINCON, using the default
+%     MATERNFIT(...,'con',...) alternately uses FMINCON with the default
 %       interior-point algorithm.  This requires Matlab's Optimization 
-%       Toolbox to be installed.  Again, this is mainly for testing.
+%       Toolbox to be installed.  This is mainly for testing.
+%
+%     MATERNFIT(...,'nlo',...) uses the Nelder-Mead algorithm from the
+%       NLopt toolbox at https://nlopt.readthedocs.io.  This requires NLopt
+%       to be installed.  Again, this is mainly for testing at the moment.
 %
 %   In tests, FMINCON is generally faster, and most of the fits agree
 %   closely with those using FMINSEARCHBND.  However, occasionally FMINCON
@@ -301,7 +305,7 @@ function [structout] = maternfit(varargin)
 %          fit=maternfit(dt,z,fc,a,b);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2017 J.M. Lilly and A.M. Sykulski
+%   (C) 2014--2018 J.M. Lilly and A.M. Sykulski
 %                                --- type 'help jlab_license' for details
 
 %Notes to self:
@@ -313,9 +317,9 @@ function [structout] = maternfit(varargin)
 %Filemerge tool to compare them. 
 
 if nargin>0
-    if strcmpi(varargin{1}, '--f')
-        maternfit_fig,return
-    elseif strcmpi(varargin{1}, '--t')
+%    if strcmpi(varargin{1}, '--f')
+ %       maternfit_fig,return
+    if strcmpi(varargin{1}, '--t')
         maternfit_test,return
     end
 end
@@ -346,7 +350,7 @@ varargin=varargin(3:end);
 %Sorting out input options 
 
 opts.side='both';            %Determines side: opposite, same, or both
-opts.alg='bnd';              %Algorithm: bnd or con
+opts.alg='bnd';              %Algorithm: bnd, con, or nlopt
 opts.ver='difference';       %Fit version: difference or raw
 opts.cores='series';         %Series or parallel computation
 opts.bgtype='matern';        %Type of model for background
@@ -355,7 +359,7 @@ psi=[];                      %The default data taper is the empty taper
 verstrin=false;              %Flag for whether or not version string is input
 for i=1:30
     if ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'con')||strcmpi(varargin{end}(1:3),'bnd')
+        if strcmpi(varargin{end}(1:3),'con')||strcmpi(varargin{end}(1:3),'bnd')||strcmpi(varargin{end}(1:3),'nlo')
             opts.alg=varargin{end};
             if strcmpi(opts.alg(1:3),'con')
                 if exist('fmincon.m')~=2
@@ -610,15 +614,35 @@ guess((xanorm==0)&(xbnorm==0))=0;
 
 tol=1e-6;%tol=1e-3;
 if strcmpi(opts.alg(1:3),'bnd')
-    options=optimset('GradObj','on','MaxFunEvals',10000,'MaxIter',10000,'TolFun',tol,'TolX',tol);
+    options=optimset('MaxFunEvals',10000,'MaxIter',10000,'TolFun',tol,'TolX',tol);
     [xf,fval1,exitflag,struct]=fminsearchbnd(@(z) specmodel(dt,z.*xo,spp,snn,index,N,opts),...
         guess,xanorm,xbnorm,options);
+    iters=struct.iterations;
 elseif strcmpi(opts.alg(1:3),'con')
     options=optimoptions('fmincon','Algorithm','interior-point','MaxFunEvals',10000,'MaxIter',10000,'TolFun',tol,'TolX',tol,'Display','off');
     [xf,fval1,exitflag,struct]=fmincon(@(z) specmodel(dt,z.*xo,spp,snn,index,N,opts),...
         guess,[],[],[],[],xanorm,xbnorm,[],options);
+    iters=struct.iterations;
+elseif strcmpi(opts.alg(1:3),'nlo')
+    %opt.algorithm = NLOPT_GN_DIRECT_L;
+    opt.algorithm = NLOPT_LN_NELDERMEAD;  %Works, not too much slower than Matlab
+    %opt.algorithm = NLOPT_LN_PRAXIS;   %Works,but slower than NM
+    %opt.algorithm = NLOPT_GN_CRS2_LM;
+    %opt.algorithm = NLOPT_GD_STOGO;
+    %opt.algorithm = NLOPT_GN_ISRES;
+    %opt.algorithm = NLOPT_GN_ESCH;
+    %opt.algorithm = NLOPT_LN_COBYLA;
+    %opt.algorithm =NLOPT_LN_SBPLX;  %Works,but slower than NM
+    %opt.algorithm = NLOPT_LN_BOBYQA;  %Somewhat slower than NM, and different results
+    %opt.algorithm = NLOPT_AUGLAG;    opt.lower_bounds = xanorm;
+    opt.lower_bounds = xanorm;
+    opt.upper_bounds = xbnorm;
+    opt.min_objective = @(z) specmodel(dt,z.*xo,spp,snn,index,N,opts);
+    opt.fc_tol = [tol tol tol tol];
+    opt.xtol_rel = tol;
+    [xf, fmin, exitflag] = nlopt_optimize(opt, guess);
+    iters=nan;  %Not sure how to return this
 end
-iters=struct.iterations;
 
 x=xf.*xo;% scale back to correct units
 [like,Spp,Snn,f]=specmodel(dt,x,spp,snn,index,N,opts);
@@ -643,9 +667,11 @@ end
 R=maternfit_materncov(dt,N,x(1,:));    
 [f,Spp,Snn]=maternfit_blurspec(dt,R,opts.ver,opts.win);
     
+%length(R)
 %[f,Spp2,Snn2]=blurspec(1,R,opts.ver,'window',opts.win);aresame(Spp,Spp2)
 %Same answers but slower
 
+%length(index),N,length(f),length(Spp)
 indexn=fixindex(N,index);        %This deals with zero and Nyquist for negative frequencies
 if strcmpi(opts.side(1:3),'pos')
     %Include only positive frequencies
@@ -762,7 +788,7 @@ if (strcmpi(opts.side(1:3),'opp')||strcmpi(opts.side(1:3),'sam'))
 else
     M=length(a:b)+length(indexn);
 end
-aicc=2*like + frac(2*M*P,M-P-1);
+aicc=2*like + frac(4*M*P,2*M-P-1);
     
 %figure,plot(f,[Spp spp]),hold on,plot(-f,[Snn snn]),ylog
 %vlines(f(a)),vlines(f(b))
@@ -791,9 +817,10 @@ vtranspose(x,xa,xb,xo);
 function[index]=fixindex(N,index)
 %This modifies the frequency index appropriate for negative frequencies, 
 %due to the fact that zero is repeated for both even and odd, while the  
-%Nyquist is repeated for odd. See comments at MSPEC.
+%Nyquist is also repeated for even. See comments at MSPEC.
+
 if iseven(N)
-    if index(end)==N
+    if index(end)==((N/2)+1)
         index=index(1:end-1);
     end
 end
@@ -813,7 +840,7 @@ elseif strcmpi(ver(1:3),'sec')
 end
 
 R=R.*win;
-R(1,:)=R(1,:)./2;  %Don't forget to divide first element by two
+R(1,:)=R(1,:)./2;    %Don't forget to divide first element by two
 S=dt*2*real(fft(R)); %But I do take it into account in spectrum
 
 S=abs(S);  %Sometimes there are small negative parts after blurring
@@ -873,6 +900,11 @@ fit=maternfit(dt,z,frac(1,2)*pi);
 bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h,0.002);
 reporttest('MATERNFIT recovers Matern parameters with unit sample rate',allall(bool))
 
+%z=maternoise(dt,1001,sigo,alpha,h,'raw');
+%fit=maternfit(dt,z,frac(1,2)*pi);
+%bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h,0.002);
+%reporttest('MATERNFIT recovers Matern parameters with unit sample rate',allall(bool))
+
 fit2=maternfit(dt,z,frac(1,2)*pi,'range.sigma',[0 17 100],'range.alpha',[0 1.5 100],'range.lambda',[1/1000 1/10 10]);
 
 clear bool
@@ -905,10 +937,21 @@ bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresa
 reporttest('MATERNFIT recovers Matern parameters with non-unit sample rate, tapered version',allall(bool))
 
 psi=sleptap(size(z,1)-1,3,1);
+tic;
 fit=maternfit(dt,z,frac(1,2)*pi./dt,'tapered',psi,'difference');
 bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002);
 reporttest('MATERNFIT recovers Matern parameters with non-unit sample rate, differenced tapered version',allall(bool))
+etime1=toc;
 
+if exist('nlopt_optimize')==3
+    psi=sleptap(size(z,1)-1,3,1);
+    tic;
+    fit=maternfit(dt,z,frac(1,2)*pi./dt,'tapered',psi,'difference','nlopt');
+    bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002);
+    reporttest('MATERNFIT using NLopt version of previous',allall(bool))
+    etime2=toc;
+    disp(['MATERNFIT NLopt version took ' num2str(etime2./etime1) ' as much time as FMINSEARCH.'])
+end
 
 
 

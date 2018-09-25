@@ -80,18 +80,13 @@ fs=morsespace(ga,be,{0.2,fmax},fmin,8);
 [wx,wy]=wavetrans(real(cx),imag(cx),{ga,be,fs,'bandpass'},'mirror');
 
 %Form ridges of component time series
-[ir,jr,wx,fx]=ridgewalk(dt,wx,wy,fs,{3,0});   
-
-wxr=wx(:,1);wyr=wx(:,2);
-fxr=fx(:,1);fyr=fx(:,2);
+[wxr,wyr,ir,jr,fr]=ridgewalk(dt,wx,wy,fs,sqrt(be*ga),1);   
 
 %Map into time series locations
-[wrx,frx]=ridgemap(length(cx),wxr,fxr,ir);
-[wry,fry]=ridgemap(length(cx),wyr,fyr,ir);
+[wxr,wyr,fr]=ridgemap(length(cx),wxr,wyr,fr,ir);
 
-[kappa,lambda,theta,phi]=ellparams(wrx,wry);
-om=vmean([frx fry],2,squared([wrx wry]));
-ro=ellrossby(lat,lambda,om);
+[kappa,lambda,theta,phi]=ellparams(wxr,wyr);
+ro=ellrossby(lat,lambda,fr);
 
 rm=ellrad(kappa,lambda);
 vm=ellvel(24*3600,kappa,lambda,theta,phi,1e5);

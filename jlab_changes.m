@@ -1,5 +1,57 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.6.6
+%
+%   Figure making for a new publication:
+%
+%   Lilly (2018).  Kinematics of a fluid ellipse in a linear flow. Fluids, 
+%        3 (1) 16: 1--29.
+%
+%   New functions:
+% 
+%   ridgetrim  - Trim edge effect regions from wavelet ridges.
+%   colorquant - Set the color axis according to quantiles of the data.
+%   ellpol     - Polarization parameters of an elliptical signal.
+%   printall   - Print and close all open figures.
+%   cellmed    - Median value of each element a cell array.
+%   cellsum    - Sum of each element a cell array, possibly weighted.
+%
+%  Updated dataset
+%
+%   tpjaos.mat    - Alongtrack sea surface height anomalies from the 
+%        Beckley dataset, updated through May 30, 2018.  See about_tpjaos.
+%
+%   Major bugfix
+%
+%   SPHERELAP for computing the Laplacian in spherical geometry 
+%   unfortunately had a major bug in earlier versions that rendered its
+%   output incorrect.  This has been corrected in version 1.6.6.
+%
+%   Changes and improvements:
+%
+%   LATLON2XY added new correction for small angles and additional tests.
+%   SPHERESORT and TWODSORT now have options for truncating size of output.
+%   POLYSMOOTH considerable speed and memory improvments.
+%   POLYSMOOTH bugfix for test that was occasionally failing incorrectly. 
+%   POLYSMOOTH now outputs total weight of data points.
+%   POLYSMOOTH now includes tests of the tangent plane equations.
+%   POLYSMOOTH new uses the Gaussian weighting function by default.
+%   MATERNFIT now supports using NLopt, https://nlopt.readthedocs.io. 
+%   MATERNFIT now works using Nelder-Mead without the Optimization Toolbox. 
+%   MATERNFIT corrections to AICC output field.
+%   RIDGEWALK now supports trimming edge effects using RIDGETRIM.
+%   RIDGEWALK simplifications and speed improvements.
+%   RIDGEWALK bugfix to sample figure generation.
+%   PERIODINDEX simplifications and bugfix.
+%   FOURIER now outputs one- or two-sided frequency arrays.
+%   FOURIER outputs a cell array of frequency arrays given vector input.
+%   CELLFILL, -STRIP, and -PACK now use INFs (not NaNs) as the data flag.
+%   CELLMEAN and -STD now support weighted means and standard deviations.
+%   ELLPARAMS input format simplifications.
+%   READTOPO bugfix when loading all longitudes.
+%
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.5
 %         
 %   Support for a new publication, see module jMatern:
@@ -19,12 +71,16 @@
 %   STANDALONE bugfix for recursive searches and support for files lists.
 %   STANDALONE now uses 'private' sub-directory for dependency files.
 %
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.4
 %
 %   PROVEC now expecting sampling interval as first argument, in hours.
 %   STICKVECT bugfix for cutting off the end of the time series.
 %   STICKVECT improved commenting for how to choose the scale factor SCALE.
-%    
+%
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.3
 %
 %   This is a major new release, which includes the following changes:

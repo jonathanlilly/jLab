@@ -7,7 +7,7 @@ load qgsnapshot
 P=frac(P,std(P(:)));
 
 [xc,yc]=closedcurves(qgsnapshot.x,qgsnapshot.y,P,-2);
-[xo,yo,L,R,D,a,b,theta]=curvemoments(xc,yc);
+[xo,yo,kappa,R,L,a,b,theta]=curvemoments(xc,yc);
 
 figure,jpcolor(qgsnapshot.x,qgsnapshot.y,P),axis equal, axis tight,
 hold on,colormap gray,flipmap,cellplot(xc,yc,'2b'),

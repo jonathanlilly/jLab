@@ -1,5 +1,5 @@
 function[varargout]=latlon2xy(varargin)
-% LATLON2XY  Converts latitude and longitude into local Cartesian coordinates.
+% LATLON2XY  Converts latitude and longitude into tangent plane coordinates.
 %
 %   [X,Y]=LATLON2XY(LAT,LON,LATO,LONO) converts (LAT,LON) with units of
 %   degrees into displacements (X,Y) in a plane tangent to the earth at the
@@ -14,9 +14,7 @@ function[varargout]=latlon2xy(varargin)
 %   the input arrays.  
 %
 %   X and Y are computed by projecting the tangent plane onto the sphere
-%   using full spherical geometry.  
-%
-%   The radius of the earth is given by the function RADEARTH.
+%   using full spherical geometry, see Lilly and Lagerloef (2018).  
 %
 %   Note that X and Y are set to NANs for points on the opposite side of
 %   the earth from the tangent plane, that is, where the great circle 
@@ -28,14 +26,11 @@ function[varargout]=latlon2xy(varargin)
 %   [X,Y,D]=LATLON2XY(...) also returns the great circle distance D between
 %   the two sets of points.  
 %
-%   For points on the same side on the earth from the tangent plane, i.e.
-%   where the great circle distance is less than RADEARTH * pi/2, LATLON2XY
-%   gives the same distance as SPHEREDIST.  
+%   LATLON2XY gives the same distance as SPHEREDIST for points where the 
+%   great circle distance is less than RADEARTH * pi/2, but returns NaNs
+%   for greater distances.
 %
-%   However, for points on the opposite side of the earth, LATLON2XY 
-%   returns NANs whereas SPHEREDIST returns the correct distance.
-%
-%   The great circle distance computed here is useful because it is a fast 
+%   The great circle distance returned here is useful because it is a fast 
 %   computation if X and Y are already known.
 %   ___________________________________________________________________
 %
@@ -51,6 +46,14 @@ function[varargout]=latlon2xy(varargin)
 %   scalars.
 %   ___________________________________________________________________
 %
+%   Small angle approximation
+%
+%   [X,Y,D]=LATLON2XY(...,'small') returns X, Y, and D based on the small 
+%   angle approximation, corrected for points differing in longitude by 
+%   more than ninety degrees.  See Lilly and Lagerloef (2018) for details.
+%   This is primarily used for testing purposes. 
+%   ___________________________________________________________________
+%
 %   LATLON2XY is inverted by XY2LATLON.
 %
 %   See also XY2LATLON, LATLON2UV, SPHEREDIST.
@@ -62,7 +65,7 @@ function[varargout]=latlon2xy(varargin)
 %           cx=latlon2xy(lat,lon,lato,lono);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2014 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2018 J.M. Lilly --- type 'help jlab_license' for details        
   
 if strcmpi(varargin{1}, '--t')
   latlon2xy_test,return
@@ -73,7 +76,7 @@ if ischar(varargin{end})
     str=varargin{end};
     na=na-1;
 else 
-    str='sphere';
+    str='tangent';
 end
 
 lat=varargin{1};
@@ -132,27 +135,41 @@ if ~isempty(lat)&&~isempty(lato)
     if numel(lono)==1
         lono=lono+0*lat;
     end
-    
     if strcmpi(str(1:3),'sma')
-        [x,y]=latlon2xy_cartesian(lat,lon-lono,lato,R);
-    elseif strcmpi(str(1:3),'sph')
+        [x,y]=latlon2xy_small(lat,lon-lono,lato,R);
+        if N==3
+            d=sqrt(x.^2+y.^2);
+        end
+    elseif strcmpi(str(1:3),'tan')
+        %vsize(lat,lon,lato,lon)
         if N<3
-            [x,y]=latlon2xy_sphere(lat,lon-lono,lato,R);
+            [x,y]=latlon2xy_tangent(lat,lon-lono,lato,R);
         else
-            [x,y,d]=latlon2xy_sphere(lat,lon-lono,lato,R);
+            [x,y,d]=latlon2xy_tangent(lat,lon-lono,lato,R);
         end
     end
 end
     
-function[x,y]=latlon2xy_cartesian(lat,lon,lato,R)
+function[x,y]=latlon2xy_small(lat,lon,lato,R)
 
 [lat,lon,lato]=jdeg2rad(lat,lon,lato);
-r1=R.*cos(lato);
 dlon=angle(rot(lon));
-x=dlon.*r1;
 y=(lat-lato).*R;
 
-function[x,y,d]=latlon2xy_sphere(lat,lon,lato,R)
+%--------------------------------------------------------------------------
+%Here is a correction for crossing of the poles, see LL08
+index=find(abs(dlon)>pi/2);
+if length(lato)==1
+    lato=lato+0*lat;
+end
+
+y(index)=R.*(sign(lato(index)).*pi-lat(index)-lato(index));
+dlon(index)=angle(rot(pi-lon(index)));
+%--------------------------------------------------------------------------
+
+x=R.*cos(lat).*dlon;
+
+function[x,y,d]=latlon2xy_tangent(lat,lon,lato,R)
 
 x=nan*lat;
 y=nan*lon;
@@ -192,40 +209,84 @@ if ~isempty(index)
     y(index)=-R*coslat(index).*sinlato(index).*coslon(index)+R.*coslato(index).*sinlat(index);
 end
 
-%d=2*R.*asin(frac(1,sqrt(2)).*sqrt(1-sqrt(1-frac(x.^2+y.^2,R.^2)))); 
+%length(index),length(coslat)
+%maxmax(coslat(index)),maxmax(sind(lon(index)))
+
+%d=2*R.*asin(frac(1,sqrt(2)).*sqrt(1-sqrt(1-frac(x.^2+y.^2,R.^2))));
 if nargout==3
     if ~isempty(index)
         d=nan*lon;
-        d(index)=2*R.*asin(frac(1,sqrt(2)).*sqrt(1-sqrt(1-frac(x(index).^2+y(index).^2,R.^2)))); 
+        d(index)=2*R.*asin(frac(1,sqrt(2)).*sqrt(1-sqrt(1-frac(x(index).^2+y(index).^2,R.^2))));
+        %Remove sometimes very small imaginary part
+        d=real(d);
     end
 end
 
-
 function[]=latlon2xy_test
-latlon2xy_sphere_test1
-latlon2xy_sphere_test2
-latlon2xy_sphere_test3
-latlon2xy_sphere_test4
+latlon2xy_test1
+latlon2xy_test2
+latlon2xy_test3
+latlon2xy_test4
 
-function[]=latlon2xy_sphere_test1
+function[]=latlon2xy_test1
+%--------------------------------------------------------------------------
+%Test near equator
 rng(1);
 N=1000;
 tol=1e-3;
 
 lon=2*pi*rand(N,1)-pi;
 lat=pi*rand(N,1)-pi/2;
-[lat,lon]=jrad2deg(lat,lon);
+[lat,lon]=jrad2deg(lat/1000,lon/1000);
 
-lat=lat/1000;
-lon=lon/1000;
-
-tic;[x,y]=latlon2xy(lat,lon,0,0,'sphere');etime1=toc;
+tic;[x,y]=latlon2xy(lat,lon,0,0,'tangent');etime1=toc;
 tic;[x2,y2]=latlon2xy(lat,lon,0,0,'small');etime2=toc;
 
 b=aresame(x,x2,tol) && aresame(y,y2,tol);
-reporttest('LATLON2XY Cartesian and spherical algorithms match for small LAT and LON about zero',b);
+reporttest('LATLON2XY small angle and spherical algorithms match for small LAT and LON about zero',b);
 
-function[]=latlon2xy_sphere_test2
+%--------------------------------------------------------------------------
+%Test near north pole
+rng(1);
+lon=2*pi*rand(N,1)-pi;
+lat=pi*rand(N,1)-pi/2;
+[lat,lon]=jrad2deg(lat/10000,lon/1000);
+
+lato=90-1e-16;
+lat=lat+lato;
+%plot(lon,lat,'b.'),hold on
+[x,y,z]=latlon2xyz(lat,lon);
+[lat,lon]=xyz2latlon(x,y,z);
+%plot(lon,lat,'ro')
+
+tic;[x,y]=latlon2xy(lat,lon,lato,0,'tangent');etime1=toc;
+tic;[x2,y2]=latlon2xy(lat,lon,lato,0,'small');etime2=toc;
+
+b=aresame(x,x2,tol) && aresame(y,y2,tol);
+reporttest('LATLON2XY small angle and spherical algorithms match for LAT near 90 N',b);  
+%Note that this test fails without the small angle correction
+%--------------------------------------------------------------------------
+%Test near south pole
+rng(1);
+lon=2*pi*rand(N,1)-pi;
+lat=pi*rand(N,1)-pi/2;
+[lat,lon]=jrad2deg(lat/10000,lon/1000);
+
+lato=-90+1e-16;
+lat=lat+lato;
+%plot(lon,lat,'b.'),hold on
+[x,y,z]=latlon2xyz(lat,lon);
+[lat,lon]=xyz2latlon(x,y,z);
+%plot(lon,lat,'ro')
+
+tic;[x,y]=latlon2xy(lat,lon,lato,0,'tangent');etime1=toc;
+tic;[x2,y2]=latlon2xy(lat,lon,lato,0,'small');etime2=toc;
+
+b=aresame(x,x2,tol) && aresame(y,y2,tol);
+reporttest('LATLON2XY small angle and spherical algorithms match for LAT near 90 S',b);
+%Note that this test fails without the small angle correction
+
+function[]=latlon2xy_test2
 rng(2);
 N=100;
 tol1=1e-1;
@@ -248,23 +309,20 @@ lon=lon+lono;
 clear x y lat2 lon2
 
 for i=1:length(lato)
-    [x(i,1),y(i,1)]=latlon2xy(lat(i),lon(i),lato(i),lono(i),'sphere');
-    [lat2(i,1),lon2(i,1)]=xy2latlon(x(i),y(i),lato(i),lono(i),'sphere');
+    [x(i,1),y(i,1)]=latlon2xy(lat(i),lon(i),lato(i),lono(i),'tangent');
+    [lat2(i,1),lon2(i,1)]=xy2latlon(x(i),y(i),lato(i),lono(i),'tangent');
 end
 
 [x2,y2]=latlon2xy(lat,lon,lato,lono);
 
 b=aresame(x,x2,tol1) && aresame(y,y2,tol1);
-reporttest('LATLON2XY Cartesian and spherical algorithms match for small LAT and LON perturbations',b);
-
+reporttest('LATLON2XY small angle and spherical algorithms match for small LAT and LON perturbations',b);
 
 %figure,plot([lon lon2 lon-lon2])
-%This is not the best test as some random numbers can lead to a irrelevant 
+%This is not the best test as some random numbers can lead to am irrelevant 
 %360 degree offset... so that's why I set rng
 b=aresame(lat,lat2,tol2) && aresame(lon,lon2,tol2);
-reporttest('XY2LATLON Cartesian and spherical algorithms match for small LAT and LON perturbations',b);
-
-
+reporttest('XY2LATLON small angle and spherical algorithms match for small LAT and LON perturbations',b);
 
 function[]=xy2latlon_test
 rng(1);
@@ -308,16 +366,15 @@ lono=pi*rand(N,1)-pi/2;
 clear lat lon x2 y2
 
 for i=1:length(lato)
-    [lat(i,1),lon(i,1)]=xy2latlon(x(i),y(i),lato(i),lono(i),'sphere');
-    [x2(i,1),y2(i,1)]=latlon2xy(lat(i),lon(i),lato(i),lono(i),'sphere');
+    [lat(i,1),lon(i,1)]=xy2latlon(x(i),y(i),lato(i),lono(i),'tangent');
+    [x2(i,1),y2(i,1)]=latlon2xy(lat(i),lon(i),lato(i),lono(i),'tangent');
     [x3(i,1),y3(i,1)]=latlon2xy(lat(i),lon(i),lato(i),lono(i));
 end
-
 
 b=aresame(x,x2,tol) && aresame(y,y2,tol);
 reporttest('LATLON2XY spherical algorithm inverts XY2LATLON spherical algorithm',b);
 
-function[]=latlon2xy_sphere_test3
+function[]=latlon2xy_test3
 rng(1);
 lon=(-180:5:175);
 lat=(-90:5:90);
@@ -350,8 +407,7 @@ end
 reporttest('LATLON2XY matches SPHEREDIST for points in same hemisphere',b1);
 reporttest('LATLON2XY gives NANs for points in other hemisphere',b2);
 
-
-function[]=latlon2xy_sphere_test4
+function[]=latlon2xy_test4
 rng(1);
 N=100;
 tol=1e-3;
@@ -363,12 +419,12 @@ lat=pi*rand(N,1)-pi/2;
 lat=lat/1000;
 lon=lon/1000;
 
-[x,y]=latlon2xy(lat,lon,0,0,'sphere');
+[x,y]=latlon2xy(lat,lon,0,0,'tangent');
 
 latc{1}=lat;lonc{1}=lon;lonoc{1}=0;latoc{1}=0;
 latc{2}=lat;lonc{2}=lon;lonoc{2}=0;latoc{2}=0;
 
-[xc,yc]=latlon2xy(latc,lonc,latoc,lonoc,'sphere');
+[xc,yc]=latlon2xy(latc,lonc,latoc,lonoc,'tangent');
 
 b=aresame(xc{1},x,tol) && aresame(yc{1},y,tol)&&aresame(xc{2},x,tol) && aresame(yc{2},y,tol);
 reporttest('LATLON2XY cell input / output',b);

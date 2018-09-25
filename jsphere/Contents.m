@@ -17,9 +17,9 @@
 %   tidefreq   - Frequencies of the eight major tidal components.
 %
 % Coordinate transformations 
-%   latlon2xy  - Converts latitude and longitude into local Cartesian coordinates.
+%   latlon2xy  - Converts latitude and longitude into tangent plane coordinates.
 %   latlon2xyz - Converts latitude and longitude into 3D Cartesian coordinates.   
-%   xy2latlon  - Converts local Cartesian coordinates into latitude and longitude.
+%   xy2latlon  - Converts tangent plane coordinates into latitude and longitude.
 %   xyz2latlon - Converts 3D Cartesian coordinates into latitude and longitude.   
 %   sphere2uvw - Converts a 3D spherical vector to a 3D Cartesian vector. 
 %

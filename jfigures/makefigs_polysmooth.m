@@ -13,7 +13,7 @@ index=index(1:600);
 xo=(-3:.125:3);
 yo=(-3:.125:3);
 
-B=1;
+B=1/2;
 
 [ds,xs,ys,zs]=twodsort(xdata,ydata,zdata,xo,yo,B);    
 z0=polysmooth(ds,xs,ys,zs,B,0,'epan');

@@ -40,7 +40,7 @@ function[curl,uy,vx]=spherecurl(varargin)
 %   See VDIFF for more information.  
 %   ___________________________________________________________________
 %
-%   See also SPHEREGRAD, SPHERELAP, SPHERDIV, JSPHERE.
+%   See also SPHEREGRAD, SPHERELAP, SPHEREDIV, JSPHERE.
 %
 %   'spherecurl --t' runs a test.
 %

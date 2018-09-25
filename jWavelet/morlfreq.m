@@ -1,7 +1,7 @@
 function[nui,om2i]=morlfreq(omi)
 %MORLFREQ  Compute Morlet wavelet carrier frequency given peak frequency.
 %
-%   FNU=MORLFREQ(FMAX), where FMAX is the desired peak frequency of the a 
+%   FNU=MORLFREQ(FMAX), where FMAX is the desired peak frequency of a 
 %   Morlet wavelet, returns the appropriate carrier wave frequency FNU.
 %
 %   The Morlet wavelet carrier wave and peak frequency differ on account

@@ -96,7 +96,7 @@ function[varargout]=instmom(varargin)
 %          [a,om,up,xi]=instmom(dt,x,dim,jdim);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2018 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   _____________________________________________________________________

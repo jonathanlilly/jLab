@@ -115,7 +115,7 @@ if ~isscalar(gamma)
     ls=length(s);
     lr=length(r);
     if ~(lg==lb&&lg==la&&lg==ls&&lg==lr)
-        error('MAXCONF was expecting the first five input arguments to all be the same length.')
+        error('TRANSMAXDIST was expecting the first five input arguments to all be the same length.')
     end
     if strcmpi(str(1:3),'ext')&&(length(gamma)>1)
         error('Sorry, ALPHA, BETA, GAMMA, FS, and R must be scalars for ''extrapolate'' option.')

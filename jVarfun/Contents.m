@@ -2,7 +2,8 @@
 %
 %  Sizes and statistics
 %   vsize      - Returns the sizes of multiple arguments.                           
-%   vmean      - Mean over non-NaN elements along a specified dimension.             
+%   vmean      - Mean over non-NaN elements along a specified dimension.
+%   vrms       - Root-mean-square of non-NaN elements along a specified dimension.
 %   vsum       - Sum over non-NaN elements along a specified dimension.              
 %   vstd       - Standard deviation over non-NaN elements along a specfied dimension.
 %   vmoment    - Central moment over non-NaN elements along a specfied dimension.    

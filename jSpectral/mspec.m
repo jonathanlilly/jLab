@@ -310,7 +310,7 @@ if iscell(x)||iscell(y)
     elseif isempty(x)
         x=cell(size(y));
     end
-    if ~iscell(psi);
+    if ~iscell(psi)
         psio=psi;
         psi=cell(size(x));
         for i=1:length(x)
@@ -384,7 +384,7 @@ else
 end
 
 if isempty(y) %One time series
-     if lambda==1
+     if length(lambda)==1
          cellout{2}=avgspec(mmatx,mmatx).*dt;
      else
          var=squared(vstd(x,1)); 
@@ -393,7 +393,7 @@ if isempty(y) %One time series
      cellout{3}=zeros(size(cellout{2}));
      cellout{4}=zeros(size(cellout{2}));
 else         %Two time series
-     if lambda==1
+     if length(lambda)==1
         cellout{2}=real(avgspec(mmatx,mmatx)).*dt;
         cellout{3}=real(avgspec(mmaty,mmaty)).*dt;
         cellout{4}=avgspec(mmatx,mmaty).*dt;
@@ -402,13 +402,12 @@ else         %Two time series
         %with the same coefficients
         var=squared(vstd(x,1))+squared(vstd(y,1)); 
         
-        [s,dk]=adaptspec(abs(mmatx).^2+abs(mmaty).^2,lambda,var);
+        [~,dk]=adaptspec(abs(mmatx).^2+abs(mmaty).^2,lambda,var);
         cellout{2}=squeeze(frac(sum(dk.^2.*abs(mmatx).^2.*dt,2),sum(abs(dk).^2,2)));
         cellout{3}=squeeze(frac(sum(dk.^2.*abs(mmaty).^2.*dt,2),sum(abs(dk).^2,2)));
         cellout{4}=squeeze(frac(sum(dk.^2.*mmatx.*conj(mmaty).*dt,2),sum(abs(dk).^2,2))); 
      end
 end
-
 
 %Corrections for zero component, and for Nyquist with even and odd length
 %Both zero are Nyquist are shared for even length time series, so divide both by two.
@@ -422,14 +421,12 @@ end
 %     end
 % end
 
-if strfind(normstr,'cyc')
+if contains(normstr,'cyc')
     f=f/2/pi;
     %for i=2:length(cellout)
     %    cellout{i}=cellout{i}/2/pi;
     %end
 end
-
-    
     
 if isscalar(dt)
     cellout{1}=f./dt;
@@ -437,15 +434,13 @@ else
     cellout{1}=vrep(f,size(dt,2),2)./dt;
 end
 
-
-
 function[S]=avgspec(mmat1,mmat2)
 eigspec=mmat1.*conj(mmat2);
 S=squeeze(mean(eigspec,2));
 
-
-
 function[s,dk]=adaptspec(eigspec,lambda,var)
+
+%[size(eigspec),size(lambda),isempty(lambda)]
 
 s=squeeze(zeros(size(eigspec(:,1,:))));
 dk=zeros(size(eigspec));
@@ -554,10 +549,10 @@ function[]=mspec_test
 tol=1e-10;
 load bravo94
 cv=bravo94.rcm.cv;
-[psi,lambda]=sleptap(length(cv),8);
+psi=sleptap(length(cv),8);
 
-[f,sxx,syy,sxy]=mspec(real(cv),imag(cv),psi);
-[f,spp,snn,spn]=mspec(cv,psi);
+[~,sxx,syy,sxy]=mspec(real(cv),imag(cv),psi);
+[~,spp,snn,spn]=mspec(cv,psi);
 
 S(1,1,:,:)=sxx;
 S(2,2,:,:)=syy;
@@ -583,8 +578,7 @@ xo=vfilt(x,24,'nonans');
 %t=num-yf2num(floor(bravo.rcm.yearf(1)));
 t=yearfrac(bravo94.rcm.num);
 
-
-[psi,lambda]=sleptap(length(x),8);
+psi=sleptap(length(x),8);
 
 p0=vsum(abs(real(x)-vmean(real(x),1)).^2,1)./length(x);
 [f,sp]=mspec(real(x),psi);
@@ -604,11 +598,11 @@ p1=(vsum(sp,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for real Bravo, non-unit sample rate, cyclic frequency',abs(p1-p0)./p0<4/100);
 
 p0=vsum(abs(x-vmean(x,1)).^2,1)./length(x);
-[f,sp,sn,spn]=mspec(x,psi);
+[f,sp,sn]=mspec(x,psi);
 p1=frac(1,2*pi)*(vsum(sp,1)+vsum(sn,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for complex Bravo, unit sample rate',abs(p1-p0)./p0<4/100);
 
-[f,sp,sn,spn]=mspec(t(2)-t(1),x,psi);
+[f,sp,sn]=mspec(t(2)-t(1),x,psi);
 p1=frac(1,2*pi)*(vsum(sp,1)+vsum(sn,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for complex Bravo, non-unit sample rate',abs(p1-p0)./p0<4/100);
 
@@ -626,35 +620,35 @@ reporttest('MSPEC SXX+SYY=SPP+SNN for Bravo, non-unit sample rate',aresame(sx+sy
 N=1001;
 cv=randn(N,1)+sqrt(-1)*randn(N,1);
 cv=cv-vmean(cv,1);
-[f,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[]);
 reporttest('MSPEC periodogram matches variance exactly for zero-mean complex signal and odd length', aresame(sum(spp)./N+sum(snn(2:end))./N,sum(abs(cv).^2)./N,1e-10))
 
 N=1001;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[f,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[]);
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and odd length', aresame(sum(spp)./N+sum(snn(2:end))./N,sum(abs(cv).^2)./N,1e-10))
 
 
 N=1000;
 cv=randn(N,1)+sqrt(-1)*randn(N,1);
 cv=cv-vmean(cv,1);
-[f,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[]);
 reporttest('MSPEC periodogram matches variance exactly for zero-mean complex signal and even length', aresame(sum(spp)./N+sum(snn(2:end-1))./N,sum(abs(cv).^2)./N,1e-10))
 
 N=1000;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[f,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[]);
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and even length', aresame(sum(spp)./N+sum(snn(2:end-1))./N,sum(abs(cv).^2)./N,1e-10))
 
 N=1000;
 dt=3600;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[f,spp,snn]=mspec(dt,cv,[]);
+[~,spp,snn]=mspec(dt,cv,[]);
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and even length, and non-unit sample rate', aresame(sum(spp)./(dt*N)+sum(snn(2:end-1))./(dt*N),sum(abs(cv).^2)./N,1e-10))
 
 N=1000;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-tic;[f,spp,snn]=mspec(cv,[]);toc
+tic;[~,spp,snn]=mspec(cv,[]);toc
 tic;S=squared(fft(cv));toc;
 b1=aresame(S(1:length(spp)),spp*N,1e-6);
 b2=aresame(flipud(S(length(spp)+1:end)),snn(2:end-1)*N,1e-6);
@@ -663,7 +657,7 @@ reporttest('MSPEC recovers periodogram for even N', b1&&b2)
 
 N=1001;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-tic;[f,spp,snn]=mspec(cv,[]);toc
+tic;[~,spp,snn]=mspec(cv,[]);toc
 tic;S=squared(fft(cv));toc;
 b1=aresame(S(1:length(spp)),spp*N,1e-6);
 b2=aresame(flipud(S(length(spp)+1:end)),snn(2:end)*N,1e-6);
@@ -677,22 +671,22 @@ function[]=mspec_test_frequency
 T=10000;
 fo=100./T;
 x=cos([1:T]'*2*pi*fo);
-[psi,lambda]=sleptap(T,1,1);
+psi=sleptap(T,1,1);
 [f,sp,sn]=mspec(x+sqrt(-1)./1e10,psi);
 
-[mp,jp]=max(sp);
-[mn,jn]=max(sn);
+[~,jp]=max(sp);
+[~,jn]=max(sn);
 bool=aresame(frac(1,2*pi)*f(jp),fo,1e-12)&&aresame(frac(1,2*pi)*f(jn),fo,1e-12);
 reporttest('MSPEC frequency matches expected exactly, even number of points',bool);
 
 T=10000-1;
 fo=100/T;
 x=cos([1:T]'*2*pi*fo);
-[psi,lambda]=sleptap(T,1,1);
+psi=sleptap(T,1,1);
 [f,sp,sn]=mspec(x+sqrt(-1)./1e10,psi);
 
-[mp,jp]=max(sp);
-[mn,jn]=max(sn);
+[~,jp]=max(sp);
+[~,jn]=max(sn);
 bool=aresame(frac(1,2*pi)*f(jp),fo,1e-12)&&aresame(frac(1,2*pi)*f(jn),fo,1e-12);
 reporttest('MSPEC frequency matches expected exactly, odd number of points',bool);
 

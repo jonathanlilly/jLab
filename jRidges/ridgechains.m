@@ -1,4 +1,4 @@
-function[id,ii,jj,xr,fr]=ridgechains(fs,N,bool,x,f,alpha,mask)
+function[id,ii,jj,xr,fr]=ridgechains(fs,N,bool,x,f,alpha,mask,rq)
 %RIDGECHAINS  Forms ridge curves by connecting transform ridge points.
 %
 %   RIDGECHAINS is a low-level function called by RIDGEWALK.
@@ -20,7 +20,7 @@ function[id,ii,jj,xr,fr]=ridgechains(fs,N,bool,x,f,alpha,mask)
 %   Usage:  [id,ii,jj,xr]=ridgechains(N,bool,x);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2018 J.M. Lilly --- type 'help jlab_license' for details
 
 if isempty(find(bool,1))
     [id,ii,jj,xr,fr]=vempty;return
@@ -31,16 +31,28 @@ indexridge=find(bool);
 [ii,sorter]=sort(ii);
 vindex(jj,indexridge,sorter,1);
 
+%New version as of April 2018, using quadratic interpolation
+%/*************************************************************************
 dfdt=vdiff(f,1);
-dfdt=dfdt(indexridge);
+%Interpolate frequency within ridge for better estimation
+[fr,dfdt,xr]=ridgeinterp(rq,ii,jj,f,dfdt,x);
 
-%Using new algorithm as of November 2007, faster and also prevents ridge breaking
+%Old version
+%dfdt=vdiff(f,1);
+%dfdt=dfdt(indexridge);
+%xr=x(indexridge);             %Transform value along ridge
+%fr=f(indexridge);             %Frequency along ridge
 
-xr=x(indexridge);             %Transform value along ridge
-fr=f(indexridge);             %Frequency along ridge
-fsr=fs(jj);                   %Scale frequency along ridge
+%New version actually makes a significant difference. 
+%Probably will help to minimize ridge breaking
+%fro=f(indexridge);figure,plot(fr,'.'),hold on,plot(fro,'o')
+%Try uncommenting this on the example figure
+
+fsr=fs(jj);       %Scale frequency along ridge
 fr_next=fr+dfdt;  %Predicted frequency at next point
 fr_prev=fr-dfdt;  %Predicted frequency at previous point
+%\*************************************************************************
+
 
 cumbool=cumsum(bool,2);
 J=maxmax(cumbool(:,end));   %Maximum number of ridges at any one time
@@ -97,7 +109,7 @@ index=find(~isnan(mindf));
 if ~isempty(index)
     mindf=mindf(index);
     [ii2,jj2]=ind2sub(size(indexmat),index);
-    [ii2,jj2,index,mindf]=vindex(ii2,jj2,index,mindf,find(ii2<size(x,1)),1);
+    [ii2,~,index,~]=vindex(ii2,jj2,index,mindf,find(ii2<size(x,1)),1);
     index2=sub2ind(size(indexmat),ii2+1,jjmin(index));
     nextindexmat(index)=indexmat(index2);
 end
@@ -114,18 +126,21 @@ for i=1:size(nextindexmat,1)
 end
 [id,sorter]=sort(id);
 vindex(ii,jj,indexridge,xr,fr,sorter,1);
-
+    
 %Remove ridge lines of length shorter than a specified length
-%figure,uvplot(xr)
-lr=ridgelen(1,id,ii,fr); 
-vindex(id,ii,jj,indexridge,xr,fr,lr,find(lr>=N),1); 
+lr=ridgelen(1,id,fr);
+vindex(id,ii,jj,indexridge,xr,fr,lr,find(lr>N),1);
+
+%Remove isolated points.
+bool=~(~isnan(id)&isnan(vshift(id,-1,1))&isnan(vshift(id,1,1)));
+vindex(id,ii,jj,indexridge,xr,fr,lr,bool,1);
 
 %This block is for applying the mask
 %/**************************************************************
 %Keep from chaining ridges through mask
 %isempty(mask)
 if ~isempty(mask)&&~isempty(ii)
-    [L,ia,ib]=blocklen(id);  
+    [~,~,ib]=blocklen(id);  
     jjnext=circshift(jj,-1,1);
     jjnext(ib)=jj(ib);
     
@@ -143,10 +158,14 @@ if ~isempty(mask)&&~isempty(ii)
     breaks(find(diff(ii)>1)+1)=true;
     breaks(find(diff(id)>0)+1)=true;
     id=cumsum(breaks);
-   
+  
     %And remove short ridges again
-    lr=ridgelen(1,id,ii,fr);
-    vindex(id,ii,jj,indexridge,xr,fr,lr,find(lr>=N),1);
+    lr=ridgelen(1,id,fr);
+    vindex(id,ii,jj,indexridge,xr,fr,lr,find(lr>N),1);
+    
+    %Remove isolated points. 
+    bool=~(~isnan(id)&isnan(vshift(id,-1,1))&isnan(vshift(id,1,1)));
+    vindex(id,ii,jj,indexridge,xr,fr,lr,bool,1);
     %figure,plot(ii,lr,'.'),hlines((2*sqrt(6)/pi)),ylog,N
 end
 %\**************************************************************

@@ -17,6 +17,10 @@ function[varargout]=cell2col(varargin)
 %
 %   CELL2COL(X1,X2,...,XN); with no output arguments overwrites the 
 %   original input variables.
+%
+%   CELL2COL(...,'nonans') suppresses the insertion of NANs as well as the
+%   swapping of existing NANs for INFS, and simply concatenates the cells
+%   into long arrays.
 %   __________________________________________________________________
 %
 %   See also COL2CELL, COL2MAT, MAT2COL, COLBREAKS, COL2CELL.
@@ -27,38 +31,50 @@ function[varargout]=cell2col(varargin)
 %          [c1,c2,...,cN]=cell2col(x1,x2,...,xN);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
     cell2col_test,return
 end
 
-for i=1:nargin
-    ray=varargin{i}(:);  
-    width=ones(1,max(cellsize(ray,2)));
-    for j=1:length(ray)
-        %zeros(size(ray{j}(1,:)))
-        ray{j}=[ray{j};-inf*width];
-        %ray{j}=[ray{j};-inf];
+str='nans';
+if ischar(varargin{end})
+    str=varargin{end};
+    varargin=varargin(1:end-1);
+end
+
+for i=1:length(varargin)
+    ray=varargin{i}(:);
+    
+    if strcmpi(str(1:3),'nan')
+        width=ones(1,max(cellsize(ray,2)));
+        for j=1:length(ray)
+            %zeros(size(ray{j}(1,:)))
+            ray{j}=[ray{j};-inf*width];
+            %ray{j}=[ray{j};-inf];
+        end
     end
+    
     ray=cell2mat(ray);
     
-    ray=vswap(ray,nan,inf);
-    ray=vswap(ray,nan+sqrt(-1)*nan,inf+sqrt(-1)*inf);
-    ray=vswap(ray,-inf,nan);
-
-    if i==1
-        ray1=ray;
-    elseif i~=1
-        ray(isnan(ray1))=nan;
-    end
-    if ~isreal(ray)
-        ray=vswap(ray,nan,nan+sqrt(-1)*nan);
-        ray=vswap(ray,inf,inf+sqrt(-1)*inf);
-    end
+    if strcmpi(str(1:3),'nan')
+        ray=vswap(ray,nan,inf);
+        ray=vswap(ray,nan+sqrt(-1)*nan,inf+sqrt(-1)*inf);
+        ray=vswap(ray,-inf,nan);
         
+        if i==1
+            ray1=ray;
+        elseif i~=1
+            ray(isnan(ray1))=nan;
+        end
+        if ~isreal(ray)
+            ray=vswap(ray,nan,nan+sqrt(-1)*nan);
+            ray=vswap(ray,inf,inf+sqrt(-1)*inf);
+        end
+    end
     varargout{i}=ray;
 end   
+
 eval(to_overwrite(nargin));
 
 function[]=cell2col_test
@@ -92,13 +108,22 @@ cell2col(x,y);
 reporttest('CELL2COL column vector leading empties', aresame(nonnan(x),z) && aresame(nonnan(y),z))
 
 clear x
-x{1}=[1 2; 2 4];
-x{2}=[3 3];
-x{3}=[2 7; 3 7; 4 7];
+x{1,1}=[1 2; 2 4];
+x{2,1}=[3 3];
+x{3,1}=[2 7; 3 7; 4 7];
 y=x;
 z=[x{1};nan nan;x{2};nan nan; x{3}; nan nan];
 cell2col(x);
-
 reporttest('CELL2COL two-column array', aresame(x,z))
+
+clear x
+x{1,1}=[1 2; 2 4];
+x{2,1}=[3 3];
+x{3,1}=[2 7; 3 7; 4 7];
+y=x;
+z=[x{1};x{2};x{3};];
+cell2col(x,'nonans');
+reporttest('CELL2COL two-column array with NONANS setting', aresame(x,z))
+
 
 %Further tests for cell2col are contained in col2cell

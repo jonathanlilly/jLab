@@ -21,7 +21,7 @@ function[varargout] = vmean(varargin)
 %   Y=VMEAN(X,DIM,W) forms the weighted mean of X using weights W, an array 
 %   of the same size as X. 
 %
-%   In this case [Y,NUM]=VMEAN(X,DIM,W) returns total weight using in 
+%   In this case [Y,NUM]=VMEAN(X,DIM,W) returns total weight used in 
 %   forming the mean at each point, rather than the number of data points.
 %  
 %   Thus VMEAN(X,DIM,W) is the same as VMEAN(X.*W,DIM)./VMEAN(W,DIM).

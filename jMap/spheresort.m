@@ -9,16 +9,8 @@ function[varargout]=spheresort(varargin)
 %   circle distances DS between data points at locations LAT, LON and 
 %   nearby grid points located at LATO, LONO, sorting in order of distance. 
 %
-%   XS and YS are the corresponding positions of the sorted data points 
+%   XS and YS are the corresponding coordinates of the sorted data points 
 %   in a local tangent plane about each grid point. 
-%
-%   SPHERESORT only computes distances for nearby points.  CUTOFF is the
-%   maximum distance (in kilometers) for which we wish the great circle
-%   distance to be computed.  
-%
-%   CUTOFF should be less that 1/4 of the circumference of the earth, 
-%   RADEARTH * PI/2, so that (LAT,LON) points lie in the same hemisphere
-%   as the corresponding grid points.
 % 
 %   LAT and LON are arrays of the same size into data point locations.
 %   Any NaN values in LAT/LON are ignored.  
@@ -31,16 +23,32 @@ function[varargout]=spheresort(varargin)
 %                  ...
 %                LATO_M]
 %
-%   The output arrays are then each M x N x P arrays of column vectors, 
-%   where P is the maximum number of points in the CUTOFF neighborhood at
-%   any grid point.  Points farther away are filled with NANs.
+%   SPHERESORT only computes distances for nearby points, up to a distance 
+%   of CUTOFF, which is given in kilometers.  CUTOFF should be less than 
+%   1/4 of the circumference of the earth, RADEARTH * PI/2, so that sorted
+%   (LAT,LON) points will lie in the same hemisphere as the grid points.
+%
+%   The output arrays are then all M x N x P arrays where P is the maximum
+%   number of points in the CUTOFF neighborhood at any grid point.  Entries 
+%   in the ouput corresponding to farther distances are filled with NaNs.
 %
 %   DS gives the distances of data points less than CUTOFF kilometers 
 %   from the (m,n)th grid point, sorted in order of increasing distance.  
 %
-%   XS and YS are also M x N x P, and give the coordinates of the 
-%   corresponding data points in a Cartesian expansion about the (m,n)th
-%   grid point, in kilometers.  See LATLON2XY for details.
+%   XS and YS give the coordinates, in kilometers, of the corresponding 
+%   data points in a plane tangent to the (m,n)th grid point.  See 
+%   LATLON2XY and Lilly and Lagerloef (2018) for details.
+%   _________________________________________________________________
+% 
+%   Limiting output dimension
+%
+%   SPHERESORT(LAT,LON,LATO,LONO,[CUTOFF PMAX]), where the fifth input 
+%   argument is a 2-vector, additionally specifies that the third dimension
+%   of the output arrays will be no more than PMAX. 
+%
+%   This option is useful for the 'fixed population' algorithm in
+%   POLYSMOOTH, as it ensures the output fields will be no larger than is
+%   necessary.  It can also be used simply to limit the output size. 
 %   _________________________________________________________________
 % 
 %   Additional input parameters
@@ -53,12 +61,11 @@ function[varargout]=spheresort(varargin)
 %
 %   also returns the sorted values of these variables.
 %
-%   Z1S, Z2S,...,ZKS are the same size as the other output arguments.  
-%   Z1S then gives the value of Z1 at data points no more than CUTOFF 
-%   kilometers from the (m,n)th grid point, etc.
+%   Z1D, Z2D,...,ZKD are the same size as the other output arguments, and 
+%   give the values of Z1, Z2,...,ZK sorted according to distance.
 %   _________________________________________________________________
 %
-%   One grid, many data fields
+%   One grid, many fields
 %
 %   It is often the case that the field to be mapped, Z, consists of many 
 %   copies of observations at the same LAT/LON points.  For example, X and
@@ -72,13 +79,13 @@ function[varargout]=spheresort(varargin)
 %       [DS,XS,YS,INDEX]=
 %            SPHERESORT(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF)
 %
-%   which outputs an index INDEX into the data point locations, where INDEX
-%   is the same size as the other output arrays.
+%   which outputs an index INDEX into the data point locations, which is
+%   the same size as the other output arrays.
 %
 %   Then for each of the K copies of Z at the same LAT/LON locations, form 
 %
-%        ZS=NAN*ZEROS(SIZE(XS))
-%        ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)))
+%        ZS=NAN*ZEROS(SIZE(XS));
+%        ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)));
 %   
 %   and then use this ZS together with DS, XS, and YS to call POLYSMOOTH.
 %   In this way, SPHERESORT only needs to be called once and not K times.    
@@ -105,6 +112,9 @@ function[varargout]=spheresort(varargin)
 %   As an example, for a dataset with 1 million points, a 12 core Mac Pro 
 %   takes about 44 seconds to complete the sort on a 1x1 degree grid, 
 %   versus 184 seconds for the standard algorithm, a factor of 4 faster.
+%
+%   Also, depending on the size of dataset, the parallel algorith may lead
+%   to memory problems, so it should be used judiciously.
 %   _________________________________________________________________
 %
 %   See also TWODSORT, POLYSMOOTH.
@@ -117,7 +127,7 @@ function[varargout]=spheresort(varargin)
 %          [ds,xs,ys,z1s,z2s]=spheresort(lat,lon,z1,z2,lato,lono,cutoff);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 
 if strcmpi(varargin{1}, '--t')
@@ -161,6 +171,13 @@ lono=varargin{end-1};
 cutoff=varargin{end};
 args=varargin(3:end-3);
 
+%In case max # points is not input
+Ncutoff=inf;
+if length(cutoff)==2
+    Ncutoff=cutoff(2);
+    cutoff=cutoff(1);
+end
+
 if ~aresame(size(lat),size(lon))
     error('LAT and LON must be the same size.')
 end
@@ -197,15 +214,15 @@ else
     
     disp('SPHERESORT reorganizing, this may take a while...')
     
-    L=cellength(d_cell);    
+    L=min(Ncutoff,cellength(d_cell));    
     [d,xd,yd,indexd]=vzeros(size(L,1),size(L,2),maxmax(L),nan);
     for i=1:size(L,1)
         for j=1:size(L,2)
             if L(i,j)>=1
-                d(i,j,1:L(i,j))=d_cell{i,j};
-                xd(i,j,1:L(i,j))=xd_cell{i,j};
-                yd(i,j,1:L(i,j))=yd_cell{i,j};
-                indexd(i,j,1:L(i,j))=indexd_cell{i,j};
+                d(i,j,1:L(i,j))=d_cell{i,j}(1:L(i,j));
+                xd(i,j,1:L(i,j))=xd_cell{i,j}(1:L(i,j));
+                yd(i,j,1:L(i,j))=yd_cell{i,j}(1:L(i,j));
+                indexd(i,j,1:L(i,j))=indexd_cell{i,j}(1:L(i,j));
             end
         end
     end
@@ -225,11 +242,7 @@ for k=1:length(args)
 end
 disp('SPHERESORT finished.')
 
-
-
-
 function [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers)
-
 %Parallelize with single program multiple data
 dlat_cutoff=jrad2deg(cutoff./radearth);
 b=floor((length(lato)/Nworkers)*[1:Nworkers]);
@@ -263,8 +276,6 @@ for i=1:length(dp)
         indexd(a(i):b(i),:,1:size(dp{i},3))=indexdp{i};
     end
 end
-
-
 
 function [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,cutoff)
 dlat_cutoff=jrad2deg(cutoff./radearth);
@@ -304,8 +315,6 @@ for j=1:length(lato)
          %if isnan(chi),chi=inf;end
          neari=find(dlon(:)<=chi);
            
-         %length(find(neari))
-         %dlon
          %Formerly I used this wedge, but it ends up being broader
          %This gives me the largest latitude where I might find
          %a point inside the search radius, but never > 90 degrees
@@ -439,6 +448,9 @@ lato=(-80:5:80);
 
 cutoff=1000;
 
+tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,[cutoff 100]);etime1=toc;
+reporttest('SPHERESORT population cutoff',size(d,3)==100&&size(xd,3)==100&&size(yd,3)==100&&size(latd,3)==100)
+
 tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime1=toc;
 %tic;[do,xdo,ydo,latdo,londo]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime2=toc;
 
@@ -479,8 +491,6 @@ reporttest('SPHERESORT two algorithm versions match',allall(bool))
 % [lat,lon]=xy2latlon(squeeze(xd(ii,jj,:)),squeeze(yd(ii,jj,:)),lato(ii),lono(jj));
 % plot(lon,lat,'go')
 
-
- 
 function[]=spheresort_parallel_test
 
 %N=1000000;
@@ -505,17 +515,15 @@ reporttest('SPHERESORT standard and parallel algorithms match',allall(bool))
 disp(['SPHERESORT parallel algorithm was ' num2str(etime1./etime2) ' times faster than standard algorithm.'])
 
 
-%\************************************************************************
-
-
-lato=[-90:0.1:90]';
-cutoff=[100 200 400 800];
-[chi,fact,maxlat]=vzeros(length(lato),length(cutoff));
-for i=1:length(cutoff)
-    for j=1:length(lato)
-        maxlat(j,i)=min(abs(lato(j))+frac(360,2*pi)*frac(cutoff(i),radearth),90);
-        fact(j,i)=min(1,frac(sin(frac(cutoff(i),2*radearth)).^2,cosd(maxlat(j,i)).*cosd(lato(j))));
-        chi(j,i)=2*asin(sqrt(fact(j,i)));
-    end
-end
-figure,plot(chi*360/2/pi,lato),ylim([-90 90])
+% Not sure what I was doing with this figure
+% lato=[-90:0.1:90]';
+% cutoff=[100 200 400 800];
+% [chi,fact,maxlat]=vzeros(length(lato),length(cutoff));
+% for i=1:length(cutoff)
+%     for j=1:length(lato)
+%         maxlat(j,i)=min(abs(lato(j))+frac(360,2*pi)*frac(cutoff(i),radearth),90);
+%         fact(j,i)=min(1,frac(sin(frac(cutoff(i),2*radearth)).^2,cosd(maxlat(j,i)).*cosd(lato(j))));
+%         chi(j,i)=2*asin(sqrt(fact(j,i)));
+%     end
+% end
+% figure,plot(chi*360/2/pi,lato),ylim([-90 90])

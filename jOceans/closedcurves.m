@@ -211,24 +211,25 @@ for i=1:length(xc)
     end
 end
 
-lenx=cellength(xc);
-leny=cellength(yc);
-bool=(lenx>=3)&(leny>=3);
-xc=xc(bool);
-yc=yc(bool);
-
-if strcmpi(interpstr(1:3),'int')
-    [xcnew,ycnew]=vzeros(Mnew,length(xc));
-    for i=1:length(xc)
-        t=(1:length(xc{i}))';
-        tnew=linspace(1,length(xc{i}),Mnew)';
-        xcnew(:,i)=interp1(t,xc{i},tnew,'spline');
-        ycnew(:,i)=interp1(t,yc{i},tnew,'spline');
+if ~isempty(xc)
+    lenx=cellength(xc);
+    leny=cellength(yc);
+    bool=(lenx>=3)&(leny>=3);
+    xc=xc(bool);
+    yc=yc(bool);
+    
+    if strcmpi(interpstr(1:3),'int')
+        [xcnew,ycnew]=vzeros(Mnew,length(xc));
+        for i=1:length(xc)
+            t=(1:length(xc{i}))';
+            tnew=linspace(1,length(xc{i}),Mnew)';
+            xcnew(:,i)=interp1(t,xc{i},tnew,'spline');
+            ycnew(:,i)=interp1(t,yc{i},tnew,'spline');
+        end
+        xc=xcnew;
+        yc=ycnew;
     end
-    xc=xcnew;
-    yc=ycnew;
 end
-
 function[]=closedcurves_test
 load qgsnapshot
 

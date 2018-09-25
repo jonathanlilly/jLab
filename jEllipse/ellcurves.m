@@ -1,17 +1,20 @@
-function[z]=ellcurves(varargin)
+function[x,y]=ellcurves(varargin)
 %ELLCURVES  Returns curves corresponding to specified ellipse properties.
 %
 %   For direct plotting of ellipses, see ELLPLOT, which calls ELLCURVES.
 %
-%   Z=ELLCURVES(KAPPA,LAMBDA,THETA,ZO) returns complex-valued curves Z
+%   ZC=ELLCURVES(KAPPA,LAMBDA,THETA,ZRES) returns complex-valued curves ZC
 %   tracing out the periphery of ellipses with amplitude KAPPA, linearity 
-%   LAMBDA, and orientation THETA, located at complex positions ZO=XO+iYO.
+%   LAMBDA, and orientation THETA, located at complex positions ZRES.
 %
 %   All input arguments are arrays of the same length, say N.  By default,  
-%   Z is calculated at 32 locations around the periphery.  Thus Z will be a
-%   complex-valued matrix with 32 rows and N columns. 
+%   ZC is calculated at 32 locations around the periphery.  Thus ZC will be
+%   a complex-valued matrix with 32 rows and N columns. 
 %
-%   ELLCURVES(KAPPA,LAMBDA,THETA,PHI,Z) with five input arguments begins 
+%   [XC,YC]=ELLCURVES(...) alternately returns the real and imaginary parts
+%   of ZC, corresponding to the X- and Y- components of the ellipses.
+%
+%   ELLCURVES(KAPPA,LAMBDA,THETA,PHI,ZRES) with five input arguments begins 
 %   each ellipse at phase PHI.  For most applications, the starting phase
 %   does not matter.  The default value is to begin with a phase of zero. 
 %
@@ -23,17 +26,18 @@ function[z]=ellcurves(varargin)
 %   ELLCURVES is called by ELLPLOT, and is also useful in applications,
 %   e.g. analysis of model fields within elliptical contours.
 %
-%   The curves can be plotted with PLOT(Z).
+%   The curves can be plotted with PLOT(ZC).
 %
 %   See also ELLIPSEPLOT, ELLSIG, INELLIPSE.
 %
-%   Usage: z=ellcurves(kappa,lambda,theta,zo);
-%          z=ellcurves(kappa,lambda,theta,phi,zo);
-%          z=ellcurves(kappa,lambda,theta,phi,zo,'npoints',64);
-%          z=ellcurves(kappa,lambda,theta,phi,zo,'aspect',ar,'npoints',64);
+%   Usage: zc=ellcurves(kappa,lambda,theta,zres);
+%          zc=ellcurves(kappa,lambda,theta,phi,zres);
+%          zc=ellcurves(kappa,lambda,theta,phi,zres,'npoints',64);
+%          [xc,yc]=ellcurves(kappa,lambda,theta,phi,zres,'npoints',64);
+%          zc=ellcurves(kappa,lambda,theta,phi,zres,'aspect',ar,'npoints',64);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2018 J.M. Lilly --- type 'help jlab_license' for details
  
  
 na=length(varargin);
@@ -81,17 +85,18 @@ else
     end
 end
 
-% if nargout==2
-%     if iscell(z)
-%         x=cellreal(z);
-%         y=cellimag(z);
-%     else
-%         x=real(z);
-%         y=imag(z);
-%     end
-% else
-%     x=z;
-% end
+
+if nargout==2
+    if iscell(z)
+        x=cellreal(z);
+        y=cellimag(z);
+    else
+        x=real(z);
+        y=imag(z);
+    end
+else
+    x=z;
+end
 
 
 function[z]=ellcurves_one(kappa,lambda,theta,phi,x,ar,npoints)

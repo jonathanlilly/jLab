@@ -2,7 +2,7 @@ function[varargout]=colbreaks(varargin)
 %COLBREAKS  Insert NANs into discontinuties in a vector.
 %
 %   O1=COLBREAKS(I1), where I1 is a column vector, inserts NANs into I1 at
-%   its discontinuties (and puts one at the end), for example:
+%   its discontinuities (and puts one at the end), for example:
 %		
 %	  COLBREAKS([2;2;2;3;3])=[2;2;2;NAN;3;3;NAN];
 %

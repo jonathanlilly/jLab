@@ -131,7 +131,6 @@ df=2*1e6./(2*2*pi/360)./(1000*radearth.*cos(jdeg2rad(latg)));
 tol=1e-6;
 reporttest('SPHEREGRAD purely zonal gradient',maxmax(abs(gradx-df))<tol)
 
-
 f=latg.^2+cos(jdeg2rad(long)).^3;
 u=1+0*latg;
 v=1+0*latg;
@@ -143,5 +142,6 @@ x2=f.*div+u.*gradx+v.*grady;
 
 tol=1e-5;
 reporttest('SPHEREGRAD, SPHEREDIV flux identity',aresame(x1,x2,tol))
+
 
 

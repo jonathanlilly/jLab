@@ -3,6 +3,10 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
+%  'jlab_makefigs kinematics':
+%   Lilly, J. M. (2018) Kinematics of a fluid ellipse in a linear flow. 
+%       Fluids, 3 (1) 16: 1--29.
+%
 %  'jlab_makefigs matern':
 %   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2017).
 %       Fractional Brownian motion, the Matern process, and stochastic 
@@ -83,6 +87,7 @@ jj=jj+1;names{jj}='multivariate';
 jj=jj+1;names{jj}='superfamily';
 jj=jj+1;names{jj}='element';
 jj=jj+1;names{jj}='matern';
+jj=jj+1;names{jj}='kinematics';
 
 %cd(jlab_settings('dirnames.figures'))
 
@@ -107,15 +112,194 @@ end
 
 set(0,'defaultTextInterpreter',dti)
 set(0,'defaultLegendInterpreter',dli)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function[]=jlab_makefigs_kinematics(str) 
+%cd /Users/lilly/Desktop/Dropbox/Projects/kinematics
+%/************************************************************************
+%Ellipse & Annulus Schematic
+figure
+subplot(1,2,1)
+a=3;b=2;
+theta=pi/3;
+alpha=1.2;
+[kappa,lambda]=ab2kl(a,b);
 
+ellipseplot(kappa,lambda,theta,0+sqrt(-1)*0,'npoints',64,'k');hold on
+linestyle 2k
+[x,y]=ellsig(kappa*alpha,lambda,theta,[0:pi/12:2*pi]','real');
+
+phi=[0:pi/48:2*pi-1e-10]';
+[x,y]=ellsig(kappa,lambda,theta,phi,'real');
+r=sqrt(x.^2+y.^2);
+z=rot(theta).*(a*cos(phi(1:4:end))+1i*b*sin(phi(1:4:end)));
+for i=1:length(z)
+    h1=plot(real(z(i))*[1 alpha],imag(z(i))*[1 alpha],'k');
+end
+linestyle -h h1 G
+h1=plot(real(z(1))*[0 alpha],imag(z(1))*[0 alpha],'k');
+h1=plot(real(z(5))*[0 alpha],imag(z(5))*[0 alpha],'k');
+h1=plot(real(z(1))*[0 1],imag(z(1))*[0 1]);linestyle -h h1 3G
+h1=plot(real(z(7))*[0 1],imag(z(7))*[0 1]);linestyle -h h1 3G--
+plot(z(5),'wo','markerfacecolor','w','markersize',9)
+plot(z(5),'ko','markerfacecolor','k','markersize',6)
+
+% vartheta=atan2(imag(z),real(z));  %Azimuth angle
+% [vartheta,index]=sort(vartheta);
+% R=interp1([vartheta;vartheta(1)+2*pi],[abs(z(index));abs(z(index(1)))],angle(rot(phi(1:4:end))));
+% 
+% z2=rot(phi(1:4:end)).*R;
+% for i=1:length(z2)
+%     if i~=1&&i~=7&&i~=13&&i~=19 %Omit lines that vlines+hlines will plot
+%         h1=plot(real(z2(i))*[0 1],imag(z2(i))*[0 1],':');
+%         linestyle -h h1 D:
+%     end
+% end
+hlines(0,'k:'),vlines(0,'k:')
+
+plot(rot(0:pi/48:angle(z(1))),'k')
+phi=0:pi/48:angle(z(1));
+plot(rot(theta)*(a.*cos(phi)+1i*b.*sin(phi))/2,'k')
+text(.5,.25,'\theta','interpreter','tex')
+text(.1,.75,'\phi','interpreter','tex')
+text(1.15,1.75,'a')
+text(-1.15,0.4,'b')
+axis([-3.25 3.25 -3.75 3.75])
+title('Ellipse Schematic')
+axis off
+%************************************************************************
+%Annulus Schematic
+subplot(1,2,2)
+a=3;b=2;
+theta=pi/3;
+alpha=1.2;
+[kappa,lambda]=ab2kl(a,b);
+
+ellipseplot(kappa,lambda,theta,0+sqrt(-1)*0,'npoints',64,'k');hold on
+ellipseplot(kappa*alpha,lambda,theta,0+sqrt(-1)*0,'npoints',64,'k');
+linestyle 2k
+[x,y]=ellsig(kappa*alpha,lambda,theta,[0:pi/12:2*pi]','real');
+
+phi=[0:pi/48:2*pi-1e-10]';
+[x,y]=ellsig(kappa,lambda,theta,phi,'real');
+r=sqrt(x.^2+y.^2);
+z=rot(theta).*(a*cos(phi(1:4:end))+1i*b*sin(phi(1:4:end)));
+
+for i=1:length(z)
+    h1=plot(real(z(i))*[1 alpha],imag(z(i))*[1 alpha],'k');
+end
+vartheta=atan2(imag(z),real(z));  %Azimuth angle
+[vartheta,index]=sort(vartheta);
+R=interp1([vartheta;vartheta(1)+2*pi],[abs(z(index));abs(z(index(1)))],angle(rot(phi(1:4:end))));
+
+for ii=17:20;
+    patch([x(ii) alpha*x(ii) alpha*x(ii+1) x(ii+1)],...
+    [y(ii) alpha*y(ii) alpha*y(ii+1) y(ii+1)],'k')
+end
+
+% z2=rot(phi(1:4:end)).*R;
+% for i=1:length(z2)
+%     if i~=1&&i~=7&&i~=13&&i~=19 %Omit lines that vlines+hlines will plot
+%         h1=plot(real(z2(i))*[0 1],imag(z2(i))*[0 1],':');
+%         linestyle -h h1 D:
+%     end
+% end
+hlines(0,'k:'),vlines(0,'k:')
+
+h1=plot(real(z(1))*[0 alpha],imag(z(1))*[0 alpha],'k');
+h1=plot(real(z(5))*[0 alpha],imag(z(5))*[0 alpha],'k');
+h1=plot(real(z(1))*[0 1],imag(z(1))*[0 1]);linestyle -h h1 3G
+h1=plot(real(z(7))*[0 1],imag(z(7))*[0 1]);linestyle -h h1 2w
+h1=plot(real(z(7))*[0 1],imag(z(7))*[0 1]);linestyle -h h1 3G--
+
+%hlines(0,'k:'),vlines(0,'k:')
+plot(rot(0:pi/48:angle(z(1))),'k')
+phi=0:pi/48:angle(z(1));
+plot(rot(theta)*(a.*cos(phi)+1i*b.*sin(phi))/2,'k')
+text(.5,.25,'\theta','interpreter','tex')
+text(.1,.75,'\phi','interpreter','tex')
+text(1.15,1.75,'a')
+text(-1.15,0.4,'b')
+
+%legend([h1 h2 h3],'Time','Phase','Azimuth')
+axis([-3.25 3.25 -3.75 3.75])
+title('Elliptical Ring Schematic')
+fontsize 14 12 12 12
+axis off
+letterlabels(4)
+
+packfig(1,2,'columns')
+
+set(gcf,'paperposition',[1 1 12 8])
+set(gcf,'color','w')
+set(gcf,'inverthardcopy','off')
+
+if strcmp(str,'print')
+   print -deps kinematics-schematic.eps
+end
+%\************************************************************************
+
+
+%/************************************************************************
+figure,
+x=[-7:1:7]';y=x;
+[xg,yg]=meshgrid(x,y);
+
+% subplot(1,4,1);quiver(x,y,xg,yg,'k','linewidth',1),title('Divergence')
+% subplot(1,4,2);quiver(x,y,-yg,xg,'k','linewidth',1),title('Vorticity')
+% subplot(1,4,3);quiver(x,y,xg,-yg,'k','linewidth',1),title(' Normal Strain')
+% subplot(1,4,4);quiver(x,y,yg,xg,'k','linewidth',1),title('Shear Strain')
+
+for i=1:4,subplot(1,4,i), axis equal,axis([-1 1 -1 1]*max(x)),
+%vlines(0,'k:'),hlines(0,'k:'),
+noxlabels,noylabels,hold on,boxon,end
+
+subplot(1,4,1);quiver(x,y,xg,yg,'k','linewidth',0.5),title('Ix','FontWeight','bold')
+subplot(1,4,2);quiver(x,y,-yg,xg,'k','linewidth',0.5),title('Jx','FontWeight','bold')
+subplot(1,4,3);quiver(x,y,xg,-yg,'k','linewidth',0.5),title('Kx','FontWeight','bold')
+subplot(1,4,4);quiver(x,y,yg,xg,'k','linewidth',0.5),title('Lx','FontWeight','bold')
+
+packfig(1,4,'columns')
+
+orient landscape
+fontsize 9 9 9 9
+if strcmp(str,'print')
+   print -depsc kinematics-ijkl-vectors.eps
+end
+
+figure
+x=[-10:.1:10]';y=x;
+[xg,yg]=meshgrid(x,y);
+subplot(1,4,1);contour(x,y,xg.^2+yg.^2,10,'k'),title('x$^T$Ix','fontweight','bold'),
+subplot(1,4,2);title('x$^T$Jx','fontweight','bold')
+subplot(1,4,3);
+z=xg.^2-yg.^2;zp=z;zn=z;zp(z<0)=nan;zn(z>0)=nan;
+contour(x,y,zp,10,'k'),title('x$^T$Kx','fontweight','bold'),
+hold on, contour(x,y,zn,10,'-.','color',0.6*[1 1 1]),
+subplot(1,4,4);
+z=2*xg.*yg;zp=z;zn=z;zp(z<0)=nan;zn(z>0)=nan;
+contour(x,y,zp,10,'k'),title('x$^T$Lx','fontweight','bold'),
+hold on,contour(x,y,zn,10,'-.','color',0.6*[1 1 1]),
+for i=1:4,subplot(1,4,i), axis equal,axis([-10 10 -10 10]),boxon,
+%vlines(0,'D:'),hlines(0,'D:'),
+noxlabels,noylabels,end
+packfig(1,4,'columns')
+
+
+orient landscape
+fontsize 9 9 9 9
+if strcmp(str,'print')
+   print -depsc kinematics-ijkl-quadratic.eps
+end
+%\************************************************************************
+
+%END of jlab_makefigs_kinematics
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_matern(str) 
 makefigs_matern(str);
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_element(str) 
 makefigs_element(str);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 function[varargout]=jlab_makefigs_superfamily(str)
 
 %/************************************************************
@@ -425,19 +609,16 @@ clear wx wy cx ir jr wxr wyr fxr fyr
 for i=1:length(lat)
     i
     cx{i}=fillbad(latlon2xy(lat{i},lon{i},lato,lono));   
-    [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{1,ga(i),be(i),fs{i},'bandpass'},'mirror');
+    [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{ga(i),be(i),fs{i},'bandpass'},'mirror');
     dt=num{i}(2)-num{i}(1);
-    [ir{i},jr{i},wr,fr,br,cr]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*ppsi(i),0}); 
+    [wxr{i},wyr{i},ir{i},jr{i},fr{i},er,br,cr]=ridgewalk(dt,wx{i},wy{i},fs{i},ppsi(i),3); 
     
-    if length(wr)>0
-        wxr{i}=wr(:,1);wyr{i}=wr(:,2);
-        fxr{i}=fr(:,1);fyr{i}=fr(:,2);
+    if length(ir{i})>0
         bxr{i}=br(:,1);byr{i}=br(:,2);
         cxr{i}=cr(:,1);cyr{i}=cr(:,2);
     else
         [wxr{i},wyr{i},fxr{i},fyr{i},bxr{i},byr{i},cxr{i},cyr{i}]=vempty;
     end
-    
 end
 
 
@@ -446,9 +627,8 @@ clear fxhat fyhat cxhat cyhat fbar
 
 for i=1:length(lat)
     %Small overlap of two weak ridges for i=9 and i=23 
-    [xhatr{i},yhatr{i},fxhat{i},fyhat{i},cxhat{i},cyhat{i}]=...
-         ridgemap(length(cx{i}),wxr{i},wyr{i},fxr{i},fyr{i},cxr{i},cyr{i},ir{i},'collapse');
-    fbar{i}=vmean([fxhat{i} fyhat{i}],2,squared([xhatr{i} yhatr{i}]));  %Joint instantaneous frequency
+    [xhatr{i},yhatr{i},fbar{i},cxhat{i},cyhat{i}]=...
+         ridgemap(length(cx{i}),wxr{i},wyr{i},fr{i},cxr{i},cyr{i},ir{i},'collapse');
     xhatmag=sqrt(squared(xhatr{i})+squared(yhatr{i}));
     cxhat{i}=frac(1,2)*squared(frac(ppsi(i),fbar{i})).*cxhat{i}.*xhatmag;
     cyhat{i}=frac(1,2)*squared(frac(ppsi(i),fbar{i})).*cyhat{i}.*xhatmag;
@@ -605,23 +785,15 @@ disp('Computing wavelet transforms using generalized Morse wavelets.')
 ga=3;be=2; 
 fs=morsespace(ga,be,{.2 pi},pi./300,8); 
 %[psi,psif]=morsewave(length(x),1,ga,be,fs);
-[wx,wy]=wavetrans(unwrap(x/L)*L,y,{1,ga,be,fs,'bandpass'},'mirror');
+[wx,wy]=wavetrans(unwrap(x/L)*L,y,{ga,be,fs,'bandpass'},'mirror');
 
 make vortex.drifters wx wy
-clear ir jr kr xr fr fbar kappa lambda theta phi R V
-for k=1:size(x,2),
+clear ir jr kr xr yr fbar kappa lambda theta phi R V
+for k=1:size(x,2)
     disp(['Wavelet ridge analysis for drifter #' int2str(k) ' of 101.'])
     %The physical cutoff is 400/1000 km = 0.4 km
-    [ir{k},jr{k},wr,fr]=ridgewalk(dt,wx(:,:,k),wy(:,:,k),fs,{2*morseprops(ga,be)/pi,L*1e-3});
-    
-    if length(wr)>0
-        xr{k}=wr(:,1);yr{k}=wr(:,2);
-        fxr{k}=fr(:,1);fyr{k}=fr(:,2);
-        fbar{k}=vmean([fxr{k} fyr{k}],2,squared([xr{k} yr{k}]));
-    else
-        [xr{k},yr{k},fxr{k},fyr{k},fbar{k}]=vempty;
-    end
-    
+    [xr{k},yr{k},ir{k},jr{k},fbar{k}]=ridgewalk(dt,wx(:,:,k),wy(:,:,k),fs,morseprops(ga,be),1);
+  
     %Keep track of which number drifter we're on, for future reference
     kr{k}=k+0*ir{k};
     
@@ -631,8 +803,9 @@ for k=1:size(x,2),
     R{k}=ellrad(kappa{k},lambda{k},phi{k});
     V{k}=ellvel(dt*24*3600,kappa{k},lambda{k},theta{k},phi{k},1e5);
 end
-make vortex.ridges ir jr kr xr yr fxr fyr fbar kappa lambda theta phi R V
+make vortex.ridges ir jr kr xr yr fbar kappa lambda theta phi R V
 %\************************************************************************
+%vsize(ir,jr,kr,xr,yr,fbar,kappa)
 
 
 %/************************************************************************
@@ -666,13 +839,12 @@ end
 x(abs(x-vshift(x,1,1))>L*pi)=nan;
 xres(abs(xres-vshift(xres,1,1))>L*pi)=nan;
 
-make vortex.ridges ir jr kr xr yr fxr fyr fbar kappa lambda theta phi R V xresr yresr
+make vortex.ridges ir jr kr xr yr fbar kappa lambda theta phi R V xresr yresr
 make vortex.drifters x y xres yres xhat yhat
 %\************************************************************************
 
 %That's the end of the processing, on to the figure making
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 
 %/************************************************************************
@@ -849,7 +1021,6 @@ end
 %/************************************************************************
 figure
 
-
 use vortex.drifters
 ha(1)=subplot(2,2,1);
 plot(x+sqrt(-1)*y),axis([-1 1 -1 1]*pi*L),set(gca,'dataaspectratio',[1 1 1])
@@ -859,13 +1030,15 @@ plot(xres+sqrt(-1)*yres),axis([-1 1 -1 1]*pi*L),set(gca,'dataaspectratio',[1 1 1
 linestyle default
 
 use vortex.ridges
-%Make the ridges into one long column
 cell2col(ir,jr,kr,fbar,R,V,kappa,theta,lambda,xresr,yresr);
+bool=~isinf(ir);
+vindex(ir,jr,kr,fbar,R,V,kappa,theta,lambda,xresr,yresr,bool,1);
+%Make the ridges into one long column
 
-%0.8223=ecconv(0.95,'ecc2lin')
+%0.8223=ecconv(0.95,'ecc2lin');l . %FYI
 
 ha(3)=subplot(2,2,3);
-index=periodindex(dt,fbar,3)';
+index=periodindex(dt,fbar,3);
 ii=find(lambda(index)<0.8223&V(index)<0);
 h=ellipseplot(kappa,lambda,theta,xresr+sqrt(-1)*yresr,[1 1],'index',index(ii),'b');hold on;
 ii=find(lambda(index)<0.8223&V(index)>0);
@@ -875,7 +1048,6 @@ ii=find(lambda(index)>0.8223);
 h=ellipseplot(kappa,lambda,theta,xresr+sqrt(-1)*yresr,[1 1],'index',index(ii),'2w');hold on
 h=ellipseplot(kappa,lambda,theta,xresr+sqrt(-1)*yresr,[1 1],'index',index(ii),'g');hold on
 axis([-1 1 -1 1]*pi*L)
-
 
 ha(4)=subplot(2,2,4);
 index=periodindex(dt,fbar,3)';
@@ -1503,7 +1675,7 @@ clear ir jr xr fr ar br cr xra fra bra cra wx
     
 for i=1:3
       wx(:,:,i)=wavetrans(real(cx),{1,ga(i),be(i),fs,'bandpass'},'mirror');
-    [ir{i},jr{i},xr{i},fr{i},br{i},cr{i}]=ridgewalk(dt,wx(:,:,i),fs,{2*morseprops(ga(i),be(i)),0});  
+    [xr{i},ir{i},jr{i},fr{i},br{i},cr{i}]=ridgewalk(dt,wx(:,:,i),fs,2*morseprops(ga(i),be(i)));  
     [xra(:,i),fra(:,i),bra(:,i),cra(:,i)]=ridgemap(length(cx),xr{i},fr{i},br{i},cr{i},ir{i},'collapse');
 end
 
@@ -1570,7 +1742,7 @@ end
 % %Reconstructing mean and median estimates
 % for i=1:3
 %      wx(:,:,i)=wavetrans(real(xra(:,i)),{1,ga(i),be(i),fs,'bandpass'},'mirror');
-%     [ir{i},jr{i},xr{i},fr{i},br{i},cr{i}]=ridgewalk(dt,wx(:,:,i),fs,{2*morseprops(ga(i),be(i)),0});  
+%     [ir{i},jr{i},xr{i},fr{i},br{i},cr{i}]=ridgewalk(dt,wx(:,:,i),fs,2*morseprops(ga(i),be(i)));  
 %     [xra2(:,i),fra(:,i),bra(:,i),cra(:,i)]=ridgemap(length(cx),xr{i},fr{i},br{i},cr{i},ir{i},'collapse');
 % end
 % 
@@ -1622,16 +1794,17 @@ fs=morsespace(ga,be,{0.2,fmax},fmin,8);
 
 
 %Compute wavelet transforms using generalized Morse wavelets
-[wx,wy]=wavetrans(real(cx),imag(cx),{1,ga,be,fs,'bandpass'},'mirror');
+[wx,wy]=wavetrans(real(cx),imag(cx),{ga,be,fs,'bandpass'},'mirror');
 %[wp,wn]=vectmult(tmat,wx,wy);
 
 %Form ridges of component time series
-[ir,jr,wr,fr]=ridgewalk(dt,wx,wy,fs,{3,0});   
+[wrx,wry,ir,~,fr,er,br]=ridgewalk(dt,wx,wy,fs,3,2);   
+
 
 %Map into time series locations
-[wrx,wry,frx,fry]=ridgemap(length(cx),wr(:,1),wr(:,2),fr(:,1),fr(:,2),ir);
+[wrx,wry,fr]=ridgemap(length(cx),wrx,wry,fr,ir);
 
-%Convert xy transforms to ellipse forms
+%Convert xy transforms to ellipse formsdf
 [kappa,lambda,theta,phi]=ellparams(wrx,wry);
 
 %Other ellipse properties from xy transforms
@@ -1642,12 +1815,16 @@ vm=ellvel(24*3600,kappa,lambda,theta,phi,1e5);
 [fphi,fth]=vdiff(2*pi*dt,phi,theta,1,'nans');
 
 z=ellsig(kappa,lambda,theta,phi);
-[a,fr,up]=instmom([wrx wry],1,2);
 fr=fr./(2*pi);
 
 [upa,upb,upc]=ellband(dt,kappa,lambda,theta,phi);
 %\*************************************************
 
+%Bandwidth from ridgewalk not agreeing with ellband,
+%also figure looks sightly different for bandwith
+%up=sqrt(squared(wrx)).*br(:,1))+squared(wry.*br(:,2)))./sqrt(squared(wrx)+squared(wry));
+%plot(up),hold on
+%plot(sqrt(squared(upa)+squared(upb)+squared(upc)))
 
 
 %/*************************************************
@@ -1671,7 +1848,7 @@ ylabel('Cyclic Frequency')
 fixlabels([0 -1])
 
 subplot(514)
-plot(num,vfilt(abs([up upa upb upc]),20,'mirror'))
+plot(num,vfilt(abs([upa upb upc]),20,'mirror'))
 axis tight,ylim([0 .09]),boxon,ytick(0:.02:.09),fixlabels([0 -2]),xlim([-100 440])
 linestyle 2k k k-- k-.
 hlines(0,'k:');
@@ -1679,7 +1856,7 @@ ylabel('Bandwidth')
 
 
 subplot(515)
-plot(num,vfilt(abs([up upa upb upc]),20,'mirror')./[fr fr fr fr]./(2*pi))
+plot(num,vfilt(abs([upa upb upc]),20,'mirror')./[fr fr fr]./(2*pi))
 axis tight,ylim([0 0.17]),boxon,ytick(0:.03:.15),fixlabels([0 -2]),xlim([-100 440])
 linestyle 2k k k-- k-.
 hlines(0,'k:');
@@ -1806,68 +1983,54 @@ function[varargout]=jlab_makefigs_asilomar(str)
 load ebasnfloats
 use ebasnfloats
 
+len=cellength(lat);
+index=find(len>200);
 lato=30;
 lono=-25;
 
-len=cellength(lat);
-vindex(id,num,lat,lon,p,t,find(len>200),1);
+vindex(id,num,lat,lon,p,t,index,1);
 
-clear ga be fs
+
+clear ga be fs p
 for i=1:length(lat)
     if i==25||i==26
         %Special treatment for 36 (148000, now 25) and 37 (149000, now 26), 
         %       which are not getting ridges otherwise
         ga(i)=3;
         be(i)=8;
-        fs{i}=morsespace(ga(i),be(i),{0.05,pi},2*pi/10,8);
+        fs{i}=morsespace(ga(i),be(i),{0.05,pi},2*pi/100,8);
     else
         ga(i)=3;
         be(i)=3;
         fs{i}=morsespace(ga(i),be(i),{0.05,2*pi/3},2*pi/100,8);
     end
+    ppsi(i)=morseprops(ga(i),be(i));
 end
 
+
 %Compute wavelet transforms using generalized Morse wavelets
-clear wx wy cx ir jr wxr wyr fxr fyr
+clear wx wy ir jr wxr wyr fxr fyr
 for i=1:length(lat)
     i
     cx{i}=fillbad(latlon2xy(lat{i},lon{i},lato,lono));   
-    [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{1,ga(i),be(i),fs{i},'bandpass'},'mirror');
+    [wx{i},wy{i}]=wavetrans(real(cx{i}),imag(cx{i}),{ga(i),be(i),fs{i},'bandpass'},'mirror');
     dt=num{i}(2)-num{i}(1);
-    [ir{i},jr{i},wr,fr]=ridgewalk(dt,wx{i},wy{i},fs{i},{2*morseprops(ga(i),be(i)),0}); 
-    
-    if length(wr)>0
-        wxr{i}=wr(:,1);wyr{i}=wr(:,2);
-        fxr{i}=fr(:,1);fyr{i}=fr(:,2);
-    else
-        [wxr{i},wyr{i},fxr{i},fyr{i}]=vempty;
-    end
+    [wxr{i},wyr{i},ir{i},jr{i},fr{i}]=ridgewalk(dt,wx{i},wy{i},fs{i},ppsi(i),3); 
 end
 
-%for i=1:length(ir),length(find(isnan(ir{i}))),
 
-
-clear xhatr yhatr fxhat fyhat xres lathat lonhat latres lonres kap lam the phi fbar rm vm vg
-for i=1:length(lat)
-    [xhatr{i},yhatr{i},fxhat{i},fyhat{i}]=ridgemap(length(cx{i}),wxr{i},wyr{i},fxr{i},fyr{i},ir{i});
-end
+clear xhatr yhatr xres lathat lonhat latres lonres kap lam the phi
+clear fxhat fyhat cxhat cyhat fbar 
 
 for i=1:length(lat)
     %Small overlap of two weak ridges for i=9 and i=23 
-    if size(xhatr{i},2)~=1
-        fxhat{i}=squeeze(vmean(fxhat{i},2,squared(xhatr{i})));
-        fyhat{i}=squeeze(vmean(fyhat{i},2,squared(yhatr{i})));
-        xhatr{i}=squeeze(vmean(xhatr{i},2,squared(xhatr{i})));
-        yhatr{i}=squeeze(vmean(yhatr{i},2,squared(yhatr{i})));
-    end
+    [xhatr{i},yhatr{i},fbar{i}]=...
+         ridgemap(length(cx{i}),wxr{i},wyr{i},fr{i},ir{i},'collapse');
+    xhatmag=sqrt(squared(xhatr{i})+squared(yhatr{i}));
     [kap{i},lam{i},the{i},phi{i}]=ellparams(xhatr{i},yhatr{i});  
-    fbar{i}=vmean([fxhat{i} fyhat{i}],2,squared([xhatr{i} yhatr{i}]));
     xhat{i}=real(xhatr{i})+sqrt(-1)*real(yhatr{i});
-    xres{i}=cx{i}-vswap(vswap(xhat{i},nan+sqrt(-1)*nan,0),inf+sqrt(-1)*inf,0);
+    xres{i}=cx{i}-vswap(xhat{i},nan,0);
     [latres{i},lonres{i}]=xy2latlon(xres{i},lato,lono);
-    rm{i}=ellrad(kap{i},lam{i});
-    vm{i}=ellvel(kap{i},lam{i},the{i},phi{i});
-    vg{i}=sign(lam{i}).*fbar{i}.*kap{i}.^2./rm{i};
 end
 
 clear cv cvres cvhat
@@ -1878,10 +2041,8 @@ for i=1:length(lat)
     cvres{i}=fillbad(cvres{i});
     cvhat{i}=cv{i}-cvres{i};
 end
-
 jj=find(cellength(ir)>0);
 %\******************************************************************
-
 
 %/******************************************************************
 figure
@@ -1889,47 +2050,63 @@ ax=[-30.5 -19.5 18 36.5];
 
 subplot(131),h=cellplot(lon,lat);linestyle -h h D
 hold on,h=cellplot(lon(jj),lat(jj));linestyle -h h k
+h1=plot(lon{24},lat{24});linestyle -h h1 5C
+h1=plot(lon{24},lat{24});linestyle -h h1 1k
+
 
 ylabel('Latitude')
 xlabel('West Longitude'),latratio(30),axis(ax)
 title('Float Trajectories')
 
 subplot(132)
-xlabel('West Longitude'),title('Elliptical Signals')
+xlabel('West Longitude'),title('Signal Ellipses')
 
 for i=1:length(lat)
-     index=periodindex(num{i}(2)-num{i}(1),fbar{i},1);
-     ar=[frac(360,2*pi*radearth*cosd(30)) frac(360,2*pi*radearth) ];
-     h=ellipseplot(2*kap{i},lam{i},the{i},lonres{i}+sqrt(-1)*latres{i},ar,'index',index);hold on
-end
+    if anyany(~isnan(kap{i}))
+        dt=round(frac(2*pi,fbar{i}));
+        clear index
+        index(1)=dt(find(~isnan(dt),1,'first'));
 
+        while index(end)<length(kap{i})-dt(find(~isnan(dt),1,'last'))
+            index(end+1)=index(end)+dt(index(end));
+        end
+        index=nonnan(index);
+        index=index(~isnan(kap{i}(index)));
+        if ~isempty(index)
+            ar=[frac(360,2*pi*radearth) frac(360,2*pi*radearth*cosd(30))];
+            h=ellipseplot(2*kap{i},lam{i},the{i},lonres{i}+sqrt(-1)*latres{i},ar,'index',index);hold on
+        end
+    end
+end
 latratio(30),axis(ax)
 linestyle k D
 
 subplot(133),h=cellplot(lonres,latres);linestyle -h h D
 hold on,h=cellplot(lonres(jj),latres(jj));linestyle -h h k
 xlabel('West Longitude'),latratio(30),axis(ax),title('Residuals')
+h1=plot(lonres{24},latres{24});linestyle -h h1 5C
+h1=plot(lonres{24},latres{24});linestyle -h h1 1k
 
 for i=1:3
     subplot(1,3,i)
     xtick([-30:2.5:-20])
     xtl=get(gca,'xticklabel');
     set(gca,'xticklabel',xtl(:,2:end))
+    %fixlabels([-1,0])
     boxon
 end
-letterlabels(1)
+letterlabels(4)
 packfig(1,3,'columns')
 
 
 orient landscape
 fontsize 12 10 10 10
-set(gcf,'paperposition',[1 1 9 7])
+set(gcf,'paperposition',[1 1 11 7])
 
 if strcmpi(str,'print')
    print -depsc ebasn-trajectories.eps
 end
 %\******************************************************************
-
 
 
 %/*************************************************    
@@ -2241,7 +2418,8 @@ cv=npg2006.cv;  %Annoyingly, I have to set cv by hand because of a Matlab bug wi
                 %which gets confused by 'use' on account of some other function called 'cv'
 
 %Compute wavelet transforms using generalized Morse wavelets
-[wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
+P=sqrt(2*4);
+[wx,wy]=wavetrans(real(cx),imag(cx),{2,4,fs,'bandpass'},'mirror');
 
 %Convert to plus and minus transforms
 [wp,wn]=vectmult(tmat,wx,wy);
@@ -2254,10 +2432,10 @@ cv=npg2006.cv;  %Annoyingly, I have to set cv by hand because of a Matlab bug wi
 %Form ridges of component time series
 %Note... using hidden 'phase' option, read body of RIDGWEALK for details 
 %In general, you will not need to use this option
-[irp,jrp,wrp,frp]=ridgewalk(dt,wp,fs,{12,0,'phase'});   
-[irn,jrn,wrn,frn]=ridgewalk(dt,wn,fs,{12,0,'phase'});   
-[irx,jrx,wrx,frx]=ridgewalk(dt,wx,fs,{12,0,'phase'});   
-[iry,jry,wry,fry]=ridgewalk(dt,wy,fs,{12,0,'phase'});    
+[wrp,irp,jrp,frp]=ridgewalk(dt,wp,fs,P,7,'phase');   
+[wrn,irn,jrn,frn]=ridgewalk(dt,wn,fs,P,7,'phase');   
+[wrx,irx,jrx,frx]=ridgewalk(dt,wx,fs,P,7,'phase');   
+[wry,iry,jry,fry]=ridgewalk(dt,wy,fs,P,7,'phase');    
 
 %Map into time series locations
 [wrx,frx]=ridgemap(length(cx),wrx,frx/2/pi,irx);

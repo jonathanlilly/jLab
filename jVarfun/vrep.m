@@ -16,7 +16,7 @@ function[varargout]=vrep(varargin)
 %   See also VINDEX, DIM.      
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2014 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2018 J.M. Lilly --- type 'help jlab_license' for details    
 
 if strcmpi(varargin{1}, '--t')
   vrep_test,return
