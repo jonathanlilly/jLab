@@ -8,39 +8,43 @@
     <img src="../figures/drifters.png">
     _______________________________________________________________________
  
-    DRIFTERS.MAT is a matfile containing the global surface drifter dataset 
+    DRIFTERS.MAT and DRIFTERS.NC contain the global surface drifter dataset 
     from NOAA's Atlantic Oceanographic and Meteorological Laboratory (AOML)
     Global Drifter Program (GDP) Drifter Data Assembly Center, online at
  
         http://www.aoml.noaa.gov/phod/dac/index.php
  
-    All gaps have been filled with linear interpolation, and only drifter
-    records with at least one week of data are returned.  
+    This data differs from AOML's version in that all gaps up to two days 
+    have been filled with linear interpolation, trajectory segments have 
+    been split at any gaps longer than two days, and only drifter records 
+    with at least one week of data are returned.  
  
-    The current version of DRIFTERS.MAT contains data through Sept. 2016, 
-    with all the data updated since AOML's major revision in March 2016.
+    DRIFTERS.MAT is a Matlab version, and DRIFTERS.NC is a NetCDF version.
+ 
+    DRIFTERS is distributed as a part of <a href="jData.html">JDATA</a>, a supplement to the 
+    software toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
+    _______________________________________________________________________
+ 
+    Matlab version
  
     LOAD DRIFTERS loads the structure DRIFTERS, with the following fields:
  
         drifters.about     Pointer to this document            
-        drifters.id        Drifter ids                 [20577 x 1 array] 
-        drifters.buoy      Drifter buoy type           [20577 x 1 array] 
-        drifters.num       Date in DATENUM format      {20577 x 1 cell} 
-        drifters.lat       Latitudes                   {20577 x 1 cell} 
-        drifters.lon       Longitudes                  {20577 x 1 cell} 
-        drifters.t         Temperature in centigrade   {20577 x 1 cell} 
-        drifters.cv        Velocity u+iv in cm/s       {20577 x 1 cell}   
-        drifters.cvo       AOML velocity u+iv in cm/s  {20577 x 1 cell}   
-        drifters.flag      Drogue presence flag        {20577 x 1 cell}   
+        drifters.id        Drifter ids                 [22058 x 1 array] 
+        drifters.buoy      Drifter buoy type           [22058 x 1 array] 
+        drifters.num       Date in DATENUM format      {22058 x 1 cell} 
+        drifters.lat       Latitudes                   {22058 x 1 cell} 
+        drifters.lon       Longitudes                  {22058 x 1 cell} 
+        drifters.u         Eastward velocity in cm/s   {22058 x 1 cell}   
+        drifters.v         Northward velocity in cm/s  {22058 x 1 cell}   
+        drifters.t         Temperature in centigrade   {22058 x 1 cell} 
+        drifters.flag      Drogue presence flag        {22058 x 1 cell}   
+        drifters.filled    True if data was filled     {22058 x 1 cell}   
  
-    NUM, LAT, LON, T, CV, and FLAG are all cell arrays, with one drifter 
+    NUM, LAT, LON, U, V, T, and FLAG are all cell arrays, with one drifter 
     per cell.
  
-    BUOY and FLAG are metadata information described in more detail below.
- 
-    The two velocity fields CV and CVO differ in their computation.  CVO
-    is the original velocity product distributed by AOML, whereas CV is 
-    computed from the 6-hourly positions using <a href="latlon2uv.html">LATLON2UV</a>.
+    BUOY, FLAG and FILLED are metadata information described below.
  
     A number of routines are available in <a href="jLab.html">JLAB</a> to work directly with such
     cell arrays, see <a href="jCell.html">JCELL</a>.  In particular, <a href="cellplot.html">CELLPLOT</a> will plot such data.
@@ -56,10 +60,7 @@
     the longitude of the southern tip of Africa.
  
     To convert the cell arrays into one long column vector, with a NAN 
-    separating each drifter, type '<a href="cell2col.html">cell2col</a>(num,lat,lon,t,cv);'.
- 
-    DRIFTERS.MAT is distributed as a part of <a href="jData.html">JDATA</a>, a supplement to the 
-    software toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
+    separating each drifter, type '<a href="cell2col.html">cell2col</a>(num,lat,lon,u,v,t);'.
     __________________________________________________________________
  
     Metadata
@@ -71,37 +72,47 @@
  
     FLAG is true when the drifter's drogue is estimated to be present, and
     false otherwise. 
+ 
+    FILLED is true for data points that have been filled with linear 
+    interpolation.  This is done for all gaps up to two days.
+    _______________________________________________________________________
+ 
+    NetCDF version
+  
+    The NetCDF version is basically the same as the mat-file version, but
+    having all the cell array fields stored as column arrays with 
+    separating NaNs, see <a href="col2cell.html">COL2CELL</a>.
+ 
+    Use the <a href="jLab.html">JLAB</a> routine <a href="ncload.html">NCLOAD</a> to load the NetCDF file and convert all the
+    NaN-separated columns into cells, i.e. '<a href="ncload.html">ncload</a> drifters'.
     __________________________________________________________________
  
     Dataset creation
  
-    The ASCII files on which DRIFTERS.MAT is based are available for 
-    download from AOML at 
+    The files on which DRIFTERS is based are available for download at 
  
         http://www.aoml.noaa.gov/envids/gld/FtpInterpolatedInstructions.php
  
     For completeness, the m-file <a href="about_drifters.html">ABOUT_DRIFTERS</a> also contains the 
-    processing steps used in the creation of DRIFTER.MAT.  
+    processing steps used in the creation of DRIFTERS.MAT and DRIFTERS.NC.  
  
     If you wish to do this yourself, with <a href="jLab.html">JLAB</a> on your search path, 
-    '<a href="about_drifters.html">about_drifters</a> --create' will recreate DRIFTERS.MAT by reading in the
-    original data as downloaded from AOML.  This will take a while.
+    '<a href="about_drifters.html">about_drifters</a> --create' will recreate DRIFTERS.MAT and DRIFTERS.NC
+    by reading in the original downloaded data.  This will take a while.
  
-    You'll need to make sure to put the directory containing the files on
-    your Matlab search path using ADDPATH, e.g. 'addpath ~/Data/aoml'.
- 
-    As of March 2017, the AOML drifter dataset consists of three files:
+    As of January 2019, the AOML drifter dataset consists of eight files:
     
             buoydata_1_5000.dat
             buoydata_5001_10000.dat
-            buoydata_10001_sep16.dat
+            buoydata_10001_15000.dat
+            buoydata_15001_jun18.dat
+            dirfl_1_5000.dat
+            dirfl_5001_10000.dat
+            dirfl_10001_15000.dat
+            dirfl_15001_jun18.dat
  
-    These should placed in the directory specified above in order for 
-    <a href="about_drifters.html">ABOUT_DRIFTERS</a>.M to create DRIFTERS.MAT.
- 
-    Note that the velocity CV in DRIFTERS.MAT is computed from latitude,
-    longitude, and time using <a href="latlon2uv.html">LATLON2UV</a>.  It is not quite the same as the
-    velocity field produced by AOML.
+    You'll need to make sure to put the directory containing the files on
+    your Matlab search path using ADDPATH, e.g. 'addpath ~/Data/aoml'.
     __________________________________________________________________
  
     See also <a href="jData.html">JDATA</a>, <a href="about_floats.html">ABOUT_FLOATS</a>.
@@ -112,5 +123,5 @@
            about_drifters --create     
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2007--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+    (C) 2007--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

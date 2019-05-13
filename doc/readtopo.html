@@ -9,7 +9,7 @@
     _______________________________________________________________________
  
     [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>(REGION) extracts regional topography from the
-    the one-minute Smith and Sandwell global database version 18.1.  This 
+    the one-minute Smith and Sandwell global database version 19.1.  This 
     file is included with <a href="jData.html">JDATA</a>, available from at http://www.jmlilly.net.
  
     REGION is an array of the form REGION=[WEST EAST SOUTH NORTH] which  
@@ -31,6 +31,9 @@
     Note that the Smith and Sandwell database is defined only for latitudes 
     between -80.738 and 80.738.
  
+    [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>([]), where REGION is an empty array, returns 
+    entire (very large) dataset. 
+ 
     Topography at higher northern latitudes is found in the IBCAO dataset,
     see <a href="about_ibcao.html">ABOUT_IBCAO</a>.  A merged 1/6th degree version of both datasets,
     called JTOPO, is is distributed with JLAB; see <a href="about_jtopo.html">ABOUT_JTOPO</a> for details.
@@ -42,6 +45,8 @@
     interpolates the one-minute (1/60 degree) topographic data to a 
     different resolution, specified by DLAT and DLON, in degrees.   
  
+    [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>([],DLAT,DLON) interpolates the entire dataset.
+ 
     <a href="readtopo.html">READTOPO</a>(REGION,DLAT) with DLON omitted sets DLON=DLAT.
  
     This is useful for interpolating the high-resolution Smith and Sandwell
@@ -50,17 +55,17 @@
  
     Alternate path
  
-    By default, <a href="readtopo.html">READTOPO</a> looks for the topography file topo_18.1.img in 
+    By default, <a href="readtopo.html">READTOPO</a> looks for the topography file topo_19.1.img in 
     the <a href="jLab.html">JLAB</a> directory.  
  
     [TOPO,LAT,LON]=<a href="readtopo.html">READTOPO</a>(DIRNAME,REGION...) alternatively specifies  
-    DIRNAME as the path to the parent directory of the file topo_18.1.img. 
+    DIRNAME as the path to the parent directory of the file topo_19.1.img. 
     __________________________________________________________________
  
     Data and documentation
  
     The original location for the Smith and Sandwell Global Topography
-     Dataset v. 18.1, file 'topo_18.1.img' is
+     Dataset v. 19.1, file 'topo_19.1.img' is
  
         http://topex.ucsd.edu/WWW_html/mar_topo.html.
  
@@ -73,7 +78,7 @@
  
     License and Copyright 
  
-    The data file topo_18.1.img is distributed with <a href="jData.html">JDATA</a> for RESEARCH AND 
+    The data file topo_19.1.img is distributed with <a href="jData.html">JDATA</a> for RESEARCH AND 
     NON-PROFIT <a href="use.html">USE</a> ONLY, in accordance with the copyright statement for the
     Smith and Sandwell dataset.  For details, type 'help <a href="topo_copyright.html">topo_copyright</a>'.
  
@@ -95,5 +100,5 @@
            [topo,lat,lon]=<a href="readtopo.html">readtopo</a>(dirname,[west east south north]);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2006--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

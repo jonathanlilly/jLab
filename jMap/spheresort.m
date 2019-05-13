@@ -28,7 +28,7 @@ function[varargout]=spheresort(varargin)
 %   1/4 of the circumference of the earth, RADEARTH * PI/2, so that sorted
 %   (LAT,LON) points will lie in the same hemisphere as the grid points.
 %
-%   The output arrays are then all M x N x P arrays where P is the maximum
+%   The output arrays are then all M x N x J arrays where J is the maximum
 %   number of points in the CUTOFF neighborhood at any grid point.  Entries 
 %   in the ouput corresponding to farther distances are filled with NaNs.
 %
@@ -42,9 +42,9 @@ function[varargout]=spheresort(varargin)
 % 
 %   Limiting output dimension
 %
-%   SPHERESORT(LAT,LON,LATO,LONO,[CUTOFF PMAX]), where the fifth input 
+%   SPHERESORT(LAT,LON,LATO,LONO,[CUTOFF JMAX]), where the fifth input 
 %   argument is a 2-vector, additionally specifies that the third dimension
-%   of the output arrays will be no more than PMAX. 
+%   of the output arrays will be no more than JMAX. 
 %
 %   This option is useful for the 'fixed population' algorithm in
 %   POLYSMOOTH, as it ensures the output fields will be no larger than is
@@ -63,58 +63,21 @@ function[varargout]=spheresort(varargin)
 %
 %   Z1D, Z2D,...,ZKD are the same size as the other output arguments, and 
 %   give the values of Z1, Z2,...,ZK sorted according to distance.
-%   _________________________________________________________________
 %
-%   One grid, many fields
-%
-%   It is often the case that the field to be mapped, Z, consists of many 
-%   copies of observations at the same LAT/LON points.  For example, X and
-%   Y could be 1-D arrays, and Z a matrix with LENGTH(Z) rows and many(K)
-%   columns.  In this case, the format SPHERESORT(LAT,LON,Z1,Z2,...,ZK...) 
-%   described above is cumbersome, and may lead to memory problems. 
-%
-%   Instead, one can pre-compute the DS, XS, and YS arrays once, and use
-%   these for all K copies of Z. To do this, call SPHERESORT as
-%
-%       [DS,XS,YS,INDEX]=
-%            SPHERESORT(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF)
-%
-%   which outputs an index INDEX into the data point locations, which is
-%   the same size as the other output arrays.
-%
-%   Then for each of the K copies of Z at the same LAT/LON locations, form 
-%
-%        ZS=NAN*ZEROS(SIZE(XS));
-%        ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)));
-%   
-%   and then use this ZS together with DS, XS, and YS to call POLYSMOOTH.
-%   In this way, SPHERESORT only needs to be called once and not K times.    
-%
-%   When inputting LAT/LON values for which the corresponding data is 
-%   always undefined (e.g., altimeter tracks over land), once should set 
-%   the LAT/LON coordinates of these points to NaNs such that they will be
-%   omitted from DS, XY, YS, and INDEX.
+%   When there are multiple fields to be mapped, one may instead wish to 
+%   use the approach described under "One grid, many fields" in POLYSMOOTH.   
 %   _________________________________________________________________
 %  
 %   Parellel algorithm
 %
-%   With Matlab's Parallel Computing Toolbox installed, SPHERESORT can 
-%   take advantage of multiple cores to speed up operations.
-%
-%   SPHERESORT(...'parallel') parallelizes the computation with the
-%   maximum possible number of workers for your system.  To set the number
-%   of workers explicitly, use SPHERESORT(...,'parallel',NWORKERS).
-%
-%   As the additional efficiency is not dramatic, this is typically only an 
-%   advantage for very large datasets.  Due to the nature of the
-%   calculation we have to use SPMD, which is less efficient than PARFOR.
-%
-%   As an example, for a dataset with 1 million points, a 12 core Mac Pro 
-%   takes about 44 seconds to complete the sort on a 1x1 degree grid, 
-%   versus 184 seconds for the standard algorithm, a factor of 4 faster.
+%   SPHERESORT(...'parallel') parallelizes the computation using a parfor
+%   loop implemented over latitudes.  This requires Matlab's Parallel 
+%   Computing Toolbox to be installed. 
 %
 %   Also, depending on the size of dataset, the parallel algorith may lead
-%   to memory problems, so it should be used judiciously.
+%   to memory problems, so it should be used judiciously.  For large
+%   datasets, try combining an external loop over longitude with the
+%   parallel algorithm over latitude.
 %   _________________________________________________________________
 %
 %   See also TWODSORT, POLYSMOOTH.
@@ -130,9 +93,20 @@ function[varargout]=spheresort(varargin)
 %   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 
+%   Not using SPMD any more
+%   of workers explicitly, use SPHERESORT(...,'parallel',NWORKERS).
+%
+%   As the additional efficiency is not dramatic, this is typically only an 
+%   advantage for very large datasets.  Due to the nature of the
+%   calculation we have to use SPMD, which is less efficient than PARFOR.
+%
+%   As an example, for a dataset with 1 million points, a 12 core Mac Pro 
+%   takes about 44 seconds to complete the sort on a 1x1 degree grid, 
+%   versus 184 seconds for the standard algorithm, a factor of 4 faster.
+
 if strcmpi(varargin{1}, '--t')
-    spheresort_test;
-    %spheresort_parallel_test;
+    %spheresort_test;
+    spheresort_parallel_test;
     return
 end
 
@@ -141,14 +115,10 @@ lon=varargin{2};
 
 algstr='current';
 str='serial';
-Nworkers=[];
+%Nworkers=[];
 
 for i=1:2
-    if ischar(varargin{end-1})
-        str=varargin{end-1};
-        Nworkers=varargin{end};
-        varargin=varargin(1:end-2);
-    elseif ischar(varargin{end})
+    if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'par')
             str=varargin{end};
         else
@@ -158,13 +128,12 @@ for i=1:2
     end
 end
 
-if strcmpi(str(1:3),'par')
-    if isempty(Nworkers)
-         myCluster = parcluster('local');
-         Nworkers = myCluster.NumWorkers;
-    end
-end
-P=inf;
+% if strcmpi(str(1:3),'par')
+%     if isempty(Nworkers)
+%          myCluster = parcluster('local');
+%          Nworkers = myCluster.NumWorkers;
+%     end
+% end
     
 lato=varargin{end-2};
 lono=varargin{end-1};
@@ -204,17 +173,18 @@ vcolon(lato,lono);
 lono=lono';
 
 if strcmpi(str(1:3),'par')
-    [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers);
+    [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,cutoff,Ncutoff);
+    %    [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers);
 else
     if strcmpi(algstr(1:3),'cur')
-        [d_cell,xd_cell,yd_cell,indexd_cell]=spheresort_current(lat,lon,lato,lono,cutoff);
+        [d_cell,xd_cell,yd_cell,indexd_cell]=spheresort_current(lat,lon,lato,lono,cutoff,[]);
     else
         [d_cell,xd_cell,yd_cell,indexd_cell]=spheresort_former(lat,lon,lato,lono,cutoff);
     end
     
     disp('SPHERESORT reorganizing, this may take a while...')
     
-    L=min(Ncutoff,cellength(d_cell));    
+    L=min(Ncutoff,cellength(d_cell));
     [d,xd,yd,indexd]=vzeros(size(L,1),size(L,2),maxmax(L),nan);
     for i=1:size(L,1)
         for j=1:size(L,2)
@@ -226,8 +196,10 @@ else
             end
         end
     end
-    clear d_cell xd_cell yd_cell indexd_cell
 end
+
+
+%clear d_cell xd_cell yd_cell indexd_cell
 
 varargout{1}=d;
 varargout{2}=xd;
@@ -241,6 +213,37 @@ for k=1:length(args)
     varargout{k+3}=temp;
 end
 disp('SPHERESORT finished.')
+
+function [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,cutoff,Ncutoff)
+%Parallelize by looping over latitude
+
+% d=zeros(length(lato),length(lono),Ncutoff)*nan;
+
+%vsize(d,xd,yd,indexd)
+%vsize(lat,lon,lato,lono,cutoff)
+
+parfor i=1:length(lato)
+    [d_cell{i},xd_cell{i},yd_cell{i},indexd_cell{i}]=spheresort_current(lat,lon,lato(i),lono,cutoff,[i length(lato)]);
+end
+
+L=zeros(length(lato),length(lono));
+for i=1:length(lato)
+    L(i,:)=min(Ncutoff,cellength(d_cell{i}));
+end
+
+[d,xd,yd,indexd]=vzeros(length(lato),length(lono),maxmax(L),nan);
+
+%tic
+%need to reshape these
+for i=1:length(lato)
+    for j=1:length(lono)
+        d(i,j,1:L(i,j))=d_cell{i}{j}(1:L(i,j));
+        xd(i,j,1:L(i,j))=xd_cell{i}{j}(1:L(i,j));
+        yd(i,j,1:L(i,j))=yd_cell{i}{j}(1:L(i,j));
+        indexd(i,j,1:L(i,j))=indexd_cell{i}{j}(1:L(i,j));
+    end
+end
+%toc
 
 function [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers)
 %Parallelize with single program multiple data
@@ -277,7 +280,7 @@ for i=1:length(dp)
     end
 end
 
-function [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,cutoff)
+function [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,cutoff,J)
 dlat_cutoff=jrad2deg(cutoff./radearth);
 
 sd=cell(length(lato),length(lono));
@@ -287,7 +290,11 @@ xd=cell(length(lato),length(lono));
 yd=cell(length(lato),length(lono));
 
 for j=1:length(lato)
-     disp(['SPHERESORT computing latitude band ' int2str(j) ' of ' int2str(length(lato)) '.'])
+     if isempty(J)
+         disp(['SPHERESORT computing latitude band ' int2str(j) ' of ' int2str(length(lato)) '.'])
+     else
+         disp(['SPHERESORT computing latitude band ' int2str(J(1)) ' of ' int2str(J(2)) '.'])
+     end
      index=find(abs(lat-lato(j))<=dlat_cutoff);
      if ~isempty(index)
                   
@@ -494,7 +501,7 @@ reporttest('SPHERESORT two algorithm versions match',allall(bool))
 function[]=spheresort_parallel_test
 
 %N=1000000;
-N=10000;
+N=1000000;
 lat=rand(N,1)*180-90;
 lon=rand(N,1)*360;
  
@@ -504,14 +511,21 @@ lato=(-80:5:80);
 cutoff=1000;
 
 %tic;[do,xdo,ydo,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime1=toc;
+tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,cutoff,'parallel');etime2=toc;
 tic;[do,xdo,ydo,latdo,londo]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime1=toc;
-tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,cutoff,'parallel',12);etime2=toc;
 bool=aresame(d,do)&&aresame(xd,xdo)&&aresame(yd,ydo)&&aresame(latd,latdo)&&aresame(lond,londo);
 reporttest('SPHERESORT standard and parallel algorithms match',allall(bool))
 
-%Wtih 10,000 datapoints parallel is 1/2 as fast
+%older spmd algorithm:
+%With 10,000 datapoints parallel is 1/2 as fast
 %With 100,000 datapoints parallel is 2x as fast 
 %With 1,000,000 data points is 4x as fast
+
+%new parfor algorithm:
+%With 10,000 datapoints parallel is 1.9x as fast
+%With 100,000 datapoints parallel is 2.1x as fast 
+%With 1,000,000 data points is 2.5x as fast
+
 disp(['SPHERESORT parallel algorithm was ' num2str(etime1./etime2) ' times faster than standard algorithm.'])
 
 

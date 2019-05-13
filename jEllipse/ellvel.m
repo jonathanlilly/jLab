@@ -4,7 +4,7 @@ function[v]=ellvel(varargin)
 %   V=ELLVEL(KAPPA,LAMBDA,THETA,PHI,STR) where KAPPA and LAMBDA are the 
 %   amplitude and linearity of a time-varying ellise, THETA is its time-
 %   varying orientation, and PHI is its time-varying phase, returns various
-%   measures of the ellispe 'velocity'.
+%   measures of the ellipse 'velocity'.
 %
 %   STR determines the velocity quantity to be output.
 %

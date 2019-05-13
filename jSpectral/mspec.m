@@ -6,8 +6,8 @@ function[varargout]=mspec(varargin)
 %   Type 'jhelp mspec' to view this image. *|*
 %   _______________________________________________________________________
 %
-%   MSPEC implements spectral and cross-spectral analysis using the 
-%   multitaper method for real or complex-valued data. 
+%   MSPEC implements spectral and cross-spectral analysis using the multi-
+%   taper method for real or complex-valued data, and along any dimension.
 %
 %   MSPEC is to be run after calling SLEPTAP to compute the multitapers.
 %   _______________________________________________________________________
@@ -16,65 +16,38 @@ function[varargout]=mspec(varargin)
 %
 %   [F,S]=MSPEC(X,PSI) returns the one-sided power spectrum of X at 
 %   positive frequencies using data tapers PSI. 
-%  
-%   Input:   
-%       X  --  M x N matrix containing N length M time series
-%     PSI  --  M x K matrix of K data tapers
-% 
-%   Output:
-%       F  --  [M/2] nonnegative *radian* frequencies
-%       S  --  [M/2] x N one-sided power spectrum matrix
-%                
-%   In the above, [M/2] means: M/2 if M is even, and (M+1)/2 if M is odd. 
-%   See FOURIER for the calculation of the Fourier frequencies.
 %
-%   The spectra matrices are averages over the K "eigenspectra" computed 
-%   with each of the K tapers, as discussed in Park et al. JGR 1987.
+%   X may be an array with an arbitrary number of dimensions and with time 
+%   along it first dimensions.  Let M be its number of rows, M=SIZE(X,1).
 %
-%   The one-sided spectrum S is normalized such that its sum over all 
-%   frequencies F, (1/2/pi)*SUM(S,1)*DF where DF is the frequency 
-%   increment, approximates the signal variance; see discussion below.
+%   PSI is a then matrix of K data tapers having M rows and K columns.
 %
-%   MSPEC(...,'detrend') detrends the data before computing the spectra.
+%   F is an array of frequencies with FlOOR(M/2)+1 rows, while the spectral
+%   matrix S has FlOOR(M/2)+1 rather than M rows, and the same size as X
+%   along all of its other dimensions.
+%
+%   The spectrum can also be computed with time oriented along a different
+%   dimension, as described below.
+%
+%   By default, MSPEC removes the mean from each time series before
+%   computing the spectra. This is suppressed by MSPEC(...,'nodemean').
 %   ______________________________________________________________________
 %  
 %   Cross-spectra of real-valued data
 %   
-%   MSPEC can be used to compute the cross-spectrum of two real-valued
-%   time series or sets of time series.
-%
-%   [F,SXX,SYY,SXY]=MSPEC(X,Y,PSI);   --- For cross-spectra
-%        
-%   Input:
-%       X  --  M x N matrix containing N length M time series
-%       Y  --  M x N matrix containing N length M time series
-%     PSI  --  M x K matrix of K data tapers
-% 
-%   Output:
-%       F  --  M/2 nonnegative frequencies
-%     SXX  --  [M/2] x N one-sided spectra of X
-%     SYY  --  [M/2] x N one-sided spectra of Y
-%     SXY  --  [M/2] x N one-sided cross spectra of X and Y 
+%   [F,SXX,SYY,SXY]=MSPEC(X,Y,PSI) computes the cross-spectrum of two 
+%   real-valued time series or sets of time series.  Here SXX and SYY are
+%   the one-sided spectra of X and Y, while SXY is their cross spectrum.
 %
 %   See TWOSPECPLOT for plotting SXX and SYY simultaneously.
 %   ______________________________________________________________________
 %  
 %   Rotary spectra of complex-valued data
 %
-%   MSPEC can also the so called "rotary spectra" of complex-valued 
-%   time series or sets of time series.
-%
-%   [F,SPP,SNN,SPN]=MSPEC(Z,PSI);   --- For rotary spectra of Z=X+iY
-%
-%   Input:   
-%       Z  --  M x N matrix containing N length M time series
-%     PSI  --  M x K matrix of K data tapers
-%   
-%   Output:   
-%        F  --  M/2 nonnegative frequencies
-%      SPP  --  [M/2] x N positively rotating power spectrum matrix
-%      SNN  --  [M/2] x N negatively rotating power spectrum matrix  
-%      SPN  --  [M/2] x N rotary cross spectral matrix      
+%   [F,SPP,SNN,SPN]=MSPEC(Z,PSI) where Z is complex-valued computes the so-
+%   called "rotary spectra". Here SPP and SNN are the positively-rotating
+%   and negatively rotating spectra, and SPN is the rotary cross spectrum.
+%   the one-sided spectra of X and Y, while SPN is their cross spectrum.
 %
 %   Note that the rotary spectra are defined such that SXX+SYY=SPP+SNN.
 %  
@@ -82,15 +55,6 @@ function[varargout]=mspec(varargin)
 %   over all frequencies plus that of SNN approximates the variance of Z. 
 %
 %   See TWOSPECPLOT for plotting SPP and SNN simultaneously.
-%   ______________________________________________________________________
-%  
-%   Sample rate
-%
-%   [F,S]=MSPEC(DT,...) specifies the sample interval to be used in the
-%   calculation of the frequency array F. DT defaults to unity.
-%
-%   Spectral values depend linearly upon the sample rate in order that the 
-%   integral of the spectra over frequency approximate the variance.
 %   ______________________________________________________________________
 %
 %   Periodogram
@@ -103,6 +67,28 @@ function[varargout]=mspec(varargin)
 %   taper, normalized to unit energy. This returns the periodogram.  
 %   ______________________________________________________________________
 %  
+%   Sample rate
+%
+%   [F,S]=MSPEC(DT,...) specifies the sample interval to be used in the
+%   calculation of the frequency array F. DT defaults to unity.
+%
+%   Spectral values depend linearly upon the sample rate in order that the 
+%   integral of the spectra over frequency approximate the variance.
+%   ______________________________________________________________________
+%   
+%   Spectra along arbitary dimension 
+%
+%   MSPEC(...,DIM) computes the spectrum with time oriented along dimension
+%   DIM, with the default behavior corresponding to DIM=1.
+%
+%   Let M be the length of the input X, Z, or X and Y along dimension DIM. 
+%   PSI is again a matrix of K data tapers having M rows and K columns.
+%
+%   F will be again an array of frequencies with FlOOR(M/2)+1 rows, while
+%   the output spectral matrices will the same size as the input arrays,
+%   but with FlOOR(M/2)+1 rather than M elements along dimension DIM.
+%   ______________________________________________________________________
+%  
 %   Normalizations
 %
 %   By default, MSPEC uses *radian* frequency as in cos(f t).  Optionally
@@ -111,6 +97,9 @@ function[varargout]=mspec(varargin)
 %   MSPEC is normalized to approximately recover the time series variance. 
 %   For the MSPEC periodogram, this recovery is exact, although the 
 %   expressions are complicated somewhat by the use of one-sided spectra.  
+%
+%   For simplicity, the normalizations will be explained for the case of a
+%   single time series with M oriented along rows, that is, with DIM=1.
 %
 %   Real-valued data
 %
@@ -147,13 +136,13 @@ function[varargout]=mspec(varargin)
 %   [F,SN1N1,SN2N2,SN1N2]=MSPEC(CONJ(Z1),CONJ(Z2),PSI);  
 %
 %   The first call returns the spectra and cross-spectra of Z1 and Z2 at
-%   positive frequencies, while the second returns their spectra and cross-
-%   spectra at negative frequencies.  Finally
+%   positive frequencies, while the second returns their spectra and the 
+%   *conjugate* of the cross-spectrum at negative frequencies.  Finally
 %
 %   [F,SP1P1,SN2N2,SP1N2]=MSPEC(Z1,CONJ(Z2),PSI);  
+%   [F,SN1N1,SP2P2,SN1P2]=MSPEC(CONJ(Z1),Z2,PSI);  
 %
-%   returns the cross-spectra between the positive rotary components of Z1 
-%   and the negative components of Z2.
+%   returns the so-called outer or complementary cross-spectra. 
 %   ______________________________________________________________________
 %
 %   Adaptive spectra
@@ -217,11 +206,13 @@ function[varargout]=mspec(varargin)
 %
 %   Usage   [f,s]=mspec(x,psi);    
 %           [f,s]=mspec(dt,x,psi);     
+%           [f,s]=mspec(dt,x,psi,dim);     
 %           [f,spp,snn,spn]=mspec(z,psi);     
 %           [f,sxx,syy,sxy]=mspec(x,y,psi);
+%           [f,sxx,syy,sxy]=mspec(x,y,psi,dim);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2019 J.M. Lilly --- type 'help jlab_license' for details        
   
 %   The Cartesian and rotary spectra are then related by a unitary
 %   transformation.  For details see
@@ -237,27 +228,13 @@ if strcmpi(varargin{1},'--f')
     makefigs_mspec;
     return
 end
-
-deltat=1;
-if isscalar(varargin{1})
-  deltat=varargin{1};
-  varargin=varargin(2:end);
-else
-  if nargin>2
-      bool1=~iscell(varargin{2})&&(numel(varargin{1})==size(varargin{2},2));
-      bool2= iscell(varargin{2})&&(numel(varargin{1})==length(varargin{2}));
-      if bool1||bool2
-          deltat=varargin{1};
-          deltat=deltat(:)';
-          varargin=varargin(2:end);
-      end
-  end
-end
-  
+    
 
 %Sort out input arguments
+dim=1;
+deltat=1;
 lambda=1;  %This means use the average multitaper spectrum
-detrendstr='nodetrend';
+detrendstr='demean';
 normstr='rad';
 cores='serial';
 
@@ -267,9 +244,11 @@ for i=1:4
             lambda=varargin{end-1};
             varargin=varargin(1:end-2);
             if length(lambda)~=numel(lambda)
-                error('Looks like you forgot to input LAMBDA with the adaptive algorithm.')
+                if lambda~=floor(lambda)
+                    error('Looks like you forgot to input LAMBDA with the adaptive algorithm.')
+                end
             end
-        elseif ~isempty(strfind(varargin{end},'det'))||~isempty(strfind(varargin{end},'nod'))
+        elseif ~isempty(strfind(varargin{end},'dem'))||~isempty(strfind(varargin{end},'nod'))
              detrendstr=varargin{end};
              varargin=varargin(1:end-1);
         elseif strcmpi(varargin{end}(1:3),'par')||strcmpi(varargin{end}(1:3),'ser')
@@ -290,7 +269,26 @@ if strcmpi(cores(1:3),'par')
     end
 end
 
+if isscalar(varargin{end})&&~iscell(varargin{end})
+    dim=varargin{end};
+    varargin=varargin(1:end-1);
+end
 
+if isscalar(varargin{1})
+  deltat=varargin{1};
+  varargin=varargin(2:end);
+else
+  if length(varargin)>2
+      bool1=~iscell(varargin{2})&&(numel(varargin{1})==size(varargin{2},2));
+      bool2= iscell(varargin{2})&&(numel(varargin{1})==length(varargin{2}));
+      if bool1||bool2
+          deltat=varargin{1};
+          deltat=deltat(:)';
+          varargin=varargin(2:end);
+      end
+  end
+end
+  
 x=varargin{1};
 if length(varargin)==1
     error('Taper not specified.')
@@ -329,7 +327,7 @@ if iscell(x)||iscell(y)
             disp(['SLEPTAP computing spectra for time series #' int2str(i) ' of ' int2str(length(x)) '.'])
             %iscell(deltat),iscell(x),iscell(y),iscell(psi)
             %vsize(deltat(i),x{i},y{i},psi{i},lambda(:,i))
-            cellout{i}=mspec_one(deltat(i),x{i},y{i},psi{i},lambda(:,i),detrendstr,normstr);
+            cellout{i}=mspec_one(deltat(i),x{i},y{i},psi{i},lambda(:,i),detrendstr,normstr,dim);
         end
     elseif strcmpi(cores(1:3),'par')
         %Exactly the same but with a parfor
@@ -337,7 +335,7 @@ if iscell(x)||iscell(y)
             disp(['SLEPTAP computing spectra for time series #' int2str(i) ' of ' int2str(length(x)) '.'])
             %iscell(deltat),iscell(x),iscell(y),iscell(psi)
             %vsize(deltat(i),x{i},y{i},psi{i},lambda(:,i))
-            cellout{i}=mspec_one(deltat(i),x{i},y{i},psi{i},lambda(:,i),detrendstr,normstr);
+            cellout{i}=mspec_one(deltat(i),x{i},y{i},psi{i},lambda(:,i),detrendstr,normstr,dim);
         end
     end
     
@@ -347,11 +345,11 @@ if iscell(x)||iscell(y)
         end
     end
 else
-    varargout=mspec_one(deltat,x,y,psi,lambda,detrendstr,normstr);
+    varargout=mspec_one(deltat,x,y,psi,lambda,detrendstr,normstr,dim);
 end
 
 
-function[cellout]=mspec_one(dt,x,y,psi,lambda,detrendstr,normstr)
+function[cellout]=mspec_one(dt,x,y,psi,lambda,detrendstr,normstr,dim)
 
 if ~isscalar(dt)
     dt=vrep(dt,length(fourier(size(x,1))),1);
@@ -361,10 +359,10 @@ if ~isreal(x)&&isempty(y)
     y=conj(x);
 end
 
-if strcmpi(detrendstr(1:3),'det')
-    x=detrend(x);
+if strcmpi(detrendstr(1:3),'dem')
+    x=x-vrep(vmean(x,dim),size(x,dim),dim);
     if ~isempty(y)
-        y=detrend(y);
+       y=y-vrep(vmean(y,dim),size(y,dim),dim);
     end
 end
 
@@ -374,38 +372,42 @@ end
 
 %In real cases, multiply by sqrt(2) to get one-sided spectrum
 if isempty(y)        %One real-valued
-     [f,mmatx]=mtrans(sqrt(2)*x,psi);
+     [f,mmatx]=mtrans(sqrt(2)*x,psi,dim);
 else
      if ~isreal(x)   %Two complex-valued
-        [f,mmatx,mmaty]=mtrans(x,y,psi);
+        [f,mmatx,mmaty]=mtrans(x,y,psi,dim);
      else            %Two real-valued
-        [f,mmatx,mmaty]=mtrans(sqrt(2)*x,sqrt(2)*y,psi); 
+        [f,mmatx,mmaty]=mtrans(sqrt(2)*x,sqrt(2)*y,psi,dim); 
      end
 end
 
+N=lnsd(x)+1;
 if isempty(y) %One time series
      if length(lambda)==1
-         cellout{2}=avgspec(mmatx,mmatx).*dt;
+         cellout{2}=avgspec(mmatx,mmatx,N).*dt;
      else
-         var=squared(vstd(x,1)); 
-         cellout{2}=adaptspec(abs(mmatx).^2,lambda,var).*dt;
+         var=vrep(squared(vstd(x,dim)),floor(size(x,dim)/2)+1,dim);
+         %Variance same size as original input field
+         cellout{2}=adaptspec(abs(mmatx).^2,lambda,var,N).*dt;
      end
      cellout{3}=zeros(size(cellout{2}));
      cellout{4}=zeros(size(cellout{2}));
 else         %Two time series
      if length(lambda)==1
-        cellout{2}=real(avgspec(mmatx,mmatx)).*dt;
-        cellout{3}=real(avgspec(mmaty,mmaty)).*dt;
-        cellout{4}=avgspec(mmatx,mmaty).*dt;
+        cellout{2}=avgspec(mmatx,mmatx,N).*dt;
+        cellout{3}=avgspec(mmaty,mmaty,N).*dt;
+        cellout{4}=avgspec(mmatx,mmaty,N).*dt;
+        cellout{4}(isnan(cellout{4}))=nan+1i*nan;%cross-spectrum should have complex nans
      else
         %For two time series one should do the adaptive spectra on both
         %with the same coefficients
-        var=squared(vstd(x,1))+squared(vstd(y,1)); 
+        var=vrep(squared(vstd(x,dim))+squared(vstd(y,dim)),floor(size(x,dim)/2)+1,dim);
         
-        [~,dk]=adaptspec(abs(mmatx).^2+abs(mmaty).^2,lambda,var);
-        cellout{2}=squeeze(frac(sum(dk.^2.*abs(mmatx).^2.*dt,2),sum(abs(dk).^2,2)));
-        cellout{3}=squeeze(frac(sum(dk.^2.*abs(mmaty).^2.*dt,2),sum(abs(dk).^2,2)));
-        cellout{4}=squeeze(frac(sum(dk.^2.*mmatx.*conj(mmaty).*dt,2),sum(abs(dk).^2,2))); 
+        [~,dk]=adaptspec(abs(mmatx).^2+abs(mmaty).^2,lambda,var,N);
+        cellout{2}=frac(sum(dk.^2.*abs(mmatx).^2.*dt,N),sum(abs(dk).^2,N));
+        cellout{3}=frac(sum(dk.^2.*abs(mmaty).^2.*dt,N),sum(abs(dk).^2,N));
+        cellout{4}=frac(sum(dk.^2.*mmatx.*conj(mmaty).*dt,N),sum(abs(dk).^2,N)); 
+        cellout{4}(isnan(cellout{4}))=nan+1i*nan;%cross-spectrum should have complex nans
      end
 end
 
@@ -434,36 +436,36 @@ else
     cellout{1}=vrep(f,size(dt,2),2)./dt;
 end
 
-function[S]=avgspec(mmat1,mmat2)
+function[S]=avgspec(mmat1,mmat2,N)
 eigspec=mmat1.*conj(mmat2);
-S=squeeze(mean(eigspec,2));
+S=mean(eigspec,N);
 
-function[s,dk]=adaptspec(eigspec,lambda,var)
+function[s,dk]=adaptspec(eigspec,lambda,var,N)
 
-%[size(eigspec),size(lambda),isempty(lambda)]
+sold=vindex(eigspec,1,N);
+s=frac(1,2)*(vindex(eigspec,1,N)+vindex(eigspec,2,N));
+%Start just with first two
 
-s=squeeze(zeros(size(eigspec(:,1,:))));
-dk=zeros(size(eigspec));
-for i=1:size(eigspec,3)
-    [s(:,i),dk(:,:,i)]=adaptspec_one(eigspec(:,:,i),lambda,var(i));
+tol=1e-4;
+
+var=vrep(var,length(lambda),N);
+lambdamat=zeros(size(var));
+%vsize(var,lambdamat,eigspec)
+for i=1:length(lambda)
+    lambdamat=vindexinto(lambdamat,lambda(i),i,N);
 end
-
-
-function[s,dk]=adaptspec_one(eigspec,lambda,var)
-
-s=frac(1,2)*squeeze(eigspec(:,1)+eigspec(:,2));
-lambda=lambda(:)';
-tol=1e-3;
-
-var=var+0*s;
+%figure,plot(lambdamat)
+bkmat=var.*(1-lambdamat);  %Outer product;
+   
 i=0;
-sold=s*0+1000;
-while any(abs(s-sold)./sold>tol)&&i<20
-	i=i+1;
-	sold=s;
-    bk=var*(ones(size(lambda))-lambda);  %Outer product
-	dk=(s*real(sqrt(lambda)))./(s*lambda+bk);  %Outer products
-	s=frac(sum(dk.^2.*eigspec,2),sum(abs(dk).^2,2));
+%maxmax(abs(s-sold)./sold)
+while anyany(abs(s-sold)./sold>tol)&&i<20
+    i=i+1;
+	sold=s; 
+    smat=vrep(s,size(eigspec,N),N);
+	dk=(smat.*real(sqrt(lambdamat)))./(smat.*lambdamat+bkmat);  %Outer products
+	s=frac(sum(dk.^2.*eigspec,N),sum(abs(dk).^2,N));
+ %   maxmax(abs(s-sold)./sold)
 end
 
 if i~=20
@@ -472,11 +474,10 @@ else
    disp(['Adaptive spectral loop terminated at ' int2str(i) ' iterations.'])
 end
 
-
 function[varargout]=mtrans(varargin)
 % MTRANS  Multitaper "eigentransform" computation.
 % 
-%   [F,W]=MTRANS(X,PSI) returns the multitaper "eigentransform" matrix 
+%   [F,W]=MTRANS(X,PSI,DIM) returns the multitaper "eigentransform" matrix 
 %   for use in multitaper spectral estimates or eigenspectral SVD analysis.                 
 %
 %       X  --  M x N matrix containing N length M time series
@@ -488,71 +489,101 @@ function[varargout]=mtrans(varargin)
 %
 %   F is the angular Fourier frequency, in radians.
 %
-%   [F,W1,W2,...,WN]=MTRANS(X1,X2,...,XN,PSI) also works, where X1,...,XN
-%   are all M x N matrices.
+%   [F,W1,W2,...,WN]=MTRANS(X1,X2,...,XN,PSI,DIM) also works, where X1,...,
+%   XN are all M x N matrices.
 %
 %   MTRANS(X,[]) with PSI empty uses the default taper, so that the square
 %   of W corresponds to the periodogram.  
 %
 %   See also: SLEPTAP, HERMFUN, MSPEC, MSVD.
 %
-%   Usage:  [f,w]=mtrans(x,psi);  
-%           [f,wx,wy]=mtrans(x,y,psi);    
-%           [f,wx,wy,wz]=mtrans(x,y,z,psi);    
+%   Usage:  [f,w]=mtrans(x,psi,dim);  
+%           [f,wx,wy]=mtrans(x,y,psi,dim);    
+%           [f,wx,wy,wz]=mtrans(x,y,z,psi,dim);    
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details        
   
 %Sort out input arguments
-psi=varargin{end};
-x=varargin(1:end-1);
+dim=varargin{end};
+psi=varargin{end-1};
+x=varargin(1:end-2);
 
 %Size check
-for i=1:length(x)
-    sizex(i,:)=size(x{i});
+bool=false(4,length(x));
+for i=1:4
+    for j=1:length(x)
+       bool(i,j)=aresame(size(x{j},i),size(x{1},i));
+    end
 end
-if ~allall(sizex(:,1)==sizex(1,1))||~allall(sizex(:,2)==sizex(1,2))
+if ~allall(bool)
    error('All input arguments should be the same size')
 end
 
-sizex=sizex(1,:);
 
-if ~isempty(psi)
-    psimat=vrep(psi,sizex(2),3);
-else
+%This complicated code makes a vector that permutes PSI such that it has
+%its first dimension along DIM and its last along dimension LNSD(X{1})+1.
+n=3;
+permutevec=zeros(lnsd(x{1})+1,1);
+for i=1:lnsd(x{1})
+    if i==dim
+        permutevec(i)=1;
+    else
+        permutevec(i)=n;
+        n=n+1;
+    end
+end
+permutevec(end)=2;
+        
+if isempty(psi)
     psimat=[];
+else
+    psimat=permute(psi,permutevec);
+    for i=1:lnsd(x{1})
+        if i~=dim
+            psimat=vrep(psimat,size(x{1},i),i);
+        end
+    end
 end
 
-f=fourier(sizex(1));
+f=fourier(size(x{1},dim));
 
 index=1:length(f);
 varargout{1}=f;
 
 for i=1:size(x,2)
-    mmat=mtrans1(x{i},psimat);
-    varargout{i+1}=mmat(index,:,:);
+    Nnans=length(find(~isfinite(x{i})));
+    if Nnans>0
+        disp(['MSPEC finding non-finite data values.  Spectrum will be undefined.'])
+    end
+    
+    N=lnsd(x{i})+1;
+    xmat=vrep(x{i},size(psimat,N),N);
+    mmat=fft(psimat.*xmat,[],dim);
+   
+    mmat(isnan(mmat))=nan;%This is to prevent imaginary NaNs
+    %    varargout{i+1}=mmat(index,:,:);
+    varargout{i+1}=vindex(mmat,index,dim);
 end
-
-function[mmat]=mtrans1(x,psimat)
-
-Nnans=length(find(~isfinite(x)));
-if Nnans>0
-     disp(['MSPEC finding non-finite data values.  Spectrum will be undefined.'])
-end
-
-x=permute(x,[1 3 2]);
-xmat=vrep(x,size(psimat,2),2);
-mmat=fft(psimat.*xmat,[],1);
 
 function[]=mspec_test
 
 tol=1e-10;
 load bravo94
-cv=bravo94.rcm.cv;
-psi=sleptap(length(cv),8);
+cv=bravo94.rcm.cv(:,2:end);
+[psi,lambda]=sleptap(length(cv),8);
+
+[~,spp,snn,spn]=mspec(cv,psi,lambda,'adaptive');
+[~,spp2,snn2,spn2]=mspec(conj(cv)',psi,2,lambda,'adaptive');
+bool=aresame(spp,spp2')&&aresame(snn,snn2')&&aresame(spn,conj(spn2)');
+reporttest('MSPEC transposed input for adaptive spectrum',bool)
 
 [~,sxx,syy,sxy]=mspec(real(cv),imag(cv),psi);
 [~,spp,snn,spn]=mspec(cv,psi);
+
+[~,spp2,snn2,spn2]=mspec(conj(cv)',psi,2);
+bool=aresame(spp,spp2')&&aresame(snn,snn2')&&aresame(spn,conj(spn2)');
+reporttest('MSPEC transposed input for average spectrum',bool)
 
 S(1,1,:,:)=sxx;
 S(2,2,:,:)=syy;
@@ -614,6 +645,9 @@ reporttest('MSPEC satisfies Parseval''s theorem to within 4% for bivariate Bravo
 p1=frac(1,2*pi)*(vsum(sx+sy,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for bivariate Bravo, non-unit sample rate',abs(p1-p0)./p0<4/100);
 
+
+
+
 reporttest('MSPEC SXX+SYY=SPP+SNN for Bravo, non-unit sample rate',aresame(sx+sy,sp+sn,tol));
 
 
@@ -625,7 +659,7 @@ reporttest('MSPEC periodogram matches variance exactly for zero-mean complex sig
 
 N=1001;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[~,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[],'nodemean');
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and odd length', aresame(sum(spp)./N+sum(snn(2:end))./N,sum(abs(cv).^2)./N,1e-10))
 
 
@@ -637,18 +671,18 @@ reporttest('MSPEC periodogram matches variance exactly for zero-mean complex sig
 
 N=1000;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[~,spp,snn]=mspec(cv,[]);
+[~,spp,snn]=mspec(cv,[],'nodemean');
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and even length', aresame(sum(spp)./N+sum(snn(2:end-1))./N,sum(abs(cv).^2)./N,1e-10))
 
 N=1000;
 dt=3600;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-[~,spp,snn]=mspec(dt,cv,[]);
+[~,spp,snn]=mspec(dt,cv,[],'nodemean');
 reporttest('MSPEC periodogram matches variance exactly for non-zero-mean complex signal and even length, and non-unit sample rate', aresame(sum(spp)./(dt*N)+sum(snn(2:end-1))./(dt*N),sum(abs(cv).^2)./N,1e-10))
 
 N=1000;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-tic;[~,spp,snn]=mspec(cv,[]);toc
+tic;[~,spp,snn]=mspec(cv,[],'nodemean');toc
 tic;S=squared(fft(cv));toc;
 b1=aresame(S(1:length(spp)),spp*N,1e-6);
 b2=aresame(flipud(S(length(spp)+1:end)),snn(2:end-1)*N,1e-6);
@@ -657,7 +691,7 @@ reporttest('MSPEC recovers periodogram for even N', b1&&b2)
 
 N=1001;
 cv=randn(N,1)+sqrt(-1)*randn(N,1)+17;
-tic;[~,spp,snn]=mspec(cv,[]);toc
+tic;[~,spp,snn]=mspec(cv,[],'nodemean');toc
 tic;S=squared(fft(cv));toc;
 b1=aresame(S(1:length(spp)),spp*N,1e-6);
 b2=aresame(flipud(S(length(spp)+1:end)),snn(2:end)*N,1e-6);

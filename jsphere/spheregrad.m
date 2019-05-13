@@ -2,14 +2,15 @@ function[gradx,grady]=spheregrad(varargin)
 %SPHEREGRAD  Gradient of a field on the surface of a sphere.
 %
 %   [FX,FY]=SPHEREGRAD(LAT,LON,F) computes the gradient of the scalar field
-%   F on the surface of the sphere.
+%   F on the surface of the sphere. 
+%
+%   Latitude LAT and longitude LON are in degrees.  LAT and LON are vectors
+%   specifing an evenly-spaced grid, and F is an array of any size provided
+%   its first two dimensions are LENGTH(LAT) and LENGTH(LON), respectively. 
 %
 %   FX and FY are the components of the gradient of F in the zonal and
-%   meridional directions, respectively, with units of F per meter.
-%
-%   LAT and LON are vectors specifing an evenly-spaced grid, and F is an 
-%   array of size LENGTH(LAT) x LENGTH(LON) x M, where M is greater than or
-%   equal to one.  LAT and LON are in degrees.
+%   meridional directions, respectively, with units of F per meter.  These
+%   both have the same size as F.
 %
 %   The radius of the Earth as specified by RADEARTH is used by default.
 %   SPHEREDIV(...,R) uses a sphere of radius R, in kilometers, instead.
@@ -48,7 +49,7 @@ function[gradx,grady]=spheregrad(varargin)
 %          [fx,fy]=spheregrad(lat,lon,f,R);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     spheregrad_test,return
@@ -96,6 +97,7 @@ if size(f,3)>1
     vrep(lon,lat,size(f,3),3);
 end
 [phi,theta]=jdeg2rad(lat,lon);
+%vsize(lat,lon,f)
 
 gradx=frac(1,R.*cos(phi).*dth).*vdiff(f,2,str);
 grady=frac(1,R.*dphi).*vdiff(f,1,strlat);

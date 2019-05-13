@@ -4,6 +4,8 @@ function[varargout]=cellgrid(varargin)
 %   [TO,Y]=CELLGRID(T,X,DT) where T is a cell array of time arrays, and
 %   X is of the same size as T, linearly interpolates the elements of X 
 %   within T at times TO, which are regularly spaced with interval DT.  
+%   
+%   DT may either be a scalar, or an array of the same length as T and X.
 %
 %   CELLGRID does not modify bad data points, such as those marked with
 %   NaNs.  See CELLFILL to interpolate over bad data points.  
@@ -32,8 +34,7 @@ function[varargout]=cellgrid(varargin)
 %   Specifying interpolated times
 %
 %   [TO,Y]=CELLGRID(T,X,DT,A,B) will set TO to TO=A:DT:B, where A and B 
-%   are either scalars or an arrays of the same size as X.  Note that DT
-%   must be a scalar.
+%   are either scalars or an arrays of the same size as X. 
 %
 %   The default behavior is equivalent to choosing A and B as the first and
 %   last elements of TO, that is, to setting A=CELLMIN(T) and B=CELLMAX(T).
@@ -54,7 +55,7 @@ function[varargout]=cellgrid(varargin)
 %          cellgrid(t,x1,x2,x3,dt);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     cellgrid_test,return
@@ -100,6 +101,7 @@ else
 end
     
 dt=varargin{end};
+
 varargin=varargin(1:end-1);
  
 %Size check
@@ -109,8 +111,12 @@ for i=2:length(varargin)
     end
 end
 
+if length(dt)==1
+    dt=dt+0*a;
+end
+
 for i=1:length(t)
-   to{i,1}=[a(i):dt:b(i)]';
+   to{i,1}=[a(i):dt(i):b(i)]';
 end
 
 if strcmpi(cores(1:3),'par')
@@ -134,7 +140,8 @@ else
         for i=1:length(t)
             if length(t{i})>1
                 bool=~isnan(t{i})&~isnan(varargin{j}{i});
-                if length(find(bool))~=0
+                if length(find(bool))>=2
+                    %i,j,length(find(bool))
                     args{j}{i,1}=interp1(t{i}(bool),varargin{j}{i}(bool),to{i},str);
                 else
                     args{j}{i,1}=nan*to{i};

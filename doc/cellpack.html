@@ -2,22 +2,22 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>CELLPACK is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="cellpack.html">CELLPACK</a>  Removes all NaN values from cell arrays of numeric arrays.
+ <a href="cellpack.html">CELLPACK</a>  Removes all INF values from cell arrays of numeric arrays.
  
     Y=<a href="cellpack.html">CELLPACK</a>(X) where X is a cell array of numeric arrays, removes any
-    NaN values occuring within the cells and returns the result in Y.  
+    INF values occuring within the cells and returns the result in Y.  
  
     An example of an input cell array X and the output Y is as follows:
  
-        X{1} = [1 2 nan 4 nan]';  X{2}=[nan 2 3]';  X{3}=[1 2];   X{4}=[];
+        X{1} = [1 2 inf 4 inf]';  X{2}=[inf 2 3]';  X{3}=[1 2];   X{4}=[];
         Y{1} = [1 2 4]';          Y{2}=[2 3]';      Y{3}=[1 2];   Y{4}=[];
  
     <a href="cellpack.html">CELLPACK</a> does not remove empty cells.  This is done by <a href="cellprune.html">CELLPRUNE</a>.
  
     [Y1,Y2,...YN]=<a href="cellpack.html">CELLPACK</a>(X1,X2,...XN) with multiple input arguments, all
-    of the same size, removes locations of NaNs that occur in *any* of the 
+    of the same size, removes locations of INFs that occur in *any* of the 
     input variables.  The output variables Y1,Y2,...YN will all be the same
-    size, and none of them will contain any NaNs.
+    size, and none of them will contain any INFs.
  
     <a href="cellpack.html">CELLPACK</a>(X1,X2,...XN); with no output arguments overwrites the 
     original input variables.   
@@ -29,5 +29,5 @@
            <a href="cellpack.html">cellpack</a>(x1,x2,x3);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

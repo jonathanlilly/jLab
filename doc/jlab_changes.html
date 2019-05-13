@@ -4,6 +4,82 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.6.6
+ 
+    Figure making for a new publications:
+       
+    Lilly (2018).  Kinematics of a fluid ellipse in a linear flow. Fluids, 
+         3 (1) 16: 1--29.
+ 
+    New functions:
+  
+    <a href="jfig.html">jfig</a>         - Shorthand for tweaking figures.
+    <a href="jprint.html">jprint</a>       - Print to a specified directory and <a href="crop.html">crop</a> the resulting file.
+    <a href="ncload.html">ncload</a>       - Load all variables from a NetCDF file and unpack any columns.
+    <a href="ridgetrim.html">ridgetrim</a>    - Trim edge effect regions from wavelet ridges.
+    <a href="colorquant.html">colorquant</a>   - Set the color axis according to quantiles of the data.
+    <a href="ellpol.html">ellpol</a>       - Polarization parameters of an elliptical signal.
+    <a href="printall.html">printall</a>     - Print and close all open figures.
+    <a href="cellmed.html">cellmed</a>      - Median value of each element a cell array.
+    <a href="cellsum.html">cellsum</a>      - Sum of each element a cell array, possibly weighted.
+    <a href="interplatlon.html">interplatlon</a> - Interpolation for working with latitude and longitude.
+ 
+    Updated datasets:  All datasets now include both a mat-file version and
+         a NetCDF version.  The NetCDF versions are larger but load faster.
+         Use the <a href="jLab.html">jLab</a> routine <a href="ncload.html">NCLOAD</a> to load a whole NetCDF file at once.
+ 
+    floats.mat and floats.nc     - Major update to the historical dataset of 
+         eddy-resolving subsurface floats.  See <a href="about_floats.html">about_floats</a>.
+    drifters.mat and drifters.nc - The global surface drifter dataset, 
+        updated through April 1, 2018.  See <a href="about_drifters.html">about_drifters</a>.
+    tpjaos.mat and tpjaos.nc     - Alongtrack SSH anomalies from the 
+        Beckley dataset, updated through May 30, 2018.  See <a href="about_tpjaos.html">about_tpjaos</a>.
+    sandwell.mat and sandwell.nc - One minute resolution topography data 
+        from Smith and Sandwell. See <a href="about_sandwell.html">about_sandwell</a>.
+    ibcao.mat and ibcao.nc       -  International Bathymetric Chart of the 
+       Arctic Ocean topography. See <a href="about_ibcao.html">about_ibcao</a>.
+ 
+    Major bugfix
+ 
+    <a href="spherelap.html">SPHERELAP</a> for computing the Laplacian in spherical geometry 
+    unfortunately had a major bug in earlier versions that rendered its
+    output incorrect.  This has been corrected in version 1.6.6.
+ 
+    Changes and improvements:
+  
+    <a href="vsize.html">VSIZE</a> changed to return 1's rather than 0's for singular dimensions.
+    <a href="ncinterp.html">NCINTERP</a> bugfix to correctly handle [-180,180] or [0,360] longitudes.
+    <a href="ncinterp.html">NCINTERP</a> buxfix affecting processing chunks in non-periodic domains.
+    <a href="ellipseplot.html">ELLIPSEPLOT</a> bugfix for interacting with M_MAP.
+    <a href="jlab_addpath.html">JLAB_ADDPATH</a> bugfix to add root <a href="jData.html">JDATA</a> directory.
+    <a href="mspec.html">MSPEC</a> now computes the spectrum along an arbitrary dimension.
+    <a href="mspec.html">MSPEC</a> now removes the mean by default, but no longer detrends.
+    <a href="anatrans.html">ANATRANS</a> improved to correctly handle the Nyquist frequency.
+    <a href="divgeom.html">DIVGEOM</a> now handles different DX and DY; note input argument change.
+    <a href="findfiles.html">FINDFILES</a> bugfix for 'include' and 'exclude' flags.  
+    <a href="topoplot.html">TOPOPLOT</a> no longer plots continental shelves by default.
+    <a href="cellgrid.html">CELLGRID</a> now accepts array-valued DT arguments.
+    <a href="cellsplit.html">CELLSPLIT</a> now accepts array-valued TOL arguments.
+    <a href="twodstats.html">TWODSTATS</a> bugfix for complex-valued input using HISTCOUNTS2 algorithm.
+    <a href="matinv.html">MATINV</a> now works for matrices up to dimension 12. 
+    <a href="latlon2xy.html">LATLON2XY</a> added new correction for small angles and additional tests.
+    <a href="spheresort.html">SPHERESORT</a> and <a href="twodsort.html">TWODSORT</a> now have options for truncating size of output.
+    <a href="polysmooth.html">POLYSMOOTH</a> has major changes, including speed and memory improvements.
+    <a href="maternfit.html">MATERNFIT</a> now supports using NLopt, https://nlopt.readthedocs.io. 
+    <a href="maternfit.html">MATERNFIT</a> now works using Nelder-Mead without the Optimization Toolbox. 
+    <a href="maternfit.html">MATERNFIT</a> corrections to AICC output field.
+    <a href="ridgewalk.html">RIDGEWALK</a> now supports trimming edge effects using <a href="ridgetrim.html">RIDGETRIM</a>.
+    <a href="ridgewalk.html">RIDGEWALK</a> simplifications and speed improvements.
+    <a href="ridgewalk.html">RIDGEWALK</a> bugfix to sample figure generation.
+    <a href="periodindex.html">PERIODINDEX</a> simplifications and bugfix.
+    <a href="fourier.html">FOURIER</a> now outputs one- or two-sided frequency arrays.
+    <a href="fourier.html">FOURIER</a> outputs a cell array of frequency arrays given vector input.
+    <a href="cellfill.html">CELLFILL</a>, -STRIP, and -PACK now <a href="use.html">use</a> INFs (not NaNs) as the data flag.
+    <a href="cellmean.html">CELLMEAN</a> and -STD now support weighted means and standard deviations.
+    <a href="ellparams.html">ELLPARAMS</a> input format simplifications.
+    <a href="readtopo.html">READTOPO</a> bugfixes and additional testing.
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.5
           
     Support for a new publication, see module <a href="jMatern.html">jMatern</a>:
@@ -23,12 +99,16 @@
     <a href="standalone.html">STANDALONE</a> bugfix for recursive searches and support for files lists.
     <a href="standalone.html">STANDALONE</a> now uses 'private' sub-directory for dependency files.
  
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.4
  
     <a href="provec.html">PROVEC</a> now expecting sampling interval as first argument, in hours.
     <a href="stickvect.html">STICKVECT</a> bugfix for cutting off the end of the time series.
     <a href="stickvect.html">STICKVECT</a> improved commenting for how to <a href="choose.html">choose</a> the scale factor SCALE.
-     
+ 
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.3
  
     This is a major new release, which includes the following changes:

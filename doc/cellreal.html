@@ -4,18 +4,16 @@
 <div><h1>CELLREAL is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="cellreal.html">CELLREAL</a>  Real part of each element in a cell array.
  
-    XR=<a href="cellreal.html">CELLREAL</a>(X) where X is a cell array of N arrays,
- 
-        X{1}=X1, X{2}=X2,..., X{N}=XN
-  
-    returns the length N cell array XR with 
+    XR=<a href="cellreal.html">CELLREAL</a>(X) where X is a cell array of N arrays, is equivalent to 
    
-       XR(1)=REAL(X1), XR(2)=REAL(X2),..., XR(N)=REAL(XN).
+       XR{1}=REAL(X{1}), XR{2}=REAL(X{2}), ..., XR{N}=REAL(X{N})
+ 
+    thus returning the real part of each element in the cell array.
  
     See also <a href="jCell.html">JCELL</a>.
  
     Usage: xr=<a href="cellreal.html">cellreal</a>(x);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

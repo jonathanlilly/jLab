@@ -49,13 +49,24 @@
     `edge effects' that occur near the ends of the time series.
     ___________________________________________________________________
  
+    Returning frequency domain version
+ 
+    <a href="anatrans.html">ANATRANS</a>(...,'frequency') suppresses a final inverse Fourier transform, 
+    so that output fields will be analytic signals in the frequency domain.
+    This is mainly useful for calculation of frequency-domain moments, as
+    in FREQMOM, for large datasets where optimization is a priority.
+ 
+    The 'frequency' flag implies a 'periodic' boundary condition, so a 
+    separate boundary condition flag cannot be used in this case.
+    ___________________________________________________________________
+ 
     '<a href="anatrans.html">anatrans</a> --t' runs some tests.
  
     Usage: z=<a href="anatrans.html">anatrans</a>(x);
            z=<a href="anatrans.html">anatrans</a>(x,dim);
-           z=<a href="anatrans.html">anatrans</a>(x,dim,'mirror');
+           z=<a href="anatrans.html">anatrans</a>(x,dim,'periodic');
            [zp,zn]=<a href="anatrans.html">anatrans</a>(z,conj(z));
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2004--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+    (C) 2004--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

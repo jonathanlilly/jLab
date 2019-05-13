@@ -32,7 +32,7 @@ function[]=jlab_index(varargin)
 %   cellchunk     - Converts cell array data into uniform length 'chunks'.                               
 %   celldiv       - Division acting on each element in a cell array.                                     
 %   cellength     - Length of each element in a cell array.                                              
-%   cellfill      - Fills missing data marked by NaNs in a cell array.                                   
+%   cellfill      - Fills missing data marked by INFs in a cell array.                                   
 %   cellfirst     - Returns the first (or last) element of each entry in a cell array.                   
 %   cellget       - Indexes a cell array of numerical arrays by ID number.                               
 %   cellgrid      - Interpolate a cell array of numeric arrays onto a regular grid.                      
@@ -41,23 +41,27 @@ function[]=jlab_index(varargin)
 %   cellindex     - Applies a cell array of indices to a cell array of column vectors.                   
 %   celllog10     - Base ten logarithm of each element in a cell array.                                  
 %   cellmax       - Maximum of each element in a cell array.                                             
-%   cellmean      - Mean value of each element a cell array.                                             
+%   cellmean      - Mean value of each element a cell array, possibly weighted.                          
+%   cellmed       - Median value of each element a cell array.                                           
 %   cellmin       - Minimum of each element in a cell array.                                             
 %   cellmult      - Multiplication acting on each element in a cell array.                               
-%   cellpack      - Removes all NaN values from cell arrays of numeric arrays.                           
+%   cellpack      - Removes all INF values from cell arrays of numeric arrays.                           
+%   cellpair      - Complex pairing for elements in a cell array.                                        
 %   cellplot      - Rapidly plot all elements of a cell array of numeric arrays.                         
 %   cellprune     - Removes all empty cells, or cells less than a specified length.                      
 %   cellreal      - Real part of each element in a cell array.                                           
 %   cellsize      - Size of each element in a cell array along specified dimension.                      
 %   cellsplit     - Splits cell arrays of numeric arrays at data gaps.                                   
-%   cellstd       - Standard deviation of each element a cell array.                                     
-%   cellstrip     - Strips NaN values from the beginnings or ends of cell arrays.                        
+%   cellstd       - Standard deviation of each element a cell array, possibly weighted.                  
+%   cellstrip     - Strips INF values from the beginnings or ends of cell arrays.                        
+%   cellsum       - Sum of each element a cell array, possibly weighted.                                 
 %   choose        - Binomial coefficient: CHOOSE(N,K) = N!K!/(N-K)!                                      
 %   closedcurves  - Locate and interpolate closed curves in a possibly periodic domain.                  
 %   cms2kmd       - Converts centimeters per second to kilometers per day.                               
 %   col2cell      - Converts 'column-appended' data into cell arrays of numeric arrays.                  
 %   col2mat       - Expands 'column-appended' data into a matrix.                                        
 %   colbreaks     - Insert NANs into discontinuties in a vector.                                         
+%   colorquant    - Set the color axis according to quantiles of the data.                               
 %   commentlines  - Returns the comment lines from m-files.                                              
 %   corfreq       - Coriolis frequency in radians per hour.                                              
 %   crop          - Gets rid of whitespace around an image. [by A. Bliss]                                
@@ -78,6 +82,7 @@ function[]=jlab_index(varargin)
 %   elldiff       - Differentiation of modulated elliptical signals.                                     
 %   ellipseplot   - Plot ellipses.                                                                       
 %   ellparams     - Ellipse parameters of a modulated bivariate or trivariate oscillation.               
+%   ellpol        - Polarization parameters of an elliptical signal.                                     
 %   ellrad        - Average and instantaneous ellipse radius.                                            
 %   ellrossby     - Ellipse Rossby number, for oceanographic applications.                               
 %   ellsig        - Creates a modulated elliptical signal in two or three dimensions.                    
@@ -91,7 +96,7 @@ function[]=jlab_index(varargin)
 %   flipy         - Flips the direction of the y-axis                                                    
 %   fminsearchbnd - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]           
 %   fontsize      - Rapidly set title, axes, label, and text fontsizes.                                  
-%   fourier       - The one-sided Fourier frequencies for a given length time series.                    
+%   fourier       - Returns the Fourier frequencies for a given length time series.                      
 %   frac          - Fraction: FRAC(A,B)=A./B                                                             
 %   hermfun       - Orthonormal Hermite functions. [with F. Rekibi]                                      
 %   hermpoly      - Hermite polynomials. [with F. Rekibi]                                                
@@ -101,6 +106,7 @@ function[]=jlab_index(varargin)
 %   inellipse     - Locates points on the interior of ellipses.                                          
 %   inregion      - Tests whether lat/lon points lie within a specified box.                             
 %   instmom       - Univariate and multivariate instantaneous moments.                                   
+%   interplatlon  - Interpolation for working with latitude and longitude.                               
 %   inticks       - Sets the 'tickdir' property of the current axis to 'in'.                             
 %   iseven        - True for even integer values; false otherwise.                                       
 %   isodd         - True for odd integer values; false otherwise.                                        
@@ -108,6 +114,7 @@ function[]=jlab_index(varargin)
 %   isridgepoint  - Finds wavelet ridge points using one of several criterion.                           
 %   jdawson       - The Dawson function and its derivatives. [With P.J. Acklam]                          
 %   jdeg2rad      - Converts degrees to radians.                                                         
+%   jfig          - Shorthand for tweaking figures.                                                      
 %   jhelp         - Opens linked JLAB help files in Matlab's internal web browser.                       
 %   jlab_addpath  - Adds JLAB and JDATA subdirectories to your Matlab search path.                       
 %   jlab_allhelp  - Displays the help comments for all JLAB modules.                                     
@@ -122,12 +129,13 @@ function[]=jlab_index(varargin)
 %   jmat2         - 2x2 rotation matrix through specified angle.                                         
 %   jmat3         - 3x3 rotation matrix through specified angle.                                         
 %   jpcolor       - Modified version of PCOLOR appropriate for cell-centered grids.                      
+%   jprint        - Print to a specified directory and crop the resulting file.                          
 %   jrad2deg      - Converts radians to degrees.                                                         
 %   kl2ab         - Converts ellipse parameters Kappa and Lambda to A and B.                             
 %   lansey        - The Lansey modification of Cynthia Brewer's "Spectral" colormap.                     
 %   lansey_copyright - Copyright statement for the Lansey colormap.                                      
 %   latlon2uv     - Converts latitude and longitude to horizontal velocity.                              
-%   latlon2xy     - Converts latitude and longitude into local Cartesian coordinates.                    
+%   latlon2xy     - Converts latitude and longitude into tangent plane coordinates.                      
 %   latlon2xyz    - Converts latitude and longitude into 3D Cartesian coordinates.                       
 %   latratio      - Set plot aspect ratio for latitude / longitude plot.                                 
 %   letterlabels  - For automatically putting letter labels on subplots.                                 
@@ -156,6 +164,7 @@ function[]=jlab_index(varargin)
 %   makefigs_inellipse - Makes a sample figure for INELLIPSE.                                            
 %   makefigs_instmom - Makes some sample figures for INSTMOM.                                            
 %   makefigs_jdawson - Makes a sample figure for DJAWSON.                                                
+%   makefigs_jfig - Makes a sample figure for JFIG.                                                      
 %   makefigs_jpcolor - Makes a sample figure for JPCOLOR.                                                
 %   makefigs_jtopo - Makes a sample figure for ABOUT_JTOPO.                                              
 %   makefigs_lansey - Makes a sample figure for LANSEY.                                                  
@@ -180,6 +189,7 @@ function[]=jlab_index(varargin)
 %   makefigs_psi2fields - Makes a sample figure for PSI2FIELDS.                                          
 %   makefigs_regionplot - Makes some sample figures for REGIONPLOT.                                      
 %   makefigs_ridges - has been moved to JLAB_MAKEFIGS.                                                   
+%   makefigs_ridgetrim - Makes a sample figure for RIDGETRIM.                                            
 %   makefigs_ridgewalk - Makes a sample figure for RIDGEWALK.                                            
 %   makefigs_simplepdf - Makes a sample figure for SIMPLEPDF.                                            
 %   makefigs_slidetrans - Makes a sample figure for SLIDETRANS.                                          
@@ -233,7 +243,8 @@ function[]=jlab_index(varargin)
 %   morsexpand    - Generalized Morse wavelets via time-domain Taylor series.                            
 %   mspec         - Multitaper power and cross spectra.                                                  
 %   msvd          - Singular value decomposition for polarization analysis.                              
-%   ncinterp      - Interpolate field from NetCDF file onto specified positions.                         
+%   ncinterp      - One-line interpolation from 3D lat/lon/time field in NetCDF file.                    
+%   ncload        - Load all variables from a NetCDF file and convert columns to cells.                  
 %   nocontours    - Removes contours from a CONTOURF plot.                                               
 %   nonnan        - Return all non-NAN elements of an array.                                             
 %   noxlabels     - Remove some or all x-axis tick mark labels.                                          
@@ -247,7 +258,11 @@ function[]=jlab_index(varargin)
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polysmooth    - Smoothing scattered 2D data with local polynomial fitting.                           
+%   polysmooth    - Mapping using local polynomial fitting, also known as loess.    
+%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH.                          
+%   polysmooth_kernel - Returns the weighting kernel employed by POLYSMOOTH.                             
+%   polysmooth_presort - Sort arguments to POLYSMOOTH in case of missing data.                           
+%   printall      - Print and close all open figures.                                                    
 %   provec        - Generate progressive vector diagrams (simple and fancy).                             
 %   psi2fields    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
 %   quadinterp    - Fast quadratic interpolation for arbitrary-sized arrays.                             
@@ -259,6 +274,7 @@ function[]=jlab_index(varargin)
 %   ridgeinterp   - Interpolate quantity values onto ridge locations.                                    
 %   ridgelen      - Wavelet ridge length expressed as number of full cycles.                             
 %   ridgemap      - Maps ridge quantities back onto the time series.                                     
+%   ridgetrim     - Trim edge effect regions from wavelet ridges.                                        
 %   ridgewalk     - Extract wavelet transform ridges, including bias estimates.                          
 %   rot           - Complex-valued rotation:  ROT(X)=EXP(SQRT(-1)*X)                                     
 %   sampletimes   - Computes mean sampling intervals and their statistics.                               
@@ -312,6 +328,7 @@ function[]=jlab_index(varargin)
 %   vmedian       - Median over finite elements along a specified dimension.                             
 %   vmoment       - Central moment over non-NaN elements along a specfied dimension.                     
 %   vrep          - Replicates an array along a specified dimension.                                     
+%   vrms          - Root-mean-square of non-NaN elements along a specified dimension.                    
 %   vshift        - Cycles the elements of an array along a specified dimension.                         
 %   vsize         - Returns the sizes of multiple arguments.                                             
 %   vsqueeze      - Squeezes multiple input arguments simultaneously.                                    
@@ -328,17 +345,17 @@ function[]=jlab_index(varargin)
 %   xlog          - Sets x-axis scale to logarithmic.                                                    
 %   xoffset       - Offsets lines in the x-direction after plotting.                                     
 %   xtick         - Sets locations of x-axis tick marks.                                                 
-%   xy2latlon     - Converts local Cartesian coordinates into latitude and longitude.                    
+%   xy2latlon     - Converts tangent plane coordinates into latitude and longitude.                      
 %   xyz2latlon    - Converts 3D Cartesian coordinates into latitude and longitude.                       
 %   yearfrac      - Converts a DATENUM into 'year.fraction' and 'month.fraction'.                        
 %   ylin          - Sets y-axis scale to linear.                                                         
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks.   
+%   ztick         - Sets locations of z-axis tick marks.                                                
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_index

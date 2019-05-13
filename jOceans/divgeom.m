@@ -1,12 +1,13 @@
 function[Q1,Q2,Q3,Q4,Q]=divgeom(varargin)
 %DIVGEOM  Geometric decomposition of eddy vorticity flux divergence.
 %
-%   [F1,F2,F3,F4]=DIVGEOM(K,L,THETA) returns the geometric decomposition
+%   [F1,F2,F3,F4]=DIVGEOM(DX,DY,K,L,THETA) returns the geometric decomposition
 %   of eddy vorticity flux divergence associated with variance ellipses 
 %   having kinetic energy K, anisotropy L, and orientation THETA.
 %
 %   K, L, and THETA are matrices of the same size.  These are defined on an
-%   X-Y grid with x oriented in *columns* and y oriented in *rows*.  
+%   X-Y grid with x oriented in *columns* and y oriented in *rows*.  DX and
+%   DY are the sampling intervals in the X and Y directions, respectively.
 %
 %   Note that K and L are related to ellipse parameters KAPPA and LAMBDA
 %   used elsewhere in JLAB by K=KAPPA^2 and L=LAMBDA*KAPPA^2.
@@ -22,9 +23,6 @@ function[Q1,Q2,Q3,Q4,Q]=divgeom(varargin)
 %   For details, see Waterman and Lilly (2015), Geometric decomposition of
 %   eddy-mean flow feedbacks in barotropic systems, J. Phys. Oceanogr. 
 %
-%   DIVGEOM(DX,...) alternately uses a grid spacing of DX for computing the
-%   derivatives, with a default value DX=1.
-%
 %   [F1,F2,F3,F4,F]=DIVGEOM(...) also returns the total eddy flux 
 %   divergence F, calculated directly, with F1+F2+F3+F4 = F apart from 
 %   numerical error.
@@ -33,11 +31,9 @@ function[Q1,Q2,Q3,Q4,Q]=divgeom(varargin)
 %   a first central difference.  DIVGEOM(...,'arakawa') alternately uses a 
 %   modified first central difference appropriate for models that employ an
 %   Awakawa advection scheme. 
-%
 %   __________________________________________________________________
 %
-%   Usage: [F1,F2,F3,F4]=divgeom(K,L,theta);
-%          [F1,F2,F3,F4,F]=divgeom(dx,K,L,theta);
+%   Usage: [f1,f2,f3,f4]=divgeom(dx,dy,K,L,theta);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2013--2015 J.M. Lilly --- type 'help jlab_license' for details
@@ -81,48 +77,43 @@ for i=1:2
     end
 end
 
-if length(varargin{1})==1
-    dx=varargin{1};
-    varargin=varargin(2:end);
-else
-    dx=1;
-end
-K=varargin{1};
-L=varargin{2};
-theta=varargin{3};
+dx=varargin{1};
+dy=varargin{2};
+K=varargin{3};
+L=varargin{4};
+theta=varargin{5};
 
-if length(varargin)==4
-    N=varargin{4};
+if length(varargin)==6
+    N=varargin{6};
 else
     N=0;
 end
 
-
-[x,y] = meshgrid([1:size(K,2)]*dx,[1:size(K,1)]*dx);
+%[x,y] = meshgrid([1:size(K,2)]*dx,[1:size(K,1)]*dx);
 
 
 %/************************************************
 %Compute gradients
 Lx=divgeom_vdiff(dx,L,2,diffstr);
-Ly=divgeom_vdiff(dx,L,1,diffstr);
+Ly=divgeom_vdiff(dy,L,1,diffstr);
 
 thetax=divgeom_vdiff(dx,frac(1,2)*unwrap(2*theta,[],2),2,diffstr);
-thetay=divgeom_vdiff(dx,frac(1,2)*unwrap(2*theta,[],1),1,diffstr);
+thetay=divgeom_vdiff(dy,frac(1,2)*unwrap(2*theta,[],1),1,diffstr);
 
 cos2x=divgeom_vdiff(dx,cos(2*theta),2,diffstr);
-cos2y=divgeom_vdiff(dx,cos(2*theta),1,diffstr);
+cos2y=divgeom_vdiff(dy,cos(2*theta),1,diffstr);
 
 sin2x=divgeom_vdiff(dx,sin(2*theta),2,diffstr);
-sin2y=divgeom_vdiff(dx,sin(2*theta),1,diffstr);
+sin2y=divgeom_vdiff(dy,sin(2*theta),1,diffstr);
 
 M=L.*cos(2*theta);
 N=L.*sin(2*theta);
 
 Nx=divgeom_vdiff(dx,N,2,diffstr);
-Ny=divgeom_vdiff(dx,N,1,diffstr);
+Ny=divgeom_vdiff(dy,N,1,diffstr);
 
-QM=divgeom_mixederiv(dx,divgeom_vdiff(dx,M,2,diffstr),divgeom_vdiff(dx,M,1,diffstr),diffstr);
-QN=divgeom_vdiff(dx,Nx,2,diffstr)-divgeom_vdiff(dx,Ny,1,diffstr);
+QM=divgeom_mixederiv(dx,dy,divgeom_vdiff(dx,M,2,diffstr),divgeom_vdiff(dy,M,1,diffstr),diffstr);
+QN=divgeom_vdiff(dx,Nx,2,diffstr)-divgeom_vdiff(dy,Ny,1,diffstr);
 
 Q=QN-QM;
 %\************************************************
@@ -134,12 +125,13 @@ Q=QN-QM;
 % Q1=-imag(rot(-2*theta).*cx);
 
     
-Q1a=-cos(2*theta).*divgeom_mixederiv(dx,Lx,Ly,diffstr);
-Q1b= sin(2*theta).*(divgeom_vdiff(dx,Lx,2,diffstr)-divgeom_vdiff(dx,Ly,1,diffstr));
+Q1a=-cos(2*theta).*divgeom_mixederiv(dx,dy,Lx,Ly,diffstr);
+Q1b= sin(2*theta).*(divgeom_vdiff(dx,Lx,2,diffstr)-divgeom_vdiff(dy,Ly,1,diffstr));
 Q1=Q1a+Q1b;
 
-Q3a= 2*L.*cos(2*theta).*(divgeom_vdiff(dx,thetax,2,diffstr)-divgeom_vdiff(dx,thetay,1,diffstr));
-Q3b= 2*L.*sin(2*theta).*divgeom_mixederiv(dx,thetax,thetay,diffstr);
+%vsize(L,theta,thetax,thetay)
+Q3a= 2*L.*cos(2*theta).*(divgeom_vdiff(dx,thetax,2,diffstr)-divgeom_vdiff(dy,thetay,1,diffstr));
+Q3b= 2*L.*sin(2*theta).*divgeom_mixederiv(dx,dy,thetax,thetay,diffstr);
 Q3=Q3a+Q3b;
 
 
@@ -152,8 +144,9 @@ if findstr(str,'dir')
     Q4b= -4*L.*sin(2*theta).*(thetax.^2-thetay.^2);
     Q4=Q4a+Q4b;
 else
-    dkdsin2=L.*(divgeom_vdiff(dx,sin2x,2,diffstr)-divgeom_vdiff(dx,sin2y,1,diffstr));
-    dldcos2=L.*divgeom_mixederiv(dx,divgeom_vdiff(dx,cos(2*theta),2,diffstr),divgeom_vdiff(dx,cos(2*theta),1,diffstr),diffstr);
+    dkdsin2=L.*(divgeom_vdiff(dx,sin2x,2,diffstr)-divgeom_vdiff(dy,sin2y,1,diffstr));
+    dldcos2=L.*divgeom_mixederiv(dx,dy,divgeom_vdiff(dx,cos(2*theta),2,diffstr),...
+        divgeom_vdiff(dy,cos(2*theta),1,diffstr),diffstr);
     
     Q2a=QN-Q1b-dkdsin2;
     Q2b=-(QM+Q1a-dldcos2);
@@ -202,10 +195,10 @@ end
 df=vdiff(dx,f,dim);
 
 
-function[gxy]=divgeom_mixederiv(dx,fx,fy,diffstr)
+function[gxy]=divgeom_mixederiv(dx,dy,fx,fy,diffstr)
 %Correction for two possible forms of mixed derivative
 
-gxy= divgeom_vdiff(dx,fx,1,diffstr);
+gxy= divgeom_vdiff(dy,fx,1,diffstr);
 gyx= divgeom_vdiff(dx,fy,2,diffstr);
 gxy=gxy+gyx;
 
@@ -242,7 +235,7 @@ function[]=divgeom_figure
 load jetellipses_highres
 use jetellipses
  
-[q1,q2,q3,q4,q]=divgeom(x(2)-x(1),kappabar,lambdabar,thetabar,5);
+[q1,q2,q3,q4,q]=divgeom(x(2)-x(1),x(2)-x(1),kappabar,lambdabar,thetabar,5);
 
 figure
 subplot(2,2,1),jpcolor(x,y,q1),axis equal,axis tight

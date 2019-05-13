@@ -8,29 +8,33 @@
     <img src="../figures/sandwell.png">
     _______________________________________________________________________
  
-    SANDWELL.MAT is a matfile containing nearly-global topography data from 
+    SANDWELL.MAT and SANDWELL.NC contain nearly-global topography data from 
     the Smith and Sandwell database version 18.1, at its full, 
     approximately one minute resolution.
  
-    LOAD SANDWELL loads the structure SANDWELL, with the following fields:
+    SANDWELL.MAT is a Matlab version, while SANDWELL.NC is a NetCDF 
+    version. These both contain identical data.
+ 
+    SANDWELL is distributed as a part of <a href="jData.html">JDATA</a>, a supplement to the 
+    software toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
+ 
+    In Matlab, LOAD SANDWELL for the Matlab version, or <a href="ncload.html">NCLOAD</a> SANDWELL for 
+    the NetCdf version, leads to a structure containing the following fields
  
         sandwell.about     Pointer to this document  
         sandwell.lat       Array of latitudes         [17280 x 1] 
-        sandwell.lon       Array of longitudes        [1 x 21600]
+        sandwell.lon       Array of longitudes        [21600 x 1]
         sandwell.topo      Matrix of topography       [17280 x 21600]
  
     Typing '<a href="use.html">use</a> sandwell' maps these fields into variables in the current
     workspace.
  
     TOPO is a matrix of topography in units of kilometers and is positive 
-    for above sea level, and negative for below sea level.  LON is a row
-    vector of longitudes and LAT a column vector of latitudes.
+    for above sea level, and negative for below sea level. 
  
     LAT and LON output are *grid-centered*, that is, they indicate 
     midpoints of the topography cells. LON is uniformly spaced, but LAT is 
     non-uniformly spaced, with bin sizes decreasing poleward.
- 
-    SANDWELL.MAT is distributed with <a href="jLab.html">JLAB</a> at http://www.jmlilly.net.
  
     Note that the Smith and Sandwell database is defined only for latitudes
     between -80.738 and 80.738.  Topography at higher northern latitudes is
@@ -42,7 +46,7 @@
  
     Forming regional datasets is more convenient by directly accessing the 
     original binary file, topo_18.1.img.  This can be read using <a href="readtopo.html">READTOPO</a>.
-    <a href="readtopo.html">READTOPO</a> and topo_18.1.img are distributed together with SANDWELL.MAT.
+    <a href="readtopo.html">READTOPO</a> and topo_18.1.img are distributed together with SANDWELL.
     __________________________________________________________________
  
     Data and documentation
@@ -69,9 +73,9 @@
     Dataset creation
  
     For completeness, the m-file <a href="about_sandwell.html">ABOUT_SANDWELL</a> also contains steps used in 
-    the creation of SANDWELL.MAT. If you wish to do this yourself, typing
-    '<a href="about_sandwell.html">about_sandwell</a> --create' with <a href="jLab.html">JLAB</a> installed will recreate 
-    SANDWELL.MAT from source. 
+    the creation of SANDWELL.MAT and SANDWELL.NC. If you wish to do this 
+    yourself, typing '<a href="about_sandwell.html">about_sandwell</a> --create' with <a href="jLab.html">JLAB</a> installed and with 
+    topo_18.1.img on your search path will recreate SANDWELL. 
     __________________________________________________________________
      
     See also <a href="about_ibcao.html">ABOUT_IBCAO</a>, and JTOPO, <a href="regionplot.html">REGIONPLOT</a>, and <a href="topoplot.html">TOPOPLOT</a> in <a href="jLab.html">JLAB</a>.
@@ -82,5 +86,5 @@
            about_sandwell --create
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

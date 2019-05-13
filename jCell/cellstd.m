@@ -1,19 +1,18 @@
 function[varargout]=cellstd(varargin)
 %CELLSTD  Standard deviation of each element a cell array, possibly weighted.
 %
-%   SIG=CELLSTD(X) where X is a cell array of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-% 
-%   returns the N x 1 array of standard deviation values SIG such that
+%   S=CELLSTD(X) where X is a cell array of N arrays, is equivalent to
 %  
-%      SIG(1)=STD(X1(:)),  SIG(2)=STD(X2(:)),...,  SIG(N)=STD(XN(:)).
+%      S(1,1)=STD(X{1}(:)),  S(2,1)=STD(X{2}(:)), ...,  S(N,1)=STD(X{N}(:))
+%
+%   thus returning an N x 1 array containing the standard deviation of all
+%   values in each element in the cell array.
 %
 %   In taking the standard deviation, non-finite values are ignored, as in
-%   VSTD. The output SIG is a column vector of the same length as X.  
+%   VSTD. The output S is a column vector of the same length as X.  
 %
-%   [SIG1,SIG2,...,SIGP]=CELLSTD(X1,X2,...,XP) also works for P different 
-%   input arguments. 
+%   [S1,S2,...,SP]=CELLSTD(X1,X2,...,XP) also works for P different input
+%   arguments. 
 %
 %   CELLSTD(X1,X2,...XP);  with no output arguments overwrites the 
 %   original input variables.
@@ -33,15 +32,15 @@ function[varargout]=cellstd(varargin)
 %   installed, and is useful for very large datasets.
 %   __________________________________________________________________   
 %
-%   See also CELLMEAN, CELLMED, JCELL, VTOOLS.
+%   See also CELLMEAN, CELLMED, JCELL.
 %
-%   Usage: sig=cellstd(x);
-%          [sig1,sig2,sig3]=cellstd(x1,x2,x3);
-%          [sig1,sig2,sig3]=cellstd(x1,x2,x3,'weight',w);
+%   Usage: s=cellstd(x);
+%          [s1,s2,s3]=cellstd(x1,x2,x3);
+%          [s1,s2,s3]=cellstd(x1,x2,x3,'weight',w);
 %          cellstd(x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 if ~iscell(varargin{1})
     error('X must be a cell array.')

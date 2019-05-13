@@ -2,15 +2,14 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>CELLMEAN is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="cellmean.html">CELLMEAN</a>  Mean value of each element a cell array.
+ <a href="cellmean.html">CELLMEAN</a>  Mean value of each element a cell array, possibly weighted.
  
-    M=<a href="cellmean.html">CELLMEAN</a>(X) where X is a cell array of N arrays,
- 
-        X{1}=X1, X{2}=X2,..., X{N}=XN
-  
-    returns the N x 1 array of mean values M with
+    M=<a href="cellmean.html">CELLMEAN</a>(X) where X is a cell array of N arrays, is equivalent to
    
-       M(1)=MEAN(X1(:)),  M(2)=MEAN(X2(:)),...,  M(N)=MEAN(XN(:)).
+      M(1,1)=MEAN(X{1}(:)), M(2,1)=MEAN(X{2}(:)), ..., M(N,1)=MEAN(X{N}(:))
+ 
+    thus returning an N x 1 array containing the mean of all values in each
+    element in the cell array.
  
     In taking the mean, non-finite values are ignored, as in <a href="vmean.html">VMEAN</a>.
     M is a column vector of the same length as X.  
@@ -22,6 +21,13 @@
     original input variables.
     __________________________________________________________________   
  
+    Weighted means
+ 
+    <a href="cellmean.html">CELLMEAN</a>(X,'weight',W) or <a href="cellmean.html">CELLMEAN</a>(X1,X2,...,XP,'weight',W) where W is 
+    a cell array of the same size as the other input variables, computes
+    the weighted mean, using the weighting factor ABS(W).^2.  
+    __________________________________________________________________   
+ 
     Parallelization
  
     <a href="cellmean.html">CELLMEAN</a>(...,'parallel') parallelizes the computation using a PARFOR 
@@ -29,13 +35,14 @@
     installed, and is useful for very large datasets.
     __________________________________________________________________   
  
-    See also <a href="jCell.html">JCELL</a>, VTOOLS.
+    See also <a href="cellstd.html">CELLSTD</a>, <a href="cellmed.html">CELLMED</a>, <a href="jCell.html">JCELL</a>.
  
     Usage: m=<a href="cellmean.html">cellmean</a>(x);
            [m1,m2,m3]=<a href="cellmean.html">cellmean</a>(x1,x2,x3);
+           <a href="cellmean.html">cellmean</a>(x1,x2,x3,'weight',w);
            <a href="cellmean.html">cellmean</a>(x1,x2,x3);
            <a href="cellmean.html">cellmean</a>(x1,x2,x3,'parallel');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2014--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

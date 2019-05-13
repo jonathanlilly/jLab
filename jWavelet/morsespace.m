@@ -210,7 +210,7 @@ for i=1:length(ga)
     fs{i}=morsespace(ga(i),be(i),{0.95,pi},{1,N/10},4);
     psi(:,i)=morsewave(N,ga(i),be(i),fs{i}(end),'energy');
 end
-plot(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)),1))
+%figure,plot(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)),1))
 bool=aresame(median(sum(squared(psi((end+1)/2-50:(end+1)/2+50,:)))),0.95,0.01);
 
 reporttest('MORSESPACE low-frequency cutoff, P approximates 95% energy',bool)

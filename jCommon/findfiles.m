@@ -47,7 +47,7 @@ function[varargout]=findfiles(varargin)
 %   'findfiles --t' runs a test.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     findfiles_test,return
@@ -126,10 +126,10 @@ end
 if N~=0
     for i=1:length(files)
         if ~isempty(includestr)
-            bool(i,1)=bool(i,1)&~contains(files{i}(1:end-N-1),includestr);
+            bool(i,1)=bool(i,1)&contains(files{i}(1:end-N-1),includestr);
         end
         if ~isempty(excludestr)
-            bool(i,1)=bool(i,1)&contains(files{i}(1:end-N-1),excludestr);
+            bool(i,1)=bool(i,1)&~contains(files{i}(1:end-N-1),excludestr);
         end
     end
 end

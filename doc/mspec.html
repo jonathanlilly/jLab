@@ -8,8 +8,8 @@
     <img src="../figures/mspec.png">
     _______________________________________________________________________
  
-    <a href="mspec.html">MSPEC</a> implements spectral and cross-spectral analysis using the 
-    multitaper method for real or complex-valued data. 
+    <a href="mspec.html">MSPEC</a> implements spectral and cross-spectral analysis using the multi-
+    taper method for real or complex-valued data, and along any dimension.
  
     <a href="mspec.html">MSPEC</a> is to be run after calling <a href="sleptap.html">SLEPTAP</a> to compute the multitapers.
     _______________________________________________________________________
@@ -18,65 +18,38 @@
  
     [F,S]=<a href="mspec.html">MSPEC</a>(X,PSI) returns the one-sided power spectrum of X at 
     positive frequencies using data tapers PSI. 
-   
-    Input:   
-        X  --  M x N matrix containing N length M time series
-      PSI  --  M x K matrix of K data tapers
-  
-    Output:
-        F  --  [M/2] nonnegative *radian* frequencies
-        S  --  [M/2] x N one-sided power spectrum matrix
-                 
-    In the above, [M/2] means: M/2 if M is even, and (M+1)/2 if M is odd. 
-    See <a href="fourier.html">FOURIER</a> for the calculation of the Fourier frequencies.
  
-    The spectra matrices are averages over the K "eigenspectra" computed 
-    with each of the K tapers, as discussed in Park et al. JGR 1987.
+    X may be an array with an arbitrary number of dimensions and with time 
+    along it first dimensions.  Let M be its number of rows, M=SIZE(X,1).
  
-    The one-sided spectrum S is normalized such that its sum over all 
-    frequencies F, (1/2/pi)*SUM(S,1)*DF where DF is the frequency 
-    increment, approximates the signal variance; see discussion below.
+    PSI is a then matrix of K data tapers having M rows and K columns.
  
-    <a href="mspec.html">MSPEC</a>(...,'detrend') detrends the data before computing the spectra.
+    F is an array of frequencies with FlOOR(M/2)+1 rows, while the spectral
+    matrix S has FlOOR(M/2)+1 rather than M rows, and the same size as X
+    along all of its other dimensions.
+ 
+    The spectrum can also be computed with time oriented along a different
+    dimension, as described below.
+ 
+    By default, <a href="mspec.html">MSPEC</a> removes the mean from each time series before
+    computing the spectra. This is suppressed by <a href="mspec.html">MSPEC</a>(...,'nodemean').
     ______________________________________________________________________
    
     Cross-spectra of real-valued data
     
-    <a href="mspec.html">MSPEC</a> can be used to compute the cross-spectrum of two real-valued
-    time series or sets of time series.
- 
-    [F,SXX,SYY,SXY]=<a href="mspec.html">MSPEC</a>(X,Y,PSI);   --- For cross-spectra
-         
-    Input:
-        X  --  M x N matrix containing N length M time series
-        Y  --  M x N matrix containing N length M time series
-      PSI  --  M x K matrix of K data tapers
-  
-    Output:
-        F  --  M/2 nonnegative frequencies
-      SXX  --  [M/2] x N one-sided spectra of X
-      SYY  --  [M/2] x N one-sided spectra of Y
-      SXY  --  [M/2] x N one-sided cross spectra of X and Y 
+    [F,SXX,SYY,SXY]=<a href="mspec.html">MSPEC</a>(X,Y,PSI) computes the cross-spectrum of two 
+    real-valued time series or sets of time series.  Here SXX and SYY are
+    the one-sided spectra of X and Y, while SXY is their cross spectrum.
  
     See <a href="twospecplot.html">TWOSPECPLOT</a> for plotting SXX and SYY simultaneously.
     ______________________________________________________________________
    
     Rotary spectra of complex-valued data
  
-    <a href="mspec.html">MSPEC</a> can also the so called "rotary spectra" of complex-valued 
-    time series or sets of time series.
- 
-    [F,SPP,SNN,SPN]=<a href="mspec.html">MSPEC</a>(Z,PSI);   --- For rotary spectra of Z=X+iY
- 
-    Input:   
-        Z  --  M x N matrix containing N length M time series
-      PSI  --  M x K matrix of K data tapers
-    
-    Output:   
-         F  --  M/2 nonnegative frequencies
-       SPP  --  [M/2] x N positively rotating power spectrum matrix
-       SNN  --  [M/2] x N negatively rotating power spectrum matrix  
-       SPN  --  [M/2] x N rotary cross spectral matrix      
+    [F,SPP,SNN,SPN]=<a href="mspec.html">MSPEC</a>(Z,PSI) where Z is complex-valued computes the so-
+    called "rotary spectra". Here SPP and SNN are the positively-rotating
+    and negatively rotating spectra, and SPN is the rotary cross spectrum.
+    the one-sided spectra of X and Y, while SPN is their cross spectrum.
  
     Note that the rotary spectra are defined such that SXX+SYY=SPP+SNN.
    
@@ -84,15 +57,6 @@
     over all frequencies plus that of SNN approximates the variance of Z. 
  
     See <a href="twospecplot.html">TWOSPECPLOT</a> for plotting SPP and SNN simultaneously.
-    ______________________________________________________________________
-   
-    Sample rate
- 
-    [F,S]=<a href="mspec.html">MSPEC</a>(DT,...) specifies the sample interval to be used in the
-    calculation of the frequency array F. DT defaults to unity.
- 
-    Spectral values depend linearly upon the sample rate in order that the 
-    integral of the spectra over frequency approximate the variance.
     ______________________________________________________________________
  
     Periodogram
@@ -105,6 +69,28 @@
     taper, normalized to unit energy. This returns the periodogram.  
     ______________________________________________________________________
    
+    Sample rate
+ 
+    [F,S]=<a href="mspec.html">MSPEC</a>(DT,...) specifies the sample interval to be used in the
+    calculation of the frequency array F. DT defaults to unity.
+ 
+    Spectral values depend linearly upon the sample rate in order that the 
+    integral of the spectra over frequency approximate the variance.
+    ______________________________________________________________________
+    
+    Spectra along arbitary dimension 
+ 
+    <a href="mspec.html">MSPEC</a>(...,DIM) computes the spectrum with time oriented along dimension
+    DIM, with the default behavior corresponding to DIM=1.
+ 
+    Let M be the length of the input X, Z, or X and Y along dimension DIM. 
+    PSI is again a matrix of K data tapers having M rows and K columns.
+ 
+    F will be again an array of frequencies with FlOOR(M/2)+1 rows, while
+    the output spectral matrices will the same size as the input arrays,
+    but with FlOOR(M/2)+1 rather than M elements along dimension DIM.
+    ______________________________________________________________________
+   
     Normalizations
  
     By default, <a href="mspec.html">MSPEC</a> uses *radian* frequency as in cos(f t).  Optionally
@@ -113,6 +99,9 @@
     <a href="mspec.html">MSPEC</a> is normalized to approximately recover the time series variance. 
     For the <a href="mspec.html">MSPEC</a> periodogram, this recovery is exact, although the 
     expressions are complicated somewhat by the use of one-sided spectra.  
+ 
+    For simplicity, the normalizations will be explained for the case of a
+    single time series with M oriented along rows, that is, with DIM=1.
  
     Real-valued data
  
@@ -149,13 +138,13 @@
     [F,SN1N1,SN2N2,SN1N2]=<a href="mspec.html">MSPEC</a>(CONJ(Z1),CONJ(Z2),PSI);  
  
     The first call returns the spectra and cross-spectra of Z1 and Z2 at
-    positive frequencies, while the second returns their spectra and cross-
-    spectra at negative frequencies.  Finally
+    positive frequencies, while the second returns their spectra and the 
+    *conjugate* of the cross-spectrum at negative frequencies.  Finally
  
     [F,SP1P1,SN2N2,SP1N2]=<a href="mspec.html">MSPEC</a>(Z1,CONJ(Z2),PSI);  
+    [F,SN1N1,SP2P2,SN1P2]=<a href="mspec.html">MSPEC</a>(CONJ(Z1),Z2,PSI);  
  
-    returns the cross-spectra between the positive rotary components of Z1 
-    and the negative components of Z2.
+    returns the so-called outer or complementary cross-spectra. 
     ______________________________________________________________________
  
     Adaptive spectra
@@ -219,9 +208,11 @@
  
     Usage   [f,s]=<a href="mspec.html">mspec</a>(x,psi);    
             [f,s]=<a href="mspec.html">mspec</a>(dt,x,psi);     
+            [f,s]=<a href="mspec.html">mspec</a>(dt,x,psi,dim);     
             [f,spp,snn,spn]=<a href="mspec.html">mspec</a>(z,psi);     
             [f,sxx,syy,sxy]=<a href="mspec.html">mspec</a>(x,y,psi);
+            [f,sxx,syy,sxy]=<a href="mspec.html">mspec</a>(x,y,psi,dim);
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2000--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+    (C) 2000--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

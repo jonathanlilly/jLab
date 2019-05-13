@@ -8,16 +8,27 @@
     <img src="../figures/curvemoments.png">
     ______________________________________________________________________
  
-    [XO,YO]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) returns the centroid of the region bounded 
-    by the closed curve specified by the column vectors XC and YC.
+    <a href="curvemoments.html">CURVEMOMENTS</a> returns various moments of a closed curve.  These occur in 
+    two sets, moments of the curve itself, and moments of the velocity
+    meausured along the curve.
+    __________________________________________________________________
  
-    [XO,YO,L,R,D]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) also returns the arc length L, area
-    radius R defined such that pi R^2 is the enclosed area, and the root-
-    mean-squared distance D from the curve periphery to the centroid.
+    Curve moments: Centroid, arc length, area, moment of inertia, etc.
  
-    [XO,YO,L,R,D,A,B,THETA]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC) also returns the region's
-    second central moment, the area moment of inertia.  This describes an 
-    ellipse with semi-major and minor axes A and B, and orientation THETA. 
+    [XO,YO,KAPPA,R,L,A,B,THETA]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC), where the closed curve 
+    is specified by the column vectors XC and YC, returns the following:
+ 
+        XO    -- X-component of the centroid of the enclosed region     
+        YO    -- Y-component of the centroid of the enclosed region
+        KAPPA -- root-mean-square distance from the curve to the centroid
+        R     -- area radius, defined such that pi R^2 is the enclosed area    
+        L     -- arc length along the curve    
+        A     -- major axis of the area moment of inertia 
+        B     -- minor axis of the area moment of inertia 
+        THETA -- orientation angle of the area moment of inertia 
+ 
+    Note that the last three quantities describe the area moment of inertia
+    as an ellipse with semi-axes length A and B, and orientation THETA. 
  
     The moments are calculated from the curve (XC,YC) using expressions
     for converting spatial to line integrals derived from Green's theorem.
@@ -40,18 +51,25 @@
  
     <a href="curvemoments.html">CURVEMOMENTS</a> can also compute various moments based on the velocity.
  
-    [VORT,DIV,MOM,KE]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC,ZC) where ZC is the complex-valued
-    velocity ZC=U+iV along the curve, returns the spatially-averaged 
-    vorticity VORT, the spatially-averaged divergence MOM, and the angular 
-    momentum MOM and kinetic energy KE averaged along the curve periphery.
+    [ZETA,DIV,SIGMA,NU,MOM,KE]=<a href="curvemoments.html">CURVEMOMENTS</a>(XC,YC,ZC) where ZC is the 
+    complex-valued velocity ZC=U+iV along the curve, returns the following:
+ 
+        ZETA  -- spatially-averaged vorticity  
+        DIV   -- spatially-averaged divergence    
+        SIGMA -- spatially-averaged shear strain
+        NU    -- spatially-averaged normal strain  
+        MOM   -- average angular momentum along the curve
+        KE    -- average kinetic energy along the curve
  
     For the velocity moments, <a href="curvemoments.html">CURVEMOMENTS</a> expects XC and YC to have units
-    of km while ZC is in cm/s.  VORT and DIV then have units of 1/s, MOM 
-    and MOMSTD have units of cm^2/s, and KE has units of cm^2/s^2.
+    of km while ZC is in cm/s.  ZETA, DIV, SIGMA, and NU then have units of
+    1/s, MOM and MOMSTD have units of cm^2/s, and KE has units of cm^2/s^2.
  
-    Note that VORT and DIV are computed as integrals of the tangential and
+    Note that ZETA and DIV are computed as integrals of the tangential and
     normal velocities along the curve, respectively, then converted to area 
-    averages by applying Stokes' theorem and the divergence theorem.
+    averages by applying Stokes' theorem and the divergence theorem.  The
+    strain components SIGMA and NU are similarly computed using an extended
+    version of Stokes' thereom derived by Lilly (2018).
  
     MOM is the average angular momentum along the curve with respect to the
     curve centroid. KE is the average value of the kinetic energy along the
@@ -64,10 +82,10 @@
     '<a href="curvemoments.html">curvemoments</a> --f' generates the above figure.
  
     Usage: [xo,yo]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
-           [xo,yo,L,R,D]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
-           [xo,yo,L,R,D,a,b,theta]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
-           [vort,div,mom,ke,momstd]=<a href="curvemoments.html">curvemoments</a>(xc,yc,zc);
+           [xo,yo,kappa,R,L]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
+           [xo,yo,kappa,R,L,a,b,theta]=<a href="curvemoments.html">curvemoments</a>(xc,yc);
+           [zeta,div,sigma,nu,mom,ke,momstd]=<a href="curvemoments.html">curvemoments</a>(xc,yc,zc);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--20154 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2013--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

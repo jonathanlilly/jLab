@@ -16,7 +16,7 @@ function[varargout] = vstd(varargin)
 %   input variables.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2018 J.M. Lilly --- type 'help jlab_license' for details    
   
 if strcmpi(varargin{1}, '--t')
   vstd_test,return
@@ -27,6 +27,9 @@ dim=varargin{end};
 for i=1:length(varargin)-1
    [varargout{i},numi{i}]=vmoment(varargin{i},2,dim);
    varargout{i}=sqrt(varargout{i});
+   if isreal(varargin{i})
+       varargout{i}=real(varargout{i});
+   end
 end
 
 for i=length(varargin):nargout

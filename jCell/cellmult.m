@@ -1,12 +1,9 @@
 function[y]=cellmult(x,y)
 %CELLMULT  Multiplication acting on each element in a cell array.
 %
-%   Z=CELLMULT(X,Y) where X and Y are both cell arrays of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-%  
-%   with the Nth element in X and in Y having the same size, returns the
-%   cell array Z containing their products, 
+%   Z=CELLMULT(X,Y) where X and Y are both cell arrays of N arrays,  with
+%   the corresponding  elements in X and in Y having the same size, returns 
+%   the cell array Z containing their products, 
 %
 %       Z{1}=X{1}.*Y{1}, Z{2}=X{2}.*Y{2},..., Z{N}=X{N}.*Y{N}.
 %
@@ -15,7 +12,7 @@ function[y]=cellmult(x,y)
 %   Usage: z=cellmult(x,y);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 if ~iscell(x)
     if length(x)==1

@@ -2,24 +2,30 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>CELLSTD is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="cellstd.html">CELLSTD</a>  Standard deviation of each element a cell array.
+ <a href="cellstd.html">CELLSTD</a>  Standard deviation of each element a cell array, possibly weighted.
  
-    SIG=<a href="cellstd.html">CELLSTD</a>(X) where X is a cell array of N arrays,
- 
-        X{1}=X1, X{2}=X2,..., X{N}=XN
-  
-    returns the N x 1 array of standard deviation values SIG such that
+    S=<a href="cellstd.html">CELLSTD</a>(X) where X is a cell array of N arrays, is equivalent to
    
-       SIG(1)=STD(X1(:)),  SIG(2)=STD(X2(:)),...,  SIG(N)=STD(XN(:)).
+       S(1,1)=STD(X{1}(:)),  S(2,1)=STD(X{2}(:)), ...,  S(N,1)=STD(X{N}(:))
+ 
+    thus returning an N x 1 array containing the standard deviation of all
+    values in each element in the cell array.
  
     In taking the standard deviation, non-finite values are ignored, as in
-    <a href="vstd.html">VSTD</a>. The output SIG is a column vector of the same length as X.  
+    <a href="vstd.html">VSTD</a>. The output S is a column vector of the same length as X.  
  
-    [SIG1,SIG2,...,SIGP]=<a href="cellstd.html">CELLSTD</a>(X1,X2,...,XP) also works for P different 
-    input arguments. 
+    [S1,S2,...,SP]=<a href="cellstd.html">CELLSTD</a>(X1,X2,...,XP) also works for P different input
+    arguments. 
  
     <a href="cellstd.html">CELLSTD</a>(X1,X2,...XP);  with no output arguments overwrites the 
     original input variables.
+    __________________________________________________________________   
+ 
+    Weighted standard deviation
+ 
+    <a href="cellstd.html">CELLSTD</a>(X,'weight',W) or <a href="cellstd.html">CELLSTD</a>(X1,X2,...,XP,'weight',W) where W is 
+    a cell array of the same size as the other input variables, computes
+    the weighted standard deviation, using the weighting factor ABS(W).^2.  
     __________________________________________________________________   
  
     Parallelization
@@ -29,12 +35,13 @@
     installed, and is useful for very large datasets.
     __________________________________________________________________   
  
-    See also <a href="jCell.html">JCELL</a>, VTOOLS.
+    See also <a href="cellmean.html">CELLMEAN</a>, <a href="cellmed.html">CELLMED</a>, <a href="jCell.html">JCELL</a>.
  
-    Usage: sig=<a href="cellstd.html">cellstd</a>(x);
-           [sig1,sig2,sig3]=<a href="cellstd.html">cellstd</a>(x1,x2,x3);
+    Usage: s=<a href="cellstd.html">cellstd</a>(x);
+           [s1,s2,s3]=<a href="cellstd.html">cellstd</a>(x1,x2,x3);
+           [s1,s2,s3]=<a href="cellstd.html">cellstd</a>(x1,x2,x3,'weight',w);
            <a href="cellstd.html">cellstd</a>(x1,x2,x3);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

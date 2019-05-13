@@ -4,44 +4,46 @@
 <div><h1>RIDGEMAP is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="ridgemap.html">RIDGEMAP</a>  Maps ridge quantities back onto the time series.
  
-    X=<a href="ridgemap.html">RIDGEMAP</a>(N,XR,IR) where IR is a ridge index and XR is a quantity 
+    X=<a href="ridgemap.html">RIDGEMAP</a>(M,XR,IR) where IR is a ridge index and XR is a quantity 
     along the ridge, maps the values of XR to their correct row locations 
-    in a time series of length N, and returns the result in the array X.
+    in a time series of length M, and returns the result in the array X.
  
     If IR and XR contain L different ridges separated by NaNs, as output by
-    <a href="ridgewalk.html">RIDGEWALK</a>, then X is N x L with the values of XR from each ridge in a 
-    separate column. Values not specified by the IR are left as INFs. 
+    <a href="ridgewalk.html">RIDGEWALK</a>, then X is M x L with the values of XR from each ridge in a 
+    separate column. Values not specified by the IR are left as NaNs. 
  
-    [X1,X2,...,XM]=<a href="ridgemap.html">RIDGEMAP</a>(N,X1R,X2R,...,XPR,IR) also works for any P
+    [X1,X2,...,XM]=<a href="ridgemap.html">RIDGEMAP</a>(M,X1R,X2R,...,XPR,IR) also works for any P
     different ridge quantities X1R--XPR.
  
     When using RIDGEWALK's joint ridges algorithm, in which some quantities
     have more than one column, they should be passed to <a href="ridgemap.html">RIDGEMAP</a> 
-    individually, for example [X1,X2]=<a href="ridgemap.html">RIDGEMAP</a>(N,X(:,1),X(:,2),IR).
+    individually, for example [X1,X2]=<a href="ridgemap.html">RIDGEMAP</a>(M,X(:,1),X(:,2),IR).
     __________________________________________________________________
  
     Collapsing 
  
     X=<a href="ridgemap.html">RIDGEMAP</a>(...'collapse') combines values from all the ridges using
-    a power-weighted mean.  Then X is a column vector of size N x 1.
+    a power-weighted mean.  Then X is a column vector of size M x 1.
     __________________________________________________________________
   
     Ridge multiplicity
  
     [...,MULT]=<a href="ridgemap.html">RIDGEMAP</a> returns the ridge multiplicity MULT after all the
-    expected output quantities.  MULT is a column vector with size N x 1.
+    expected output quantities.  MULT is a column vector with size M x 1.
   
     The ridge multiplicity is the number of ridges present at each time.     
     __________________________________________________________________
  
     See also <a href="ridgewalk.html">RIDGEWALK</a>.
  
-    Usage:   x=<a href="ridgemap.html">ridgemap</a>(N,xr,ir);
-             [x,f]=<a href="ridgemap.html">ridgemap</a>(N,xr,fr,ir);
-             [x,f]=<a href="ridgemap.html">ridgemap</a>(N,xr,fr,ir,'collapse');
-             [x,mult]=<a href="ridgemap.html">ridgemap</a>(N,xr,ir);
-             [x,f,mult]=<a href="ridgemap.html">ridgemap</a>(N,xr,fr,ir);
+    '<a href="ridgemap.html">ridgemap</a> --t' runs some a test.
+ 
+    Usage:   x=<a href="ridgemap.html">ridgemap</a>(M,xr,ir);
+             [x,f]=<a href="ridgemap.html">ridgemap</a>(M,xr,fr,ir);
+             [x,f]=<a href="ridgemap.html">ridgemap</a>(M,xr,fr,ir,'collapse');
+             [x,mult]=<a href="ridgemap.html">ridgemap</a>(M,xr,ir);
+             [x,f,mult]=<a href="ridgemap.html">ridgemap</a>(M,xr,fr,ir);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

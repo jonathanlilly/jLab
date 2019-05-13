@@ -184,7 +184,7 @@ end
 
 
 
-if isappdata(gca,'lineringpointer');
+if isappdata(gca,'lineringpointer')
   num=getappdata(gca,'lineringpointer');   %Remember current linering
 end
 
@@ -199,7 +199,7 @@ if bloop
          b=[indexspaces-1 length(temp)];
          vars=[];
          jj=0;
-         for i=1:length(a);
+         for i=1:length(a)
              if ~isempty(temp(a(i):b(i)))
                  jj=jj+1;
                 vars{i}=temp(a(i):b(i));

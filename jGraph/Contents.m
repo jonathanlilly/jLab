@@ -22,6 +22,7 @@
 %   uvplot           - Plots the real and imaginary parts of a signal on the same axis.
 %
 % Figure tweaking
+%   jfig       - Shorthand for tweaking figures.   
 %   dlines     - Add diagonal lines to a plot.  
 %   hlines     - Add horizontal lines to a plot.                                  
 %   vlines     - Add vertical lines to a plot.   
@@ -39,6 +40,7 @@
 %   lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
 %
 % Printing
+%   jprint     - Print to a specified directory and crop the resulting file.
 %   printall   - Print and close all open figures.
 %
 % Graphics aliases

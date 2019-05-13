@@ -1,15 +1,12 @@
 function[s]=cellsize(x,n)
 %CELLSIZE  Size of each element in a cell array along specified dimension.
 %
-%   S=CELLSIZE(X,DIM) where X is a cell array of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-% 
-%   returns the N x 1 array of lengths S with 
+%   S=CELLSIZE(X,DIM) where X is a cell array of N arrays, is equivalent to
 %  
-%      S(1)=SIZE(X1,DIM), S(2)=SIZE(X2,DIM),..., S(N)=SIZE(XN,DIM).
+%      S(1)=SIZE(X{1},DIM), S(2)=SIZE(X{2},DIM), ..., S(N)=SIZE(X{N},DIM)
 %
-%   S is the same size as X. 
+%   thus returning an N x 1 array containing the sizes of each element of X
+%   along dimension DIM.
 %
 %   CELLSIZE requires the cell array X to have four or fewer dimensions.
 %
@@ -18,7 +15,7 @@ function[s]=cellsize(x,n)
 %   Usage: s=cellsize(x,dim);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(x, '--t')
      cellsize_test,return

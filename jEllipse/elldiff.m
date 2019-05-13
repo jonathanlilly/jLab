@@ -72,6 +72,10 @@ eps=1e-10;
 vswap(P,0,eps);
 vswap(N,0,eps);
 %vsize(P,phip,dt,fact)
+
+phip=unwrap(phip);
+phin=unwrap(phin);
+
 P2=fact*P.*sqrt(squared(frac(1,dt).*vdiff(log(P),1,str))+squared(frac(1,dt).*vdiff(phip,1,str)));
 N2=fact*N.*sqrt(squared(frac(1,dt).*vdiff(log(N),1,str))+squared(frac(1,dt).*vdiff(phin,1,str)));
 phip2=unwrap(phip+imlog(frac(1,dt).*vdiff(log(P),1,str)+sqrt(-1).*(frac(1,dt).*vdiff(phip,1,str))));

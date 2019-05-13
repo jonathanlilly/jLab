@@ -15,8 +15,6 @@ function[varargout]=maternoise(varargin)
 %
 %   See MATERNSPEC for details on the input arguments. 
 %
-%   Note that the process Z is explicitly set to have zero temporal mean. 
-%
 %   For details, including the fast generation method described below, see:
 %
 %     Lilly, Sykulski, Early, and Olhede, (2017).  Fractional Brownian
@@ -86,7 +84,7 @@ function[varargout]=maternoise(varargin)
 %          z=maternoise(dt,N,A,alpha,0);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2017  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2018  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details
 
 

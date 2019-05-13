@@ -1,15 +1,12 @@
 function[maxx]=cellmax(x)
 %CELLMAX  Maximum of each element in a cell array.
 %
-%   M=CELLMAX(X) where X is a cell array of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-% 
-%   returns the N x 1 array of maximum values M with
+%   M=CELLMAX(X) where X is a cell array of N arrays, is equivalent to
 %  
-%      M(1)=MAX(X1(:)),  M(2)=MAX(X2(:)),...,  M(N)=MAX(XN(:)).
+%      M(1,1)=MAX(X{1}(:)),  M(2,1)=MAX(X{2}(:)),...,  M(N,1)=MAX(X{N}(:))
 %
-%   M is the same size as X.
+%   thus returning an N x 1 array containing the maximum values of each
+%   element in the cell array.
 %
 %   CELLMAX requires that X have four or fewer dimensions.
 %

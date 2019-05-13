@@ -1,4 +1,4 @@
-function[]=commentlines(dirname)
+function[str]=commentlines(dirname)
 %COMMENTLINES  Returns the comment lines from m-files. 
 %
 %   COMMENTLINES is used to facilitate making 'Contents.m' files.
@@ -18,7 +18,7 @@ function[]=commentlines(dirname)
 %              commentlines elmat
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2002--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2002--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 bmname=0;
 dirname=deblank(dirname);

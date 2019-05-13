@@ -46,34 +46,38 @@ function[varargout]=anatrans(varargin)
 %   `edge effects' that occur near the ends of the time series.
 %   ___________________________________________________________________
 %
+%   Returning frequency domain version
+%
+%   ANATRANS(...,'frequency') suppresses a final inverse Fourier transform, 
+%   so that output fields will be analytic signals in the frequency domain.
+%   This is mainly useful for calculation of frequency-domain moments, as
+%   in FREQMOM, for large datasets where optimization is a priority.
+%
+%   The 'frequency' flag implies a 'periodic' boundary condition, so a 
+%   separate boundary condition flag cannot be used in this case.
+%   ___________________________________________________________________
+%
 %   'anatrans --t' runs some tests.
 %
 %   Usage: z=anatrans(x);
 %          z=anatrans(x,dim);
-%          z=anatrans(x,dim,'mirror');
+%          z=anatrans(x,dim,'periodic');
 %          [zp,zn]=anatrans(z,conj(z));
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2019 J.M. Lilly --- type 'help jlab_license' for details        
 
 
 if strcmpi(varargin{1},'--t')
     anatrans_test,return
 end
 
-% anatrans is basically the same as Matlab's Hilbert:
-% if isreal(x)
-%     zp=x+sqrt(-1)*hiltrans(x);
-% else
-%     zp=frac(1,2)*(x+sqrt(-1)*hiltrans(x));
-%     zn=frac(1,2)*(x-sqrt(-1)*hiltrans(x));
-% end
-
 str='mirror';
 if ischar(varargin{end})
     str=varargin{end};
     varargin=varargin(1:end-1);
 end
+
 dim=1;
 if length(varargin{end})==1
     dim=varargin{end};
@@ -84,62 +88,51 @@ for i=1:length(varargin)
     varargout{i}=anatrans_one(varargin{i},str,dim);
 end
 
-function[zp]=anatrans_one(x,str,dim)
+function[Z]=anatrans_one(x,str,dim)
 
 M0=size(x,dim);
 
 mx=mean(x,dim);
 x=x-vrep(mx,M0,dim);
-x=timeseries_boundary(x,dim,str,'nodetrend');
+
+
+if ~strcmpi(str(1:3),'fre')
+    x=timeseries_boundary(x,dim,str,'nodetrend');
+end
+
+
 M=size(x,dim);
 
-Z=2*fft(x,[],dim);
-
-index=round(M/2):size(Z,dim);
-
-Z=vindexinto(Z,0,index,dim);
-zp=ifft(Z,[],dim);
-
-if ~isreal(x)
-    zp=frac(1,2)*zp;
-end
-
-if M0~=M
-    index=M0+1:M0*2;
-    vindex(zp,index,dim);     
-end
-
-function[y]=hiltrans(x)
-%HILTRANS  Hilbert transform.
-%
-%   Y=HILTRANS(X) returns the Hilbert transform of column vector X.
-%
-%   If SIZE(X,2)>1, HILTRANS takes the Hilbert transform along columns.
-%
-%   'hiltrans --f' makes a sample figure
-%   _________________________________________________________________
-%   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
-  
 if isreal(x)
-  bool=1;
+    Z=2*fft(x,[],dim);
 else
-  bool=0;
+    Z=fft(x,[],dim);
 end
+clear x
 
-N=size(x,1);
-X=fft(x);
-sgnom=ones(N,1);
-%sgnom(1)=0;
-index=(1:N);
-sgnom(index-1>N/2)=-1;
-d=-sqrt(-1)*(sgnom);
-d=vrep(d,size(x,2),2);
-y=ifft(X.*d);
+%size(Z)
 
-%Take real part if real vector was input
-if bool
-  y=real(y);
+if iseven(M)
+    %analytic signal has M/2 + 1 coefficients
+    index=(M/2+2):size(Z,dim);
+    Z=vindexinto(Z,0,index,dim);
+    %divide Nyquist by two in even case
+    %Z(M/2+1,:)=Z(M/2+1,:)/2;
+    %size(vindex(Z,M/2+1,dim)/2)
+    Z=vindexinto(Z,vindex(Z,M/2+1,dim)/2,M,dim);
+else
+    %analytic signal has M/2 + 1 coefficients
+    index=(M+3)/2:size(Z,dim);
+    Z=vindexinto(Z,0,index,dim);
+end
+%size(Z)
+
+if ~strcmpi(str(1:3),'fre')
+    Z=ifft(Z,[],dim);
+    if M0~=M
+        index=M0+1:M0*2;
+        Z=vindex(Z,index,dim);
+    end
 end
 
 function[]=anatrans_test

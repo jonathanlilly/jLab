@@ -29,7 +29,7 @@
 %   trackextract  - Extracts alongtrack altimetry segments within given region.
 %
 % NetCDF tools
-%   ncinterp      - Interpolate field from NetCDF file onto specified positions.
+%   ncinterp    - One-line interpolation from 3D lat/lon/time field in NetCDF file.
 %
 % Topography tools and data
 %   jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.              

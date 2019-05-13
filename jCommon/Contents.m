@@ -11,6 +11,7 @@
 %   vectmult   - Matrix multiplication for arrays of vectors.    
 %
 % File and directory tools
+%   ncload       - Load all variables from a NetCDF file and unpack any columns.
 %   commentlines - Returns the comment lines from m-files.                          
 %   findfiles    - Returns all files in a directory with a specified extension.       
 %   findpath     - Returns the full pathname of a directory on the Matlab search path.

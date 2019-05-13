@@ -36,6 +36,9 @@ ver=version;
 %if str2num(ver(1)) >=9
 try
     x=vswap(x,inf,nan);
+    x=vswap(x,-inf,nan);
+    x=vswap(x,inf+1i*inf,nan);
+
     y=sum(x,dim,'omitnan');
     if nargout==2
         num=sum(isfinite(x),dim,'omitnan');

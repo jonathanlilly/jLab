@@ -27,8 +27,24 @@
     amplitude minima, or if the frequency anomaly (transform frequency
     minus scale frequency) is a maximum.
  
-    See also RIDGEQUANTITY, <a href="ridgewalk.html">RIDGEWALK</a>.
+    BOOL=<a href="isridgepoint.html">ISRIDGEPOINT</a>(W,FS,CHI,STR,FMIN,FMAX) only returns ridge points
+    between frequencies FMIN and FMAX, which may be either scalars or 
+    arrays of length SIZE(W,1).
+ 
+    BOOL=<a href="isridgepoint.html">ISRIDGEPOINT</a>(W,FS,CHI,STR,FMIN,FMAX,MASK), where MASK is a boolean
+    variable of the same size as W, only returns ridge points at locations
+    at which MASK is true.
+ 
+    [BOOL,RQ,W,OMEGA]=<a href="isridgepoint.html">ISRIDGEPOINT</a>(...) also returns the ridge quantity RQ,
+    the complex-valued joint wavelet transform W, and the transform's
+    instantaneous frequency OMEGA, all of which are of the same size. 
+ 
+    See also <a href="ridgeinterp.html">RIDGEINTERP</a>, <a href="ridgewalk.html">RIDGEWALK</a>.
+ 
+    Usage: [bool,rq,w,om]=<a href="isridgepoint.html">isridgepoint</a>(w,fs,chi,str);
+           [bool,rq,w,om]=<a href="isridgepoint.html">isridgepoint</a>(w,fs,chi,str,fmin,fmax);
+           [bool,rq,w,om]=<a href="isridgepoint.html">isridgepoint</a>(w,fs,chi,str,fmin,fmax,mask);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2006--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2006--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -2,24 +2,38 @@
 %
 %   Changes new in version 1.6.6
 %
-%   Figure making for a new publication:
-%
+%   Figure making for a new publications:
+%      
 %   Lilly (2018).  Kinematics of a fluid ellipse in a linear flow. Fluids, 
 %        3 (1) 16: 1--29.
 %
 %   New functions:
 % 
-%   ridgetrim  - Trim edge effect regions from wavelet ridges.
-%   colorquant - Set the color axis according to quantiles of the data.
-%   ellpol     - Polarization parameters of an elliptical signal.
-%   printall   - Print and close all open figures.
-%   cellmed    - Median value of each element a cell array.
-%   cellsum    - Sum of each element a cell array, possibly weighted.
+%   jfig         - Shorthand for tweaking figures.
+%   jprint       - Print to a specified directory and crop the resulting file.
+%   ncload       - Load all variables from a NetCDF file and unpack any columns.
+%   ridgetrim    - Trim edge effect regions from wavelet ridges.
+%   colorquant   - Set the color axis according to quantiles of the data.
+%   ellpol       - Polarization parameters of an elliptical signal.
+%   printall     - Print and close all open figures.
+%   cellmed      - Median value of each element a cell array.
+%   cellsum      - Sum of each element a cell array, possibly weighted.
+%   interplatlon - Interpolation for working with latitude and longitude.
 %
-%  Updated dataset
+%   Updated datasets:  All datasets now include both a mat-file version and
+%        a NetCDF version.  The NetCDF versions are larger but load faster.
+%        Use the jLab routine NCLOAD to load a whole NetCDF file at once.
 %
-%   tpjaos.mat    - Alongtrack sea surface height anomalies from the 
-%        Beckley dataset, updated through May 30, 2018.  See about_tpjaos.
+%   floats.mat and floats.nc     - Major update to the historical dataset of 
+%        eddy-resolving subsurface floats.  See about_floats.
+%   drifters.mat and drifters.nc - The global surface drifter dataset, 
+%       updated through April 1, 2018.  See about_drifters.
+%   tpjaos.mat and tpjaos.nc     - Alongtrack SSH anomalies from the 
+%       Beckley dataset, updated through May 30, 2018.  See about_tpjaos.
+%   sandwell.mat and sandwell.nc - One minute resolution topography data 
+%       from Smith and Sandwell. See about_sandwell.
+%   ibcao.mat and ibcao.nc       -  International Bathymetric Chart of the 
+%      Arctic Ocean topography. See about_ibcao.
 %
 %   Major bugfix
 %
@@ -28,14 +42,25 @@
 %   output incorrect.  This has been corrected in version 1.6.6.
 %
 %   Changes and improvements:
-%
+% 
+%   VSIZE changed to return 1's rather than 0's for singular dimensions.
+%   NCINTERP bugfix to correctly handle [-180,180] or [0,360] longitudes.
+%   NCINTERP buxfix affecting processing chunks in non-periodic domains.
+%   ELLIPSEPLOT bugfix for interacting with M_MAP.
+%   JLAB_ADDPATH bugfix to add root JDATA directory.
+%   MSPEC now computes the spectrum along an arbitrary dimension.
+%   MSPEC now removes the mean by default, but no longer detrends.
+%   ANATRANS improved to correctly handle the Nyquist frequency.
+%   DIVGEOM now handles different DX and DY; note input argument change.
+%   FINDFILES bugfix for 'include' and 'exclude' flags.  
+%   TOPOPLOT no longer plots continental shelves by default.
+%   CELLGRID now accepts array-valued DT arguments.
+%   CELLSPLIT now accepts array-valued TOL arguments.
+%   TWODSTATS bugfix for complex-valued input using HISTCOUNTS2 algorithm.
+%   MATINV now works for matrices up to dimension 12. 
 %   LATLON2XY added new correction for small angles and additional tests.
 %   SPHERESORT and TWODSORT now have options for truncating size of output.
-%   POLYSMOOTH considerable speed and memory improvments.
-%   POLYSMOOTH bugfix for test that was occasionally failing incorrectly. 
-%   POLYSMOOTH now outputs total weight of data points.
-%   POLYSMOOTH now includes tests of the tangent plane equations.
-%   POLYSMOOTH new uses the Gaussian weighting function by default.
+%   POLYSMOOTH has major changes, including speed and memory improvements.
 %   MATERNFIT now supports using NLopt, https://nlopt.readthedocs.io. 
 %   MATERNFIT now works using Nelder-Mead without the Optimization Toolbox. 
 %   MATERNFIT corrections to AICC output field.
@@ -48,8 +73,7 @@
 %   CELLFILL, -STRIP, and -PACK now use INFs (not NaNs) as the data flag.
 %   CELLMEAN and -STD now support weighted means and standard deviations.
 %   ELLPARAMS input format simplifications.
-%   READTOPO bugfix when loading all longitudes.
-%
+%   READTOPO bugfixes and additional testing.
 %   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.6.5
@@ -312,7 +336,7 @@
 %   Removed a large number of obsolete functions; consolidated many others.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2002--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2002--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 help jlab_changes
 

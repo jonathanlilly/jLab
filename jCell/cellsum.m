@@ -1,18 +1,17 @@
 function[varargout]=cellsum(varargin)
-%CELLSUM  Mean value of each element a cell array, possibly weighted.
+%CELLSUM  Sum of each element a cell array, possibly weighted.
 %
-%   M=CELLSUM(X) where X is a cell array of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-% 
-%   returns the N x 1 array of mean values M with
+%   S=CELLSUM(X) where X is a cell array of N arrays, is equivalent to
 %  
-%      M(1)=SUM(X1(:)),  M(2)=SUM(X2(:)),...,  M(N)=SUM(XN(:)).
+%      S(1,1)=SUM(X{1}(:)),  S(2,1)=SUM(X{2}(:)), ...,  S(N,1)=SUM(X{N}(:))
 %
-%   In taking the mean, non-finite values are ignored, as in VSUM.
-%   M is a column vector of the same length as X.  
+%   thus returning an N x 1 array containing the sum over all values of 
+%   each element in the cell array.
 %
-%   [M1,M2,...,MP]=CELLSUM(X1,X2,...,XP) also works for P different 
+%   In taking the sum, non-finite values are ignored, as in VSUM.
+%   S is a column vector of the same length as X.  
+%
+%   [S1,S2,...,SP]=CELLSUM(X1,X2,...,XP) also works for P different 
 %   input arguments. 
 %
 %   CELLSUM(X1,X2,...XP);  with no output arguments overwrites the 
@@ -33,16 +32,16 @@ function[varargout]=cellsum(varargin)
 %   installed, and is useful for very large datasets.
 %   __________________________________________________________________   
 %
-%   See also CELLSTD, CELLMED, JCELL, VTOOLS.
+%   See also CELLSTD, CELLMED, JCELL.
 %
-%   Usage: m=cellsum(x);
-%          [m1,m2,m3]=cellsum(x1,x2,x3);
+%   Usage: s=cellsum(x);
+%          [s1,s2,s3]=cellsum(x1,x2,x3);
 %          cellsum(x1,x2,x3,'weight',w);
 %          cellsum(x1,x2,x3);
 %          cellsum(x1,x2,x3,'parallel');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 if ~iscell(varargin{1})
     error('X must be a cell array.')

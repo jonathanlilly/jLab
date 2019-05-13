@@ -6,17 +6,16 @@ function[h,hc]=topoplot(varargin)
 %   Type 'jhelp topoplot' to view this image. *|*
 %   __________________________________________________________________
 %
-%   TOPOPLOT with no input arguments makes a patch plot of the earth's
-%   surface topography within the axis of the current plot.  Continents are
-%   black and the continental shelf to a depth of 500~m is gray.
+%   TOPOPLOT with no input arguments makes a plot of the earth's topography
+%   within the axis of the current plot, with continents shown in black. 
 %
-%   TOPOPLOT CONTINENTS plots the continents only as a patch plots with
-%   the continents in black.  
+%   'TOPOPLOT shelves' plots the continents in black and also the 
+%   continental shelves at a depth of 500~m in gray.
 %
 %   If the current plot is empty, TOPOPLOT uses the domain -180 to 180 
 %   degrees in longitude, and -80.666 to 80.666 degrees in latitude.
 %
-%   These two options use PATCHCONTOURF, which does not use the current 
+%   These two options use PATCHCONTOURF, which does nheot use the current 
 %   colormap and so allow one to allow plot a colored field in addition to
 %   the topography.  The remaining options use CONTOURF.
 %
@@ -98,7 +97,7 @@ end
 
 sty='2w';
 str='matlab';
-optionstr='shelves';
+optionstr='continents';
 
 for i=1:3
     if length(varargin)>=1

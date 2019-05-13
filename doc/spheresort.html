@@ -12,16 +12,8 @@
     circle distances DS between data points at locations LAT, LON and 
     nearby grid points located at LATO, LONO, sorting in order of distance. 
  
-    XS and YS are the corresponding positions of the sorted data points 
+    XS and YS are the corresponding coordinates of the sorted data points 
     in a local tangent plane about each grid point. 
- 
-    <a href="spheresort.html">SPHERESORT</a> only computes distances for nearby points.  CUTOFF is the
-    maximum distance (in kilometers) for which we wish the great circle
-    distance to be computed.  
- 
-    CUTOFF should be less that 1/4 of the circumference of the earth, 
-    <a href="radearth.html">RADEARTH</a> * PI/2, so that (LAT,LON) points lie in the same hemisphere
-    as the corresponding grid points.
   
     LAT and LON are arrays of the same size into data point locations.
     Any NaN values in LAT/LON are ignored.  
@@ -34,16 +26,32 @@
                    ...
                  LATO_M]
  
-    The output arrays are then each M x N x P arrays of column vectors, 
-    where P is the maximum number of points in the CUTOFF neighborhood at
-    any grid point.  Points farther away are filled with NANs.
+    <a href="spheresort.html">SPHERESORT</a> only computes distances for nearby points, up to a distance 
+    of CUTOFF, which is given in kilometers.  CUTOFF should be less than 
+    1/4 of the circumference of the earth, <a href="radearth.html">RADEARTH</a> * PI/2, so that sorted
+    (LAT,LON) points will lie in the same hemisphere as the grid points.
+ 
+    The output arrays are then all M x N x J arrays where J is the maximum
+    number of points in the CUTOFF neighborhood at any grid point.  Entries 
+    in the ouput corresponding to farther distances are filled with NaNs.
  
     DS gives the distances of data points less than CUTOFF kilometers 
     from the (m,n)th grid point, sorted in order of increasing distance.  
  
-    XS and YS are also M x N x P, and give the coordinates of the 
-    corresponding data points in a Cartesian expansion about the (m,n)th
-    grid point, in kilometers.  See <a href="latlon2xy.html">LATLON2XY</a> for details.
+    XS and YS give the coordinates, in kilometers, of the corresponding 
+    data points in a plane tangent to the (m,n)th grid point.  See 
+    <a href="latlon2xy.html">LATLON2XY</a> and Lilly and Lagerloef (2018) for details.
+    _________________________________________________________________
+  
+    Limiting output dimension
+ 
+    <a href="spheresort.html">SPHERESORT</a>(LAT,LON,LATO,LONO,[CUTOFF JMAX]), where the fifth input 
+    argument is a 2-vector, additionally specifies that the third dimension
+    of the output arrays will be no more than JMAX. 
+ 
+    This option is useful for the 'fixed population' algorithm in
+    <a href="polysmooth.html">POLYSMOOTH</a>, as it ensures the output fields will be no larger than is
+    necessary.  It can also be used simply to limit the output size. 
     _________________________________________________________________
   
     Additional input parameters
@@ -56,58 +64,23 @@
  
     also returns the sorted values of these variables.
  
-    Z1S, Z2S,...,ZKS are the same size as the other output arguments.  
-    Z1S then gives the value of Z1 at data points no more than CUTOFF 
-    kilometers from the (m,n)th grid point, etc.
-    _________________________________________________________________
+    Z1D, Z2D,...,ZKD are the same size as the other output arguments, and 
+    give the values of Z1, Z2,...,ZK sorted according to distance.
  
-    One grid, many data fields
- 
-    It is often the case that the field to be mapped, Z, consists of many 
-    copies of observations at the same LAT/LON points.  For example, X and
-    Y could be 1-D arrays, and Z a matrix with LENGTH(Z) rows and many(K)
-    columns.  In this case, the format <a href="spheresort.html">SPHERESORT</a>(LAT,LON,Z1,Z2,...,ZK...) 
-    described above is cumbersome, and may lead to memory problems. 
- 
-    Instead, one can pre-compute the DS, XS, and YS arrays once, and use
-    these for all K copies of Z. To do this, call <a href="spheresort.html">SPHERESORT</a> as
- 
-        [DS,XS,YS,INDEX]=
-             <a href="spheresort.html">SPHERESORT</a>(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF)
- 
-    which outputs an index INDEX into the data point locations, where INDEX
-    is the same size as the other output arrays.
- 
-    Then for each of the K copies of Z at the same LAT/LON locations, form 
- 
-         ZS=NAN*ZEROS(SIZE(XS))
-         ZS(~ISNAN(INDEX))=ZK(INDEX(~ISNAN(INDEX)))
-    
-    and then use this ZS together with DS, XS, and YS to call <a href="polysmooth.html">POLYSMOOTH</a>.
-    In this way, <a href="spheresort.html">SPHERESORT</a> only needs to be called once and not K times.    
- 
-    When inputting LAT/LON values for which the corresponding data is 
-    always undefined (e.g., altimeter tracks over land), once should set 
-    the LAT/LON coordinates of these points to NaNs such that they will be
-    omitted from DS, XY, YS, and INDEX.
+    When there are multiple fields to be mapped, one may instead wish to 
+    use the approach described under "One grid, many fields" in <a href="polysmooth.html">POLYSMOOTH</a>.   
     _________________________________________________________________
    
     Parellel algorithm
  
-    With Matlab's Parallel Computing Toolbox installed, <a href="spheresort.html">SPHERESORT</a> can 
-    take advantage of multiple cores to speed up operations.
+    <a href="spheresort.html">SPHERESORT</a>(...'parallel') parallelizes the computation using a parfor
+    loop implemented over latitudes.  This requires Matlab's Parallel 
+    Computing Toolbox to be installed. 
  
-    <a href="spheresort.html">SPHERESORT</a>(...'parallel') parallelizes the computation with the
-    maximum possible number of workers for your system.  To set the number
-    of workers explicitly, use <a href="spheresort.html">SPHERESORT</a>(...,'parallel',NWORKERS).
- 
-    As the additional efficiency is not dramatic, this is typically only an 
-    advantage for very large datasets.  Due to the nature of the
-    calculation we have to use SPMD, which is less efficient than PARFOR.
- 
-    As an example, for a dataset with 1 million points, a 12 core Mac Pro 
-    takes about 44 seconds to complete the sort on a 1x1 degree grid, 
-    versus 184 seconds for the standard algorithm, a factor of 4 faster.
+    Also, depending on the size of dataset, the parallel algorith may lead
+    to memory problems, so it should be used judiciously.  For large
+    datasets, try combining an external loop over longitude with the
+    parallel algorithm over latitude.
     _________________________________________________________________
  
     See also <a href="twodsort.html">TWODSORT</a>, <a href="polysmooth.html">POLYSMOOTH</a>.
@@ -120,5 +93,5 @@
            [ds,xs,ys,z1s,z2s]=<a href="spheresort.html">spheresort</a>(lat,lon,z1,z2,lato,lono,cutoff);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

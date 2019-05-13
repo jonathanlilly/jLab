@@ -16,7 +16,7 @@ function[invmat]=matinv(mat,str)
 %   occupy the last two dimensions.  The last dimension is interpreted as
 %   "columns" and the second to last as "rows."
 %
-%   Note that MATINV only works matrices with M=2 through M=6.
+%   Note that MATINV only works matrices with M=2 through M=8.
 %   ____________________________________________________________
 %
 %   Algorithms
@@ -45,7 +45,7 @@ function[invmat]=matinv(mat,str)
 %   Usage: inv=matinv(mat);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(mat, '--t')
     matinv_test,return
@@ -53,25 +53,25 @@ end
 
 ndims=lnsd(mat);
 K=size(mat,ndims);
+
 if K~=size(mat,ndims-1)
     error('The last two dimensions of MAT must be the same for it to be invertible.')
 end
 
-if K>6
-    error('Sorry, MATINV only supports matrices of size M>1 and M<=6.')
-end
 if nargin==1   
     str='direct';
 end
 
- %size(mat),ndims
- 
+if K>12
+    error('MATINV number of dimensions of matrix should be no more than M=12.')
+end
+
 sizemat=size(mat);
 if length(sizemat)>2
     %[mat,index]=matinv_strip(mat); 
     
     if ~isempty(strfind(str,'dir'))
-        invmat=matinv_direct(mat,ndims);
+        invmat=matinv_direct(mat,ndims,K);
     elseif ~isempty(strfind(str,'loo'))
         invmat=matinv_loop(mat);
     end
@@ -88,8 +88,6 @@ mat=reshape(mat,prod(sizemat(1:end-2)),sizemat(end-1),sizemat(end));
 bool=~isnan(sum(sum(mat,3),2));
 index=find(bool);
 mat=mat(index,:,:);
-
-
 
 function[invmat]=matinv_loop(mat)
 
@@ -110,25 +108,18 @@ warning('on','MATLAB:illConditionedMatrix');
 warning('on','MATLAB:nearlySingularMatrix');
 warning('on','MATLAB:singularMatrix');
 
-function[invmat]=matinv_direct(mat,ndims)
-%ndims
-%size(mat)
+function[invmat]=matinv_direct(mat,ndims,K)
 
-if size(mat,ndims)==1&&size(mat,ndims-1)==1
-        invmat=matinv_onexone(mat,ndims);
-elseif size(mat,ndims)==2&&size(mat,ndims-1)==2
+%if K==1
+%    invmat=1./mat;
+if K==2
     invmat=matinv_twoxtwo(mat,ndims);
-elseif size(mat,ndims)==3&&size(mat,ndims-1)==3
+elseif K==3
     invmat=matinv_threexthree(mat,ndims);
-elseif (size(mat,ndims)==4&&size(mat,ndims-1)==4)...
-        ||(size(mat,ndims)==5&&size(mat,ndims-1)==5)...
-        ||(size(mat,ndims)==6&&size(mat,ndims-1)==6)
-    invmat=matinv_block(mat,ndims);
+else
+    invmat=matinv_block(mat,ndims,K);
 end
-
-%function[invmat]=matinv_onexone(mat,ndims)
-%invmat=1./mat;    
-
+    
 function[invmat]=matinv_twoxtwo(mat,ndims)
 ac=vindex(mat,1,ndims);
 bd=vindex(mat,2,ndims);
@@ -220,19 +211,15 @@ mat=vindexinto(mat,c1,1,ndims);
 mat=vindexinto(mat,c2,2,ndims);
 mat=vindexinto(mat,c3,3,ndims);
 
-function[invmat]=matinv_block(mat,ndims)
+function[invmat]=matinv_block(mat,ndims,K)
 
-if size(mat,ndims)==4
-    i1=1:2;
-    i2=3:4;
-elseif size(mat,ndims)==5
-    i1=1:3;
-    i2=4:5;
-elseif size(mat,ndims)==6
-    i1=1:3;
-    i2=4:6;
-end
+%This keeps the two matrices about the same size, which seems the 
+%fastest option in tests
 
+i1=1:floor(K/2);
+i2=floor(K/2)+1:K;
+
+%i1,i2
 
 ac=vindex(mat,i1,ndims);
 bd=vindex(mat,i2,ndims);
@@ -241,6 +228,8 @@ a=vindex(ac,i1,ndims-1);
 c=vindex(ac,i2,ndims-1);
 b=vindex(bd,i1,ndims-1);
 d=vindex(bd,i2,ndims-1);
+
+%vsize(a,b,c,d)
 
 %Recursion
 ainv=matinv(a);
@@ -251,7 +240,6 @@ bnew=-matmult(matmult(ainv,b,ndims-1),dcab,ndims-1);
 anew=ainv+matmult(matmult(-bnew,c,ndims-1),ainv,ndims-1);
 cnew=-matmult(matmult(dcab,c,ndims-1),ainv,ndims-1);
 dnew=dcab;
-
 
 ac=vindexinto(ac,anew,i1,ndims-1);
 ac=vindexinto(ac,cnew,i2,ndims-1);
@@ -265,156 +253,37 @@ invmat=vindexinto(invmat,bd,i2,ndims);
 
 function[]=matinv_test
 disp('Testing that direct and looping algorithms match for non-singular matrices.')
-matinv_test_twoxtwo
-matinv_test_threexthree
-matinv_test_fourxfour
-matinv_test_fivexfive
-matinv_test_sixxsix
 
+rng(0);
 
-function[]=matinv_test_twoxtwo
-mat=[1 3; 4 5];
-invmat=inv(mat);
-invmat2=matinv(mat);
-
-reporttest('MATINV with single 2x2 matrix',aresame(invmat,invmat2,1e-6))
-
-mat=randn(10000,2,2);
-
-tic
-invmat=matinv(mat,'loop');
-t1=toc;
-
-tic 
-invmat2=matinv(mat,'direct');
-t2=toc;
-
-tol=1e-4;
-bool=false(size(mat,1),1);
-for i=1:size(mat)
-    bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
+for n=2:12
+    
+    mat=randn(n);
+    
+    invmat=inv(mat);
+    invmat2=matinv(mat);
+    disp(['MATINV testing case of ' int2str(n) 'x' int2str(n) ' matrices.'])
+    reporttest('MATINV with single matrix',aresame(invmat,invmat2,1e-3))
+    mat=randn(10000,n,n);
+    tic
+    invmat=matinv(mat,'loop');
+    t1=toc;
+    
+    tic
+    invmat2=matinv(mat,'direct');
+    t2=toc;
+    
+    tol=1e-1;
+    bool=false(size(mat,1),1);
+    for i=1:size(mat)
+        bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
+    end
+    
+    vindex(invmat,invmat2,find(bool),1);
+    
+    reporttest('MATINV with 10000 random matrices',aresame(invmat,invmat2,1e-2))
+    disp(['MATINV was ' num2str(t1./t2) ' times faster than INV.'])
 end
 
-vindex(invmat,invmat2,find(bool),1);
-
-reporttest('MATINV with 10000 random 2x2 matrices',aresame(invmat,invmat2,1e-6))
-disp(['MATINV was ' int2str(t1./t2) ' times faster than INV.'])
-
-function[]=matinv_test_threexthree
-mat=[1 3 7; -3 4 5; 6 2 -9];
-invmat=inv(mat);
-invmat2=matinv(mat);
-
-reporttest('MATINV with single 3x3 matrix',aresame(invmat,invmat2,1e-6))
-
-%mat=permute(mat,[3 1 2]);
-%mat=vrep(mat,10000,1);
-mat=randn(10000,3,3);
-
-tic
-invmat=matinv(mat,'loop');
-t1=toc;
-
-tic 
-invmat2=matinv(mat,'direct');
-t2=toc;
-
-tol=1e-3;
-bool=false(size(mat,1),1);
-for i=1:size(mat)
-    bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
-end
-
-vindex(invmat,invmat2,find(bool),1);
-
-reporttest('MATINV with 10000 random 3x3 matrices',aresame(invmat,invmat2,1e-3))
-disp(['MATINV was ' int2str(t1./t2) ' times faster than INV.'])
-
-
-function[]=matinv_test_fourxfour
-mat=[1 3 7 -3 ; -3 4 5 10 ; 6 2 -9 2; 1 9 -3 7];
-invmat=inv(mat);
-invmat2=matinv(mat);
-
-reporttest('MATINV with single 4x4 matrix',aresame(invmat,invmat2,1e-3))
-
-mat=randn(10000,4,4);
-
-tic
-invmat=matinv(mat,'loop');
-t1=toc;
-
-tic 
-invmat2=matinv(mat,'direct');
-t2=toc;
-
-tol=1e-3;
-bool=false(size(mat,1),1);
-for i=1:size(mat)
-    bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
-end
-
-vindex(invmat,invmat2,find(bool),1);
-
-reporttest('MATINV with 10000 random 4x4 matrices',aresame(invmat,invmat2,1e-3))
-disp(['MATINV was ' num2str(t1./t2) ' times faster than INV.'])
-
-
-
-function[]=matinv_test_fivexfive
-mat=[1 3 7 -3 17; -3 4 5 10 2; 4 6 2 -9 2;-5 1 9 -3 7; -18 5 9 -4 10];
-
-invmat=inv(mat);
-invmat2=matinv(mat);
-
-reporttest('MATINV with single 5x5 matrix',aresame(invmat,invmat2,1e-3))
-mat=randn(10000,5,5);
-tic
-invmat=matinv(mat,'loop');
-t1=toc;
-
-tic 
-invmat2=matinv(mat,'direct');
-t2=toc;
-
-tol=1e-1;
-bool=false(size(mat,1),1);
-for i=1:size(mat)
-    bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
-end
-
-vindex(invmat,invmat2,find(bool),1);
-
-reporttest('MATINV with 10000 random 5x5 matrices',aresame(invmat,invmat2,1e-2))
-disp(['MATINV was ' num2str(t1./t2) ' times faster than INV.'])
-
-
-
-function[]=matinv_test_sixxsix
-mat=[1 3 7; -3 4 5; 6 2 -9];
-mat=[mat mat' ; mat flipud(mat)];
-invmat=inv(mat);
-invmat2=matinv(mat);
-
-reporttest('MATINV with single 6x6 matrix',aresame(invmat,invmat2,1e-3))
-mat=randn(10000,6,6);
-tic
-invmat=matinv(mat,'loop');
-t1=toc;
-
-tic 
-invmat2=matinv(mat,'direct');
-t2=toc;
-
-tol=1e-1;
-bool=false(size(mat,1),1);
-for i=1:size(mat)
-    bool(i)=rcond(squeeze(mat(i,:,:)))>=tol;
-end
-
-vindex(invmat,invmat2,find(bool),1);
-
-reporttest('MATINV with 10000 random 6x6 matrices',aresame(invmat,invmat2,1e-2))
-disp(['MATINV was ' num2str(t1./t2) ' times faster than INV.'])
 
 

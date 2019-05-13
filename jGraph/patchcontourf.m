@@ -83,6 +83,7 @@ z1(2:end-1,2:end-1)=z;
 bool=ishold;
 hold on
 
+h=[];
 if isempty(x)
     for i=1:length(ii)
         if strcmpi(flag(1:3),'m_m')

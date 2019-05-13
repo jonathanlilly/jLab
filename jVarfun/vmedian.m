@@ -48,17 +48,37 @@ sorted=reshape(sorted,[length(numel(:)),size(sorted,ndims(sorted))]);
 ii=(1:length(numel(:)))';
 ii=reshape(ii,size(numel));
 
+
 boolodd=isodd(numel);
 booleven=~boolodd&(numel~=0);
 
-indexodd=sub2ind(size(sorted),ii(boolodd),(numel(boolodd)+1)./2);
-indexeven1=sub2ind(size(sorted),ii(booleven),numel(booleven)./2);
-indexeven2=sub2ind(size(sorted),ii(booleven),numel(booleven)./2+1);
+%ii(boolodd)
 
-med(boolodd)=sorted(indexodd);
-med(booleven)=sorted(indexeven1)./2+sorted(indexeven2)./2;
+%(numel(boolodd)+1)./2
 
+%looking to fix bug reported by Sandra
+%indexodd=sub2ind(size(sorted),ii(boolodd),(numel(boolodd)+1)./2);
+%indexeven1=sub2ind(size(sorted),ii(booleven),numel(booleven)./2);
+%indexeven2=sub2ind(size(sorted),ii(booleven),numel(booleven)./2+1);
 
+% vsize(sorted,ii,find(boolodd))
+% anyany(~isfinite(boolodd))
+% minmin(numel(boolodd))
+% maxmax(numel(boolodd))
+% median(vcolon(numel(boolodd)),1)
+% minmin((numel(boolodd)+1)/2)
+% maxmax((numel(boolodd)+1)/2)
+% median((numel(boolodd)+1)/2,1)
+
+if ~isempty(boolodd)
+    indexodd=sub2ind(size(sorted),ii(boolodd),(numel(boolodd)+1)./2);
+    med(boolodd)=sorted(indexodd);  
+end
+if ~isempty(booleven)
+    indexeven1=sub2ind(size(sorted),ii(booleven),numel(booleven)./2);
+    indexeven2=sub2ind(size(sorted),ii(booleven),numel(booleven)./2+1);
+    med(booleven)=sorted(indexeven1)./2+sorted(indexeven2)./2;
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[]=vmedian_test
 

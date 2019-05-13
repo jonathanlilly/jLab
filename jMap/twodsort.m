@@ -1,8 +1,8 @@
 function[varargout]=twodsort(varargin)
 %TWODSORT  Distances from data points to nearby grid points.
 %
-%   [D,XD,YD]=TWODSORT(X,Y,XO,YO,CUTOFF) returns sorted distances D between
-%   data points at locations X,Y and grid points at XO,YO, computed 
+%   [DS,XS,YS]=TWODSORT(X,Y,XO,YO,CUTOFF) returns sorted distances D 
+%   between data points at locations X,Y and grid points at XO,YO, computed 
 %   efficiently and organized in a convenient manner.
 %
 %   X and Y are arrays of the same size into data point locations. XO and
@@ -16,21 +16,21 @@ function[varargout]=twodsort(varargin)
 %
 %   CUTOFF is the maximum distance to be included in the output arrays.
 %
-%   The output arrays are then each M x N x P arrays, where P is the 
+%   The output arrays are then each M x N x J arrays, where J is the 
 %   maximum number of points in the CUTOFF neighborhood at any grid point.
 %   Points farther away are filled with NANs.
 %
-%   D gives the distances SQRT((X-XO)^2+(Y-YO)^2) of those data points less
+%   DS gives the distances SQRT((X-XO)^2+(Y-YO)^2) of all data points less
 %   than the CUTOFF distance from the (m,n)th grid point, sorted in order
-%   of increasing distance.  XD and YD are corresponding deviations X-XO 
+%   of increasing distance.  XS and YS are corresponding deviations X-XO 
 %   and Y-YO from the grid point location to each data point.
 %   _________________________________________________________________
 % 
 %   Limiting output dimension
 %
-%   [D,XD,YD]=TWODSORT(X,Y,XO,YO,[CUTOFF PMAX]), where the fifth input 
+%   [DS,XS,YS]=TWODSORT(X,Y,XO,YO,[CUTOFF JMAX]), where the fifth input 
 %   argument is a 2-vector, additionally specifies that the third dimension
-%   of the output arrays will be no more than PMAX. 
+%   of the output arrays will be no more than JMAX. 
 %
 %   This option is useful for the 'fixed population' algorithm in
 %   POLYSMOOTH, as it ensures the output fields will be no larger than is
@@ -42,21 +42,17 @@ function[varargout]=twodsort(varargin)
 %   Let's say some additional variables Z1, Z2,...,ZK are given at the data
 %   locations X,Y.  Then 
 %   
-%   [D,XD,YD,Z1D,Z2D,...,ZKD]=
+%   [DS,XS,YS,Z1S,Z2S,...,ZKS]=
 %
 %                TWODSORT(X,Y,Z1,Z2,...,ZK,XO,YO,CUTOFF);
 %
 %   also returns the values of these variables.
 %
-%   Z1D, Z2D,...,ZKD are the same size as the other output arguments, and 
+%   Z1S, Z2S,...,ZKS are the same size as the other output arguments, and 
 %   give the values of Z1, Z2,...,ZK sorted according to distance.
 %
-%   To output an index into the data point locations, use
-%  
-%   [D,X,Y,INDEX]= TWODSORT(X,Y,[1:LENGTH(X(:))],XO,YO,CUTOFF).
-%
-%   See the description at SPHERESORT for using INDEX to map many fields
-%   sampled on the same grid.
+%   When there are multiple fields to be mapped, one may instead wish to 
+%   use the approach described under "One grid, many fields" in POLYSMOOTH.
 %   _________________________________________________________________
 % 
 %   See also SPHERESORT, POLYSMOOTH.

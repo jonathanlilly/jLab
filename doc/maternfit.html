@@ -26,7 +26,7 @@
          models for ocean surface drifter trajectories. Journal of the 
          Royal Statisical Society, Series C. 65 (1): 29--50.
  
-      Sykulski, Olhede, and Lilly (2016). The de-biased Whittle likelihood 
+      Sykulski, Olhede, and Lilly (2018). The de-biased Whittle likelihood 
          for second-order stationary stochastic processes.  ArXiv preprint.
  
     For details on the Matern process and its spectrum, see:
@@ -108,9 +108,8 @@
     FO may be scalars or length N arrays.
  
     In these cases, the fields SIGMA, ALPHA, LAMBDA, and NU of FIT will 
-    also be arrays with N elements, as will LIKE, AICC, ERR, and EXITFLAG. 
-    The subfields of RANGE will all be N x 3 arrays.  In PARAMS, the fields
-    DT, FO, A, and B will all be length N.   
+    also be arrays with N elements, as all non-string fields of PARAMS. The 
+    fields of RANGE will then all be N x 3 arrays.  
     __________________________________________________________________
     
     Specifiying frequencies
@@ -169,7 +168,7 @@
     because occasionally an optimum spectral fit is found that has much 
     larger total variance than the signal. 
  
-    Similarly, ranges of LAMBDA and NU are nondimensional values representing
+    The ranges of LAMBDA and NU are nondimensional values representing
     fractions of the magnitude of the reference frequency ABS(FO).  Thus 
  
         <a href="maternfit.html">MATERNFIT</a>(...,'range.lambda',[1/1000 2/1000 1],...)
@@ -223,9 +222,13 @@
         D'Errico included with <a href="jLab.html">JLAB</a> in accordance with its license terms. 
         This in turn calls Matlab's FMINSEARCH using Nelder-Mead.
  
-      <a href="maternfit.html">MATERNFIT</a>(...,'con',...) alternately uses FMINCON, using the default
+      <a href="maternfit.html">MATERNFIT</a>(...,'con',...) alternately uses FMINCON with the default
         interior-point algorithm.  This requires Matlab's Optimization 
-        Toolbox to be installed.  Again, this is mainly for testing.
+        Toolbox to be installed.  This is mainly for testing.
+ 
+      <a href="maternfit.html">MATERNFIT</a>(...,'nlo',...) uses the Nelder-Mead algorithm from the
+        NLopt toolbox at https://nlopt.readthedocs.io.  This requires NLopt
+        to be installed.  Again, this is mainly for testing at the moment.
  
     In tests, FMINCON is generally faster, and most of the fits agree
     closely with those using <a href="fminsearchbnd.html">FMINSEARCHBND</a>.  However, occasionally FMINCON
@@ -291,8 +294,8 @@
     Parallelization
  
     With Matlab's Parallel Computing toolbox installed, when Z is a cell 
-    array or a matrix, <a href="maternfit.html">MATERNFIT</a>(DT,Z,'parallel') will loop over the 
-    elements of Z using a parallel "parfor" loop to speed things up.
+    array or a matrix, <a href="maternfit.html">MATERNFIT</a>(...,'parallel') will loop over the 
+    elements of Z using a parfor loop to speed things up.
  
     This choice is reflected in the output field PARAMS.CORES, which 
     will take on the values 'series' (the default) or 'parallel'.
@@ -304,6 +307,6 @@
            fit=<a href="maternfit.html">maternfit</a>(dt,z,fc,a,b);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2017 J.M. Lilly and A.M. Sykulski
+    (C) 2014--2018 J.M. Lilly and A.M. Sykulski
                                  --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

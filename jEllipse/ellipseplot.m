@@ -90,8 +90,11 @@ function[h,indexout]=ellipseplot(varargin)
 %   Additional options
 %
 %   ELLIPSEPLOT(K,L,TH,Z, ... ,'m_map') will work with Rich Pawlowicz's 
-%   M_MAP package. In this case Z should be of the form LON+SQRT(-1)*LAT,
-%   or a cell array of numeric arrays having this form.
+%   M_MAP package. Z should be of the form LON+SQRT(-1)*LAT, or a cell
+%   array of numeric arrays having this form.  Note that this is based on 
+%   using the aspect ratio for the entire plot window.  The M_MAP routine 
+%   M_ELLIPSE may handle this differently.  The amplitude scaling here is
+%   such that K=1, L=0 is a circle with a width of one degree of longitude. 
 %
 %   ELLIPSEPLOT(K,L,TH,Z, ... ,'phase',PHI) optionally draws a small line, 
 %   like a clock hand, to indicate the ellipse phase PHI.
@@ -292,11 +295,17 @@ if iscell(h)
         linestyle(h{i},sty{mod(i-1,length(sty))+1});
         %end
     end
-else
+elseif size(h,2)>1
     for i=1:size(h,2)
         sty{mod(i-1,length(sty))+1};
         linestyle(h(:,i),sty{mod(i-1,length(sty))+1});
     end
+% else
+%     for i=1:length(h)
+%         i
+%         sty{mod(i-1,length(sty))+1};
+%         linestyle(h(i),sty{mod(i-1,length(sty))+1});
+%     end
 end
 
 if verLessThan('matlab','8.4.0')
@@ -375,6 +384,22 @@ end
 function[h]=ellipseplot1(kappa,lambda,theta,phi,x,ar1,ar2,npoints,str)
 %kappa,lambda,theta,phi,x,ar1,ar2,npoints
 
+if strcmpi(str(1:3),'m_m')
+   %find the implicit aspect ratio for the plot 
+   ax=axis;
+   [lona,lata]=m_xy2ll(ax(1),ax(3));
+   [lonb,latb]=m_xy2ll(ax(2),ax(4));
+   
+%   lona,lonb,latb,lata
+   
+   ar1=frac(lonb-lona,ax(2)-ax(1));
+   ar2=frac(latb-lata,ax(4)-ax(3));
+   
+   ar2=ar2./ar1;
+   ar1=ar1./ar1;
+
+end
+
 %New algorithm as of May 2014, much faster
 if ~allall(isnan(phi));
     z=ellcurves(kappa,lambda,theta,phi,x,'npoints',npoints,'aspect',[ar1,ar2]);
@@ -383,13 +408,13 @@ else
     z=ellcurves(kappa,lambda,theta,x,'npoints',npoints,'aspect',[ar1,ar2]);
 end
 
-%figure,plot(z)
 if strcmpi(str(1:3),'mat')
     h=plot(z,'visible','off');%set(gca,'dataaspectratio',[ar(:)' 1]);
 elseif strcmpi(str(1:3),'m_m')
     h=m_plot(real(z),imag(z),'visible','off');
 end
 
+%figure,plot(z)
 % for i=1:9
 %     figure
 %     [lat,lon]=xy2latlon(z,lato(i),lono);

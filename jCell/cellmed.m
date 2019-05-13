@@ -1,13 +1,12 @@
 function[varargout]=cellmed(varargin)
 %CELLMED  Median value of each element a cell array.
 %
-%   M=CELLMED(X) where X is a cell array of N arrays,
-%
-%       X{1}=X1, X{2}=X2,..., X{N}=XN
-% 
-%   returns the N x 1 array of median values M with
+%   M=CELLMED(X) where X is a cell array of N arrays, is equivalent to
 %  
-%      M(1)=MEDIAN(X1(:)),  M(2)=MEDIAN(X2(:)),...,  M(N)=MEDIAN(XN(:)).
+%      M(1,1)=MEDIAN(X{1}(:)) ,...,  M(N,1)=MEDIAN(X{N}(:))
+%
+%   thus returning an N x 1 array containing the mean values of each
+%   element in the cell array.
 %
 %   In taking the median, non-finite values are ignored, as in VMEDIAN.
 %   M is a column vector of the same length as X.  
@@ -26,7 +25,7 @@ function[varargout]=cellmed(varargin)
 %   installed, and is useful for very large datasets.
 %   __________________________________________________________________   
 %
-%   See also CELLMEAN, CELLSTD, JCELL, VTOOLS.
+%   See also CELLMEAN, CELLSTD, JCELL.
 %
 %   Usage: m=cellmed(x);
 %          [m1,m2,m3]=cellmed(x1,x2,x3);
@@ -34,7 +33,7 @@ function[varargout]=cellmed(varargin)
 %          cellmed(x1,x2,x3,'parallel');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2019 J.M. Lilly --- type 'help jlab_license' for details
 
 if ~iscell(varargin{1})
     error('X must be a cell array.')

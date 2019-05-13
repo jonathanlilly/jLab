@@ -74,7 +74,8 @@ bi=find(ii<b/100,1,'last');
 %z(ai), z(bi)
 %ai, bi
 cax=[z(ai) z(bi)];
-caxis(cax)
+%cax
+%caxis(cax)
 if nargout==0
     clear cax
 end

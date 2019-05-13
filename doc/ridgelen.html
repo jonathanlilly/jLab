@@ -4,42 +4,22 @@
 <div><h1>RIDGELEN is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="ridgelen.html">RIDGELEN</a>  Wavelet ridge length expressed as number of full cycles.
  
-    LEN=<a href="ridgelen.html">RIDGELEN</a>(IR,FR) determines the length of the ridges given by the
-    ridge parameters IR and FR, with LEN expressed as number of cycles
-    completed along the ridge.  FR has units of radians per sample.
+    LEN=<a href="ridgelen.html">RIDGELEN</a>(FR) determines the length of the ridges given by the
+    ridge frequency FR, with LEN expressed as number of cycles completed
+    along the ridge.  FR has units of radians per sample.
  
-    IR is an array of the ridge time indices, while FR is the frequency of 
-    the wavelet transform value along the ridge, as output by <a href="ridgewalk.html">RIDGEWALK</a>. 
+    LEN is a column vector of the same size as FR.  Each element of LEN 
+    gives the number of cycles contained in the current ridge. 
  
-    LEN is a column vector of the same size as IR and FR.  Each element of
-    LEN gives the number of cycles contained in the current ridge. 
- 
-    IR and FR can also be cell arrays of ridges, in which case the output
-    LEN is also a cell array of the same size as the input variables.
-    _____________________________________________________________________
-    
-    Sample interval
- 
-    LEN=<a href="ridgelen.html">RIDGELEN</a>(DT,IR,FR) uses the sample interval DT in calculating the 
-    ridge length.  DT has the default value DT=1.
- 
-    In this case, FR is expected to have units of radians per DT.
- 
-    If IR and FR are cell arrays, DT may either be a scalar or an array of
-    length LENGTH(IR).
-    _______________________________________________________________________
- 
-    <a href="ridgelen.html">RIDGELEN</a> internally computes an ID that takes on a single value for all
-    points in the same ridge.  If such an ID is already available, calling
-    LEN=<a href="ridgelen.html">RIDGELEN</a>(DT,ID,IR,FR) also works.  This form is used by <a href="ridgewalk.html">RIDGEWALK</a>.  
-    _______________________________________________________________________
+    LEN=<a href="ridgelen.html">RIDGELEN</a>(DT,FR) uses the sample interval DT in calculating the 
+    ridge length.  DT has the default value DT=1.  In this case, FR is 
+    expected to have units of radians per DT.
  
     '<a href="ridgelen.html">ridgelen</a> --t' runs some tests.
  
-    Usage: lr=<a href="ridgelen.html">ridgelen</a>(ir,fr);
-           lr=<a href="ridgelen.html">ridgelen</a>(dt,ir,fr);
-           lr=<a href="ridgelen.html">ridgelen</a>(dt,id,ir,fr);
+    Usage: lr=<a href="ridgelen.html">ridgelen</a>(fr);
+           lr=<a href="ridgelen.html">ridgelen</a>(dt,fr);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

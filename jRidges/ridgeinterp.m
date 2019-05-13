@@ -15,7 +15,7 @@ function[varargout]=ridgeinterp(varargin)
 %   X may have more than one 'page' along its third dimension, in which 
 %   case each page is interpolated separately, and SIZE(XI,3)=SIZE(X,3). 
 %
-%   RQ is output by RIDGEQUANTITY based on a wavelet transform output by
+%   RQ is output by ISRIDGEPOINT based on a wavelet transform output by
 %   WAVETRANS, and IR and JR are output by RIDGEWALK.  
 %
 %   RIDGEINTERP interpolates transform values between discrete frequency 
@@ -37,13 +37,13 @@ function[varargout]=ridgeinterp(varargin)
 %
 %   RIDGEINTERP is a low-level function called by RIDGEWALK.
 %
-%   See also RIDGEWALK, RIDGEQUANTITY, QUADINTERP.
+%   See also RIDGEWALK, ISRIDGEPOINT, QUADINTERP.
 %
 %   Usage:  xi=ridgeinterp(rq,ir,jr,x);
 %           [xi1,xi2,xi3]=ridgeinterp(rq,ir,jr,x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2005--2018 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2005--2019 J.M. Lilly --- type 'help jlab_license' for details    
 
 
 rq=varargin{1};

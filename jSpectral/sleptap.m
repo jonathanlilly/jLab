@@ -231,7 +231,7 @@ end
 %here's some garbage
 if 0
 %see how much spline-interpolated ones vary from others
-xx=v(:,1);xx=xx/sqrt(xx'*xx);figure,plot(xx)
+xx=v(:,1);xx=xx/sqrt(xx'*xx);%figure,plot(xx)
 xx=diff(xx);xx=xx/sqrt(xx'*xx);hold on,plot(xx,'g')
 xx=diff(xx);xx=xx/sqrt(xx'*xx);plot(xx,'r')
 xx=diff(xx);xx=xx/sqrt(xx'*xx);plot(xx,'c');
@@ -240,8 +240,7 @@ for i=1:4
 v(:,i)=v(:,i)/sqrt(v(:,i)'*v(:,i));
 end
 
-figure,plot(v)
-
+%figure,plot(v)
 
 l1=lambda;
 v1=v;

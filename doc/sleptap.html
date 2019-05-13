@@ -4,20 +4,20 @@
 <div><h1>SLEPTAP is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="sleptap.html">SLEPTAP</a>  Calculate Slepian tapers.
  
-    [PSI,LAMBDA]=<a href="sleptap.html">SLEPTAP</a>(N,P,K) calculates the K lowest-order Slepian
-    tapers PSI of length N and time-bandwidth product P, together with
-    their eigenvalues LAMBDA. PSI is N x K and LAMBDA is K x 1.
+    [PSI,LAMBDA]=<a href="sleptap.html">SLEPTAP</a>(M,P,K) calculates the K lowest-order Slepian
+    tapers PSI of length M and time-bandwidth product P, together with
+    their eigenvalues LAMBDA. PSI is M x K and LAMBDA is K x 1.
  
     K is optional and defaults to 2P-1.  
     P is optional and defaults to 4.
     
-    For N<=512, <a href="sleptap.html">SLEPTAP</a> uses the tridiagonal method described in Percival 
-    and Walden (1993).  For N>512, it first computes tapers for N=512 and 
+    For M<=512, <a href="sleptap.html">SLEPTAP</a> uses the tridiagonal method described in Percival 
+    and Walden (1993).  For M>512, it first computes tapers for M=512 and 
     then spline-interpolates.
     
-    N may also be an array of lengths.  In this case PSI is a cell array of 
-    matrices, with PSI{1} being N(1) x K, PSI{2} being N(2) x K, etc., 
-    while LAMBDA is K x LENGTH(N).  See 'Cell array input' under <a href="mspec.html">MSPEC</a>.
+    M may also be an array of lengths.  In this case PSI is a cell array of 
+    matrices, with PSI{1} being M(1) x K, PSI{2} being M(2) x K, etc., 
+    while LAMBDA is K x LENGTH(M).  See 'Cell array input' under <a href="mspec.html">MSPEC</a>.
     _____________________________________________________________________
  
     Normalization
@@ -32,7 +32,7 @@
  
     Parallelization
  
-    <a href="sleptap.html">SLEPTAP</a>(N, ...,'parallel') when N is an array of lengths parallelizes 
+    <a href="sleptap.html">SLEPTAP</a>(M, ...,'parallel') when M is an array of lengths parallelizes 
     the taper computation using a PARFOR loop.  This requires that Matlab's
     Parallel Computing Toolbox be installed.
     _____________________________________________________________________
@@ -45,5 +45,5 @@
             [psi,lambda]=<a href="sleptap.html">sleptap</a>(n,p,k); 
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2000--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details        
+    (C) 2000--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

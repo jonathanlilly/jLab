@@ -24,12 +24,30 @@ function[bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask)
 %   amplitude minima, or if the frequency anomaly (transform frequency
 %   minus scale frequency) is a maximum.
 %
-%   See also RIDGEQUANTITY, RIDGEWALK.
+%   BOOL=ISRIDGEPOINT(W,FS,CHI,STR,FMIN,FMAX) only returns ridge points
+%   between frequencies FMIN and FMAX, which may be either scalars or 
+%   arrays of length SIZE(W,1).
+%
+%   BOOL=ISRIDGEPOINT(W,FS,CHI,STR,FMIN,FMAX,MASK), where MASK is a boolean
+%   variable of the same size as W, only returns ridge points at locations
+%   at which MASK is true.
+%
+%   [BOOL,RQ,W,OMEGA]=ISRIDGEPOINT(...) also returns the ridge quantity RQ,
+%   the complex-valued joint wavelet transform W, and the transform's
+%   instantaneous frequency OMEGA, all of which are of the same size. 
+%
+%   See also RIDGEINTERP, RIDGEWALK.
+%
+%   Usage: [bool,rq,w,om]=isridgepoint(w,fs,chi,str);
+%          [bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax);
+%          [bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 %        'groove'      Joint amplitude / phase definition
+
+
 
 disp('RIDGEWALK looking for ridge points...')
 

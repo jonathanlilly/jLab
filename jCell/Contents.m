@@ -9,7 +9,8 @@
 %   cellstd    - Standard deviation of each element a cell array, possibly weighted.
 %   cellmed    - Median value of each element a cell array.
 %   cellreal   - Real part of each element in a cell array.                         
-%   cellimag   - Imaginary part of each element in a cell array.    
+%   cellimag   - Imaginary part of each element in a cell array.
+%   cellpair   - Complex pairing for elements in a cell array.
 %   celllog10  - Base ten logarithm of each element in a cell array.
 %   celladd    - Addition acting on each element in a cell array.                   
 %   cellmult   - Multiplication acting on each element in a cell array.   

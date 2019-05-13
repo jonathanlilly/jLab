@@ -105,9 +105,8 @@ function [structout] = maternfit(varargin)
 %   FO may be scalars or length N arrays.
 %
 %   In these cases, the fields SIGMA, ALPHA, LAMBDA, and NU of FIT will 
-%   also be arrays with N elements, as will LIKE, AICC, ERR, and EXITFLAG. 
-%   The subfields of RANGE will all be N x 3 arrays.  In PARAMS, the fields
-%   DT, FO, A, and B will all be length N.   
+%   also be arrays with N elements, as all non-string fields of PARAMS. The 
+%   fields of RANGE will then all be N x 3 arrays.  
 %   __________________________________________________________________
 %   
 %   Specifiying frequencies
@@ -166,7 +165,7 @@ function [structout] = maternfit(varargin)
 %   because occasionally an optimum spectral fit is found that has much 
 %   larger total variance than the signal. 
 %
-%   Similarly, ranges of LAMBDA and NU are nondimensional values representing
+%   The ranges of LAMBDA and NU are nondimensional values representing
 %   fractions of the magnitude of the reference frequency ABS(FO).  Thus 
 %
 %       MATERNFIT(...,'range.lambda',[1/1000 2/1000 1],...)
@@ -292,8 +291,8 @@ function [structout] = maternfit(varargin)
 %   Parallelization
 %
 %   With Matlab's Parallel Computing toolbox installed, when Z is a cell 
-%   array or a matrix, MATERNFIT(DT,Z,'parallel') will loop over the 
-%   elements of Z using a parallel "parfor" loop to speed things up.
+%   array or a matrix, MATERNFIT(...,'parallel') will loop over the 
+%   elements of Z using a parfor loop to speed things up.
 %
 %   This choice is reflected in the output field PARAMS.CORES, which 
 %   will take on the values 'series' (the default) or 'parallel'.
@@ -332,7 +331,7 @@ range.background.sigma=[0 1 100];            %Range of standard deviation as fra
 range.background.alpha=[1/2 1 10];           %Range of slope parameter
 range.background.lambda=[1/1000 2/1000 10];  %Range of decay parameter as multiple of Coriolis
 range.background.nu=[0 0 0];                 %Frequency shift is fixed at NU=0
-range.background.mu=[0 0 0];                 %Range of decay parameter as multiple of inverse Coriolis
+range.background.mu=[0 0 0];                 %Range of damping parameter as multiple of inverse Coriolis
 %--------------------------------------------------------------------------
 %Initialize value structure
 names=fieldnames(range);
@@ -352,7 +351,7 @@ varargin=varargin(3:end);
 opts.side='both';            %Determines side: opposite, same, or both
 opts.alg='bnd';              %Algorithm: bnd, con, or nlopt
 opts.ver='difference';       %Fit version: difference or raw
-opts.cores='series';         %Series or parallel computation
+opts.cores='serial';         %Serial or parallel computation
 opts.bgtype='matern';        %Type of model for background
 
 psi=[];                      %The default data taper is the empty taper
@@ -943,15 +942,22 @@ bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresa
 reporttest('MATERNFIT recovers Matern parameters with non-unit sample rate, differenced tapered version',allall(bool))
 etime1=toc;
 
-if exist('nlopt_optimize')==3
-    psi=sleptap(size(z,1)-1,3,1);
-    tic;
-    fit=maternfit(dt,z,frac(1,2)*pi./dt,'tapered',psi,'difference','nlopt');
-    bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002);
-    reporttest('MATERNFIT using NLopt version of previous',allall(bool))
-    etime2=toc;
-    disp(['MATERNFIT NLopt version took ' num2str(etime2./etime1) ' as much time as FMINSEARCH.'])
-end
+% if exist('nlopt_optimize')==3
+%     psi=sleptap(size(z,1)-1,3,1);
+%     tic;
+%     fit=maternfit(dt,z,frac(1,2)*pi./dt,'tapered',psi,'difference','nlopt');
+%     bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002);
+%     reporttest('MATERNFIT using NLopt version of previous',allall(bool))
+%     etime2=toc;
+%     disp(['MATERNFIT NLopt version took ' num2str(etime2./etime1) ' as much time as FMINSEARCH.'])
+% end
 
 
-
+% sigo=17;
+% alpha=1.5;
+% h=1/10;
+% 
+% rng(0);
+% dt=1;
+% z=maternoise(dt,1000,sigo,alpha,h);
+% fit=maternfit(dt,[z z],frac(1,2)*pi);

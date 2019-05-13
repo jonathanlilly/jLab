@@ -1,5 +1,5 @@
 function[varargout]=ncinterp(varargin)
-%NCINTERP  Interpolate field from NetCDF file onto specified positions.
+%NCINTERP  One-line interpolation from 3D lat/lon/time field in NetCDF file.
 %
 %   X=NCINTERP(FILENAME,NUM,LAT,LON,VARNAME) interpolates the field VARNAME
 %   from the NetCDF file FILENAME onto positions given by date numbers NUM,
@@ -60,12 +60,12 @@ function[varargout]=ncinterp(varargin)
 %          [x1,x2]=ncinterp(filename,num,lat,lon,varname1,varname2);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2016--2018 J.M. Lilly --- type 'help jlab_license' for details
  
 filename=varargin{1};
 numi=varargin{2};
 lati=varargin{3};
-loni=deg360(varargin{4});
+loni=varargin{4};
 
 str='fas';
 
@@ -129,6 +129,13 @@ if (max(lon)-min(lon)+(lon(2)-lon(1)))==360
 end
 num=ncread(filename,'num');
 
+%determine whether to use +/- 180 or 360
+if anyany(lon<0)
+    loni=deg180(loni);
+elseif anyany(lon>180)
+    loni=deg360(loni);
+end
+
 %Set dates to NaNs when outside of range
 bool=(numi<=min(num))|(numi>=max(num));
 numi(bool)=nan;
@@ -171,9 +178,9 @@ for i=a:N:b
         if blatup,  xp=[xp;xp(end,:)];end  %Extra row for northern latitudes
     else
         if bperiodic
-            xp=x(:,[2:end-1],end);%Set xp back to x
+            xp=x(:,[2:end-1],end);%Set xp back to last page of x
         else
-            xp=x;
+            xp=x(:,:,end);
         end
     end
     xn=ncread(filename,varname,[1 1 i],[inf inf min(N,length(num)-i+1)]);
@@ -181,7 +188,7 @@ for i=a:N:b
     x=vzeros(length(lat),length(lon),size(xn,3)+1);
     ii=1+blatdown:length(lat)-blatup;
     
-    %size(x),size(xn),size(xp),N
+    %vsize(num,lat,lon,numi,lati,loni,x,xn,xp),N
     if bperiodic
         x(ii,[1 end],1)=xp(ii,[end 1]);      %Extra columns for longitudes
         x(ii,[1 end],2:end)=xn(:,[end 1],:); %Extra columns for longitudes
@@ -199,11 +206,16 @@ for i=a:N:b
     Ni=min(N-1,length(num)-i);
     bool=(numi>=num(i-1))&(numi<=num(i+Ni));
     [numk,latk,lonk]=vindex(numi,lati,loni,bool,1);  
-    vsize(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk)
+%    vsize(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk)
     %Note that INTERP3 bizarrely has reversed the first two input arguments
-    minmin(diff(lon)),minmin(diff(lat)),minmin(diff(num((i-1):(i+Ni))))
+%    minmin(diff(lon)),minmin(diff(lat)),minmin(diff(num((i-1):(i+Ni))))
+%     length(find(bool))
+%     [1,length(find(isfinite(x)))]
+%     plot(lon)
     xk(bool) = interp3(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk,'linear');
 end
+
+%length(find(isfinite(xk)))
 
 bool=isnan(xk)&~isnan(lati);
 xk(bool)=inf;

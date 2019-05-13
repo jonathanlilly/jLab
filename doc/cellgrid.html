@@ -7,6 +7,8 @@
     [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(T,X,DT) where T is a cell array of time arrays, and
     X is of the same size as T, linearly interpolates the elements of X 
     within T at times TO, which are regularly spaced with interval DT.  
+    
+    DT may either be a scalar, or an array of the same length as T and X.
  
     <a href="cellgrid.html">CELLGRID</a> does not modify bad data points, such as those marked with
     NaNs.  See <a href="cellfill.html">CELLFILL</a> to interpolate over bad data points.  
@@ -35,8 +37,7 @@
     Specifying interpolated times
  
     [TO,Y]=<a href="cellgrid.html">CELLGRID</a>(T,X,DT,A,B) will set TO to TO=A:DT:B, where A and B 
-    are either scalars or an arrays of the same size as X.  Note that DT
-    must be a scalar.
+    are either scalars or an arrays of the same size as X. 
  
     The default behavior is equivalent to choosing A and B as the first and
     last elements of TO, that is, to setting A=<a href="cellmin.html">CELLMIN</a>(T) and B=<a href="cellmax.html">CELLMAX</a>(T).
@@ -57,5 +58,5 @@
            <a href="cellgrid.html">cellgrid</a>(t,x1,x2,x3,dt);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

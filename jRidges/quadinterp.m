@@ -47,7 +47,7 @@ function[x,t]=quadinterp(t1,t2,t3,x1,x2,x3,t)
 %   See also LININTERP, CUBEINTERP.  
 %  
 %   Usage:   x=quadinterp(t1,t2,t3,x1,x2,x3,t);
-%            [xe,te]=quadinterp(t1,t2,t3,x1,x2,x3);
+%            [xe,te]=quadinterp(t1,t2,t3,x1,x2,x3,t);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2006 J.M. Lilly --- type 'help jlab_license' for details

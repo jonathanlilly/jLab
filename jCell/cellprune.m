@@ -56,22 +56,24 @@ for i=2:length(varargin)
     end
 end
 
-len=cellength(varargin{1});
-index=find(len>L); 
-nempty=length(find(len==0));
-
-%Find all nonfinite data
-for i=1:length(varargin)
-    varargout{i}=varargin{i}(index);
-end
-
-if nempty>0
-    if strcmpi(verbosestr(1:3),'noi')
-        disp(['Excluding ' int2str(nempty) ' empty cells.'])
+if ~isempty(varargin{1})
+    len=cellength(varargin{1});
+    index=find(len>L);
+    nempty=length(find(len==0));
+    
+    %Find all nonfinite data
+    for i=1:length(varargin)
+        varargout{i}=varargin{i}(index);
     end
+    
+    if nempty>0
+        if strcmpi(verbosestr(1:3),'noi')
+            disp(['Excluding ' int2str(nempty) ' empty cells.'])
+        end
+    end
+    eval(to_overwrite(length(varargin))) 
 end
 
-eval(to_overwrite(length(varargin))) 
 
 
 function[]=cellprune_test

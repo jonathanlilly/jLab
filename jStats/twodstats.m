@@ -304,7 +304,7 @@ end
 
 if stdflag
     if size(zdata,2)==1
-        covmattemp=accumarray([xnum ynum],zdata.^2)';
+        covmattemp=accumarray([xnum ynum],abs(zdata).^2)';
         covmat(1:size(mattemp,1),1:size(mattemp,2))=covmattemp;
         covmat=covmat./num;
         %covmat=sqrt(covmat-mat.^2);

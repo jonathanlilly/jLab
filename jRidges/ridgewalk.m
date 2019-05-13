@@ -45,19 +45,16 @@ function[varargout]=ridgewalk(varargin)
 %
 %   Error estimate
 %
-%   [...,FR,ER]=RIDGEWALK(...,FS,P), where P=SQRT(BETA*GAMMA)
-%   characterizes the generalized Morse wavelet used to form the wavelet 
-%   transform, also returns an internal error estimate ER along the ridges.
+%   [...,FR,CR]=RIDGEWALK(...,FS,P), where P=SQRT(BETA*GAMMA) characterizes 
+%   the generalized Morse wavelet used to form the wavelet transform, also
+%   returns an error estimate CR along the ridges. CR is a normalized 
+%   version of a quantity called the joint instantaneous curvature.  
+%
+%   CR measures the error with which the transforms estimate the analytic 
+%   signals of modulated oscillations, arising from bias due to the 
+%   modulation strength.  CR<<1 for signals that are accurately estimated. 
 %
 %   This works for either univariate ridges or for the joint ridges.
-%
-%   ER measures the error with which the transforms estimate the analytic 
-%   signals of modulated oscillations, arising from bias due to the 
-%   modulation strength.  ER<<1 for signals that are accurately estimated. 
-%
-%   The expression for this quantity is given for a potentially 
-%   multivariate signal by equation (62) of Lilly and Olhede (2012), and is 
-%   based on a normalized version of the joint instantaneous curvature.   
 %   _______________________________________________________________________  
 %
 %   Artifact removal
@@ -94,6 +91,21 @@ function[varargout]=ridgewalk(varargin)
 %   by DT, and thus have the same units as the ridge frequency FR. 
 %   _______________________________________________________________________
 %
+%   Masked-out regions
+%
+%   RIDGEWALK permits the use to explicitly specify time-frequency regions 
+%   which should be excluded from the ridge analyis.
+%
+%   RIDGEWALK(...,'mask',BOOL), where BOOL is a boolean array of the same
+%   size as W, then those points for which BOOL is false will be excluded 
+%   from the ridge analysis. In addition, ridges are not permitted to cross
+%   such regions, to prevent spurious chaining between distant frequencies.
+%
+%   This functionality is useful if we have ancillary information, such as
+%   a local signal-to-noise estimate, that can help determine a priori
+%   which time-frequency points appear to be statistically significant. 
+%   _______________________________________________________________________
+%
 %   Additional output arguments
 %
 %   [...,FR,ER,BR,CR]=RIDGEWALK(...,FS,P,...) additionally outputs the 
@@ -123,7 +135,7 @@ function[varargout]=ridgewalk(varargin)
 %          [wxr,wyr,ir,jr,fr,er]=ridgewalk(dt,wx,wy,fs,P,M,rho);
 %   _______________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 %   Note that (62) of L&O (2012) reduces to (64) of L&O (2010)
 
@@ -207,23 +219,6 @@ function[varargout]=ridgewalk(varargin)
 %   time-frequency product, and i=SQRT(-1).  For the generalized Morse 
 %   wavelets, P=SQRT(BETA*GAMMA).
 
-%   This is now a hidden option.  No longer used by EDDYRIDGES
-%   _______________________________________________________________________
-%
-%   Masked-out regions
-%
-%   RIDGEWALK permits the use to explicitly specify time-frequency regions 
-%   which should be excluded from the ridge analyis.
-%
-%   RIDGEWALK(...,'mask',BOOL), where BOOL is a boolean array of the same
-%   size as W, then those points for which BOOL is false will be excluded 
-%   from the ridge analysis. In addition, ridges are not permitted to cross
-%   such regions, to prevent spurious chaining between distant frequencies.
-%
-%   This functionality is useful if we have ancillary information, such as
-%   a local signal-to-noise estimate, that can help determine a priori
-%   which time-frequency points appear to be statistically significant. 
-
 
 if strcmpi(varargin{1}, '--t')
     ridgewalk_test,return
@@ -253,12 +248,13 @@ for i=1:max(3,length(varargin))
     elseif ~ischar(varargin{end})&&ischar(varargin{end-1})
         if strcmpi('alp',varargin{end-1}(1:3))
             alpha=varargin{end};
-        elseif strcmpi('mask',varargin{end-1}(1:3))
+        elseif strcmpi('mas',varargin{end-1}(1:3))
             mask=varargin{end};
         end
         varargin=varargin(1:end-2);
     end
 end
+
 
 if length(varargin{1})==1
     dt=varargin{1};

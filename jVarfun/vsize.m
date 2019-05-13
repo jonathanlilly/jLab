@@ -6,7 +6,7 @@ function[n]=vsize(varargin)
 %   of input variables and M is the maximum number of dimensions.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2018 J.M. Lilly --- type 'help jlab_license' for details    
   
 if strcmpi(varargin,'--t')
    vsize_test,return
@@ -18,7 +18,7 @@ for i=1:length(varargin)
   L(i)=length(x);
 end
 
-n=0*ones(length(varargin),max(L));
+n=ones(length(varargin),max(L));
 
 for i=1:length(varargin)
    index=1:length(xall{i});
@@ -31,5 +31,5 @@ y=ones(2,2);
 z=ones(2,2,3);
 
 x=vsize(x,y,z);
-bool=allall(x==[1 1 0 ; 2 2 0 ;2 2 3]);
+bool=allall(x==[1 1 1 ; 2 2 1 ;2 2 3]);
 reporttest('VSIZE', bool)

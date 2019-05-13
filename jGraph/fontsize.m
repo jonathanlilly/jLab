@@ -22,8 +22,22 @@ function[]=fontsize(i1,i2,i3,i4)
 %   See also LINESTYLE, LINERING.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details  
+%   (C) 2000--2019 J.M. Lilly --- type 'help jlab_license' for details  
   
+
+if ~ischar(i1)
+    arg=i1;
+    i1=arg(1);
+    if length(arg)>1
+        i2=arg(2);
+    end
+    if length(arg)>2
+        i3=arg(3);
+    end
+    if length(arg)>3
+        i4=arg(4);
+    end
+end
 
 fonts.default=[14 12 12 12];
 fonts.poster=[20 16 16 16];
@@ -96,8 +110,12 @@ else
                 bcontinue=false;
             end
             if strcmpi(h(i).Type,'colorbar')
-                h(i).FontSize=fsa;
-                h(i).Label.FontSize=fsl;
+                if ~isempty(fsa)
+                    h(i).FontSize=fsa;
+                end
+                if ~isempty(fsl)
+                    h(i).Label.FontSize=fsl;
+                end
                 bcontinue=false;
             end
 %             if strcmpi(h(i).Type,'axes')

@@ -42,10 +42,10 @@ function[varargout]=ridgemap(varargin)
 %            [x,f,mult]=ridgemap(M,xr,fr,ir);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
-    ridgemap_test,return
+    ridgemap_test,return  
 end
 
 if ischar(varargin{end})
@@ -70,7 +70,7 @@ if bNinput
     ir=varargin{end-1};
     varargin=varargin(1:end-2);
 else
-    ir=varargin{end-1};
+    ir=varargin{end};
     kr=1+0*ir;
     varargin=varargin(1:end-1);
 end
@@ -88,7 +88,10 @@ if ~isempty(ir)
     ir=col2mat(ir);
     for i=1:length(varargin)
         varargout{i}=nan*zeros(M,size(ir,2));
+%        size(varargout{i})
+ %       size(ir)
         for k=1:size(ir,2)
+           %ir(isfinite(ir(:,k)),k)
             varargout{i}(ir(isfinite(ir(:,k)),k),k)=varargin{i}(isfinite(ir(:,k)),k);
         end
     end

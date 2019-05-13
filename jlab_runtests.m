@@ -66,7 +66,7 @@ dirnames=dirnames(sorter);
 
 testfailures=zeros(length(names),1);
 for i=1:length(names)
-%for i=200:300
+%for i=230:231
     FUNCTION_NUMBER=i;
     if ~strcmpi(names{i},'jlab_runtests')&&~strcmpi(names{i},'Contents') %No recursion please
         fid=fopen([dirnames{i} '/' names{i} '.m'], 'r');   

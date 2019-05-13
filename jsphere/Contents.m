@@ -30,6 +30,7 @@
 %   spherelap  - Laplacian of a field on the surface of a sphere.   
 %
 % Interpolation
+%   interplatlon  - Interpolation for working with latitude and longitude.
 %   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.
 %
 % Plotting tools

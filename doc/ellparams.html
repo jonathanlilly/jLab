@@ -19,7 +19,10 @@
     given the ellipse parameters.
  
     <a href="ellparams.html">ELLPARAMS</a>(...,DIM) performs the analysis with time running along
-    dimension DIM, as opposed to the default behavior of DIM=1.    
+    dimension DIM, as opposed to the default behavior of DIM=1.   
+ 
+    <a href="ellparams.html">ELLPARAMS</a> also works if X and Y are cell arrays with each cell holding
+    a different analytic signal. The output will then also be cell arrays. 
     _______________________________________________________________________
  
     Trivariate signals
@@ -34,23 +37,6 @@
     <a href="ellparams.html">ELLPARAMS</a>(M), where M is matrix with three columns, also works.
  
     See Lilly (2010) for details on the trivariate case.
-    _______________________________________________________________________
- 
-    Cell array input / output
- 
-    [KAPPA,LAMBDA,THETA,PHI]=<a href="ellparams.html">ELLPARAMS</a>(C) also works if C is a cell array
-    containing, say K different X and Y signals, each as a 2-column matrix,
- 
-          C{1}(:,1)=X1, C{1}(:,2)=Y1
-          C{2}(:,1)=X2, C{2}(:,2)=Y2, ...  
-          C{K}(:,1)=XK, C{2}(:,2)=YK.  
- 
-    In this case, the output variables will also be length K cell arrays.
- 
-    The trivariate form described above also works, with each cell now
-    being a matrix with three columns.
- 
-    This format works with the cell array output format of <a href="ridgewalk.html">RIDGEWALK</a>.
     __________________________________________________________________
  
     '<a href="ellparams.html">ellparams</a> --t' runs a test.
@@ -60,9 +46,7 @@
     Usage: [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(x,y);
            [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(x,y,dim);
            [kappa,lambda,theta,phi,alpha,beta]=<a href="ellparams.html">ellparams</a>(x,y,z);
-           [kappa,lambda,theta,phi,alpha,beta]=<a href="ellparams.html">ellparams</a>([x,y,z]);
-           [kappa,lambda,theta,phi]=<a href="ellparams.html">ellparams</a>(C);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2009--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2009--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

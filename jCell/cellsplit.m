@@ -5,6 +5,8 @@ function[varargout]=cellsplit(varargin)
 %   into additional cells wherever gaps of longer than duration TOL occur.
 %   Thus TO contains no gaps of longer than duration TOL. 
 %
+%   TOL may either be a scalar or an array of length T.
+%
 %   As an example, if T is a length two cell array 
 %   
 %       T{1}=[1 2 3 8 9 12 17]';  T{2} =[1 6 7]'; 
@@ -34,7 +36,7 @@ function[varargout]=cellsplit(varargin)
 %          cellsplit(t,x1,x2,x3,tol);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     cellsplit_test,return
@@ -51,9 +53,13 @@ for i=2:length(varargin)
 end
 
 num=varargin{1};
+if length(tol)==1
+    tol=tol+zeros(size(num));
+end
+
 n=0;
 for i=1:length(num)
-    index=find(diff(num{i})>tol);
+    index=find(diff(num{i})>tol(i));
     ia=[1;index+1];
     ib=[index;length(num{i})];
     for k=1:length(ia)

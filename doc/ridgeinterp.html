@@ -15,12 +15,10 @@
     SIZE(XI,1)=SIZE(IR,1) and SIZE(XI,2)=SIZE(IR,2).  The locations of 
     NANs in IR and JR are duplicated in XI. 
  
-    NOTE:  IR and JR are now 1-D so the commenting here is not all correct.
- 
     X may have more than one 'page' along its third dimension, in which 
     case each page is interpolated separately, and SIZE(XI,3)=SIZE(X,3). 
  
-    RQ is output by RIDGEQUANTITY based on a wavelet transform output by
+    RQ is output by <a href="isridgepoint.html">ISRIDGEPOINT</a> based on a wavelet transform output by
     <a href="wavetrans.html">WAVETRANS</a>, and IR and JR are output by <a href="ridgewalk.html">RIDGEWALK</a>.  
  
     <a href="ridgeinterp.html">RIDGEINTERP</a> interpolates transform values between discrete frequency 
@@ -32,7 +30,8 @@
     and applies an appropriate correction factor. 
  
     [XI1,XI2,...,XIN]=<a href="ridgeinterp.html">RIDGEINTERP</a>(FS,RQ,IR,JR,X1,X2,...,XN) also 
-    interpolates the quantities X1,X2,...,XN, all the same size. 
+    interpolates the quantities X1,X2,...,XN, all having the same number of 
+    rows and columns as IR and JR.
  
     <a href="ridgeinterp.html">RIDGEINTERP</a> uses fast quadratic interpolation via <a href="quadinterp.html">QUADINTERP</a>.  In rare
     cases, quadratic interpolation fails for an individual point and 
@@ -41,12 +40,11 @@
  
     <a href="ridgeinterp.html">RIDGEINTERP</a> is a low-level function called by <a href="ridgewalk.html">RIDGEWALK</a>.
  
-    See also <a href="ridgewalk.html">RIDGEWALK</a>, RIDGEQUANTITY, <a href="quadinterp.html">QUADINTERP</a>.
+    See also <a href="ridgewalk.html">RIDGEWALK</a>, <a href="isridgepoint.html">ISRIDGEPOINT</a>, <a href="quadinterp.html">QUADINTERP</a>.
  
-    Usage:  xi=<a href="ridgeinterp.html">ridgeinterp</a>(fs,rq,ir,jr,x);
-            [xi1,xi2,xi3]=<a href="ridgeinterp.html">ridgeinterp</a>(fs,rq,ir,jr,x1,x2,x3);
-            [xi1,xi2,xi3]=<a href="ridgeinterp.html">ridgeinterp</a>(dt,fs,rq,ir,jr,x1,x2,x3);
+    Usage:  xi=<a href="ridgeinterp.html">ridgeinterp</a>(rq,ir,jr,x);
+            [xi1,xi2,xi3]=<a href="ridgeinterp.html">ridgeinterp</a>(rq,ir,jr,x1,x2,x3);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2005--2014 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+    (C) 2005--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

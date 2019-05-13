@@ -8,127 +8,134 @@
     <img src="../figures/floats.png">
     _______________________________________________________________________
  
-    FLOATS.MAT is a matfile containing historical eddy-resolving subsurface
-    float data from the World Ocean Circulation Experiment (WOCE) 
-    Subsurface Float Data Assembly Center (WFDAC), available online at
+    FLOATS.MAT and FLOATS.NC contain all available historical eddy-
+    resolving subsurface float data, as distributed online at NOAA's 
+    Atlantic Oceanographic and Meteorological Laboratory (AOML)
  
-        http://wfdac.whoi.edu/                      ... or ... 
-        ftp://ftp.whoi.edu/pub/users/woce-ssfdac/
+        http://www.aoml.noaa.gov/phod/float_traj/data.php 
  
-    together with some supplementary datasets provided by individual PIs.
+    and described by Ramsey, Furey, and Bower (2018) at
+ 
+        https://eos.org/project-updates/...
+             deep-floats-reveal-complex-ocean-circulation-patterns.
+ 
+    A list of experiments can be found at 
+ 
+       http://www.aoml.noaa.gov/phod/float_traj/files/...
+              FloatDatabaseTable.pdf.
+ 
+    FLOATS is a slightly reprocessed version of the Matlab file distributed
+    by AOML, modified to make the dataset more amenable to time series
+    analysis, which require continuous, uniformly spaced fields. 
+ 
+    FLOATS.MAT is a Matlab version, while FLOATS.NC is a NetCDF version.
+ 
+    FLOATS is distributed as a part of <a href="jData.html">JDATA</a>, a supplement to the software
+    toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
+    _______________________________________________________________________
+ 
+    Additional processing
+ 
+    The following processing steps have been applied to AOML's version:
+ 
+        1. All data points lacking a valid position are removed
+        2. Trajectories are split at gaps exceeding two days
+        3. Trajectory segments less than two weeks in duration are removed
+        4. Data are interpolated onto a uniformly spaced time grid 
+        5. Trajectory segments with 12.5% or more missing data are removed
+        6. Velocities are computed by central differencing position
+ 
+    Step 4 handles the fact that not all data are uniformly spaced.  The 
+    interpolation onto a uniformly spaced time grid using the median
+    value of the sample interval for each data segment as the time spacing.
+ 
+    Step 5 removes 7 floats, all from the from the same experiment, which
+    have nearly half of their data missing within the uniform time grid.
+ 
+    Step 6 forms velocities by calling the jLab function <a href="latlon2uv.html">LATLON2UV</a>.
+    _______________________________________________________________________
+ 
+    Matlab version
  
     LOAD FLOATS loads the structure FLOATS, with the following fields:
  
         floats.about         Pointer to this document       
-        floats.experiments   Experiment names            {83 x 1 cell}
-        floats.expid         Experiment id number        [1469 x 1 array] 
-        floats.id            Float id number             [1469 x 1 array] 
-        floats.dt            Sample interval in days     [1469 x 1 array] 
-        floats.num           Date in DATENUM format      {1469 x 1 cell} 
-        floats.lat           Latitude                    {1469 x 1 cell} 
-        floats.lon           Longitude                   {1469 x 1 cell} 
-        floats.t             Temperature in centigrade   {1469 x 1 cell} 
-        floats.cv            Velocity u+iv in cm/s       {1469 x 1 cell}   
+        floats.experiment    Experiment names            {52 x 1 cell}
+        floats.expid         Experiment id number        [3091 x 1 array] 
+        floats.type          Float types                 {5 x 1 cell}
+        floats.typeid        Type id number              [3091 x 1 array] 
+        floats.id            Float id number             [3091 x 1 array] 
+        floats.dt            Sample interval in days     [3091 x 1 array] 
+        floats.num           Date in DATENUM format      {3091 x 1 cell} 
+        floats.lat           Latitude                    {3091 x 1 cell} 
+        floats.lon           Longitude                   {3091 x 1 cell} 
+        floats.u             Eastward velocity in cm/s   {3091 x 1 cell} 
+        floats.v             Northward velocity in cm/s  {3091 x 1 cell} 
+        floats.p             Pressure in decibar         {3091 x 1 cell} 
+        floats.t             Temperature in centigrade   {3091 x 1 cell} 
+        floats.filled        True if gap was filled      {3091 x 1 cell} 
  
-    NUM, LAT, LON, T, and CV are cell arrays, with one drifter per cell.
+    ID is the float number, the same as 'indexFlt' in AOML's dataset.
+    EXPID is the experiment number, the same as 'expNum' in AOML's dataset.
  
-    Within each cell, the time NUM proceeds uniformly, i.e. without jumps.
-    However, note that trajectories may include some gaps, marked by INFs. 
-    Use FLOATFILL to fill these gaps with linear interpolation.  
+    Unlike in AOML's dataset, here floats trajectories may be split into
+    multiple segements in order to avoid having long gaps.  Thus, there are 
+    3091 trajectory segments, but only 2193 different floats. 
  
-    A number of routines are available in <a href="jLab.html">JLAB</a> to work directly with such
-    cell arrays, see <a href="jCell.html">JCELL</a>.  In particular, <a href="cellplot.html">CELLPLOT</a> will plot such data.
+    Missing data points in P and T are filled with INFs.  There is no 
+    missing data in the other fields. 
+ 
+    The field FILLED is true if a gap was filled during processing Step 4
+    listed above. Information on gaps filled during upstream processing in 
+    forming the fields that compose the AOML dataset is not available. 
+ 
+    The last eight field are all cell arrays, with one drifter per cell. 
+    See <a href="jCell.html">JCELL</a> for a number of tools for working with this type of data. In
+    particular, <a href="cellplot.html">CELLPLOT</a> will plot such data.
  
     After 'load floats, type '<a href="use.html">use</a> floats' to map the structure fields 
     into named variables in the workspace--id, num, lat, lon, etc.
  
-    The experiment names are found by experiments(expid(100)), for example,
-    which returns the experiment name of the 100th float trajectory.
+    To convert the cell arrays into one long column vector, with a NAN 
+    separating each float, type '<a href="cell2col.html">cell2col</a>(num,lat,lon,u,v,t,p);'.
+ 
+    The experiment names are found by experiment(expid(100)), for example,
+    which returns the experiment name of the 100th trajectory segment.
+    This will match the listing in the table FloatDatabaseTable.pdf.
+ 
+    The float type for a particular segment is similarly returned by e.g. 
+    type(typeid(100)).  The types are as follows: 1) SOFAR 2) Bobber SOFAR
+    3) RAFOS 4) RAFOS - VOCHA and 5) APEX.
  
     To generate the above figure of the dataset, type '<a href="about_floats.html">about_floats</a> --f'. 
- 
-    To convert the cell arrays into one long column vector, with a NAN 
-    separating each float, type '<a href="cell2col.html">cell2col</a>(num,lat,lon,t,cv);'.
  
     FLOATS.MAT is distributed as a part of <a href="jData.html">JDATA</a>, a supplement to the 
     software toolbox <a href="jLab.html">JLAB</a>, and is available at http://www.jmlilly.net.
     __________________________________________________________________
  
-    Float experiments
+    NetCDF version
+  
+    The NetCDF version is basically the same as the mat-file version, but
+    (i) lacking the 'experiment' and 'type' variables, which are cell 
+    arrays of strings, and (ii) having all the other cell array fields  
+    stored as column arrays with separating NaNs, see <a href="col2cell.html">COL2CELL</a>.
  
-    A brief summary of the 33 different experiments is as follows.
-    
-       #  Experiment   PI           Type     Data Span     Source 
-       -------------------------------------------------------------
-       1    abaco      Leaman       RAFOS    1989--1994    DAC
-       2    acuri      Rossby       RAFOS    1997--2000    DAC
-       3    acwwp      Bower        RAFOS    1996--2000    DAC
-       4    amuse      Bower        RAFOS    1993--1995    DAC
-       5    canig      Ambar        RAFOS    1997--1999    DAC
-       6    ebasn      Price        SOFAR    1984--1992    DAC
-       7    gusrex     Owens        SOFAR    1980--1985    DAC
-       8    ifmib      Zenk         RAFOS    1990--1994    DAC
-       9    kapex      Boebel       RAFOS    1997--1999    DAC
-       10   kdbe       Boebel       RAFOS    1992--1996    DAC
-       11   kpxwh      Richardson   RAFOS    1997--1999    DAC
-       12   lde        Rossby       SOFAR    1978--1979    DAC
-       13   lsuri      Prater       RAFOS    1996--1997    DAC
-       14   mode       Rossby       SOFAR    1972--1976    DAC
-       15   nefbas     Owens        SOFAR    1986--1989    DAC
-       16   noatl      Rossby       RAFOS    1993--1995    DAC
-       17   prelde     Rossby       SOFAR    1975--1985    DAC
-       18   semmed     Richardson   RAFOS    1993--1995    DAC
-       19   sitel      Owens        SOFAR    1982--1985    DAC
-       20   tasof      Schmitt      SOFAR    1989--1993    DAC
-       21   topo       Ollitrault   SOFAR    1983--1989    DAC
-       22   urigs      Rossby       RAFOS    1984--1985    DAC
-       23   urisyn     Rossby       RAFOS    1988--1990    DAC
-       24   wbc        Bower        RAFOS    1994--1997    DAC
-       25   wdbe       Hogg         RAFOS    1992--1998    DAC
-       26   wsub       Price        SOFAR    1991--1993    DAC
-       27   labsea     Brandt       RAFOS    2004--2006    PI
-       28   redsox     Bower        RAFOS    2001--2003    PI
-       29   exp        Bower        RAFOS    2003--2008    PI
-       30   mater      Gascard      RAFOS    1997--1998    PI
-       31   sofargos   Gascard      RAFOS    1994--1995    PI
-       32   esop       Gascard      RAFOS    1996--1998    PI
-       33   pomme      Gascard      RAFOS    2000--2001    PI
- 
-    The first column is the float experiment ID number in floats.expid, 
-    while the second column is a short experiment name, also listed in 
-    floats.experiments.
- 
-    "DAC" indicates the data was obtained from http://wfdac.whoi.edu/, 
-    and "PI" indicates it was obtained directly from the PI.  For the 
-    WFDAC floats, sometimes wfdac.whoi.edu lists multiple PIs; here we 
-    show only the first. 
- 
-    This includes all RAFOS and SOFAR from WFDAC apart from two, "trpac" 
-    and "shbas" (Tropical Pacific and Shikoku Basin) which are rather 
-    small, and also the only two outside of the Atlantic sector. 
+    The experiment names corresponding to 'expid' can be found in the
+    document FloatDatabaseTable.pdf, while the type names are given above.
+   
+    Use the <a href="jLab.html">JLAB</a> routine <a href="ncload.html">NCLOAD</a> to load the NetCDF file and convert all the
+    NaN-separated columns into cells, i.e. '<a href="ncload.html">ncload</a> floats'.
     __________________________________________________________________
  
     Dataset creation
  
     For completeness, the m-file <a href="about_floats.html">ABOUT_FLOATS</a> also contains the processing 
-    steps used in the creation of the WFDAC portion of FLOATS.MAT.
+    steps used in the creation of FLOATS.MAT and FLOATS.NC.
  
-    If you wish to do this yourself, with <a href="jLab.html">JLAB</a> on your search path, 
-    'about floats --create' will create the FLOATS.MAT dataset by reading 
-    in the original data, after these have been downloaded from the WFDAC
-    and unzipped.  Specifically we use the data files ending in 'asc.zip'. 
- 
-    You'll need to make sure to put the directory containing the files on
-    your Matlab search path using ADDPATH, e.g. 'addpath ~/Data/wocedac'.
-    It is important that the containing directory have the name 'wocedac'.
- 
-    Note that the velocity CV in FLOATS.MAT is computed from latitude,
-    longitude, and time using <a href="latlon2uv.html">LATLON2UV</a>.  
- 
-    Note that creation of the PI-provided datasets is not accomplished
-    here.  This is because the heterogeneous nature of those data files 
-    required a number of different processing steps.  The source data and 
-    processing scripts for these datasets are available upon request. 
+    If you wish to recreate these yourself, with <a href="jLab.html">JLAB</a> on your search path, 
+    'about floats --create' will create FLOATS.MAT and FLOATS.NC by 
+    reading in allFloats_12122017.mat as downloaded from AOML.  This 
+    dataset therefore needs to be on your search path. 
     __________________________________________________________________
  
     See also <a href="jData.html">JDATA</a>, <a href="about_drifters.html">ABOUT_DRIFTERS</a>.
@@ -139,5 +146,5 @@
            about_floats --create     
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details    
+    (C) 2014--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
