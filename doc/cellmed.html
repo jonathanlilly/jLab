@@ -1,0 +1,40 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLMED is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellmed.html">CELLMED</a>  Median value of each element a cell array.
+ 
+    M=<a href="cellmed.html">CELLMED</a>(X) where X is a cell array of N arrays, is equivalent to
+   
+       M(1,1)=MEDIAN(X{1}(:)) ,...,  M(N,1)=MEDIAN(X{N}(:))
+ 
+    thus returning an N x 1 array containing the mean values of each
+    element in the cell array.
+ 
+    In taking the median, non-finite values are ignored, as in <a href="vmedian.html">VMEDIAN</a>.
+    M is a column vector of the same length as X.  
+ 
+    [M1,M2,...,MP]=<a href="cellmed.html">CELLMED</a>(X1,X2,...,XP) also works for P different 
+    input arguments. 
+ 
+    <a href="cellmed.html">CELLMED</a>(X1,X2,...XP);  with no output arguments overwrites the 
+    original input variables.
+    __________________________________________________________________   
+ 
+    Parallelization
+ 
+    <a href="cellmed.html">CELLMED</a>(...,'parallel') parallelizes the computation using a PARFOR 
+    loop.  This requires that Matlab's Parallel Computing Toolbox be 
+    installed, and is useful for very large datasets.
+    __________________________________________________________________   
+ 
+    See also <a href="cellmean.html">CELLMEAN</a>, <a href="cellstd.html">CELLSTD</a>, <a href="jCell.html">JCELL</a>.
+ 
+    Usage: m=<a href="cellmed.html">cellmed</a>(x);
+           [m1,m2,m3]=<a href="cellmed.html">cellmed</a>(x1,x2,x3);
+           <a href="cellmed.html">cellmed</a>(x1,x2,x3);
+           <a href="cellmed.html">cellmed</a>(x1,x2,x3,'parallel');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

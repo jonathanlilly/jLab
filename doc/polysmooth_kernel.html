@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>POLYSMOOTH_KERNEL is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="polysmooth_kernel.html">POLYSMOOTH_KERNEL</a>  Returns the weighting kernel employed by <a href="polysmooth.html">POLYSMOOTH</a>.
+ 
+    <a href="polysmooth_kernel.html">POLYSMOOTH_KERNEL</a> is a low-level function called by <a href="polysmooth.html">POLYSMOOTH</a>. 
+ 
+    W=<a href="polysmooth.html">POLYSMOOTH</a>_KERNEL(DS,[],B,KERNSTR) where DS is an array of distances 
+    and B is a bandwidth, returns the value of the weighting function 
+    specified by the string KERNSTR at distances DS.  
+ 
+    See <a href="polysmooth.html">POLYSMOOTH</a> for valid choices of the string KERNSTR.
+ 
+    B is either a scalar, or a matrix the same size as DS(:,:,1).
+ 
+    W=<a href="polysmooth.html">POLYSMOOTH</a>_KERNEL(DS,[],B,L) where L is a scalar uses a Gaussian with 
+    a standard deviation set to B/L, as in W=EXP(-1/2*(L*DS/B)^2).
+ 
+    W=<a href="polysmooth.html">POLYSMOOTH</a>_KERNEL(DS,[],B,K) where K is an array takes K to be a 
+    custom kernel, with K(1) corresponding to DS/B=0 and K(end) to DS/B=1, 
+    interpolates within K to find the weight W at any distance.
+ 
+    W=<a href="polysmooth.html">POLYSMOOTH</a>_KERNEL(T,[],TAU,KERNSTR) works in just the same way if T 
+    is a time deviation and TAU is a temporal bandwidth.
+ 
+    W=<a href="polysmooth.html">POLYSMOOTH</a>_KERNEL(DS,WS,B,KERNSTR) optionally multiplies W, after 
+    computed as described above, by the additional weights given in WS.  
+ 
+    See also <a href="polysmooth.html">POLYSMOOTH</a>.
+ 
+    Usage: W=<a href="polysmooth.html">polysmooth</a>_kernel(d,[],B,kernstr);
+           W=<a href="polysmooth.html">polysmooth</a>_kernel(d,ws,B,kernstr);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>VRMS is the <a href="jVarfun.html">jVarfun</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="vrms.html">VRMS</a>  Root-mean-square of non-NaN elements along a specified dimension.
+ 
+    Y=<a href="vrms.html">VRMS</a>(X,DIM) takes the root-mean-square of all non-NaN elements of X 
+    along dimension DIM. 
+ 
+    That is, it is equivalent to Y=SQRT(<a href="vmean.html">VMEAN</a>(<a href="squared.html">SQUARED</a>(X),DIM));
+ 
+    [Y,NUM]=<a href="vrms.html">VRMS</a>(X,DIM) also outputs the number of non-NaN data points 
+    NUM, which has the same dimension as X.              
+ 
+    [Y1,Y2,...YN]=<a href="vrms.html">VRMS</a>(X1,X2,...XN,DIM) or also works, where all the XN
+    are the same size.  
+ 
+    <a href="vrms.html">VRMS</a>(X1,X2,...XN,DIM);  with no output arguments overwrites the 
+    original input variables.
+    __________________________________________________________________
+ 
+    Weighted means
+ 
+    Y=<a href="vrms.html">VRMS</a>(X,DIM,W) forms the weighted root-mean-square of X along 
+    dimension DIM using weights W, an array  of the same size as X. 
+ 
+    This is equivalent to Y=SQRT(<a href="vmean.html">VMEAN</a>(<a href="squared.html">SQUARED</a>(X),DIM,W));
+ 
+    In this case [Y,NUM]=<a href="vrms.html">VRMS</a>(X,DIM,W) returns total weight used in 
+    forming the mean at each point, rather than the number of data points.
+ 
+    [Y1,Y2,...YN]=<a href="vrms.html">VRMS</a>(X1,X2,...XN,DIM,W) also works. 
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

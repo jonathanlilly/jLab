@@ -1,0 +1,47 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>RIDGETRIM is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ridgetrim.html">RIDGETRIM</a>  Trim edge effect regions from wavelet ridges.
+ 
+    Wavelet ridges, such as those computed by <a href="ridgewalk.html">RIDGEWALK</a>, are generally 
+    contaminated by edge effects at both ends.  In these locations, the
+    ridges give biased estimates of the signal properties. 
+    
+    FRO=<a href="ridgetrim.html">RIDGETRIM</a>(P,RHO,FR), where P=SQRT(BETA*GAMMA) and FR is a column
+    vector of frequencies from the ridge analysis, removes RHO*P/pi
+    periods from the beginning and end of each ridge.  Ridges containing
+    less than two points after this trimming are removed.
+ 
+    Note that P=SQRT(BETA*GAMMA) is characterizes the generalized Morse 
+    wavelet used in the wavelet transform.
+ 
+    P/pi is approximately the number of oscillations within the central
+    window of the wavelet, see eqn. (37) of Lilly and Olhede (2009).
+ 
+    The choice RHO=1 thus corresponds to trimming one wavelet half-width 
+    from end.  Numerical experiments show RHO=1 is a good value, but this
+    depends somewhat on the values of GAMMA and BETA chosen.
+ 
+    For joint ridges for multivariate signals FR should be a column vector 
+    of the joint instantaneous frequency.  This is formed from the array FR
+    output by <a href="ridgewalk.html">RIDGEWALK</a> by the weighted average FR=<a href="vmean.html">VMEAN</a>(FR,1,ABS(WR).^2).
+ 
+    <a href="ridgetrim.html">RIDGETRIM</a>(DT,P,RHO,FR) specifies that FR has been computed with the
+    sample rate DT.
+ 
+    [FRO,X1O,X2O,...,XNO]=<a href="ridgetrim.html">RIDGETRIM</a>(P,RHO,FR,X1,X2,...,XN), where the XN
+    are any other ridge quantities, trims these in the same way as FR. The
+    XN are arrays having the same number of rows as FR.  
+ 
+    See also <a href="ridgewalk.html">RIDGEWALK</a>.
+    
+    '<a href="ridgetrim.html">ridgetrim</a> --f' generates a sample figure.
+ 
+    Usage: fr=<a href="ridgetrim.html">ridgetrim</a>(P,rho,fr);
+           [fr,wr,ir,jr]=<a href="ridgetrim.html">ridgetrim</a>(P,rho,fr,wr,ir,jr);
+           [fr,wr,ir,jr]=<a href="ridgetrim.html">ridgetrim</a>(dt,P,rho,fr,wr,ir,jr);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

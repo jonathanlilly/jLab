@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLSUM is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="cellsum.html">CELLSUM</a>  Sum of each element a cell array, possibly weighted.
+ 
+    S=<a href="cellsum.html">CELLSUM</a>(X) where X is a cell array of N arrays, is equivalent to
+   
+       S(1,1)=SUM(X{1}(:)),  S(2,1)=SUM(X{2}(:)), ...,  S(N,1)=SUM(X{N}(:))
+ 
+    thus returning an N x 1 array containing the sum over all values of 
+    each element in the cell array.
+ 
+    In taking the sum, non-finite values are ignored, as in <a href="vsum.html">VSUM</a>.
+    S is a column vector of the same length as X.  
+ 
+    [S1,S2,...,SP]=<a href="cellsum.html">CELLSUM</a>(X1,X2,...,XP) also works for P different 
+    input arguments. 
+ 
+    <a href="cellsum.html">CELLSUM</a>(X1,X2,...XP);  with no output arguments overwrites the 
+    original input variables.
+    __________________________________________________________________   
+ 
+    Weighted sums
+ 
+    <a href="cellsum.html">CELLSUM</a>(X,'weight',W) or <a href="cellsum.html">CELLSUM</a>(X1,X2,...,XP,'weight',W) where W is 
+    a cell array of the same size as the other input variables, computes
+    the weighted sum, using the weighting factor ABS(W).^2.  
+    __________________________________________________________________   
+ 
+    Parallelization
+ 
+    <a href="cellsum.html">CELLSUM</a>(...,'parallel') parallelizes the computation using a PARFOR 
+    loop.  This requires that Matlab's Parallel Computing Toolbox be 
+    installed, and is useful for very large datasets.
+    __________________________________________________________________   
+ 
+    See also <a href="cellstd.html">CELLSTD</a>, <a href="cellmed.html">CELLMED</a>, <a href="jCell.html">JCELL</a>.
+ 
+    Usage: s=<a href="cellsum.html">cellsum</a>(x);
+           [s1,s2,s3]=<a href="cellsum.html">cellsum</a>(x1,x2,x3);
+           <a href="cellsum.html">cellsum</a>(x1,x2,x3,'weight',w);
+           <a href="cellsum.html">cellsum</a>(x1,x2,x3);
+           <a href="cellsum.html">cellsum</a>(x1,x2,x3,'parallel');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2014--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

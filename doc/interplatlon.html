@@ -1,0 +1,72 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>INTERPLATLON is the <a href="jSphere.html">jSphere</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="interplatlon.html">INTERPLATLON</a>  Interpolation for working with latitude and longitude.
+ 
+    <a href="interplatlon.html">INTERPLATLON</a> performs 2D or 3D interpolation appropriate for latitude
+    and longitude.  It deals with issues arising from the periodicity of 
+    longitude in addition to performing several other convenient functions. 
+    __________________________________________________________________
+ 
+    2D Interpolation
+ 
+    Z=<a href="interplatlon.html">INTERPLATLON</a>(LATO,LONO,[],ZO,LAT,LON) performs a 2D interpolation
+    from the array ZO, which has latitude varying in LENGTH(LATO) columns
+    and longitude varying in LENGTH(LONO) rows, onto locations (LAT,LON).
+ 
+    Here LAT and LON are 2D arrays of the same size.  LATO and LONO should
+    1D arrays such that ZO is plaid; otherwise see <a href="sphereinterp.html">SPHEREINTERP</a>.
+ 
+    A difficulty in interpolating latitude and longitude is that longitude
+    is periodic, for example, if LONO=0.5:1:359.5.  Then the interpolation
+    can fail if 0<LON<0.5 or 359.5<LON<360.  <a href="interplatlon.html">INTERPLATLON</a> checks for LONO 
+    being periodic, and if so it handles the interpolation appropriately by
+    appending the last column of ZO to its front and the last to is back.
+ 
+    ZO may have multiple elements along its 3rd, 4th, or 5th dimension.  Z
+    will then have its first two dimensions matching LAT and LON, and
+    higher dimensions matching ZO.  
+ 
+    Z=<a href="interplatlon.html">INTERPLATLON</a>(LATO,LONO,[],ZO,LAT,LON,[],BOOL), where BOOL is a
+    boolean array with size SIZE(LAT), sets the corresponding entries of 
+    Z to NaNs.  BOOL could for example be true over land.  If Z has more
+    than 2 dimensions, this is done for each SIZE(LAT) element of Z.
+    __________________________________________________________________
+ 
+    Interpolation algorithm
+ 
+    <a href="interplatlon.html">INTERPLATLON</a> uses Matlab's INTERP2 with linear interpolation.  Data 
+    points for which linear interpolation does not return a valid value 
+    are filled with results from INTERP2 using the nearest-neighbor method.
+ 
+    INTERPLATON(...,'fill'), if LAT and LON are matrices of the from output 
+    by MESHGRID, will instead fill missing data points from the linear
+    interpolation with the results of a bin-averaging.  
+ 
+    This typically affects only a small number of points, but is useful in
+    controlling exactly what constitutes missing data.  
+ 
+    For example, when interpolating an ocean field from a finer grid to a 
+    coaser grid, linear interpolation will result in somewhat degraded 
+    continental boundaries. The 'fill' algorithm puts back in a few data 
+    points that would otherwise be missed by linear interpolation.
+    __________________________________________________________________
+ 
+    3D Interpolation
+ 
+    Z=<a href="interplatlon.html">INTERPLATLON</a>(LATO,LONO,TO,ZO,LAT,LON,T) similarly performs a 3D
+    interpolation, where TO is now time, with SIZE(ZO,3) being the same as
+    LENGTH(TO).  LAT, LON, and T are all the same size. 
+ 
+    Note that the 'fill' option does not work with 3D interpolation.
+    __________________________________________________________________
+ 
+    Usage: z=<a href="interplatlon.html">interplatlon</a>(lato,lono,[],zo,lat,lon);
+           z=<a href="interplatlon.html">interplatlon</a>(lato,lono,[],zo,lat,lon,[],bool);
+           z=<a href="interplatlon.html">interplatlon</a>(lato,lono,to,zo,lat,lon,t);
+           z=<a href="interplatlon.html">interplatlon</a>(lato,lono,to,zo,lat,lon,t,bool);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,41 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>ELLPOL is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ellpol.html">ELLPOL</a>  Polarization parameters of an elliptical signal.
+ 
+    [P,ALPHA,BETA]=<a href="ellpol.html">ELLPOL</a>(KAPPA,LAMBDA,THETA,PHI) where KAPPA, LAMBDA,
+    THETA, and PHI are the time-varying parameters of an elliptical signal,
+    returns the time-averaged polarization parameters P, ALPHA, and BETA.
+ 
+    P, ALPHA, and BETA are properties of the frequency-integrated spectral
+    matrix associated with the elliptical signal.  P is related to the 
+    eigenvalues D1 and D2 of that matrix by (D1-D2)(D1+D2).
+ 
+    P gives the total polarization, ALPHA is the excess of positive 
+    to negative rotational energy, and BETA is the polarization of the real
+    part of the spectral matrix associated with linear motions.
+ 
+    These three quantities are related by P^2=ALPHA^2+BETA^2.
+ 
+    The input fields may be arrays of any dimension.  The averaging is
+    performed along rows, and the result is then squeezed.  If the 
+    input fields are column arrays, the output fields are scalars.
+    
+    If the input fields are cell arrays of column vectors, the output
+    will be column vectors with one entry per cell of the input arrays.
+ 
+    [P,ALPHA,BETA,KBAR,RBAR]=<a href="ellpol.html">ELLPOL</a>(...) also returns the average RMS axis
+    length KBAR and average geometric mean radius RBAR, given in terms of
+    the eigenvalues as DBAR=SQRT(D1^2/2+D2^2/2) and RBAR=SQRT(D1*D2).
+ 
+    See also <a href="polparams.html">POLPARAMS</a>.
+ 
+    '<a href="ellpol.html">ellpol</a> --t' runs some tests.
+ 
+    Usage: [P,alpha,beta]=<a href="ellpol.html">ellpol</a>(kappa,lambda,theta,phi);
+           [P,alpha,beta,Kbar,Rbar]=<a href="ellpol.html">ellpol</a>(kappa,lambda,theta,phi);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

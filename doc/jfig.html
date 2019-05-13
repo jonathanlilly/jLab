@@ -1,0 +1,90 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>JFIG is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="jfig.html">JFIG</a>  Shorthand for tweaking figures. 
+ 
+    <a href="jfig.html">JFIG</a> is a shorthand syntax for tweaking figures.  It works like this.
+ 
+       jfig equal ticksout yrev axis|[5 45 5 45] caxis|[-8 8] ...
+            title|['Demonstration of JFIG'] colorbar|['eastoutside']
+ 
+    This call to <a href="jfig.html">JFIG</a> is equivalent to
+      
+       axis equal, set(gca,'tickdir','out'), set(gca,'ydir','reverse')
+       axis([5 45 5 45]), caxis([-8 8]), title('Demonstration of JFIG')
+       colorbar(gca,'eastoutside')
+    
+    <a href="jfig.html">JFIG</a> takes two kinds of arguments.  The first are one-word commands, 
+    such as 'equal', 'ticksout', and 'yrev'.  A list is provided below.  
+ 
+    The second kind of argument is a function with one input argument.  The
+    function name is separated from the argument by a vertical bar, '|'.
+    For these the function is simply called with the following argument.  
+ 
+    Note strings or arrays have to be enclosed in brackets in this format.
+    Arguments can also be variables, i.e., the following also works:
+ 
+        ax=[5 45 5 45]; cax=[-8 8];  jfig axis|ax caxis|cax
+ 
+    Any single-argument function can be called in this way.   
+ 
+    There are two exceptions for the single-argument functions.  Firstly, 
+    colorbar is called with GCA as its first argument whatever appears
+    after the '|' as its second argument.  Secondly, if the function name
+    is 'eval', its argument will be evaluated in the caller.  
+ 
+    The one-word commands and the single-argument functions can appear in
+    any order within a call to <a href="jfig.html">JFIG</a>.
+ 
+    By default, <a href="jfig.html">JFIG</a> turns on hold and also turns on the axis box. 
+    _______________________________________________________________________
+ 
+    One-word commands
+ 
+       new          - figure
+       clf          - clf
+       square       - axis square
+       equal        - axis equal
+       tight        - axis tight
+       holdon       - hold on
+       holdoff      - hold off
+       xlin         - set(gca,'xscale','linear')
+       ylin         - set(gca,'yscale','linear')
+       zlin         - set(gca,'zscale','linear')
+       xlog         - set(gca,'xscale','log')
+       ylog         - set(gca,'yscale','log')
+       zlog         - set(gca,'zscale','log')
+       xrev         - set(gca,'xdir','reverse')
+       yrev         - set(gca,'ydir','reverse')
+       zrev         - set(gca,'zdir','reverse')
+       xnorm        - set(gca,'xdir','normal')
+       ynorm        - set(gca,'ydir','normal')
+       znorm        - set(gca,'zdir','normal')
+       noxlabels    - set(gca,'<a href="xtick.html">xtick</a>label',[])
+       noylabels    - set(gca,'<a href="ytick.html">ytick</a>label',[])
+       nozlabels    - set(gca,'<a href="ztick.html">ztick</a>label',[])
+       xmonths      - set(gca,'<a href="xtick.html">xtick</a>',[1:12]+0.5),xlabel('Month'),...
+                        set(gca,'<a href="xtick.html">xtick</a>label',['JFMAMJJASOND']')
+       ymonths      - set(gca,'<a href="ytick.html">ytick</a>',[1:12]+0.5),ylabel('Month'),...
+                        set(gca,'<a href="ytick.html">ytick</a>label',['JFMAMJJASOND']')
+       zmonths      - set(gca,'<a href="ztick.html">ztick</a>',[1:12]+0.5),zlabel('Month'),...
+                        set(gca,'<a href="ztick.html">ztick</a>label',['JFMAMJJASOND']')
+       ticksin      - set(gca,'tickdir','in')
+       ticksout     - set(gca,'tickdir','out')
+       boxon        - set(gca,'box','on')
+       boxoff       - set(gca,'box','off')
+       topoplot     - topoplot
+       nocontours   - nocnoturs
+       latlon       - xlabel('Longitude'),ylabel('Latitude')
+       landscape    - orient landscape
+       portrait     - orient portrait
+    _______________________________________________________________________
+ 
+    '<a href="jfig.html">jfig</a> --f' generates a sample figure using the code presented above.
+ 
+    Usage: jfig equal ticksout yrev axis|[5 45 5 45] caxis|[-8 8] 
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

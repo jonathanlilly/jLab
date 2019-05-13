@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>COLORQUANT is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="colorquant.html">COLORQUANT</a>  Set the color axis according to quantiles of the data.
+ 
+    <a href="colorquant.html">COLORQUANT</a>(Q) sets the limits of the color axis CAXIS to the Qth and 
+    the 100-Qth data quantiles.  In other words, Q percent of the data will
+    be below, and Q percent below, the limits of the color axis.
+ 
+    This can save you a lot of time versus manually setting color axes.
+ 
+    <a href="colorquant.html">COLORQUANT</a>(QA,QB) sets the limits to the QAth and QBth quantiles.
+    
+    Note that the parenthesis are optional when the input arguments are 
+    numbers, so one can type '<a href="colorquant.html">colorquant</a> 10.5' or '<a href="colorquant.html">colorquant</a> 10 95'.
+ 
+    <a href="colorquant.html">COLORQUANT</a> with no input arguments uses the default value of Q=0.1.
+ 
+    <a href="colorquant.html">COLORQUANT</a> works by grabbing all surface, contour, and scatter data 
+    values on the current set of axes. 
+ 
+    CAX=<a href="colorquant.html">COLORQUANT</a>(...) returns the value of the color axis.
+ 
+    Usage: colorquant
+           <a href="colorquant.html">colorquant</a>(Q)
+           <a href="colorquant.html">colorquant</a>(Q1,Q2)
+           colorquant 10
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
