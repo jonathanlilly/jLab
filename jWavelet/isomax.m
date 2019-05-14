@@ -3,7 +3,7 @@ function[varargout]=isomax(varargin)
 %  
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", submitted.  Available at www.jmlilly.net.
+%   events in noisy time series", available at www.jmlilly.net.
 %  
 %   BOOL=ISOMAX(SIZ,INDEX,WW,FF,GAMMA,BETA,MU,LAMBDA) returns an boolean
 %   array is true for transform maxima that are isolated from other maxima.

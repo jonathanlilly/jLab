@@ -3,19 +3,20 @@ function[varargout]=max2eddy(varargin)
 %
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", submitted.  Available at www.jmlilly.net.
+%   events in noisy time series", available at www.jmlilly.net.
 %  
-%   [A,R,RO]=MAX2EDDY(DX,LAT,C,RHO) converts the wavelet transform maxmima
-%   properties C and RHO, at latitudes LAT and with alongtrack sample
-%   intervals of DX, into estimated coherent eddy properties A, R, and Ro.
+%   [A,R,V,RO]=MAX2EDDY(DX,LAT,C,RHO) converts the wavelet transform 
+%   maxmima properties C and RHO, at latitudes LAT and with alongtrack 
+%   sample intervals of DX, into estimated eddy properties A, R, V, and Ro.
 %
 %   C and RHO are as output by MAXPROPS.
 %
 %   The real part of A is the *apparent* coherent eddy displacement in 
 %   centimeters, while R is the apparent eddy radius in kilometers.  The 
-%   real part of Ro is a Rossby number estimate formed from A and Ro.  
+%   real part of V is a velocity estimate formed from A and R, and the 
+%   real part of Ro is a similarly formed Rossby number estimate.
 %
-%   Note that the imaginary parts of A and Ro reflect the magnitude of
+%   Note that the imaginary parts of A, V, and Ro reflect the magnitude of
 %   the locally odd, or sin-like, portion of the anomaly.  These will 
 %   vanish for the noise-free transform of a Gaussian eddy.
 %
@@ -27,10 +28,10 @@ function[varargout]=max2eddy(varargin)
 %
 %   'max2eddy --t' runs a test.
 %
-%   Usage: [A,R,Ro]=max2eddy(dx,lat,C,rho);
+%   Usage: [A,R,V,Ro]=max2eddy(dx,lat,C,rho);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     max2eddy_test,return
@@ -44,10 +45,12 @@ rho=varargin{4};
 A=frac(C,2*sqrt(pi));
 R=sqrt(2)*rho.*dx;
 Ro=-1*frac(9.81*A/100,sqrt(exp(1)).*squared(corfreq(lat)/3600.*(R*1000)));
+V =-1*frac(9.81*A/100,sqrt(exp(1)).*(corfreq(lat)/3600.*(R*1000)));
 
 varargout{1}=A;
 varargout{2}=R;
-varargout{3}=Ro;
+varargout{3}=V;
+varargout{4}=Ro;
 
 function[]=max2eddy_test
 
@@ -61,7 +64,7 @@ w=wavetrans(y,{ga,be,fs},'mirror');
 [index,ww,ff]=transmax(fs,w);
 [C,rho,frho]=maxprops(ww,ff,ga,be,0);
 
-[A,R,Ro]=max2eddy(dx,45,C,rho);
+[A,R,~,Ro]=max2eddy(dx,45,C,rho);
 reporttest('MAX2EDDY matches test Gaussian with BETA=1',aresame(real(A),1,0.05)&&aresame(R,50,0.5))
 
 ga=2;be=2;
@@ -70,7 +73,7 @@ w=wavetrans(y,{ga,be,fs},'mirror');
 [index,ww,ff]=transmax(fs,w);
 [C,rho,frho]=maxprops(ww,ff,ga,be,0);
 
-[A,R,Ro]=max2eddy(dx,45,C,rho);
+[A,R,~,Ro]=max2eddy(dx,45,C,rho);
 
 reporttest('MAX2EDDY matches test Gaussian with BETA=2',aresame(real(A),1,1e-2)&&aresame(R,50,2.5e-2))
 
@@ -80,7 +83,7 @@ w=wavetrans(y,{ga,be,fs},'mirror');
 [index,ww,ff]=transmax(fs,w);
 [C,rho,frho]=maxprops(ww,ff,ga,be,0);
 
-[A,R,Ro]=max2eddy(dx,45,C,rho);
+[A,R,~,Ro]=max2eddy(dx,45,C,rho);
 reporttest('MAX2EDDY matches test Gaussian with BETA=3',aresame(real(A),1,1e-2)&&aresame(R,50,3e-2))
 
 

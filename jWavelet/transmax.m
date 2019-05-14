@@ -3,7 +3,7 @@ function[varargout]=transmax(varargin)
 %
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", submitted.  Available at www.jmlilly.net.
+%   events in noisy time series", available at www.jmlilly.net.
 %  
 %   [INDEX,WW,FF]=TRANSMAX(FA,W) gives the indicies INDEX, transform values
 %   WW, and scale frequencies FF of all the maxima points in time and scale
@@ -23,7 +23,7 @@ function[varargout]=transmax(varargin)
 %   Note that W can have up to four dimensions.  This is useful for
 %   datasets containing many replicate time series. Use 
 % 
-%           [II,JJ,KK,RR]=IND2SUB(SIZE(W),INDEX)
+%           [II,JJ,KK,LL]=IND2SUB(SIZE(W),INDEX)
 %
 %   to convert INDEX into row numbers II, column numbers JJ, and so forth.
 %

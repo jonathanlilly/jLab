@@ -737,6 +737,7 @@ wwtilde=ww./(sigma.*sqrt(ff./fs(1)));
 %Forming false detection rates
 N=length(find(~wasfilled(:)));
 tic;[count,bins,rate]=transmaxdist(ga,be,0,fs,fs(1)./fs(2),N,2000,'extrap');toc
+%tic;[count,bins,rate]=transmaxdist(ga,be,0,fs,fs(1)./fs(2),N,100,'extrap');toc
 fdr=interp2(fs,bins,rate,ff,abs(wwtilde));
 fdr(isnan(fdr))=0;
 

@@ -3,7 +3,7 @@ function[varargout]=maxprops(varargin)
 %
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", submitted.  Available at www.jmlilly.net.
+%   events in noisy time series", available at www.jmlilly.net.
 %
 %   [C,RHO,FRHO]=MAXPROPS(WW,FF,GAMMA,BETA,MU) returns estimated signal
 %   properties as inferred from values of the wavelet the transfrom maxima.
@@ -14,10 +14,10 @@ function[varargout]=maxprops(varargin)
 %   have values WW and scale frequencies FF, as output by TRANSMAX.
 %   
 %   C is the estimated complex-valued coefficients of the (GAMMA,MU)
-%   wavelets that are taken to correspond to these maxima, FRHO are their
-%   scale frequencies, and RHO are their scales.
+%   wavelets that are taken to correspond to these maxima, RHO are their
+%   scales, and FRHO are their scale frequencies.
 %
-%   The output fields are all arrays having the same length as JJ and WW.
+%   The output fields are all arrays having the same length as WW and FF.
 %
 %   For details, see Lilly (2017).
 %

@@ -3,7 +3,7 @@ function[varargout]=transmaxdist(varargin)
 %
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", submitted.  Available at www.jmlilly.net.
+%   events in noisy time series", available at www.jmlilly.net.
 %  
 %   [COUNT,BINS]=TRANSMAXDIST(GAMMA,BETA,ALPHA,FS,R,N,M) returns the 
 %   histogram of wavelet transform maxima magnitudes, for a length N time 
@@ -47,7 +47,7 @@ function[varargout]=transmaxdist(varargin)
 %   Additional options
 %
 %   TRANSMAXDIST(...,BINS) alternately uses BINS for the bin centers 
-%   instead of the default choice, which is set to LINSPACE(0,6,400)'.
+%   instead of the default choice, which is set to LINSPACE(0,6,200)'.
 %
 %   By default, TRANSMAXDIST performs a simulation for each of the scale
 %   frequencies in FS.  TRANSMAXDIST(...,'extrapolate') instead computes
