@@ -31,6 +31,9 @@
 %   col2mat    - Expands 'column-appended' data into a matrix.                      
 %   colbreaks  - Insert NANs into discontinuties in a vector.                       
 %   mat2col    - Compress NAN-padded matrix data into long columns.    
+%
+%  Low-level functions
+%   jhanning   - Hanning window.
 %   
 %  See also jCell.
 help jvarfun

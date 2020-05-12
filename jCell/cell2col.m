@@ -31,7 +31,7 @@ function[varargout]=cell2col(varargin)
 %          [c1,c2,...,cN]=cell2col(x1,x2,...,xN);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2020 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1}, '--t')
     cell2col_test,return
@@ -45,7 +45,6 @@ end
 
 for i=1:length(varargin)
     ray=varargin{i}(:);
-    
     if strcmpi(str(1:3),'nan')
         width=ones(1,max(cellsize(ray,2)));
         for j=1:length(ray)
@@ -79,6 +78,7 @@ eval(to_overwrite(nargin));
 
 function[]=cell2col_test
 %function[]=cell2col_test
+
 x{1}=[1 1]';
 x{2}=3;
 x{3}=[2 2 2]';

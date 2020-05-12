@@ -127,12 +127,12 @@ function[varargout]=ridgewalk(varargin)
 %   'ridgewalk --t' runs a test.
 %   'ridgewalk --f' generates a sample figure.
 %
-%   Usage: [wr,ir,jr,fr,er]=ridgewalk(w,fs,P);
-%          [wr,ir,jr,fr,er]=ridgewalk(w,fs,P,M);
-%          [wr,ir,jr,wr,fr,er]=ridgewalk(dt,w,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er]=ridgewalk(dt,wx,wy,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er]=ridgewalk(dt,wx,wy,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er]=ridgewalk(dt,wx,wy,fs,P,M,rho);
+%   Usage: [wr,ir,jr,fr,er,br,cr]=ridgewalk(w,fs,P);
+%          [wr,ir,jr,fr,er,br,cr]=ridgewalk(w,fs,P,M);
+%          [wr,ir,jr,wr,fr,er,br,cr]=ridgewalk(dt,w,fs,P,M);
+%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M);
+%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M);
+%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M,rho);
 %   _______________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2004--2019 J.M. Lilly --- type 'help jlab_license' for details
@@ -210,6 +210,7 @@ function[varargout]=ridgewalk(varargin)
 %*************************************************************************
 
 
+%   An old idea, I don't know if this is a good idea or not
 %   RIDGEWALK can be used to create a de-biased estimate of the signal,
 %   following Lilly and Olhede (2010).  This estimate is given by
 %

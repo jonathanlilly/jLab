@@ -42,6 +42,17 @@ function[varargout]=ridgetrim(varargin)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2018 J.M. Lilly --- type 'help jlab_license' for details
  
+
+
+%This is implemented but not useful.  Not useful because, for reasons that
+%are not clear, there are high-eccentricity events near then edges that
+%occur preferentially when the estimated error is *low*
+%
+%   RIDGETRIM(DT,P,[RHO CHI],FR,ER) where ER is the error estimate produced
+%   by RIDGEWALK, only applies the ridge trimming if the average over RHO 
+%   wavelet widths of ER exceeds CHI.  Only high-error ends are removed.
+
+
 if strcmp(varargin{1}, '--f')
     type makefigs_ridgetrim
     makefigs_ridgetrim;
@@ -52,25 +63,48 @@ elseif strcmp(varargin{1}, '--t')
 end
  
 dt=1;
-if length(varargin{3})==1
+if length(varargin{3})<=2 
     dt=varargin{1};
     varargin=varargin(2:end);
 end
 P=varargin{1};
-rho=varargin{2};
-fr=varargin{3};
-args=varargin(4:end);
-
-[fr,args]=trimedges(dt,P,rho,fr,args);
-varargout{1}=fr;
-for i=1:length(args)
-    varargout{i+1}=args{i};
+chi=[];
+er=[];
+if length(varargin{2})==1
+    rho=varargin{2};
+    fr=varargin{3};
+    args=varargin(4:end);
+else
+    rho=varargin{2}(1);
+    chi=varargin{2}(2);
+    fr=varargin{3};
+    er=varargin{4};
+    args=varargin(5:end);
 end
 
-function [fr,args]=trimedges(dt,P,rho,fr,args)
+[fr,er,args]=trimedges(dt,P,rho,chi,fr,er,args);
+varargout{1}=fr;
+if isempty(er)
+    for i=1:length(args)
+        varargout{i+1}=args{i};
+    end
+else
+    varargout{2}=er;
+    for i=1:length(args)
+        varargout{i+2}=args{i};
+    end
+end
+
+function [fr,er,args]=trimedges(dt,P,rho,chi,fr,er,args)
 
 if ~isempty(fr)
+    %dt,P,rho,chi
+    %vsize(dt,P,rho,chi,fr,er,args)
+    
     fr=col2cell(fr);
+    if ~isempty(er)
+        er=col2cell(er);
+    end
     
     for i=1:length(args)
         args{i}=col2cell(args{i});
@@ -79,14 +113,37 @@ if ~isempty(fr)
     for j=1:length(fr)        
         ar=cumsum(fr{j}./(2*pi).*dt,1);  %Ridge age in cycles
         br=ar(end)-ar;                   %Reverse ridge age
-
-        a=find(ar>(rho*P/pi),1,'first');
-        b=find(br>(rho*P/pi),1,'last');
         
-        fr{j}=fr{j}(a:b);
-        
-        for i=1:length(args)
-            args{i}{j}=args{i}{j}(a:b,:);
+        if isempty(chi)
+            a=find(ar>(rho*P/pi),1,'first');
+            b=find(br>(rho*P/pi),1,'last');
+            fr{j}=fr{j}(a:b);
+            for i=1:length(args)
+                args{i}{j}=args{i}{j}(a:b,:);
+            end
+        else
+            a=find(ar>(rho*P/pi),1,'first');
+            err=vmean(er{j}(1:max(a-1,1)),1);
+            if err>chi
+                fr{j}=fr{j}(a:end);
+                er{j}=er{j}(a:end);
+                ar=ar(a:end);
+                br=br(a:end);
+                for i=1:length(args)
+                    args{i}{j}=args{i}{j}(a:end,:);
+                end
+            end
+            b=find(br>(rho*P/pi),1,'last');
+            err=vmean(er{j}(min(b+1,length(er{j})):length(er{j})),1);
+            if err>chi
+                fr{j}=fr{j}(1:b);
+                er{j}=er{j}(1:b);
+                ar=ar(1:b);
+                br=br(1:b);
+                for i=1:length(args)
+                    args{i}{j}=args{i}{j}(1:b,:);
+                end
+            end
         end
     end
     
@@ -94,6 +151,10 @@ if ~isempty(fr)
     fr=fr(index);
     fr=cell2col(fr);
     
+    if ~isempty(er)
+       er=er(index);
+       er=cell2col(er); 
+    end
     for i=1:length(args)
         args{i}=args{i}(index);
         args{i}=cell2col(args{i});

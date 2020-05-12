@@ -125,6 +125,7 @@ else
     index=(M+3)/2:size(Z,dim);
     Z=vindexinto(Z,0,index,dim);
 end
+
 %size(Z)
 
 if ~strcmpi(str(1:3),'fre')

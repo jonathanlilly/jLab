@@ -728,7 +728,6 @@ sizew=size(w);
 [ii,jj,kk]=ind2sub(size(w),index);
 lat=lat(ii);lon=lon(ii);num=num(kk);
 
-
 %Estimating noise standard deviation
 sigma=sqrt(vmean(vcolon(squared(w(:,1,:))),1));
 wwtilde=ww./(sigma.*sqrt(ff./fs(1)));

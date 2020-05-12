@@ -168,15 +168,6 @@ for i=1:size(data,2)
 	smooth(:,i)=temp(a:a+N-1);
 end
 
-function[window]=jhanning(n)
-window=frac(1,2)*(1-cos(frac(2*pi*(1:ceil(n/2)),n+1)))';
-
-if iseven(n)
-    window=[window;flipud(window)];
-else
-    window=[window(1:end-1);flipud(window)];
-end
-
 
 function[]=vfilt_test
 x =[0 0 1 1 0 0]';

@@ -8,7 +8,7 @@ function[h,hc]=jpcolor(varargin)
 %   This is unlike PCOLOR(X,Y,Z), where X and Y mark the cell *edges*.  
 %
 %   Similarly, unlike PCOLOR, JPCOLOR does not throw away the last row and
-%   column of Z.
+%   column of Z. It also specifies the axes to be centered on the cells.
 %
 %   JPCOLOR also automatically applies SQUEEZE to Z, which is useful for 
 %   working with slices of multidimensional datasets.
@@ -44,7 +44,7 @@ function[h,hc]=jpcolor(varargin)
 %          jpcolor(x,y,z,'Temperature','SO');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--f')
     type makefigs_jpcolor
@@ -84,8 +84,8 @@ end
 x=x(:);
 y=y(:);
 
-%dx=x(2)-x(1);
-%dy=y(2)-y(1);
+dx=x(2)-x(1);
+dy=y(2)-y(1);
 
 x=interp1([1:length(x)]',x,[1:length(x)+1]','pchip','extrap');
 y=interp1([1:length(y)]',y,[1:length(y)+1]','pchip','extrap');
@@ -105,7 +105,8 @@ z=vswap(z,-inf,nan);
 
 %vsize(x,y,z);
 
-h=pcolor(x,y,z);shading flat
+%h=pcolor(x,y,z);shading flat
+h=pcolor(x-dx/2,y-dy/2,z);shading flat
 uistack(h,'bottom')
 axis([min(x) max(x) min(y) max(y)])
 boxon

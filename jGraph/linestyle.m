@@ -10,7 +10,7 @@ function[]=linestyle(varargin)
 %   style; and the third to width 1, color magenta, and dash-dotted style.
 %
 %   LINESTYLE's color options supports grayscale colors, denoted by capital
-%   letters A--F, with A being white and K being black.  
+%   letters A--K, with A being white and K being black.  
 %
 %   Also, the new Matlab colors are denoted by the letters T through Z.
 %

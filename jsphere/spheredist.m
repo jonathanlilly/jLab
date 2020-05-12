@@ -136,6 +136,8 @@ end
 
 bool=isnan(lat1)|isnan(lat2)|isnan(lon1)|isnan(lon2);
 d(bool)=nan;
+bool=isinf(lat1)|isinf(lat2)|isinf(lon1)|isinf(lon2);
+d(bool)=inf;
 
 
 function[d]=spheredist_one(lat1,lon1,lat2,lon2,R,flag)

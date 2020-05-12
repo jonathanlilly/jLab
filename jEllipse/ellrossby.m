@@ -5,26 +5,29 @@ function[Ro]=ellrossby(lat,lambda,omega)
 %   for an ellipse with linearity LAMBDA and joint instantaneous frequency
 %   OMEGA, in radians per day, at latitude LAT.
 %  
-%   The magnitude of the ellipse Rossby number is |RO|=|OMEGA/F| where F
+%   The magnitude of the ellipse Rossby number is |RO|=|2*OMEGA/F| where F
 %   is the signed Coriolis frequency at latitude LAT.  
 %
 %   The sign of RO is SIGN(RO)=-SIGN(LAMBDA/F), so that RO is positive for
 %   cyclones, and negative for anticyclones, in both hemispheres. 
 %
 %   For circular eddies, this definition of Rossby number is equivalent to
-%   RO=-V/(R*F), where R is the radial distance to the eddy center and V is
+%   RO=-2V/(RF), where R is the radial distance to the eddy center and V is
 %   the signed instantaneous azimuthal velocity. 
 %
 %   The input arguments may also be cell arrays of numeric arrays, all 
 %   having the same size.  RO will then be a similarly sized cell array.
 %   Alternatively, LAMBDA and OMEGA may be cell arrays and LAT a constant.
 %
+%   **Note** as of March 21, 2020, the factor of two has been included in
+%   order to be consistent with definitions used elsewhere.
+%
 %   'ellrossby --t' runs a test.
 %
 %   Usage: ro=ellrossby(lat,lambda,omega);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2011--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2011--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(lat, '--t')
     ellrossby_test,return
@@ -52,7 +55,7 @@ end
 function[Ro]=ellrossby_one(lat,lambda,omega)
 
 fcor=(corfreq(lat))*24;  %Coriolis frequency in radians per day at center 
-Ro=sign(lambda).*frac(omega,fcor); %Rossby number under solid-body assumption
+Ro=2*sign(lambda).*frac(omega,fcor); %Rossby number under solid-body assumption
     
     
 function[]=ellrossby_test
@@ -90,9 +93,9 @@ ro=ellrossby(lat,lambda,fr);
 
 rm=ellrad(kappa,lambda);
 vm=ellvel(24*3600,kappa,lambda,theta,phi,1e5);
-om2=vm./rm*frac(24*3600,100*1000);
+om2=2*vm./rm*frac(24*3600,100*1000);
 ro2=om2./abs(corfreq(lat))/24;
 
-reporttest('ELLROSSBY matches V/(Rf) form to within 2% for EBASN anticyclone', sqrt(vmean(squared(ro-ro2),1))./abs(vmean(ro,1))<0.02)
+reporttest('ELLROSSBY matches 2V/(Rf) form to within 2% for EBASN anticyclone', sqrt(vmean(squared(ro-ro2),1))./abs(vmean(ro,1))<0.02)
 
 

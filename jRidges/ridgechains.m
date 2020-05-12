@@ -161,12 +161,17 @@ if ~isempty(mask)&&~isempty(ii)
   
     %And remove short ridges again
     lr=ridgelen(1,id,fr);
+    %[lr(1) N]
+    
     vindex(id,ii,jj,indexridge,xr,fr,lr,find(lr>N),1);
+    %length(find(isnan(id)))
     
     %Remove isolated points. 
     bool=~(~isnan(id)&isnan(vshift(id,-1,1))&isnan(vshift(id,1,1)));
+    %figure,plot(bool,'+')
     vindex(id,ii,jj,indexridge,xr,fr,lr,bool,1);
-    %figure,plot(ii,lr,'.'),hlines((2*sqrt(6)/pi)),ylog,N
+    %figure,plot(ii,lr,'.'),hlines(N)%,ylog,N
+    %figure,plot(ii,fr,'.')
 end
 %\**************************************************************
 

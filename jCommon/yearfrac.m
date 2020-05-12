@@ -21,7 +21,7 @@ function[yf,mf]=yearfrac(num)
 %          [yf,mf]=yearfrac(num);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 1998--2016 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 1998--2020 J.M. Lilly --- type 'help jlab_license' for details        
   
 if ~iscell(num)
     if strcmpi(num, '--t')
@@ -40,6 +40,8 @@ if iscell(num)
     end
 else
     [yf,mf]=yearfrac1(num);
+    yf=reshape(yf,size(num));
+    mf=reshape(mf,size(num));
 end
 
 function[yf,mf]=yearfrac1(num)

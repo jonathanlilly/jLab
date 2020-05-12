@@ -16,6 +16,8 @@ function[datao]=fillbad(data,i2,i3,i4)
 %   real and imaginary parts separately.  For a FLAG of NAN, this means 
 %   the data must contain NAN+SQRT(-1)*NAN.
 %
+%   FILLBAD(...,STR) uses the interpolation method specified in STR.
+%
 %   DATAC=FILLBAD(DATAC,...) also works when the input DATAC is a cell
 %   array of numerical arrays, DATAC{1}=DATA1, DATAC{2}=DATA2, etc. The 
 %   output is then a cell array of the identical size.
@@ -26,7 +28,7 @@ function[datao]=fillbad(data,i2,i3,i4)
 %          data=fillbad(data,flag,maxnan);   
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 2000--2015 J.M. Lilly --- type 'help jlab_license' for details  
+%   (C) 2000--2020 J.M. Lilly --- type 'help jlab_license' for details  
 
 %
 %   FILLBAD(...,STR) uses interpolation method specified by STR; see
@@ -59,7 +61,6 @@ elseif nargin==4
     maxn=i3;
     str=i4;
 end
-
 
 
 %corrected this to ignore missing values at beginning and end
@@ -125,7 +126,7 @@ if ~isempty(index)
           end	
           for i=1:length(lblocks)
              if lblocks(i)<=maxn
-                temp=interp1([ia(i) ib(i)],[data(ia(i)) data(ib(i))],ia(i)+1:ib(i)-1);
+                temp=interp1([ia(i) ib(i)],[data(ia(i)) data(ib(i))],ia(i)+1:ib(i)-1,str);
                 data(ia(i)+1:ib(i)-1)=temp;
              end
           end

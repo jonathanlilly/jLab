@@ -17,7 +17,7 @@ function[K,L]=ab2kl(A,B)
 %   Usage: [kappa,lambda]=ab2kl(a,b)
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2009 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(A, '--t')
     ab2kl_test,return
@@ -31,7 +31,7 @@ end
 
 L=sign(B).*frac(A.^2-B.^2,A.^2+B.^2);
 K=sqrt(frac(A.^2+B.^2,2));
-L(B==0)=1e-1;
+L(B==0)=1;
 
 function[]=ab2kl_test
 

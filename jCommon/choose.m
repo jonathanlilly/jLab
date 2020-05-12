@@ -1,7 +1,7 @@
 function[b]=choose(n,k)
 %CHOOSE  Binomial coefficient: CHOOSE(N,K) = N!K!/(N-K)!
 %
-%   CHOOSE(N,M) returns the binomial coefficient "N choose K", written
+%   CHOOSE(N,K) returns the binomial coefficient "N choose K", written
 %
 %         ( N )         N!    
 %         (   )   =  --------
@@ -17,4 +17,20 @@ function[b]=choose(n,k)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details
  
+
+if length(k)==1&&length(n)~=1
+    k=k+0*n;
+elseif length(k)~=1&&length(n)==1
+    n=n+0*k;
+end
+bool=k>n;
+k(k>n)=0;
+
+% b=zeros(size(n));
+% n,k
+% for i=1:length(n)
+%     b(i)=(factorial(n(i)))./(factorial(k(i)).*factorial(n(i)-k(i)));
+% end
+
 b=(factorial(n))./(factorial(k).*factorial(n-k));
+b(bool)=nan;

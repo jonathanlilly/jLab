@@ -1,5 +1,29 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.6.7
+%
+%   New functions:
+%
+%   eddyfit2d     - Least squares fit of 2D velocity data to an eddy profile.
+%   monthstats    - Mean month and standard deviation using circular statistics.
+%   jhanning      - Hanning window.
+%   celldot       - Dot product for arrays of column vectors.
+%  
+%   Updated datasets:  JTOPO global topography is now at 1/12th resolution.
+%
+%   Changes and improvements:
+%
+%   AB2KL bugfix for B=0.
+%   READTOPO bugfixes when using interpolation option.
+%   PERIODINDEX new, faster algorithm based on ridge age.
+%   VMOMENT bugfix affecting all odd moments.
+%   LETTERLABELS bugfix to avoid legend handles, if present. 
+%   CELLPACK functionality change to key off of the first input argument.
+%   VSTD redefined for complex-valued arguments.
+%   YEARFRAC bugfix for NUM consisting of a ND array.
+%   ELLROSSBY factor of two change to be consisent with the literature.
+%   -----------------------------------------------------------------------
+%
 %   Changes new in version 1.6.6
 %
 %   Figure making for a new publications:
@@ -19,6 +43,7 @@
 %   cellmed      - Median value of each element a cell array.
 %   cellsum      - Sum of each element a cell array, possibly weighted.
 %   interplatlon - Interpolation for working with latitude and longitude.
+%   jhanning      - Hanning window.
 %
 %   Updated datasets:  All datasets now include both a mat-file version and
 %        a NetCDF version.  The NetCDF versions are larger but load faster.

@@ -9,8 +9,10 @@ function[h,hc]=topoplot(varargin)
 %   TOPOPLOT with no input arguments makes a plot of the earth's topography
 %   within the axis of the current plot, with continents shown in black. 
 %
-%   'TOPOPLOT shelves' plots the continents in black and also the 
-%   continental shelves at a depth of 500~m in gray.
+%   Calling 'topoplot gray' plots the continents in gray instead of black.
+%
+%   Additionally 'topoplot shelves' plots the continents in black and also
+%   the continental shelves at a depth of 500~m in gray.
 %
 %   If the current plot is empty, TOPOPLOT uses the domain -180 to 180 
 %   degrees in longitude, and -80.666 to 80.666 degrees in latitude.
@@ -104,7 +106,7 @@ for i=1:3
         if ischar(varargin{end})
             if strfind(lower(varargin{end}),'m_m')
                 str=lower(varargin{end});
-            elseif ~isempty(strfind(lower(varargin{end}),'con'))||~isempty(strfind(lower(varargin{end}),'she'))
+            elseif ~isempty(strfind(lower(varargin{end}),'con'))||~isempty(strfind(lower(varargin{end}),'gra'))||~isempty(strfind(lower(varargin{end}),'she'))
                 optionstr=varargin{end};
             else
                 sty=varargin{end};
@@ -205,12 +207,17 @@ hold on
 h=[];
 hc=[];
 
+%Note that patchcontourf, like contour, is cell-centered so you don't 
+%need to shift things like you do with pcolor
+
 if strcmpi(optionstr(1:3),'she')
     h=patchcontourf(lon,lat,topo,-1/2,[1 1 1]*2/3,str);
     hold on
     h=patchcontourf(lon,lat,topo,0,'k',str);
 elseif strcmpi(optionstr(1:3),'con')
     h=patchcontourf(lon,lat,topo,0,'k',str);
+elseif strcmpi(optionstr(1:3),'gra')
+    h=patchcontourf(lon,lat,topo,0,[1 1 1]/2,str);
 else
     if strcmpi(str(1:3),'m_m')
         if ~isempty(depths)

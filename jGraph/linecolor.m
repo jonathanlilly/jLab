@@ -18,11 +18,13 @@ function[varargout]=linecolor(varargin)
 %          linecolor(h,c,cmin,cmax,map);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2019 J.M. Lilly --- type 'help jlab_license' for details
 
 h=varargin{1}(:);
 c=varargin{2}(:);
 c=vswap(c,nan,inf);
+
+map0=colormap;
 
 if ischar(varargin{end})
     str=varargin{end};
@@ -58,5 +60,6 @@ for i=1:length(h),
     set(h(i),'color',map(y(i),:));
 end
 
+colormap(map0);
 set(h,'visible','on')
 

@@ -160,14 +160,29 @@ for i=1:length(varargin)
             case 'portrait',  orient portrait
         end
     else
+        %determine if arg is a word
+        isword=false;
+        if (arg(1)>=setstr('A')&&arg(1)<=setstr('Z'))||(arg(1)>=setstr('a')&&arg(1)<=setstr('z'))
+            if exist(arg)~=1
+                isword=true;
+            end
+        end
         switch command
             case 'eval'
                 evalin('caller',arg)
-            case 'colorbar'
-                evalin('caller',[command '(gca,' arg ');'])          
+                %             case 'colorbar'
+                %                 if ~isword
+                %                     evalin('caller',[command '(gca,' arg ');'])
+                %                 else
+                %                     evalin('caller',[command '(gca,' arg ');'])
+                %                 end
             otherwise
                 %[command '(' arg ');']
-                evalin('caller',[command '(' arg ');'])      
+                if ~isword
+                    evalin('caller',[command '(' arg ');'])
+                else
+                    evalin('caller',[command ' ' arg])
+                end
         end
     end
 end

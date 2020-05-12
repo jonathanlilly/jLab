@@ -6,16 +6,16 @@ function[varargout]=about_jtopo(varargin)
 %   Type 'jhelp about_jtopo' to view this image. *|*
 %   _______________________________________________________________________
 %
-%   JTOPO is a matfile containing smoothed one-sixth degree global 
+%   JTOPO is a matfile containing smoothed one-twelfth degree global 
 %   topography based on the Smith and Sandwell database together with the
 %   International Bathymetric Chart of the Arctic Ocean (IBCAO).
 %
 %   LOAD JTOPO loads the structure JTOPO, with the following fields:
 %
 %       jtopo.about     Pointer to this document  
-%       jtopo.lat       Array of latitudes         [1024 x 1] 
-%       jtopo.lon       Array of longitudes        [1 x 2160]
-%       jtopo.topo      Matrix of topography       [1024 x 2160]
+%       jtopo.lat       Array of latitudes         [2048 x 1] 
+%       jtopo.lon       Array of longitudes        [1 x 4320]
+%       jtopo.topo      Matrix of topography       [2048 x 4320]
 %
 %   Typing 'use jtopo' maps these fields into variables in the current
 %   workspace, e.g. 'use jtopo, pcolor(lon,lat,topo), shading interp'.
@@ -23,8 +23,8 @@ function[varargout]=about_jtopo(varargin)
 %   TOPO is in units of kilometers and is positive for above sea level, 
 %   and negative for below sea level.  
 %
-%   LAT is uniformly spaced from -80.666 to  89.833, and LON is uniformly
-%   spaced from -180 to 179.8333.  These are *grid-centered* values, that 
+%   LAT is uniformly spaced from -80.666 to  89.917, and LON is uniformly
+%   spaced from -180 to 179.912.  These are *grid-centered* values, that 
 %   is, they indicate midpoints of the topography cells.
 %
 %   JTOPO is distributed with JLAB, available at http://www.jmlilly.net.
@@ -36,7 +36,7 @@ function[varargout]=about_jtopo(varargin)
 %   Processing
 %
 %   The one-minute Smith and Sandwell data, and 1/2 minute IBCAO data, are
-%   smoothed to one-sixth of a degree by averaging in 1/6 x 1/6 bins. 
+%   smoothed to one-twelfth of a degree by averaging in 1/12 x 1/12 bins. 
 %
 %   Smith and Sandwell is defined from -80.738 and 80.738, while IBCAO is 
 %   defined from 64 N to 90 N.  In the overlap region, from 64 to 84.738 N,
@@ -95,7 +95,7 @@ function[varargout]=about_jtopo(varargin)
 %   in and averaging the two topographic datasets. This will take a while.
 %
 %   For this to work you will need to have the JDATA folder containing
-%   file 'topo_18.1.img' and 'ibcao.mat' downloaded and on your Matlab 
+%   file 'topo_19.1.img' and 'ibcao.mat' downloaded and on your Matlab 
 %   search path. 
 %   __________________________________________________________________
 %
@@ -107,7 +107,7 @@ function[varargout]=about_jtopo(varargin)
 %          about_jtopo --create
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2014--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help about_jtopo
@@ -125,7 +125,8 @@ function[]=jtopo_create
       
 %/************************************************************************
 %Main Smith and Sandwell portion
-delta=1/6;
+%delta=1/6;
+delta=1/12;
 
 lon=[-180-delta/2:delta:180-delta/2];
 lat=[-80.66666-delta/2:delta:80.67+delta/2]';
@@ -144,12 +145,11 @@ lon=lon(1:end-1)+delta/2;
 
 about='For more information, type ''about_jtopo''.';
 matsave jtopo about lat lon topo
+%matsave jtopo_onetwelfth about lat lon topo
 %\************************************************************************
 
 %/************************************************************************
 %Adding Arctic dataset
-
-delta=1/6;
 lon=[-180-delta/2:delta:180-delta/2];
 lat=[-80.66666-delta/2:delta:90]';
 
@@ -185,5 +185,6 @@ topo=newtopo.*weight+ibcaotopo.*(1-weight);
 %\************************************************************************
 
 matsave jtopo about lat lon topo
+%matsave jtopo_onetwelfth about lat lon topo
 disp('JTOPO creation complete.')
 

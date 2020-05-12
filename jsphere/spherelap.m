@@ -1,4 +1,4 @@
-function[lap,lapa,lapb]=spherelap(varargin)
+function[lap,lapa,lapb,lapc,lapd]=spherelap(varargin)
 %SPHERELAP  Laplacian of a field on the surface of a sphere.
 %
 %   DEL2=SPHERELAT(LAT,LON,F) computes the Laplacian of the scalar field F
@@ -105,6 +105,8 @@ end
 
 lapa=frac(1,R.^2.*cos(phi).^2).*frac(1,dth.^2).*vdiff(vdiff(f,2,strlat),2,strlat);
 lapb=frac(1,R.^2.*cos(phi)).*frac(1,dphi.^2).*vdiff(cos(phi).*vdiff(f,1,str),1,str);
+lapc=frac(1,R.^2.*cos(phi).^2).*frac(1,dphi.*dth).*vdiff(cos(phi).*vdiff(f,1,str),2,str);
+lapd=frac(1,R.^2.*cos(phi)).*frac(1,dphi.*dth).*vdiff(vdiff(f,2,str),1,str);
 
 lap=lapa+lapb;
 % tol=1e-6;

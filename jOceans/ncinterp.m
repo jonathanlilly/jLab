@@ -98,7 +98,7 @@ else
 end
 
 
-lat=ncread(filename,'lat');
+lat=double(ncread(filename,'lat'));
 
 dlat=lat(end)-lat(end-1);
 blatup=(lat(end)~=90)&&((lat(end)+dlat>=90));
@@ -112,7 +112,7 @@ if blatdown
     lat=[-90;lat];
 end
 
-lon=ncread(filename,'lon');
+lon=double(ncread(filename,'lon'));
 
 %blatup,blatdown
 %lonold=lon;
@@ -127,7 +127,7 @@ if (max(lon)-min(lon)+(lon(2)-lon(1)))==360
     lon=[lon(end)-360;lon;lon(1)+360];
     bperiodic=true;
 end
-num=ncread(filename,'num');
+num=double(ncread(filename,'num'));
 
 %determine whether to use +/- 180 or 360
 if anyany(lon<0)
@@ -173,7 +173,7 @@ for i=a:N:b
     disp(['NCINTERP reading chunk ' int2str(n) ' of ' int2str(length(a:N:b)) '.'])
     if n==1
         %Initialize xp
-        xp=ncread(filename,varname,[1 1 1],[inf inf 1]);
+        xp=double(ncread(filename,varname,[1 1 1],[inf inf 1]));
         if blatdown,xp=[xp(1,:);xp];end    %Extra row for southern latitudes
         if blatup,  xp=[xp;xp(end,:)];end  %Extra row for northern latitudes
     else
@@ -183,7 +183,7 @@ for i=a:N:b
             xp=x(:,:,end);
         end
     end
-    xn=ncread(filename,varname,[1 1 i],[inf inf min(N,length(num)-i+1)]);
+    xn=double(ncread(filename,varname,[1 1 i],[inf inf min(N,length(num)-i+1)]));
     
     x=vzeros(length(lat),length(lon),size(xn,3)+1);
     ii=1+blatdown:length(lat)-blatup;
@@ -222,12 +222,12 @@ xk(bool)=inf;
 
 function[xk]=ncinterp_one_loop(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b)
 
-xn=ncread(filename,varname,[1 1 1],[inf inf 1]);
+xn=double(ncread(filename,varname,[1 1 1],[inf inf 1]));
 xk=nan*zeros(size(numi));
 for i=a:b
     disp(['NCINTERP reading time ' int2str(i-a+1) ' of ' int2str(b-a+1) '.'])
     xp=xn;
-    xn=ncread(filename,varname,[1 1 i],[inf inf 1]);
+    xn=double(ncread(filename,varname,[1 1 i],[inf inf 1]));
     
     x=vzeros(length(lat),length(lon),2);
     %ii=1+blatdown:size(xp,1)+blatdown;

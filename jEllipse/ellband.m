@@ -94,7 +94,7 @@ function[upa,upb,upc,upd,upe,upf]=ellband(varargin)
 %           [a,b,c,d,e]=ellband(dt,kappa,lambda,theta,phi,alpha,beta);    
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2014 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 
 if strcmpi(varargin{1}, '--t')
@@ -186,7 +186,6 @@ upb(abs(lambda)>sqrt(1/2))=-upb2(abs(lambda)>sqrt(1/2));
 %upc=abs(frac(a.*b,a.^2+b.^2).*vdiff(log(abs(b./a)),1))./dt;
 upc=(lambda.*omtheta);
 
-
 %Replace isolated nans that may have been lost
 bool=isnan(kappa);
 upa(bool)=nan;     
@@ -220,7 +219,6 @@ else
     upe=[];
     upf=[];
 end
-
 
 function[]=ellband_test
 ellband_test1;

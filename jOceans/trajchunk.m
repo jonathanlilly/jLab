@@ -1,25 +1,24 @@
 function[varargout]=trajchunk(varargin)
-%TRAJCHUNK  Converts Lagrangian trajectories into chunks based on the Coriolis period.
+%TRAJCHUNK  Chunks Lagrangian trajectories based on the Coriolis period.
 %
-%   TRAJCHUNK is used to split float or drifter data into chuncks such that
-%   the length of each chunk is a fixed multiple of the average Coriolis
-%   frequency. This is useful in spectral analysis. 
+%   TRAJCHUNK is used to split float or drifter data into chunks such that
+%   the length of each chunk is a fixed multiple of one over the mean
+%   Coriolis frequency. This can be useful in spectral analysis. 
 %
 %   [NUMO,LATO]=TRAJCHUNK(NUM,LAT,P), where NUM and LAT are date number and
 %   latitude for Lagangian float or drifter data, re-organizes these into 
 %   chunks such that the average Coriolis frequency f_C in each chunk is at 
 %   least P times the Rayleigh frequency f_R for that chunk.
 %
-%   Recall that the Rayleigh frequency is f_R=2*pi/(DT*N), in units of 
-%   radians per unit time, where DT is the sample interval and N is the
-%   number of samples.
+%   The Rayleigh frequency is f_R=2*pi/(DT*N), in units of radians per unit 
+%   time, where DT is the sample interval and N is the number of samples.
+%   The Rayleigh frequency decreases as the chunk length increases.
 %
 %   The input fields NUM and LAT may either be numerical arrays, or 
 %   cell arrays of numerical arrays, e.g. NUM{1}=NUM1, NUM{2}=NUM2, etc.
 %
-%   The output variables NUM and LAT are now cell arrays of numerical
-%   arrays, with each cell is truncated such that its length is just long
-%   enough such that f_C > P * f_R.  
+%   The output variables NUM and LAT are cell arrays of numerical arrays, 
+%   with each cell being just long enough such that f_C > P * f_R. 
 %
 %   Trajectories that are not long enough to satisfy this criterion are 
 %   discarded, as are short residual segments at the end of trajectories.   
@@ -31,9 +30,9 @@ function[varargout]=trajchunk(varargin)
 %   LMIN for each chunk.  
 %   __________________________________________________________________
 %
-%   Multiple input arguments
+%   Multiple input / output arguments
 %
-%   [NUMO,LATO,Y1,Y2,...,YM]=TRAJCHUNK(NUM,LAT,X1,X2,...XM,N) chunks the M
+%   [NUMO,LATO,Y1,Y2,...,YM]=TRAJCHUNK(NUM,LAT,X1,X2,...XM,P) chunks the M
 %   input arrays X1, X2,... XM in the same manner, and returns these as Y1,
 %   Y2,... YM.  The input variables may either all be numerical arrays of 
 %   all the same size, or cell arrays of numerical arrays. 
@@ -47,17 +46,20 @@ function[varargout]=trajchunk(varargin)
 %   variables. 
 %   __________________________________________________________________
 %   
-%   Keeping short data segments
+%   Optional behaviors
 %
-%   By default, any data is cells shorter than the specified length are 
+%   By default, any data in short trajectories for which f_C < P * f_R are 
 %   discarded, as are data segments at the end of the trajectories.  
 %
-%   TRAJCHUNK(...,'keep') keeps these instead.  Short cells are returned in
-%   their own chunks, and leftover segments are appended to the end of the 
-%   preceding chunk.  
+%   TRAJCHUNK(...,'keep') keeps these instead.  Short trajectories are 
+%   returned in their own chunks, and leftover segments are appended to 
+%   the end of the preceding chunk.  
 %
-%   This preserves the number of data points, while favoring a requested 
-%   length, if possible, from each trajectory. 
+%   TRAJCHUNK(...,'full') instead ensures that the output cells span the 
+%   full duration of the input fields.  This is done by appending a final 
+%   cell having f_C > P * f_R, like the others, but that ends at the final
+%   data point, regardless of the degree of overlap with the previous cell.  
+%   Data from cells shorter than the specified length are discarded. 
 %   __________________________________________________________________
 %   
 %   Overlap
@@ -78,11 +80,8 @@ function[varargout]=trajchunk(varargin)
 %          trajchunk(num,lat,lon,cv,P);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2015 J.M. Lilly --- type 'help jlab_license' for details
- 
+%   (C) 2014--2019 J.M. Lilly --- type 'help jlab_license' for details
 
-
-%
 %   [...,II,KK]=TRAJCHUNK(...) in this case also outputs the indices of
 %   the data locations within the input cells.  KK is not a cell array
 %   like the other output arguments, but rather a row array of LENGTH(II).
@@ -109,7 +108,7 @@ opt='nokeep';     %What to do with leftover points
 
 for i=1:2
     if ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'kee')||strcmpi(varargin{end}(1:3),'nok')
+        if strcmpi(varargin{end}(1:3),'kee')||strcmpi(varargin{end}(1:3),'nok')||strcmpi(varargin{end}(1:3),'ful')
             opt=varargin{end};
             varargin=varargin(1:end-1);
         end
@@ -205,12 +204,7 @@ else
 %     end
 end
 
-
-
 eval(to_overwrite(na));
-
-
-
 
 function[index]=trajchunk_index(num,lat,N,M,opt,factor)
 if length(num)<2
@@ -252,13 +246,17 @@ else
     %         index{end}=index{end}(1):x(end);
     %     end
     % end
-    
     if strcmpi(opt(1:3),'kee')
         if ~isempty(index)
             index{end}=index{end}(1):x(end);  %Append leftovers
         else
             index{1}=x;  %Keep short segments
         end
+    elseif strcmpi(opt(1:3),'ful')
+        indexlast=trajchunk_index(num,flipud(lat),N,M,'nokeep',1);
+        indexlast=length(lat)-flipud(indexlast{1})+1;
+        index{end+1}=indexlast;
+        %maxmax(indexlast),length(lat)
     end
 end
 function[]=trajchunk_test
@@ -280,6 +278,28 @@ trajchunk(num,lat,lon,32,'overlap',50);
 meanfo=vmean(abs(corfreq(col2mat(cell2col(lat)))),1)'*24*dt;
 fr=frac(2*pi,dt*cellength(lat));
 reporttest('TRAJCHUNK overlap',allall(meanfo>32*fr))
+
+% load drifterheyerdahl
+% use drifterheyerdahl
+% 
+% [numc,latc]=trajchunk(num,lat,60,'overlap',50);
+% [~,latc2,numc2]=trajchunk(num,flipud(lat),flipud(num),60,'overlap',50);
+% 
+% min(cellmin(numc))-min(num)
+% max(cellmax(numc))-max(num)
+% 
+% numc{end+1}=flipud(numc2{1});
+% latc{end+1}=flipud(latc2{1});
+% 
+% for i=1:length(numc)
+%     P(i)=sum(abs(corfreq(latc{i}))*24.*(numc{i}-numc{i}(1))/2/pi/24);
+% end
+% 
+% plot(cellmax(numc)-cellmin(numc))
+% plot(60*2*pi./(cellmean(cellabs(corfreq(latc)))*24))
+
+
+
 %length(num),length(cell2col(num))
 
 % with minimum length 

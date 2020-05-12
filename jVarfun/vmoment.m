@@ -13,21 +13,22 @@ function[varargout] = vmoment(varargin)
 %   original input variables.      
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2020 J.M. Lilly --- type 'help jlab_license' for details    
     
 if strcmpi(varargin{1}, '--t')
   vmoment_test,return
 end
 
-ndim=varargin{end};
 n=varargin{end-1};
+ndim=varargin{end};
 
 for i=1:length(varargin)-2
   x=varargin{i};
   m=vmean(x,ndim);
   m=vrep(m,size(x,ndim),ndim);
   
-  [varargout{i},numi{i}]=vmean(abs(x-m).^n,ndim);
+  %previously I had an abs around (x-m), that was incorrect 
+  [varargout{i},numi{i}]=vmean((x-m).^n,ndim);
 end
 
 for i=length(varargin)-1:nargout

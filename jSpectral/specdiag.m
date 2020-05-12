@@ -89,7 +89,7 @@ b=s(2,2,:);
 dets=a.*b-c.^2-d.^2;%figure,plot(abs(squeeze(dets)))
 trs=a+b;
 
-dets(dets<0)=0;  %Sometimes I get negative values of numerical noise
+%ßdets(dets<0)=0;  %Sometimes I get negative values of numerical noise
 
 
 l1=squeeze(frac(1,2).*(trs+sqrt(trs.^2-4*dets)));
@@ -101,7 +101,7 @@ if nargout>4
   z2=kmat(pi/4);
   z3=jmat2(nu);
   z=0*z1;
-  for i=1:size(z1,3);
+  for i=1:size(z1,3)
     z(:,:,i)=z1(:,:,i)*z2*z3(:,:,i);
   end
   z=squeeze(z);

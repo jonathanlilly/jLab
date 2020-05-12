@@ -24,7 +24,7 @@ function[h]=letterlabels(arg1,arg2,arg3)
 %   nonstandard order, do this by reordering H.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2000--2020 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(arg1,'--t')
@@ -39,6 +39,12 @@ px=py/xstretch*1.8;
 firstlet=real('a');
 i=1;
 axhand=flipud(get(gcf,'children'));
+
+bool=false(size(axhand));
+for i=1:length(bool)
+    bool(i)=strcmp(axhand(i).Type,'axes');
+end
+axhand=axhand(bool);
 
 for j=1:nargin
     xx=eval(['arg' int2str(j)]);
@@ -103,10 +109,10 @@ for j=1:length(axhand)
     end
     
     %Tried setting log to lin before adding label but didn't help
-    if ~strcmpi(get(gca,'yscale'),'log')
-        h(j)=patch([l l r r],[b t t b],'w');
-        set(h(j),'edgecolor',[1 1 1])
-    end
+    %if ~strcmpi(get(gca,'yscale'),'log')
+    %    h(j)=patch([l l r r],[b t t b],'w');
+    %    set(h(j),'edgecolor',[1 1 1])
+    %end
     cx=l/2+r/2;
     cy=t/2+b/2;
     text(l+(r-l)*0.2,cy,['(' char(firstlet-1+j),')']);

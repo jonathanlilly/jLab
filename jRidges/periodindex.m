@@ -1,17 +1,18 @@
-function[index]=periodindex(varargin)
+function[index,bool]=periodindex(varargin)
 %PERIODINDEX  Returns time index in increments of instantaneous period.
 %
-%   INDEX=PERIODINDEX(DT,OMEGA,N) returns a time index INDEX that skips 
-%   every N times the instantaneous period 2*pi/OMEGA.
+%   INDEX=PERIODINDEX(DT,OMEGA,N) returns an index INDEX giving the start
+%   of every Nth cycle completed by the instantaneous frequency OMEGA.
 %
 %   OMEGA is a column vector of instantaneous frequency in radians per unit 
 %   time as computed by INSTMOM. DT is the sample time, a scalar.  The
 %   units of 2*pi/OMEGA should be the same as the units of DT.
 %
-%   PERIODINDEX constructs an index into a vector of the same length as 
-%   OMEGA that skips every N times the instantaneous period 2*pi/OMEGA.
-%   Thus N=1 returns an index with one sample per period, etc.  The first N
-%   periods, and last N periods, are both omitted from the index. 
+%   For example, N=1 returns the start of every cycle, N=2 the start of 
+%   every second cycle, and N=0.5 the start of every half-cycle.
+%
+%   When N does not fit evenly into the total number of cycles completed by
+%   OMEGA, the remainder is split evenly between the beginning and the end.
 %
 %   If NaNs are found within OMEGA, this is interpreted as being separate
 %   ridges output by RIDGEWALK.  Then PERIODINDEX applies itself to each 
@@ -20,19 +21,30 @@ function[index]=periodindex(varargin)
 %   INDEX=PERIODINDEX(OMEGA,N) also works, with DT defaulting to unity.  In
 %   this case OMEGA must have units of radians per sample interval.
 %
+%   [INDEX,BOOL]=PERIODINDEX(OMEGA,N) also returns a boolean array BOOL of
+%   the same size as OMEGA that is true at the locations given by INDEX,
+%   and false otherwise. 
+%
 %   PERIODINDEX is useful with ELLIPSEPLOT for plotting ellipses a
 %   specified number of periods apart.
 %
 %   See also ELLIPSEPLOT.
 %
 %   Usage: index=periodindex(dt,omega,N);
+%          [index,bool]=periodindex(dt,omega,N);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2011--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2011--2019 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--f')
    periodindex_fig,return
 end
+
+% The first N periods, and last N periods, are both omitted from the index. 
+%I don't do this anymore because now I do ridge trimming
+
+%skips every N times the instantaneous period 2*pi/OMEGA.
+
 
 if nargin==3
     dt=varargin{1};
@@ -64,12 +76,21 @@ else
         index=index(isfinite(index));
     end
 end
-    
+if nargout==2
+    bool=om;
+    for i=1:length(index)
+        bool{i}=false(size(bool{i}));
+        if ~isempty(index{i})
+            bool{i}(index{i})=true;
+        end
+    end
+end
 
-function[index]=periodindex_loop(dt,om,N)
+function[index]=periodindex_loop_former(dt,om,N)
 
 skip=ceil(N*frac(2*pi,om.*dt));
 %minmin(skip)
+%figure,plot(skip)
 
 index=[];
 if skip(1)<length(om)
@@ -80,6 +101,25 @@ if skip(1)<length(om)
         index(end+1,:)=index(end)+skip(index(end));
     end
 end
+
+function[index]=periodindex_loop(dt,om,N)
+
+%ah! This is a better way!!
+age=cumsum(om.*dt)/2/pi;  %age in number of cycles 
+
+Nskips=floor(age(end)./N);  %Nskips
+a=frac(1,2)*(age(end)-Nskips*N); %a
+
+index=round(interp1(age,1:length(age),a:N:age(end)))';
+
+%make sure rounding doesn't drop us off the edge
+index(1)=max(index(1),1);
+index(end)=min(index(end),length(age));
+
+%maxmax(index)
+%length(age)
+%age(index)
+
 
 function[]=periodindex_fig
 

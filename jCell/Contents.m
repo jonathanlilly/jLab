@@ -15,6 +15,7 @@
 %   celladd    - Addition acting on each element in a cell array.                   
 %   cellmult   - Multiplication acting on each element in a cell array.   
 %   celldiv    - Division acting on each element in a cell array.
+%   celldot    - Dot product for arrays of column vectors.
 %
 % Reshaping, indexing, and sizes
 %   cell2col   - Converts cell arrays of numeric arrays into 'column-appended' form.

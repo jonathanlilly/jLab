@@ -78,10 +78,14 @@ if strcmpi(str(1:3),'amp')
    bool=(rqm<=rq)&(rqp<=rq);
 elseif strcmpi(str(1:3),'pha')
    %This is d/ds < 0 since scale decreases in columns
+   %actually it's d/dln s
    bool=(rqm<0&rqp>=0)|(rqm<=0&rqp>0);
 end
 %[ii,jj]=find(bool);
 %figure,plot(ii,jj,'.')
+
+%d/dlns=s d/ds since  dlns = 1/s ds 
+%Does d/dlns =0 where d/ds=0?  Seems so
 
 err=abs(rq);
 

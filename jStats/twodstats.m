@@ -247,9 +247,18 @@ if ~isempty(zdata)
     end
 else
     disp('Warning: Data contains only NANs and / or INFs.')
-    mat=0*oprod(ybin(1:end-1),xbin(1:end-1)); 
+    if size(zdata,2)==1
+         mat=0*oprod(ybin(1:end-1),xbin(1:end-1));         
+         num=mat;
+         stdz=mat;
+    elseif size(zdata,2)==2
+         mat=zeros(length(ybin)-1,length(xbin)-1,2);
+         stdz=zeros(length(ybin)-1,length(xbin)-1,2,2);
+        % mat(:,:,1)=0*oprod(ybin(1:end-1),xbin(1:end-1)); 
+        % size(mat)
+        % mat(:,:,2)=0*oprod(ybin(1:end-1),xbin(1:end-1)); 
+    end
     num=mat;
-    stdz=mat;
 end
 
 if nargout>1
@@ -348,11 +357,11 @@ if ~isempty(index)
         %Cumsum has problem: Force double precision for good results
         cumsumzdata=cumsum(zdata,1);
         mat(index(ia),:)=cumsumzdata(ib,:)-cumsumzdata(ia,:)+zdata(ia,:);
-    else
-        %For testing purposes
-        for i=1:length(ia)
-            mat(index(ia(i)),:)=sum(zdata(ia(i):ib(i)),:);
-        end
+%     else
+%         %For testing purposes
+%         for i=1:length(ia)
+%             mat(index(ia(i)),:)=sum(zdata(ia(i):ib(i)),:);
+%         end
     end
     mat=mat./vrep(num,size(mat,2),2);
 
@@ -377,11 +386,11 @@ if ~isempty(index)
             %Cumsum has problem: Force double precision for good results
             cumsumzvar=cumsum(double(zvar),1);
             covmat(index(ia),:,:)=cumsumzvar(ib,:,:)-cumsumzvar(ia,:,:)+zvar(ia,:,:);
-        else
-            %Just so you know what the above line actually does
-            for i=1:length(ia)
-                covmat(index(ia(i)),:,:)=sum(zvar(ia(i):ib(i)),:,:);
-            end
+%         else
+%             %Just so you know what the above line actually does
+%             for i=1:length(ia)
+%                 covmat(index(ia(i)),:,:)=sum(zvar(ia(i):ib(i)),:,:);
+%             end
         end
         
         covmat=covmat./vrep(vrep(num,size(covmat,2),2),size(covmat,3),3);
