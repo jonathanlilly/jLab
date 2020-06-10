@@ -28,27 +28,41 @@ function[varargout]=spheresort(varargin)
 %   1/4 of the circumference of the earth, RADEARTH * PI/2, so that sorted
 %   (LAT,LON) points will lie in the same hemisphere as the grid points.
 %
-%   The output arrays are then all M x N x J arrays where J is the maximum
-%   number of points in the CUTOFF neighborhood at any grid point.  Entries 
-%   in the ouput corresponding to farther distances are filled with NaNs.
+%   The output arrays are M numerical arrays arranged as a length M cell
+%   array.  That is, there is one cell per latitude band. Each numerical 
+%   array has N columns, i.e., the number of longitudes, with the number of
+%   rows varying between arrays.  
 %
 %   DS gives the distances of data points less than CUTOFF kilometers 
 %   from the (m,n)th grid point, sorted in order of increasing distance.  
+%   Entries farther than CUTOFF in all output fields are filled with NaNs.
 %
 %   XS and YS give the coordinates, in kilometers, of the corresponding 
-%   data points in a plane tangent to the (m,n)th grid point.  See 
-%   LATLON2XY and Lilly and Lagerloef (2018) for details.
+%   data points in a plane tangent to the (m,n)th grid point. 
+%
+%   The choice to put latitude bands into cell arrays is made because the
+%   number of points less than CUTOFF distance tends to vary with latitude,
+%   and for convenience in parallelizing POLYSMOOTH.
 %   _________________________________________________________________
 % 
 %   Limiting output dimension
 %
 %   SPHERESORT(LAT,LON,LATO,LONO,[CUTOFF JMAX]), where the fifth input 
-%   argument is a 2-vector, additionally specifies that the third dimension
-%   of the output arrays will be no more than JMAX. 
+%   argument is a 2-vector, additionally specifies that number of rows of
+%   in each cell of the output will be no larger than JMAX.  This option is
+%   useful for the 'fixed population' algorithm in POLYSMOOTH.
+%   _________________________________________________________________
+% 
+%   Masking out non-mapping points
 %
-%   This option is useful for the 'fixed population' algorithm in
-%   POLYSMOOTH, as it ensures the output fields will be no larger than is
-%   necessary.  It can also be used simply to limit the output size. 
+%   SPHERESORT(...,'mask',BOOL,...), where BOOL is a boolean array with
+%   LENGTH(LATO) rows and LENGTH(LONO), only returns DS, XS, and YS at
+%   points for which BOOL is true.  Where BOOL is false, the output arrays
+%   will consist of all NaNs.
+%
+%   This is useful in preventing SPHERESORT from sorting data for locations
+%   one has no intention of mapping.  For example, in creating a map of an
+%   oceanic quantity, BOOL would be set to false for all land grid points.
 %   _________________________________________________________________
 % 
 %   Additional input parameters
@@ -63,49 +77,48 @@ function[varargout]=spheresort(varargin)
 %
 %   Z1D, Z2D,...,ZKD are the same size as the other output arguments, and 
 %   give the values of Z1, Z2,...,ZK sorted according to distance.
+%   _________________________________________________________________
+% 
+%   Outputting an index
 %
-%   When there are multiple fields to be mapped, one may instead wish to 
-%   use the approach described under "One grid, many fields" in POLYSMOOTH.   
+%   [DS,XS,YS,INDEXS]=SPHERESORT(LAT,LON,LATO,LONO,CUTOFF), with no
+%   additional input arguments, returns a cell array of indices, INDEXS,
+%   which is the same size as the other output fields.  This can be used 
+%   together with POLYSMOOTH_EXTRACT to find sorted field values.  
+%
+%   If there are many fields to be mapped all using the same grid, this
+%   approach is preferred to directly inputting Z1, Z2,...,ZK as in the 
+%   previous step.  Instead the ZK would be output by POLYSMOOTH_EXTRACT.
+%
+%   For details, see the "One grid, many fields" section in POLYSMOOTH.  
 %   _________________________________________________________________
 %  
 %   Parellel algorithm
 %
 %   SPHERESORT(...'parallel') parallelizes the computation using a parfor
-%   loop implemented over latitudes.  This requires Matlab's Parallel 
-%   Computing Toolbox to be installed. 
+%   loop over latitudes, which can speed things up dramatically.  This 
+%   requires Matlab's Parallel Computing Toolbox to be installed.
 %
-%   Also, depending on the size of dataset, the parallel algorith may lead
-%   to memory problems, so it should be used judiciously.  For large
-%   datasets, try combining an external loop over longitude with the
-%   parallel algorithm over latitude.
+%   SPHERESORT will then using an existing parallel pool, or if one does 
+%   not exist, a pool will be created using all availabale workers.
+%
+%   SPHERESORT(...'parallel',Nworkers) alternately specifies the number of
+%   workers to use. If you run into memory constraints, reduce Nworkers.
 %   _________________________________________________________________
 %
 %   See also TWODSORT, POLYSMOOTH.
 %
 %   'spheresort --t' runs a test.
 %
-%   Usage: ds=spheresort(lat,lon,lato,lono,cutoff);
-%          ds=spheresort(lat,lon,lato,lono,cutoff,'parallel',Nworkers);
-%          [ds,xs,ys]=spheresort(lat,lon,lato,lono,cutoff);
+%   Usage: [ds,xs,ys,indexs]=spheresort(lat,lon,lato,lono,cutoff);
+%          [ds,xs,ys]=spheresort(lat,lon,lato,lono,cutoff,'mask',bool);
 %          [ds,xs,ys,z1s,z2s]=spheresort(lat,lon,z1,z2,lato,lono,cutoff);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 
-%   Not using SPMD any more
-%   of workers explicitly, use SPHERESORT(...,'parallel',NWORKERS).
-%
-%   As the additional efficiency is not dramatic, this is typically only an 
-%   advantage for very large datasets.  Due to the nature of the
-%   calculation we have to use SPMD, which is less efficient than PARFOR.
-%
-%   As an example, for a dataset with 1 million points, a 12 core Mac Pro 
-%   takes about 44 seconds to complete the sort on a 1x1 degree grid, 
-%   versus 184 seconds for the standard algorithm, a factor of 4 faster.
-
 if strcmpi(varargin{1}, '--t')
-    %spheresort_test;
     spheresort_parallel_test;
     return
 end
@@ -113,27 +126,42 @@ end
 lat=varargin{1};
 lon=varargin{2};
 
-algstr='current';
 str='serial';
-%Nworkers=[];
+bool=[];
+Nworkers=[];
 
 for i=1:2
-    if ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'par')
-            str=varargin{end};
-        else
-            algstr=varargin{end};
+    if ischar(varargin{end-1})&&~ischar(varargin{end})
+        if strcmpi(varargin{end-1}(1:3),'mas')
+            bool=varargin{end};
+        elseif strcmpi(varargin{end-1}(1:3),'par')
+            str=varargin{end-1};
+            Nworkers=varargin{end};
         end
-        varargin=varargin(1:end-1);
+        varargin=varargin(1:end-2);
+    else
+        if ischar(varargin{end})
+             str=varargin{end};
+             varargin=varargin(1:end-1);
+        end
     end
 end
 
-% if strcmpi(str(1:3),'par')
-%     if isempty(Nworkers)
-%          myCluster = parcluster('local');
-%          Nworkers = myCluster.NumWorkers;
-%     end
-% end
+
+pool = gcp('nocreate');
+if strcmpi(str(1:3),'par')
+    if isempty(Nworkers)
+        if isempty(pool)
+            parpool('local');
+        end
+    else
+        if ~isempty(pool)
+            parpool('local',Nworkers);
+        elseif pool.NumWorkders~=Nworkers
+            parpool('local',Nworkers);
+        end
+    end
+end
     
 lato=varargin{end-2};
 lono=varargin{end-1};
@@ -160,6 +188,7 @@ for i=1:nargin
     varargout{i}=[];
 end
 
+%Don't both sorting nan values
 indexo=find(isfinite(lat)&isfinite(lon));
 
 if ~isempty(indexo)
@@ -172,138 +201,91 @@ end
 vcolon(lato,lono);
 lono=lono';
 
-if strcmpi(str(1:3),'par')
-    [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,cutoff,Ncutoff);
-    %    [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers);
-else
-    if strcmpi(algstr(1:3),'cur')
-        [d_cell,xd_cell,yd_cell,indexd_cell]=spheresort_current(lat,lon,lato,lono,cutoff,[]);
-    else
-        [d_cell,xd_cell,yd_cell,indexd_cell]=spheresort_former(lat,lon,lato,lono,cutoff);
-    end
-    
-    disp('SPHERESORT reorganizing, this may take a while...')
-    
-    L=min(Ncutoff,cellength(d_cell));
-    [d,xd,yd,indexd]=vzeros(size(L,1),size(L,2),maxmax(L),nan);
-    for i=1:size(L,1)
-        for j=1:size(L,2)
-            if L(i,j)>=1
-                d(i,j,1:L(i,j))=d_cell{i,j}(1:L(i,j));
-                xd(i,j,1:L(i,j))=xd_cell{i,j}(1:L(i,j));
-                yd(i,j,1:L(i,j))=yd_cell{i,j}(1:L(i,j));
-                indexd(i,j,1:L(i,j))=indexd_cell{i,j}(1:L(i,j));
-            end
-        end
-    end
+if isempty(bool)
+    bool=true(length(lato),length(lono));
 end
+ 
 
-
-%clear d_cell xd_cell yd_cell indexd_cell
+if strcmpi(str(1:3),'par')
+    [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,bool,cutoff,Ncutoff);
+else
+    [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,bool,cutoff,Ncutoff,[]);
+end
 
 varargout{1}=d;
 varargout{2}=xd;
 varargout{3}=yd;
 
-%Finally, account for extra input arguments
-for k=1:length(args)
-    temp=nan*d;
-    nonnani=~isnan(indexd);
-    temp(nonnani)=args{k}(indexo(indexd(nonnani)));
-    varargout{k+3}=temp;
+for j=1:length(indexd)
+    nonnani=~isnan(indexd{j});
+    indexd{j}(nonnani)=indexo(indexd{j}(nonnani));
 end
+
+%Finally, account for extra input arguments
+% for k=1:length(args)
+%     temp=d;
+%     for j=1:length(d)
+%         nonnani=~isnan(indexd{j});
+%         temp{j}(nonnani)=args{k}(indexd{j}(nonnani));
+%     end
+%     varargout{k+3}=temp;
+% end
+
+for k=1:length(args)
+    varargout{k+3}=polysmooth_sortfield(indexd,args{k});
+end
+
+varargout{length(args)+4}=indexd;
+
 disp('SPHERESORT finished.')
 
-function [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,cutoff,Ncutoff)
+
+
+function [d,xd,yd,indexd]=spheresort_parallel(lat,lon,lato,lono,bool,cutoff,Ncutoff)
+
 %Parallelize by looping over latitude
-
-% d=zeros(length(lato),length(lono),Ncutoff)*nan;
-
-%vsize(d,xd,yd,indexd)
-%vsize(lat,lon,lato,lono,cutoff)
+d=cell(length(lato),1);
+xd=cell(length(lato),1);
+yd=cell(length(lato),1);
+indexd=cell(length(lato),1);
 
 parfor i=1:length(lato)
-    [d_cell{i},xd_cell{i},yd_cell{i},indexd_cell{i}]=spheresort_current(lat,lon,lato(i),lono,cutoff,[i length(lato)]);
+    [d1,xd1,yd1,indexd1]=spheresort_current(lat,lon,lato(i),lono,bool(i,:),cutoff,Ncutoff,[i length(lato)]);
+    d{i}=d1{1};
+    xd{i}=xd1{1};
+    yd{i}=yd1{1};
+    indexd{i}=indexd1{1};
 end
 
-L=zeros(length(lato),length(lono));
-for i=1:length(lato)
-    L(i,:)=min(Ncutoff,cellength(d_cell{i}));
-end
+%delete(gcp)
 
-[d,xd,yd,indexd]=vzeros(length(lato),length(lono),maxmax(L),nan);
-
-%tic
-%need to reshape these
-for i=1:length(lato)
-    for j=1:length(lono)
-        d(i,j,1:L(i,j))=d_cell{i}{j}(1:L(i,j));
-        xd(i,j,1:L(i,j))=xd_cell{i}{j}(1:L(i,j));
-        yd(i,j,1:L(i,j))=yd_cell{i}{j}(1:L(i,j));
-        indexd(i,j,1:L(i,j))=indexd_cell{i}{j}(1:L(i,j));
-    end
-end
-%toc
-
-function [d,xd,yd,indexd]=spheresort_spmd(lat,lon,lato,lono,cutoff,Nworkers)
-%Parallelize with single program multiple data
-dlat_cutoff=jrad2deg(cutoff./radearth);
-b=floor((length(lato)/Nworkers)*[1:Nworkers]);
-a=[1 b(1:end-1)+1];
-clear struct labindex
-index=[1:length(lat)];
-spmd
-    %Determine the data to send to each worker
-    spmdindex=a(labindex):b(labindex);
-    bool1=(lat-max(lato(spmdindex)))<=dlat_cutoff;
-    bool2=(min(lato(spmdindex))-lat)<=dlat_cutoff;
-    bool=bool1&bool2;
-    [dp,xdp,ydp,indexdp]=spheresort(lat(bool),lon(bool),index(bool),lato(spmdindex),lono,cutoff);
-end
-
-N=zeros(length(dp),1);
-for i=1:length(dp)
-    N(i)=size(dp{i},3);
-end
-N=max(N);
-
-[d,xd,yd,indexd]=vzeros(length(lato),length(lono),N,nan);
-%vsize(dp,xdp,ydp,indexdp)
-
-for i=1:length(dp)
-%    size(dp{i})
-    if numel(dp{i})>0
-        d(a(i):b(i),:,1:size(dp{i},3))=dp{i};
-        xd(a(i):b(i),:,1:size(dp{i},3))=xdp{i};
-        yd(a(i):b(i),:,1:size(dp{i},3))=ydp{i};
-        indexd(a(i):b(i),:,1:size(dp{i},3))=indexdp{i};
-    end
-end
-
-function [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,cutoff,J)
+function [d,xd,yd,indexd]=spheresort_current(lat,lon,lato,lono,bool,cutoff,Ncutoff,J)
 dlat_cutoff=jrad2deg(cutoff./radearth);
 
-sd=cell(length(lato),length(lono));
-indexd=cell(length(lato),length(lono));
-d=cell(length(lato),length(lono));
-xd=cell(length(lato),length(lono));
-yd=cell(length(lato),length(lono));
-
+d=cell(length(lato),1);
+xd=cell(length(lato),1);
+yd=cell(length(lato),1);
+indexd=cell(length(lato),1);
 for j=1:length(lato)
      if isempty(J)
          disp(['SPHERESORT computing latitude band ' int2str(j) ' of ' int2str(length(lato)) '.'])
      else
          disp(['SPHERESORT computing latitude band ' int2str(J(1)) ' of ' int2str(J(2)) '.'])
      end
+     
+     %first we remove land (or non-mapping) points     
+     oceanindex=find(bool(j,:));
+     lono1=lono(oceanindex);
+
      index=find(abs(lat-lato(j))<=dlat_cutoff);
      if ~isempty(index)
                   
          [latj,lonj]=vindex(lat,lon,index,1);
         
-         lonomat=vrep(lono,length(index),1);
+         lonomat=vrep(lono1,length(index),1);
          latomat=lato(j)+zeros(size(lonomat));
                   
-         [latjmat,lonjmat,indexmat]=vrep(latj,lonj,index,length(lono),2); 
+         [latjmat,lonjmat,indexmat]=vrep(latj,lonj,index,length(lono1),2); 
          maxlat=min(abs(lato(j))+frac(360,2*pi)*frac(cutoff,radearth),90);
         
          %Form a ``wedge'' of nearby points; speeds things up quite a bit
@@ -334,7 +316,10 @@ for j=1:length(lato)
          [dj,xjmat,yjmat]=vzeros(size(latomat),'nan');
          [xjmat(neari),yjmat(neari),dj(neari)]=latlon2xy(latjmat(neari),lonjmat(neari),latomat(neari),lonomat(neari));
          dj(dj>cutoff)=nan;
-         
+         xjmat(isnan(dj))=nan;
+         yjmat(isnan(dj))=nan;
+         indexmat(isnan(dj))=nan;
+
          %Sort and return 
          if size(dj,1)>1
              [dj,sorter]=sort(dj);
@@ -349,154 +334,26 @@ for j=1:length(lato)
              indexmat=indexmat(indexsorter);
          end
      
-         bool=(sum(~isnan(dj),2)~=0);%Find all rows that have at least one non-nan
-         vindex(dj,lonjmat,latjmat,indexmat,bool,1);
-         
-         for i=1:length(lono)
-             ii=isfinite(dj(:,i));
-             if ~isempty(ii)
-                 d{j,i}=dj(ii,i);
-                 xd{j,i}=xjmat(ii,i);
-                 yd{j,i}=yjmat(ii,i);
-                 indexd{j,i}=indexmat(ii,i);
-             end
+         bool1=(sum(~isnan(dj),2)~=0);%Find all rows that have at least one non-nan
+         vindex(dj,xjmat,yjmat,indexmat,bool1,1);
+         if size(dj,1)>Ncutoff
+             vindex(dj,xjmat,yjmat,indexmat,1:Ncutoff,1); 
          end
+         %there was previously a major bug here where I did not index xjmat
+         %and yjmat in the previous call
+         
+         d{j}(1:size(dj,1),1:length(lono))=nan;
+         xd{j}(1:size(dj,1),1:length(lono))=nan;
+         yd{j}(1:size(dj,1),1:length(lono))=nan;
+         indexd{j}(1:size(dj,1),1:length(lono))=nan;
+         
+         d{j}(:,oceanindex)=dj;
+         xd{j}(:,oceanindex)=xjmat;
+         yd{j}(:,oceanindex)=yjmat;
+         indexd{j}(:,oceanindex)=indexmat;
      end
 end
 
-function [d,xd,yd,indexd]=spheresort_former(lat,lon,lato,lono,cutoff)
-
-dlat_cutoff=jrad2deg(cutoff./radearth);
-
-sd=cell(length(lato),length(lono));
-indexd=cell(length(lato),length(lono));
-d=cell(length(lato),length(lono));
-xd=cell(length(lato),length(lono));
-yd=cell(length(lato),length(lono));
-
-[x,y,z]=latlon2xyz(lat,lon);
-
-for j=1:length(lato)
-     disp(['SPHERESORT computing latitude band ' int2str(j) ' of ' int2str(length(lato)) '.'])
-     index=find(abs(lat-lato(j))<=dlat_cutoff);
-     if ~isempty(index)
-                  
-         [xj,yj,zj,latj,lonj]=vindex(x,y,z,lat,lon,index,1);
-         [xo,yo,zo]=latlon2xyz(lato(j),lono);
-         %vsize(xo,yo,zo)
-         [xomat,yomat,zomat,lonomat]=vrep(xo,yo,zo,lono,length(index),1);
-         latomat=lato(j)+0*lonomat;
-         
-         [xjmat,yjmat,zjmat,latjmat,lonjmat,indexmat]=vrep(xj,yj,zj,latj,lonj,index,length(lono),2); 
-     
-         %vsize(xomat,xjmat,yomat,yjmat,zomat,zjmat)
-         djtilde=sqrt(abs(squared(xomat-xjmat)+squared(yomat-yjmat)+squared(zomat-zjmat)));
-         dj=2*radearth*asin(frac(1,2)*djtilde./radearth);  %asin gives phi in radians
-
-         %cutofftilde=2*radearth*sin(frac(1,4*pi)*frac(cutoff,radearth));%=2*R*sin(phi/2)
-         %neari=(djtilde<=cutofftilde);
-         neari=(dj<=cutoff);
-         [xtjmat,ytjmat]=vzeros(size(latomat),'nan');
-         
-         if anyany(neari)  %If any are true from neari
-             [lattemp,lontemp]=xyz2latlon(xjmat(neari),yjmat(neari),zjmat(neari));
-             %size(lattemp)
-             %size(neari)
-             %[xtjmat(neari),ytjmat(neari)]=latlon2xy(latomat(neari),lonomat(neari),lattemp,lontemp);
-             
-             [xtjmat(neari),ytjmat(neari)]=latlon2xy(lattemp,lontemp,latomat(neari),lonomat(neari));
-             %[xtjmat(neari),ytjmat(neari)]=xyz2hor(latomat(neari),lonomat(neari),xjmat(neari),yjmat(neari),zjmat(neari));
-         end
-
-         dj(dj>cutoff)=nan;
-         
-         %Sort and return 
-         if size(dj,1)>1
-             [dj,sorter]=sort(dj);
-             %After sorting the columns, I then rearrange all data
-             %in each column according to the sort for that column
-             
-             sorterjj=vrep(1:size(sorter,2),size(sorter,1),1);
-             indexsorter=sub2ind(size(xtjmat),sorter,sorterjj);
-             
-             xtjmat=xtjmat(indexsorter);
-             ytjmat=ytjmat(indexsorter);
-             indexmat=indexmat(indexsorter);
-         end
-       
-         last=find(~isnan(vsum(dj,2)),1,'last');%Find last nan by summing over columns
-         if ~isempty(last)
-             vindex(dj,lonjmat,latjmat,indexmat,1:last,1);
-
-             for i=1:length(lono)
-                   ii=find(isfinite(dj(:,i)));
-                   %length(ii)
-                   if ~isempty(ii)
-                       d{j,i}=dj(ii,i);
-                       xd{j,i}=xtjmat(ii,i);
-                       yd{j,i}=ytjmat(ii,i);
-                       indexd{j,i}=indexmat(ii,i);
-                   end
-             end
-         end
-     end
-end
-
-
-function[]=spheresort_test
-
-
-N=100000;
-lat=rand(N,1)*180-90;
-lon=rand(N,1)*360;
-
-lono=(0:5:360);
-lato=(-80:5:80);
-
-cutoff=1000;
-
-tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,[cutoff 100]);etime1=toc;
-reporttest('SPHERESORT population cutoff',size(d,3)==100&&size(xd,3)==100&&size(yd,3)==100&&size(latd,3)==100)
-
-tic;[d,xd,yd,latd,lond]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime1=toc;
-%tic;[do,xdo,ydo,latdo,londo]=spheresort(lat,lon,lat,lon,lato,lono,cutoff);etime2=toc;
-
-tic;
-d2=zeros(size(d));
-for i=1:length(lato)
-    for j=1:length(lono)
-        d2(i,j,:)=spheredist(latd(i,j,:),lond(i,j,:),lato(i),lono(j));
-    end
-end
-etime2=toc;
-
-%disp(['SPHERESORT was ' num2str(etime2./etime1) ' times faster than a simple loop.'])
-
-bool1=zeros(length(lato),length(lono));
-bool2=zeros(length(lato),length(lono));
-for i=1:length(lato)
-    for j=1:length(lono)
-        bool1(i,j)=all(d(i,j,:)<=cutoff|isnan(d(i,j,:)));
-        bool2(i,j)=aresame(d(i,j,:),d2(i,j,:),1e-6);
-    end
-end
-
-reporttest('SPHERESORT all distances less than or equal to cutoff',allall(bool1))
-reporttest('SPHERESORT verify distances',allall(bool2))
-
-tic;[do,xdo,ydo,latdo,londo]=spheresort(lat,lon,lat,lon,lato,lono,cutoff,'former');etime2=toc;
-
-tol=1e-8;
-bool=[aresame(d,do,tol) aresame(xd,xdo,tol) aresame(yd,ydo,tol) aresame(latd,latdo,tol) aresame(lond,londo,tol)];
-disp(['SPHERESORT current algorithm was ' num2str(etime2./etime1) ' times faster than former algorithm.'])
-reporttest('SPHERESORT two algorithm versions match',allall(bool))
-
-% ii=15;jj=30;
-% plot(squeeze(lond(ii,jj,:)),squeeze(latd(ii,jj,:)),'.')
-% hold on
-% plot(lono(jj),lato(ii),'r*') 
-% [lat,lon]=xy2latlon(squeeze(xd(ii,jj,:)),squeeze(yd(ii,jj,:)),lato(ii),lono(jj));
-% plot(lon,lat,'go')
 
 function[]=spheresort_parallel_test
 
@@ -528,16 +385,14 @@ reporttest('SPHERESORT standard and parallel algorithms match',allall(bool))
 
 disp(['SPHERESORT parallel algorithm was ' num2str(etime1./etime2) ' times faster than standard algorithm.'])
 
-
-% Not sure what I was doing with this figure
-% lato=[-90:0.1:90]';
-% cutoff=[100 200 400 800];
-% [chi,fact,maxlat]=vzeros(length(lato),length(cutoff));
-% for i=1:length(cutoff)
-%     for j=1:length(lato)
-%         maxlat(j,i)=min(abs(lato(j))+frac(360,2*pi)*frac(cutoff(i),radearth),90);
-%         fact(j,i)=min(1,frac(sin(frac(cutoff(i),2*radearth)).^2,cosd(maxlat(j,i)).*cosd(lato(j))));
-%         chi(j,i)=2*asin(sqrt(fact(j,i)));
-%     end
+%%to plot the nth slice of d
+% ds1=nan*ssh;
+% for i=1:length(ds)
+%      if ~isempty(ds{i})
+%          for j=1:length(lon)
+%              ds1(i,j)=ds{i}(1,j);
+%          end
+%      end
 % end
-% figure,plot(chi*360/2/pi,lato),ylim([-90 90])
+
+

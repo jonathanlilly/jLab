@@ -13,6 +13,9 @@
 %
 %   Changes and improvements:
 %
+%   POLYSMOOTH considerable speed improvements. 
+%   SPHERESORT and TWODSORT improvements and major change to output format.
+%   SPHERELAP now computes all the terms in the Hessian matrix.
 %   AB2KL bugfix for B=0.
 %   READTOPO bugfixes when using interpolation option.
 %   PERIODINDEX new, faster algorithm based on ridge age.
@@ -22,6 +25,7 @@
 %   VSTD redefined for complex-valued arguments.
 %   YEARFRAC bugfix for NUM consisting of a ND array.
 %   ELLROSSBY factor of two change to be consisent with the literature.
+%   TRAJEXTRACT and POLYSMOOTH bugfixes for sample figures. 
 %   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.6.6

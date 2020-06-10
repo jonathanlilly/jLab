@@ -10,7 +10,7 @@ function[d,x,y,t,z,w]=polysmooth_presort(varargin)
 %   First, if the temporal bandwidth TAU is nonempty, any datapoints
 %   outside of temporal window ABS(TS./TAU)>1 are set to NaNs.
 %
-%   After this,the data field, ZS, is checked to see if it contains any 
+%   After this, the data field, ZS, is checked to see if it contains any 
 %   NaNs. If it does, then all fields are sorted by distance DS along 
 %   third dimension, thus moving any interior NaN value to the bottom.
 %

@@ -2,39 +2,42 @@ function[varargout]=twodsort(varargin)
 %TWODSORT  Distances from data points to nearby grid points.
 %
 %   [DS,XS,YS]=TWODSORT(X,Y,XO,YO,CUTOFF) returns sorted distances D 
-%   between data points at locations X,Y and grid points at XO,YO, computed 
-%   efficiently and organized in a convenient manner.
+%   between data points at locations X,Y and grid points at XO,YO.
 %
 %   X and Y are arrays of the same size into data point locations. XO and
 %   YO are arrays of length M and N, say, specifying the bin center
 %   locations of an M x N matrix of grid points, i.e.
 %
-%       XO =  [XO_1;    YO= [YO_1 YO_2 ... YO_N]. 
-%              XO_2; 
-%               ...
-%              XO_M]
+%      XO= [XO_1 XO_2 ... XO_N]      XO =  [YO_1;    
+%                                           YO_2; 
+%                                            ...
+%                                           YO_M]
 %
 %   CUTOFF is the maximum distance to be included in the output arrays.
 %
-%   The output arrays are then each M x N x J arrays, where J is the 
-%   maximum number of points in the CUTOFF neighborhood at any grid point.
-%   Points farther away are filled with NANs.
+%   The output arrays are M numerical arrays arranged as a length M cell
+%   array.  That is, there is one cell per element of Y0. Each numerical 
+%   array has N columns, i.e., the number of elements of X0, with the 
+%   number of rows varying between arrays.  
 %
 %   DS gives the distances SQRT((X-XO)^2+(Y-YO)^2) of all data points less
 %   than the CUTOFF distance from the (m,n)th grid point, sorted in order
-%   of increasing distance.  XS and YS are corresponding deviations X-XO 
-%   and Y-YO from the grid point location to each data point.
+%   of increasing distance.  Entries farther than CUTOFF in all output
+%   fields are filled with NaNs.
+%
+%   XS and YS are corresponding deviations X-XO and Y-YO from the grid 
+%   point location to each data point.
+%
+%   The choice to put rows into cell arrays is made because for consistency
+%   with SPHERESORT and for convenience in parallelizing POLYSMOOTH.
 %   _________________________________________________________________
 % 
 %   Limiting output dimension
 %
 %   [DS,XS,YS]=TWODSORT(X,Y,XO,YO,[CUTOFF JMAX]), where the fifth input 
-%   argument is a 2-vector, additionally specifies that the third dimension
-%   of the output arrays will be no more than JMAX. 
-%
-%   This option is useful for the 'fixed population' algorithm in
-%   POLYSMOOTH, as it ensures the output fields will be no larger than is
-%   necessary.  It can also be used simply to limit the output size. 
+%   argument is a 2-vector, additionally specifies that number of rows of
+%   in each cell of the output will be no larger than JMAX.  This option is
+%   useful for the 'fixed population' algorithm in POLYSMOOTH.
 %   _________________________________________________________________
 % 
 %   Additional input parameters
@@ -59,12 +62,12 @@ function[varargout]=twodsort(varargin)
 %
 %   'twodsort --t' runs a test.
 %
-%   Usage: [ds,xs,ys]=twodsort(x,y,xo,yo,cutoff);
-%          [ds,xs,ys,zs]=twodsort(x,y,zs,xo,yo,cutoff);
-%          [xs,ys,z1s,z2s,...,zNs]=twodsort(x,y,z1,z2,...,zN,xo,yo,cutoff);
+%   Usage: [ds,xs,ys,indexs]=twodsort(x,y,xo,yo,cutoff);
+%          [ds,xs,ys,zs,indexs]=twodsort(x,y,zs,xo,yo,cutoff);
+%          [ds,xs,ys,z1s,z2s,...,zNs]=twodsort(x,y,z1,z2,...,zN,xo,yo,cutoff);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     twodsort_test,return
@@ -75,6 +78,7 @@ ydata=varargin{2};
 xo=varargin{end-2};
 yo=varargin{end-1};
 cutoff=varargin{end};
+varargin=varargin(3:end-3);
 
 %In case max # points is not input
 Ncutoff=inf;
@@ -83,19 +87,22 @@ if length(cutoff)==2
     cutoff=cutoff(1);
 end
 
-[xo,yo]=meshgrid(xo,yo);
+xo=xo(:);
+yo=yo(:);
 
 K=nargout;
-if length(varargin)<K+2
+if length(varargin)<K-3
     error('Not enough input arguments.')
 end
+
+%K,length(varargin)
 
 if ~aresame(size(xdata),size(ydata))
     error('XDATA and YDATA must be the same size.')
 end
 
 for k=1:K
-    varargout{k}=cell(size(xo,1),size(xo,2));
+    varargout{k}=cell(length(yo),1);
 end
 indexo=find(isfinite(xdata)&isfinite(ydata));
 
@@ -106,54 +113,45 @@ else
     disp(['No finite data values.']), return
 end
 
-for j=1:length(xo(:))
-     xp=xdata-xo(j);
-     yp=ydata-yo(j);
-     d=sqrt(xp.^2+yp.^2);
-     index=find(d<cutoff);
-     if ~isempty(index)
-         [dsort,sorter]=sort(d(index),'ascend');
-         index=index(sorter);
-         %aresame(d(index),dsort)
-         varargout{1}{j}=dsort;
-         varargout{2}{j}=xp(index);
-         varargout{3}{j}=yp(index);
-         for k=4:K
-             varargout{k}{j}=varargin{k-1}(indexo(index));
-         end
-     end
-end
+%indexall=1:length(xdata);
 
-cells=varargout;
-xs=cells{1};
-L=zeros(size(xs));
-for i=1:size(xs,1)
-    for j=1:size(xs,2)
-        L(i,j)=min(Ncutoff,length(xs{i,j}));
-    end
-end
-maxL=maxmax(L);
-for k=1:K
-    varargout{k}=vzeros(size(xs,1),size(xs,2),maxL,'nan');
-end
-
-for i=1:size(xs,1)
-    for j=1:size(xs,2)
-        if L(i,j)>=1
-            for k=1:K
-                varargout{k}(i,j,1:L(i,j))=cells{k}{i,j}(1:L(i,j));
-            end
+N=length(xo);
+for i=1:length(yo)
+    xp=vrep(xdata,N,2)-vrep(xo',length(xdata),1);
+    yp=vrep(ydata-yo(i),N,2);
+    d=sqrt(xp.^2+yp.^2);
+    d(d>cutoff)=nan;
+    xp(isnan(d))=nan;
+    yp(isnan(d))=nan;
+    
+    %size(d)
+    if ~allall(~isfinite(d))
+        [dsort,sorter]=sort(d,'ascend');
+        jj=vrep(1:N,length(xdata),1);    
+        index=sub2ind(size(d),sorter,jj);
+        
+        xp=xp(index);
+        yp=yp(index);
+        
+        L=min(find(sum(isfinite(dsort),2),1,'last'),Ncutoff);
+        varargout{1}{i}=dsort(1:L,:);
+        varargout{2}{i}=xp(1:L,:);
+        varargout{3}{i}=yp(1:L,:);
+        %vsize(d,xp,yp,dsort,sorter)
+        for k=4:K
+            temp=vrep(varargin{k-3}(indexo),N,2);
+            temp=temp(index);
+            temp(isnan(dsort))=nan;
+            varargout{k}{i}=temp(1:L,:);
         end
     end
 end
-        
          
 function[]=twodsort_test
 
 [x,y,z]=peaks;
 index=randperm(length(z(:)));
 index=index(1:200);
-
 
 [xdata,ydata,zdata]=vindex(x(:),y(:),z(:),index,1);
 
@@ -164,20 +162,11 @@ xo=(-3:.125:3);
 yo=(-3:.125:3);
 [xg,yg]=meshgrid(xo,yo);
 
-[ds,xs,ys,xs2,ys2]=twodsort(xdata,ydata,xdata,ydata,xo,yo,[1 20]);
+%[ds,xs,ys,xs2,ys2]=twodsort(xdata,ydata,xdata,ydata,xo,yo,[1 20]);
 %vsize(ds,xs,ys,xs2,ys2)
-reporttest('TWODSORT population cutoff',size(ds,3)==20&&size(xs,3)==20&&size(ys,3)==20&&size(xs2,3)==20)
 
 [ds,xs,ys,xs2,ys2]=twodsort(xdata,ydata,xdata,ydata,xo,yo,1);
-reporttest('TWODSORT consistency',aresame(xs+vrep(xg,size(xs,3),3),xs2)&&aresame(ys+vrep(yg,size(xs,3),3),ys2))
-
-ds2=nan*zeros(size(ds));
-for i=1:size(ds,1)
-    for j=1:size(ds,2)
-        for k=1:size(ds,3)
-            ds2(i,j,k)=sqrt((xs(i,j,k)).^2+(ys(i,j,k)).^2);
-        end
-    end
+for i=1:length(xs)
+    bool(i)=aresame(xs{i}+vrep(xo,size(xs{i},1),1),xs2{i})&aresame(ys{i}+yo(i),ys2{i});
 end
-reporttest('TWODSORT distance',aresame(ds,ds2,1e-10))
- 
+reporttest('TWODSORT consistency',allall(bool));

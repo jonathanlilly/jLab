@@ -240,10 +240,9 @@ function[varargout]=polysmooth(varargin)
 %   There is a simple way to handle this situation without needing to 
 %   resort the grid.  First one calls TWODSORT or SPHERESORT as follows:
 %
-%     [DS,XS,YS,INDEX]=TWODSORT(X,Y,[1:LENGTH(X(:))],XO,YO,CUTOFF);
+%     [DS,XS,YS,INDEX]=TWODSORT(X,Y,XO,YO,CUTOFF);
 %     --- or ---
-%     [DS,XS,YS,INDEX]=
-%            SPHERESORT(LAT,LON,1:LENGTH(LAT(:)),LATO,LONO,CUTOFF);
+%     [DS,XS,YS,INDEX]=SPHERESORT(LAT,LON,LATO,LONO,CUTOFF);
 %
 %   INDEX is now an index into the sorted datapoint locations, such that
 %
@@ -253,11 +252,6 @@ function[varargout]=polysmooth(varargin)
 %  
 %   The virtue of this approach is that one only has to call TWODSORT or 
 %   SPHERESORT once, no matter how many variable are to be mapped.
-%
-%   One tip for using this method: (X,Y) or (LAT,LON) values for which the 
-%   corresponding data is always undefined (e.g., altimeter tracks over 
-%   land), may be set to NaNs in the calls to TWODSORT or SPHERESORT, such
-%   that they will be omitted from DS, XY, YS, and INDEX.
 %   __________________________________________________________________
 %
 %   Robustification 
@@ -276,18 +270,25 @@ function[varargout]=polysmooth(varargin)
 %   Parallelization
 %
 %   POLYSMOOTH(...,'parallel') parallelizes the computation using a PARFOR
-%   PARFOR loop, by calling the default speed-optimized algorithm on each 
-%   latitude (or matrix row) separately.  
+%   loop, by operating on each latitude (or matrix row) separately.   This 
+%   requires that Matlab's Parallel Computing toolbox be installed.  
 %
-%   Whether this is faster or slower than the default algorithm depends on
-%   the memory needed by the problem relative to that of your machine.  If 
-%   the memory is too large, the parallel method will become very slow.
+%   POLYSMOOTH will then using an existing parallel pool, or if one does 
+%   not exist, a pool will be created using all availabale workers.
 %
-%   Alternatively, it may sometimes be preferable to use the default
-%   algorithm but to parallelize an external call to POLYSMOOTH.
+%   POLYSMOOTH(...'parallel',Nworkers) alternately specifies the number of
+%   workers to use. If you run into memory constraints, reduce Nworkers.
 %
-%   This requires that Matlab's Parallel Computing toolbox be installed.
+%   If you are working on multiple maps simultaneously, depending on the 
+%   size of your problem, it may be faster to use an exterior PARFOR loop,
+%   rather than calling POLYSMOOTH with the 'parallel' flag. 
 %   __________________________________________________________________
+%
+%   Quiet option
+%
+%   By default, POLYSMOOTH displays a status message saying what row it is 
+%   working on.  POLYSMOOTH(...,'quiet') suppresses this message.
+%   ___________________________________________________
 %
 %   'polysmooth --t' runs some tests.
 %   'polysmooth --f' generates some sample figures.
@@ -320,21 +321,25 @@ end
 mu=0;
 targ=[];
 tau=[];
-str='speed';
+str='cells';
 skern='gaussian';
 tkern='gaussian';
 geostr='cartesian';
 varstr='bandwidth';
 robstr='non';
+verbstr='verbose';
 iters=0;
+Nworkers=[];
 
 %First parse the string arguments
-for i=1:4
+for i=1:5
     if ischar(varargin{end})
         tempstr=varargin{end};
         if strcmpi(tempstr(1:3),'car')||strcmpi(tempstr(1:3),'sph')
             geostr=tempstr;
-        elseif strcmpi(tempstr(1:3),'spe')||strcmpi(tempstr(1:3),'loo')||strcmpi(tempstr(1:3),'par')
+        elseif strcmpi(tempstr(1:3),'ver')||strcmpi(tempstr(1:3),'qui')
+            verbstr=tempstr;
+        elseif strcmpi(tempstr(1:3),'cel')||strcmpi(tempstr(1:3),'par')
             str=tempstr;
         elseif strcmpi(tempstr(1:3),'ban')||strcmpi(tempstr(1:3),'pop')
             varstr=tempstr;
@@ -345,30 +350,39 @@ for i=1:4
         if strcmpi(tempstr(1:3),'rob')||strcmpi(tempstr(1:3),'non')
             robstr=tempstr;
             iters=varargin{end};
+        elseif strcmpi(tempstr(1:3),'par')
+            str=tempstr;
+            Nworkers=varargin{end};
         end
         varargin=varargin(1:end-2);
     end
 end
 
-%These arguments are different between the loop and fast algorithm
-if strcmpi(str(1:3),'loo')
-    xo=varargin{6};
-    yo=varargin{7};
-    varargin=varargin([1:5 8:end]);
-else
-    d=varargin{1};
-    varargin=varargin(2:end);
+pool = gcp('nocreate');
+if strcmpi(str(1:3),'par')
+    if isempty(Nworkers)
+        if isempty(pool)
+            parpool('local');
+        end
+    else
+        if ~isempty(pool)
+            parpool('local',Nworkers);
+        elseif pool.NumWorkders~=Nworkers
+            parpool('local',Nworkers);
+        end
+    end
 end
 
-x=varargin{1};
-y=varargin{2};
-t=varargin{3};
-z=varargin{4};
-w=varargin{5};
-rho=varargin{6};
-sarg=varargin{7};
-if length(varargin)==8
-    targ=varargin{8};
+d=varargin{1};
+x=varargin{2};
+y=varargin{3};
+t=varargin{4};
+z=varargin{5};
+w=varargin{6};
+rho=varargin{7};
+sarg=varargin{8};
+if length(varargin)==9
+    targ=varargin{9};
 end
  
 if iscell(sarg)
@@ -404,39 +418,33 @@ end
 %     disp(['POLYSMOOTH performing an order ' int2str(rho) ' spatial fit using a ' skern ' kernel,'])
 %     disp(['plus an order ' int2str(mu) ' temporal fit using a ' tkern ' kernel.'])
 % end
-
-%vsize(x,y,t,z,w,xo,yo)
-
-%Set distance to nan for missing data; also swap infs for nans
-d(~isfinite(z))=nan;
-%--------------------------------------------------------------------------
-%This can speed things up if you have a lot of missing data. If you don't
-%sort, then you end up doing a lot of extra operations, because you can't
-%truncate the matrix.
-%vsize(d,x,y,t,z,w,H,tau)
-%H,varstr
-[d,x,y,t,z,w]=polysmooth_presort(d,x,y,t,z,w,H,tau,varstr);
-%vsize(d,x,y,t,z,w)
-
 %--------------------------------------------------------------------------
 %vsize(x,y,t,z,w,xo,yo)
 %size(H)
 %tau,rho,mu,skern,tkern,varstr,str
 %vsize(d,x,y,t,z,w)
 
-zhat=nan*zeros(size(d,1),size(d,2),iters+1);
+if ~iscell(d)
+    d(~isfinite(z))=nan;    %Set distance to nan for missing data; also swap infs for nans
+    [d,x,y,t,z,w]=polysmooth_presort(d,x,y,t,z,w,H,tau,varstr);
+    %This can speed things up if you have a lot of missing data. If you don't
+    %sort, then you end up doing a lot of extra operations, because you can't
+    %truncate the matrix.
+    zhat=nan*zeros(size(d,1),size(d,2),iters+1);
+else
+    zhat=nan*zeros(length(d),maxmax(cellsize(d,2)),iters+1);
+end
+
 wo=w;
 while iters+1>0
-    if strcmpi(str(1:3),'loo')
-        [beta,aux]=polysmooth_loop(x,y,t,z,w,xo,yo,H,tau,rho,mu,skern,tkern,varstr,geostr);
-    elseif strcmpi(str(1:3),'spe')
-        [beta,aux,res]=polysmooth_fast(d,x,y,t,z,w,H,tau,rho,mu,skern,tkern,varstr);
+    if strcmpi(str(1:3),'cel')
+        [beta,aux,res]=polysmooth_cells(d,x,y,t,z,w,H,tau,rho,mu,skern,tkern,varstr,verbstr);
     elseif strcmpi(str(1:3),'par')
-        [beta,aux]=polysmooth_parallel(d,x,y,t,z,w,H,tau,rho,mu,skern,tkern,varstr);
+        [beta,aux,res]=polysmooth_cells_parallel(d,x,y,t,z,w,H,tau,rho,mu,skern,tkern,varstr,verbstr);
     else
         error(['Algorithm type ' str ' is not supported.'])
     end
-    vsize(d,beta,zhat)
+    %vsize(d,beta,zhat)
     zhat(:,:,iters+1)=beta(:,:,1);
     %----------------------------------------------------------------------
     %See Cleveland (1979), p 830--831
@@ -466,186 +474,224 @@ varargout{1}=zhat;
 varargout{2}=beta;
 varargout{3}=aux;
 
-function[beta,aux]=polysmooth_parallel(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr)
-
-M=size(xs,1);
-N=size(xs,2);
-Q=sum(0:rho+1)+mu;
-
-beta=nan*zeros(M,N,Q);
-aux=nan*zeros(M,N,6);
-
-%This way is actually slower than the fast method
-
-parfor i=1:M
-   [dsi,xsi,ysi,tsi,zsi,wsi]=vindex(ds,xs,ys,ts,zs,ws,i,1);
-   if size(H,1)>1
-       Hi=H(i,:);
-   else
-       Hi=H;
-   end
-   [beta(i,:,:),aux(i,:,:)]=...
-       polysmooth_fast(dsi,xsi,ysi,tsi,zsi,wsi,Hi,tau,rho,mu,skern,tkern,varstr);
-end
-
-function[beta,aux,res]=polysmooth_fast(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr)
- 
-
+function[beta,aux,res]=polysmooth_cells(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr,verbstr)
 %maxmax(ts(isfinite(zs))),minmin(ts(isfinite(zs)))
-M=size(xs,1);
-N=size(xs,2);
+M=length(ds);
+N=maxmax(cellsize(ds,2));
 Q=sum(0:rho+1)+mu;
 %rho,mu, Q
+%M,N,Q
 
-%vsize(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr)
-if strcmpi(varstr(1:3),'pop')
-    H=polysmooth_bandwidth(H,ds,ws);  %Input H was actually P
-end
-%figure,jpcolor(H)
-
+mat=zeros(N,Q,Q);
+vect=zeros(N,Q,1);
 beta=nan*zeros(M,N,Q);
-aux=nan*zeros(M,N,6);
- 
-if size(ds,3)~=0 
-    %the spatial weighting kernel
-    W=polysmooth_kernel(ds,ws,H,skern);
-    %figure,jpcolor(W(:,:,1))    
-    %multiply by the temporal weighting kernel, if requested
-    if ~isempty(tau)
-        %vsize(ts,ws,tau,tkern)
-        W=W.*polysmooth_kernel(ts,ws,tau,tkern);
-    end
-    %figure,jpcolor(log10(W(:,:,1)))    
+aux=nan*zeros(M,N,7);
+[C,res,aux1,aux2,err,aux4,aux5,V,C]=vzeros(M,N,'nan');
+C=ones(size(C));%initialize C to ones for the case of rho=1
 
-    vswap(ds,xs,ys,ts,zs,ws,W,nan,0);
-    Wsum=sum(W,3);
-    %length(ds)
-   
-    X=polysmooth_xmat(xs,ys,ts,rho,mu);
- 
-    XtimesW=X.*vrep(W,Q,4);
-    mat=zeros(M,N,Q,Q);
- 
-    %vsize(X,W,XtimesW,mat,zs)
-    for i=1:size(X,4)
-        mat(:,:,:,i)=sum(XtimesW.*vrep(X(:,:,:,i),Q,4),3);
-    end
-    %vsize(XtimesW,vrep(zs,Q,4))
-    vect=sum(XtimesW.*vrep(zs,Q,4),3);
-    vect=permute(vect,[1 2 4 3]);
-    
-    C=nan*ones(M,N);
-    for i=1:N
-        for j=1:M
-            C(j,i)=cond(squeeze(mat(j,i,:,:)));
-        end
-    end
-    C(isinf(C))=nan;
-    
-    if Q==1
-        vswap(mat,0,nan);
-        beta=vect./mat;
-    else  
-        %vsize(ds,xs,ys,zs,ws,W,vect,mat,XtimesW)
-        beta=matmult(matinv(mat),vect,3);
-    end
-    temp=vrep(permute(beta,[1 2 4 3]),size(zs,3),3);
-      
-    res=zs-sum(X.*temp,4);
-    err=sqrt(sum(W.*squared(res),3)./sum(W,3));
-   
-    %Form the intercell weighted variance
-    zbar=sum(W.*zs,3)./Wsum;
-    V=sqrt(sum(W.*squared(zs-vrep(zbar,size(zs,3),3)),3)./Wsum);
-    
-    aux(:,:,1)=sum((W>0),3);       %population P
-    aux(:,:,2)=H(:,:,1);           %bandwidth H
-    aux(:,:,3)=err;                %rms error E
-    aux(:,:,4)=sum(W,3);           %total weight
-    aux(:,:,5)=sum(W.*ds,3)./Wsum;%weighted mean distance R
-    %aux(:,:,5)=sum((W>0).*ds,3)./sum(W>0,3);%mean distance R
-    aux(:,:,6)=V;                  %intercell standard deviation V
-    aux(:,:,7)=C;                  %condition number C
+if length(H)==1
+    H=H+zeros(length(ds),1);
 end
- 
-function[beta,aux]=polysmooth_loop(x,y,t,z,w,xo,yo,H0,tau,rho,mu,skern,tkern,varstr,geostr)
-%Explicit loop without pre-sorting, for testing purposes only
-M=length(yo);
-N=length(xo);
-
-Q=sum(0:rho+1)+mu;
-
-beta=nan*zeros(M,N,Q);
-aux=[];
-
-for j=1:M
-    %Note that the slow method loops over the other direction for sphere
-    %disp(['Polysmooth computing map for row ' int2str(j) '.'])
-    for i=1:N
-        if strcmpi(geostr(1:3),'sph')
-            [xs,ys,ds]=latlon2xy(x,y,xo(i),yo(j));
-            ds(ds>radearth*pi/2)=nan;  %Just in case
-        else
-            xs=x-xo(i);
-            ys=y-yo(j);
-            ds=sqrt(xs.^2+ys.^2);
+if ~isempty(ds)
+   for i=1:M
+        if strcmpi(verbstr(1:3),'ver')
+            disp(['Polysmooth computing map for row ' int2str(i) ' of ' int2str(M) '.'])
         end
-        zs=z;
-        ws=w;
-        ts=t;
-        
-        vindex(ds,xs,ys,ts,zs,ws,isfinite(ds)&isfinite(zs),1);
-        
-        [~,sorter]=sort(ds);
-        vindex(ds,xs,ys,ts,zs,ws,sorter,1);
-        %%There are some confusing 0 distances coming from +/- 90 lat
-        %if sortds(2)==0
-        %    figure,plot(x,y,'.')
-        %    hold on, plot(xo(i),yo(j),'mo')
-        %    hold on,plot(x(ds==0),y(ds==0),'g+')
-        %end
-        %sortds(1:20)'
-        if strcmpi(varstr(1:3),'pop')
-            H(j,i)=polysmooth_bandwidth(H0,ds,ws);  %Input H0 was actually P
-            %H(j,i)=polysmooth_bandwidth(H0,permute(ds,[3 2 1]),permute(ws,[3 2 1]));  %Input H0 was actually P
-        else
-            H(j,i)=H0;
-        end        
-        %Correct for weird effect or repeated distances giving more than H0
-        %points, which appears to be happening near the poles
-%         if strcmpi(varstr(1:3),'pop')
-%              if length(ds)>=H0
-%                 sorter=sorter(1:H0);
-%              else
-%                 %If not enough data points, set all to nan
-%                 ws=nan.*ws;
-%              end
-%         end
-                
-        %the spatial weighting kernel
-        W=polysmooth_kernel(ds,ws,H(j,i),skern);
- 
-        %multiply by the temporal weighting kernel, if requested
-        if ~isempty(tau)
-            if ~length(tau)==1
-                tauij=tau(j,i);
+        if ~isempty(ds{i})
+            %don't set distance to 0; we need to know the distance 
+            [xs{i},ys{i},zs{i}]=vswap(xs{i},ys{i},zs{i},nan,0); 
+            %length(find(isnan(vcolon(zs{i}))))
+            %ds{i}=vswap(ds{i},nan,inf);
+            %vsize(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr)
+            if strcmpi(varstr(1:3),'pop')  %Input H was actually P
+                if isempty(ws)
+                    Hi=polysmooth_bandwidth(H(i),ds{i},[]);  
+                else
+                    Hi=polysmooth_bandwidth(H(i),ds{i},ws{i}); 
+                end
             else
-                tauij=tau;
+                Hi=H(i);
             end
-            W=W.*polysmooth_kernel(ts,ws,tauij,tkern);
-        end
-        
-        X=squeeze(polysmooth_xmat(xs,ys,ts,rho,mu));
+            
+            if isempty(ws)
+                W=polysmooth_kernel(ds{i},[],Hi,skern);
+            else
+                W=polysmooth_kernel(ds{i},ws{i},Hi,skern);
+            end
+            %figure,jpcolor(W(:,:,1))
+            
+            %multiply by the temporal weighting kernel, if requested
+            if ~isempty(tau)
+                %vsize(ts,ws,tau,tkern)
+                W=W.*polysmooth_kernel(ts,ws,tau,tkern);
+            end
+            %figure,plot(W)
+            %figure,jpcolor(log10(W(:,:,1)))            
+            %faster to bring this inside the parfor loop because then 
+            %you don't have to keep mat and vect for the earth in memory
+            
+            if isempty(ts)
+                X=squeeze(polysmooth_xmat(xs{i},ys{i},[],rho,mu));
+            else
+                X=squeeze(polysmooth_xmat(xs{i},ys{i},ts{i},rho,mu));
+            end
+            %X is N x lons x Q
+            XtimesW=X.*vrep(W,Q,3);
+            XT=permute(X,[1 2 4 3]);
+            %XT is N x lons x 1 x Q
+            mat=squeeze(sum(vrep(XT,Q,3).*vrep(XtimesW,Q,4),1));
+            vect=squeeze(sum(XtimesW.*vrep(zs{i},Q,3),1));
+            
+            if Q==1
+                %simplifications possible for the local constant fit
+                %Weird indexing here is to keep parfor from complaining
+                %mat2=sum(W,1);%aresame(mat,mat2)
+                %vect=squeeze(sum(W.*zs{i},1));
+ 
+                betai=vect./mat;
+                beta(i,:,:)=betai;
+                %res=zs{i}-beta(i,:,:);
+            else
+               invmat=matinv(mat);
+               beta(i,:,:)=matmult(invmat,vect,2);
+            end
+            %length(find(~isnan(mat(:))))
+            %length(find(~isnan(vect(:))))
+            res=zs{i}-sum(X.*vrep(beta(i,:,:),size(X,1),1),3);
 
-        XW=conj(X')*diag(W);
-        mat=XW*X;
-        
-        beta(j,i,:)=mat\(XW*zs); %Following Checkcode's suggestion
+            if rho>1
+                for j=1:N
+                    C(i,j)=cond(squeeze(mat(j,:,:)));
+                end
+            end
+         
+            %Have to assign individually for parfor not to complain 
+            sumW=sum(W,1);
+            aux1(i,:)=sum((W>0),1);             %population P
+            aux2(i,:)=Hi;                       %bandwidth H
+            err(i,:)=sqrt(sum(W.*squared(res),1)./sumW); %rms error E
+            aux4(i,:)=sum(W,1);                 %total weight
+            aux5(i,:)=sum(W.*ds{i},1)./sumW;    %weighted mean distance R   
+            zbar=sum(W.*zs{i},1)./sumW;
+            zbar=vrep(zbar,size(zs{i},1),1);
+            V(i,:)=sqrt(sum(W.*squared(zs{i}-zbar),1)./sumW); %intercell standard deviation V
+        end
     end
+    aux(:,:,1)=aux1;             %population P
+    aux(:,:,2)=aux2;             %bandwidth H
+    aux(:,:,3)=err;              %rms error E
+    aux(:,:,4)=aux4;             %total weight
+    aux(:,:,5)=aux5;             %weighted mean distance R   
+    aux(:,:,6)=V;                %intercell standard deviation V
+    aux(:,:,7)=vswap(C,inf,nan); %condition number C
 end
-aux=[];
-if strcmpi(geostr(1:3),'sph')
-    beta=permute(beta,[2 1 3]);
+
+function[beta,aux,res]=polysmooth_cells_parallel(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr,verbstr)
+%this is exactly the smae as the above but with a parfor instead of a for
+M=length(ds);
+N=maxmax(cellsize(ds,2));
+Q=sum(0:rho+1)+mu;
+%rho,mu, Q
+%M,N,Q
+
+mat=zeros(N,Q,Q);
+vect=zeros(N,Q,1);
+beta=nan*zeros(M,N,Q);
+aux=nan*zeros(M,N,7);
+[C,res,aux1,aux2,err,aux4,aux5,V,C]=vzeros(M,N,'nan');
+C=ones(size(C));%initialize C to ones for the case of rho=1
+
+if length(H)==1
+    H=H+zeros(length(ds),1);
+end
+if ~isempty(ds)
+   parfor i=1:M
+        if strcmpi(verbstr(1:3),'ver')
+            disp(['Polysmooth computing map for row ' int2str(i) ' of ' int2str(M) '.'])
+        end
+        if ~isempty(ds{i})
+            %don't set distance to 0; we need to know the distance 
+            [xs{i},ys{i},zs{i}]=vswap(xs{i},ys{i},zs{i},nan,0); 
+            %ds{i}=vswap(ds{i},nan,inf);
+            %vsize(ds,xs,ys,ts,zs,ws,H,tau,rho,mu,skern,tkern,varstr)
+            if strcmpi(varstr(1:3),'pop')  %Input H was actually P
+                if isempty(ws)
+                    Hi=polysmooth_bandwidth(H(i),ds{i},[]);  
+                else
+                    Hi=polysmooth_bandwidth(H(i),ds{i},ws{i}); 
+                end
+            else
+                Hi=H(i);
+            end
+
+            if isempty(ws)
+                W=polysmooth_kernel(ds{i},[],Hi,skern);
+            else
+                W=polysmooth_kernel(ds{i},ws{i},Hi,skern);
+            end
+            %figure,jpcolor(W(:,:,1))
+            
+            %multiply by the temporal weighting kernel, if requested
+            if ~isempty(tau)
+                %vsize(ts,ws,tau,tkern)
+                W=W.*polysmooth_kernel(ts,ws,tau,tkern);
+            end
+            %figure,plot(W)
+            %figure,jpcolor(log10(W(:,:,1)))            
+            %faster to bring this inside the parfor loop because then 
+            %you don't have to keep mat and vect for the earth in memory
+            
+            if isempty(ts)
+                X=squeeze(polysmooth_xmat(xs{i},ys{i},[],rho,mu));
+            else
+                X=squeeze(polysmooth_xmat(xs{i},ys{i},ts{i},rho,mu));
+            end
+            %X is N x lons x Q
+            XtimesW=X.*vrep(W,Q,3);
+            XT=permute(X,[1 2 4 3]);
+            %XT is N x lons x 1 x Q
+            mat=squeeze(sum(vrep(XT,Q,3).*vrep(XtimesW,Q,4),1));
+            vect=squeeze(sum(XtimesW.*vrep(zs{i},Q,3),1));
+            
+            if Q==1
+                %simplifications possible for the local constant fit
+                %Weird indexing here is to keep parfor from complaining
+                %mat2=sum(W,1);%aresame(mat,mat2)
+                %vect=squeeze(sum(W.*zs{i},1));
+                betai=vect./mat;
+                beta(i,:,:)=betai;
+                %res=zs{i}-beta(i,:,:);
+            else
+               invmat=matinv(mat);
+               beta(i,:,:)=matmult(invmat,vect,2);
+            end
+            res=zs{i}-sum(X.*vrep(beta(i,:,:),size(X,1),1),3);
+
+            if rho>1
+                for j=1:N
+                    C(i,j)=cond(squeeze(mat(j,:,:)));
+                end
+            end
+         
+            %Have to assign individually for parfor not to complain 
+            sumW=sum(W,1);
+            aux1(i,:)=sum((W>0),1);             %population P
+            aux2(i,:)=Hi;                       %bandwidth H
+            err(i,:)=sqrt(sum(W.*squared(res),1)./sumW); %rms error E
+            aux4(i,:)=sum(W,1);                 %total weight
+            aux5(i,:)=sum(W.*ds{i},1)./sumW;    %weighted mean distance R   
+            zbar=sum(W.*zs{i},1)./sumW;
+            zbar=vrep(zbar,size(zs{i},1),1);
+            V(i,:)=sqrt(sum(W.*squared(zs{i}-zbar),1)./sumW); %intercell standard deviation V
+        end
+    end
+    aux(:,:,1)=aux1;             %population P
+    aux(:,:,2)=aux2;             %bandwidth H
+    aux(:,:,3)=err;              %rms error E
+    aux(:,:,4)=aux4;             %total weight
+    aux(:,:,5)=aux5;             %weighted mean distance R   
+    aux(:,:,6)=V;                %intercell standard deviation V
+    aux(:,:,7)=vswap(C,inf,nan); %condition number C
 end
 
 function[X]=polysmooth_xmat(x,y,t,rho,mu)
@@ -669,8 +715,8 @@ if mu==2
 end
 function[]=polysmooth_test
 
-tstart=tic;polysmooth_test_cartesian;toc(tstart)
-tstart=tic;polysmooth_test_sphere;toc(tstart)
+%tstart=tic;polysmooth_test_cartesian;toc(tstart)
+%tstart=tic;polysmooth_test_sphere;toc(tstart)
 polysmooth_test_tangentplane;
 
 function[]=polysmooth_test_tangentplane
@@ -789,14 +835,14 @@ H=2;
 
 for i=0:2
     [ds,xs,ys,zs]=twodsort(xdata,ydata,zdata,xo,yo,H);
-    tic;[z1,beta1]=polysmooth(xdata,ydata,[],zdata,[],xo,yo,i,{H,'epan'},'loop');etime1=toc;
-    tic;[z2,beta2]=polysmooth(ds,xs,ys,[],zs,[],i,{H,'epan'},'speed');etime2=toc;
+    %tic;[z1,beta1]=polysmooth(xdata,ydata,[],zdata,[],xo,yo,i,{H,'epan'},'loop');etime1=toc;
+    tic;[z2,beta2]=polysmooth(ds,xs,ys,[],zs,[],i,{H,'epan'});etime2=toc;
     
-    disp(['POLYSMOOTH was ' num2str(etime1./etime2) ' times faster than loop, zeroth-order fit.'])
+    %disp(['POLYSMOOTH was ' num2str(etime1./etime2) ' times faster than loop, zeroth-order fit.'])
     
     tol=1e-8;
-    b1=aresame(z1,z2,tol)&&aresame(beta1,beta2,tol);
-    reporttest(['POLYSMOOTH speed and loop methods are identical for order ' int2str(i) ' fit'],b1)
+   %b1=aresame(z1,z2,tol)&&aresame(beta1,beta2,tol);
+    %reporttest(['POLYSMOOTH speed and loop methods are identical for order ' int2str(i) ' fit'],b1)
 end
 
 function[]=polysmooth_test_sphere
@@ -821,30 +867,18 @@ H=2000;
 
 for i=0:2
     [ds,xs,ys,zs,ws]=spheresort(latdata,londata,zdata,wdata,lato,lono,H);
-    tic;[z1,beta1]=polysmooth(latdata,londata,[],zdata,[],lato,lono,i,{H,'epan'},'loop','sphere');etime1=toc;
+   % tic;[z1,beta1]=polysmooth(latdata,londata,[],zdata,[],lato,lono,i,{H,'epan'},'loop','sphere');etime1=toc;
     tic;[z2,beta2]=polysmooth(ds,xs,ys,[],zs,[],i,{H,'epan'});etime2=toc;
     
-    disp(['POLYSMOOTH was ' num2str(etime1./etime2) ' times faster than loop, zeroth-order fit.'])
+   % disp(['POLYSMOOTH was ' num2str(etime1./etime2) ' times faster than loop, zeroth-order fit.'])
     
-    tol=1e-8;
-    b1=aresame(z1,z2,tol)&&aresame(beta1,beta2,tol);
-    reporttest(['POLYSMOOTH speed and loop methods are identical for order ' int2str(i) ' fit'],b1)
+    %tol=1e-8;
+    %b1=aresame(z1,z2,tol)&&aresame(beta1,beta2,tol);
+    %reporttest(['POLYSMOOTH speed and loop methods are identical for order ' int2str(i) ' fit'],b1)
 end
 
 
-for i=0:2
-    [ds,xs,ys,zs,ws]=spheresort(latdata,londata,zdata,wdata,lato,lono,H);
-    tic;[z1,beta1]=polysmooth(latdata,londata,[],zdata,[],lato,lono,i,{H,'epan'},'loop','sphere');etime1=toc;
-    tic;[z2,beta2]=polysmooth(ds,xs,ys,[],zs,[],i,{H,'epan'});etime2=toc;
-    
-    disp(['POLYSMOOTH was ' num2str(etime1./etime2) ' times faster than loop, zeroth-order fit.'])
-    
-    tol=1e-8;
-    b1=aresame(z1,z2,tol)&&aresame(beta1,beta2,tol);
-    reporttest(['POLYSMOOTH speed and loop methods are identical for order ' int2str(i) ' fit with weighted data points'],b1)
-end
-
-ok, this test shows large outliers are removed in a single iteration
+%ok, this test shows large outliers are removed in a single iteration
 %znoisy=zdata+randn(size(zdata));
 % znoisy=zdata;
 % znoisy(500)=200;
@@ -869,84 +903,3 @@ ok, this test shows large outliers are removed in a single iteration
 % cd(currentdir)
 
 
-% function[beta,rbar,H,numpoints,C,Wsum]=polysmooth_fast_experimental(ds,xs,ys,zs,ws,H,R,varstr,kernstr)
-% %Additional modifications here to prevent needless multiplications, but the
-% %effect appears minimal.  Not worth the trouble.  But I'm leaving this
-% %here as a reminder to myself that I tried it. 
-% 
-% M=size(xs,1);
-% N=size(xs,2);
-% 
-% H=polysmooth_bandwidth(H,M,N,ds,ws,varstr); 
-% %This is now an external function
-% 
-% H=vrep(H,size(xs,3),3);
-% 
-% P=sum(0:R+1);
-% 
-% beta=nan*zeros(M,N,P);
-% [rbar,C,Wsum]=vzeros(M,N,nan);
-% numpoints=zeros(M,N);
-% 
-% %Initial search to exclude right away points too far away
-% ds(ds>H)=nan;
-% numgood=squeeze(sum(sum(isfinite(ds),2),1));
-% index=find(numgood~=0,1,'last');
-% 
-% if ~isempty(index)
-%     vindex(ds,xs,ys,zs,ws,H,1:index,3);
-%     if anyany(ws~=1)
-%         W=polysmooth_kernel(dist,H,kernstr).*ws;
-%         %This is now an external function
-%     else
-%         W=polysmooth_kernel(dist,H,kernstr);
-%         %This is now an external function
-%     end
-%     
-%     Wsum=sum(W,3,'omitnan');
-%     numpoints=sum((W>0)&~isnan(W),3);
-%     rbar=sum(W.*ds,3,'omitnan')./Wsum;
-% 
-%     vswap(ds,xs,ys,zs,W,0,nan);
-%     
-%     Wmat=vrep(W,P,4);
-%     bool=~isnan(Wmat);
-%     X=polysmooth_xmat(xs,ys,ts,Q1,Q2);    
-%     XtimesW=X(bool).*Wmat(bool);  
-%     %Only need to keep that part of XtimesW for which there are good values
-%     
-%     %vsize(X,W,XtimesW)
-%     
-%     mat=zeros(M,N,P,P);
-%     vect=zeros(M,N,P);
-% 
-%     for i=1:size(X,4)
-%         Xmat=vrep(X(:,:,:,i),P,4);
-%         temp=nan*zeros(size(Xmat));
-%         temp(bool)=XtimesW.*Xmat(bool);
-%         mat(:,:,:,i)=sum(temp,3,'omitnan');
-%         %mat(:,:,:,i)=sum(XtimesW.*vrep(X(:,:,:,i),P,4),3);
-%    end
-%     
-%     zsmat=vrep(zs,P,4);
-%     temp=nan*zeros(size(zsmat));
-%     temp(bool)=XtimesW.*zsmat(bool);
-%     vect=sum(temp,3,'omitnan');
-%     %vect=sum(XtimesW.*vrep(zs,P,4),3);
-%     
-%     vect=permute(vect,[1 2 4 3]);
-%     for i=1:N
-%         for j=1:M
-%             C(j,i)=cond(squeeze(mat(j,i,:,:)));
-%         end
-%     end
-%     C(isinf(C))=nan;
-%     
-%     if P==1
-%         vswap(mat,0,nan);
-%         beta=vect./mat;
-%     else 
-%         beta=matmult(matinv(mat),vect,3);
-%     end
-% end
-% H=H(:,:,1);

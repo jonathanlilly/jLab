@@ -144,9 +144,9 @@ for i=1:length(alpha(:))
         alpha(i)=1/2+1e-10;
     end
 end
-if anyany(alpha<1/2)
-    error('Sorry, ALPHA must be greater than 1/2.')
-end
+% if anyany(alpha<1/2)
+%     error('Sorry, ALPHA must be greater than 1/2.')
+% end
 
 arrayify(sigma,alpha,lambda,mu,nu);
 
@@ -375,8 +375,8 @@ for i=1:length(alpha)
 end
 z=reshape(z,N*1000,length(alpha));
 z2=reshape(z2,N*1000,length(alpha));
-stdz1=vstd(z,1)';
-stdz2=vstd(z2,1)';
+stdz1=abs(vstd(z,1))';
+stdz2=abs(vstd(z2,1))';
 eps=abs(stdz1./sigma-1);
 eps2=abs(stdz2./sigma-1);
 
@@ -391,8 +391,8 @@ for i=1:length(alpha)
 end
 z=reshape(z,N*1000,length(alpha));
 z2=reshape(z2,N*1000,length(alpha));
-stdz1=vstd(z,1)';
-stdz2=vstd(z2,1)';
+stdz1=abs(vstd(z,1))';
+stdz2=abs(vstd(z2,1))';
 eps=abs(stdz1./sigma-1);
 eps2=abs(stdz2./sigma-1);
 

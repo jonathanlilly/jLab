@@ -15,9 +15,10 @@ function[lap,lapa,lapb,lapc,lapd]=spherelap(varargin)
 %
 %   Derivatives are computed using the second central difference.
 %
-%   [DEL2,DEL2LON,DEL2LAT]=SPHERELAT(LAT,LON,F) also returns the separate
-%   contributions from derivatives in the longitude and latitude
-%   directions, respectively.
+%   [DEL2,DEL2LON,DEL2LAT,DEL2MIXED]=SPHERELAT(LAT,LON,F) also returns the
+%   second partial derivative with respect to longitude DEL2LON, with 
+%   respect to latitude DEL2LAT, and the second mixed partial derivative 
+%   DEL2MIXED.  Together these make up the terms in the Hessian matrix. 
 %   ___________________________________________________________________
 %
 %   First and last points
@@ -46,11 +47,11 @@ function[lap,lapa,lapb,lapc,lapd]=spherelap(varargin)
 %
 %   Usage: del2=spherelap(lat,lon,f);
 %          del2=spherelap(lat,lon,f,R);
-%          [del2,del2lon,del2lat]=spherelap(lat,lon,f,R);
+%          [del2,del2lon,del2lat,del2mixed]=spherelap(lat,lon,f,R);
 %          del2=spherelap(lat,lon,f,'endpoint');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(varargin{1}, '--t')
     spherelap_test,return

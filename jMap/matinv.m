@@ -21,7 +21,7 @@ function[invmat]=matinv(mat,str)
 %
 %   Algorithms
 %
-%   MATINV can use either of two different algorithms.   This is specified
+%   MATINV can use either of two different algorithms.  This is specified
 %   with INV=MATINV(MAT,STR). 
 %    
 %   MATINV(MAT,'direct') uses algebraic expressions for 2 x 2 and 3 x 3 
@@ -45,7 +45,7 @@ function[invmat]=matinv(mat,str)
 %   Usage: inv=matinv(mat);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2008--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2008--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(mat, '--t')
     matinv_test,return

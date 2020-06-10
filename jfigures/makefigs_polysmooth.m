@@ -16,9 +16,9 @@ yo=(-3:.125:3);
 B=1/2;
 
 [ds,xs,ys,zs]=twodsort(xdata,ydata,zdata,xo,yo,B);    
-z0=polysmooth(ds,xs,ys,zs,B,0,'epan');
-z1=polysmooth(ds,xs,ys,zs,B,1,'epan');
-z2=polysmooth(ds,xs,ys,zs,B,2,'epan');
+z0=polysmooth(ds,xs,ys,[],zs,[],0,{B,'epan'});
+z1=polysmooth(ds,xs,ys,[],zs,[],1,{B,'epan'});
+z2=polysmooth(ds,xs,ys,[],zs,[],2,{B,'epan'});
 
 
 figure

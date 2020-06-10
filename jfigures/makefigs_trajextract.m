@@ -4,7 +4,7 @@ function[]=makefigs_trajextract
 load ebasnfloats
 use ebasnfloats
 region=[-30 -21 24 35];
-[lat1,lon1]=trajextract(region,lat,lon);
+[lat1,lon1]=trajextract(lat,lon,region);
 
 figure
 cellplot(lon,lat,'D'),latratio,regionplot(region),hold on

@@ -30,7 +30,7 @@ function[W]=polysmooth_kernel(dist,ws,B,kernstr)
 %          W=polysmooth_kernel(d,ws,B,kernstr);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2018--2020 J.M. Lilly --- type 'help jlab_license' for details
 
 if length(B(:))~=1
     B=vrep(B,size(dist,3),3);
@@ -38,25 +38,25 @@ end
 
 dist=frac(dist,B);
 W=zeros(size(dist));
-bool=dist<1;
+bool=(dist<=1);
 dist=dist(bool);
 
 if ischar(kernstr)
     if strcmpi(kernstr(1:3),'epa')
-        W(bool)=1-dist.^2;
+        W(bool)=frac(2,pi).*(1-dist.^2);
     elseif strcmpi(kernstr(1:3),'gau')
-        W(bool)=exp(-frac((3*dist).^2,2));
+        W(bool)=frac(9,2*pi*(1-exp(-9/2))).*exp(-frac((3*dist).^2,2));
     elseif strcmpi(kernstr(1:3),'bis')
-        W(bool)=(1-dist.^2).^2;
+        W(bool)=frac(3,pi).*(1-dist.^2).^2;
     elseif strcmpi(kernstr(1:3),'tri')
-        W(bool)=(1-dist.^3).^3;
+        W(bool)=frac(220,81*pi).*(1-dist.^3).^3;
     elseif strcmpi(kernstr(1:3),'uni')
-        W(bool)=1;
+        W(bool)=frac(1,pi);
     end
 elseif length(kernstr)==1
     %Variable Gaussian kernel
 %    W(bool)=exp(-(1/2)*(dist.*kernstr).^2)-exp(-(1/2)*(kernstr).^2);
-    W(bool)=exp(-(1/2)*(dist.*kernstr).^2);
+    W(bool)=frac(kernstr.^2,2*pi*(1-exp(-kernstr.^2/2))).*exp(-(1/2)*(dist.*kernstr).^2);
 else
     %Custom kernel
     K=kernstr(:);
