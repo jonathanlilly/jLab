@@ -1,6 +1,6 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.6.7
+%   Changes new in version 1.6.7b
 %
 %   New functions:
 %
@@ -9,7 +9,10 @@
 %   jhanning      - Hanning window.
 %   celldot       - Dot product for arrays of column vectors.
 %  
-%   Updated datasets:  JTOPO global topography is now at 1/12th resolution.
+%   Updated datasets:  
+%   
+%   JTOPO global topography is now at 1/12th resolution.
+%   
 %
 %   Changes and improvements:
 %

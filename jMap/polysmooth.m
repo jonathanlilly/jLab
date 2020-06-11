@@ -734,8 +734,8 @@ thetan=vshift(lon,1,1);
 [thetapg,phipg]=meshgrid(thetap,phip);
 [thetang,phing]=meshgrid(thetan,phin);
 
-xp=radearth*cosd(lat).*sind(thetapg-long);
-xn=radearth*cosd(lat).*sind(thetang-long);
+xp=radearth*cosd(latg).*sind(thetapg-long);
+xn=radearth*cosd(latg).*sind(thetang-long);
 yp=radearth*(cosd(latg).*sind(phipg)-sind(latg).*cosd(phipg));%.*cosd(thetapg-long));
 yn=radearth*(cosd(latg).*sind(phing)-sind(latg).*cosd(phing));%.*cosd(thetang-long));
 
