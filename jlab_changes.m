@@ -29,6 +29,7 @@
 %   YEARFRAC bugfix for NUM consisting of a ND array.
 %   ELLROSSBY factor of two change to be consisent with the literature.
 %   TRAJEXTRACT and POLYSMOOTH bugfixes for sample figures. 
+%   TWODSTATS and TWODMED fixed sample figures.
 %   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.6.6

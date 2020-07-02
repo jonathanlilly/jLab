@@ -9,7 +9,7 @@ end
 %This make take a few minutes...
 
 load drifters,use drifters
-%Decimate to speed things up
+cv=cellpair(u,v);
 vindex(lat,lon,cv,1:10:length(lat),1);
 
 tic;[mat,xmid,ymid]=twodstats(lon,lat,cellabs(cv),-180.5:180.5,-89.5:89.5);etime1=toc;

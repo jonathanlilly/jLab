@@ -9,6 +9,7 @@ end
 %This make take a few minutes...
 
 load drifters,use drifters
+cv=cellpair(u,v);
 %Decimate to speed things up
 vindex(lat,lon,cv,1:10:length(lat),1);
 

@@ -537,16 +537,31 @@ if exist('histcounts2')==2
     reporttest('TWODSTATS HISTCOUNTS2 vs. JLAB algorithm, with negative bins and NANs, num',bool3)
 end
 
+function[]=twodstats_test3
+
+
+% %Verifying that second element is conjugated
 % use drifters
-% cell2col(lon,lat,cv);
-% tic;[mat,xmid,ymid,num,std]=twodstats(lon,lat,[real(cv) imag(cv)],-180.5:180.5,-89.5:89.5,'jlab');etime1=toc;
-% tic;[mat2,xmid2,ymid2,num2,std2]=twodstats(lon,lat,[real(cv) imag(cv)],-180.5:180.5,-89.5:89.5);etime2=toc;
+% cell2col(lon,lat,u,v);
+% vindex(lon,lat,u,v,1:100:length(lon),1);
+% 
+% %tic;[mat,xmid,ymid,num,std]=twodstats(lon,lat,[u v],-180.5:180.5,-89.5:89.5);etime1=toc;
+% 
+% %[u+iv;i(u+iv)]
+% %[x  -i(u.^2+v.^2); i(u.^2+v.^2) x ]
+% 
+% tic;[mat2,xmid2,ymid2,num2,std2]=twodstats(lon,lat,[u+1i*v 1i*(u+1i*v)],-180.5:180.5,-89.5:89.5);etime2=toc;
+% s12=squeeze(std2(:,:,1,2));  %imaginary part should be and is negative
+% s21=squeeze(std2(:,:,2,1));  %imaginary part should be and is positive
+%
+%tic;[mat2,xmid2,ymid2,num2,std2]=twodstats(lon,lat,[real(cv) imag(cv)],-180.5:180.5,-89.5:89.5);etime2=toc;
 % b1=aresame(mat,mat2,1e-8);  %Great!!
 % b2=aresame(std,std2,1e-6);
 % reporttest('TWODSTATS HISTCOUNTS2 vs. jlab algorithm, for DRIFTERS.MAT',b1&&b2)
 %[mat,xmid,ymid]=twodstats(lon,lat,cellabs(cv),-180.5:180.5,-89.5:89.5,'jlab');
 
 
+%[mat,xmid,ymid,num,std]=twodstats(xdata,ydata,zdata,xbin,ybin);
 
 
 
