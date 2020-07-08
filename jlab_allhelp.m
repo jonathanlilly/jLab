@@ -18,6 +18,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     celladd    - Addition acting on each element in a cell array.                    
 %     cellmult   - Multiplication acting on each element in a cell array.    
 %     celldiv    - Division acting on each element in a cell array. 
+%     celldot    - Dot product for arrays of column vectors. 
 %   
 %   Reshaping, indexing, and sizes 
 %     cell2col   - Converts cell arrays of numeric arrays into 'column-appended' form. 
@@ -252,7 +253,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     trajextract - Extracts Lagrangian trajectory segments within given region.         
 %     trajunwrap  - Unwraps Lagrangian trajectories from a periodic domain.               
 %     trajwrap    - Wraps Lagrangian trajectories to fit within a periodic domain.        
-%     trajchunk   - Converts cell array data into chunks based on the Coriolis period. 
+%     trajchunk   - Chunks Lagrangian trajectories based on the Coriolis period. 
 %   
 %   Idealized numerical model tools 
 %     psi2fields   - Velocity and other fields from the streamfunction. [with P.E. Isachsen]     
@@ -263,6 +264,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     closedcurves - Locate and interpolate closed curves in a possibly periodic domain. 
 %     curvemoments - Centroid, area, and many other moments of a closed curve.           
 %     divgeom      - Geometric decomposition of eddy vorticity flux divergence.      
+%     eddyfit2d    - Least squares fit of 2D velocity data to an eddy profile. 
 %   
 %   Plotting tools for mooring data 
 %     hodograph  - Generate hodograph plots (simple and fancy).                                    
@@ -274,6 +276,9 @@ function[varargout]=jlab_allhelp(varargin)
 %   
 %   NetCDF tools 
 %     ncinterp    - One-line interpolation from 3D lat/lon/time field in NetCDF file. 
+%   
+%   Date and time 
+%     monthstats  - Mean month and standard deviation using circular statistics. 
 %   
 %   Topography tools and data 
 %     jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.               
@@ -405,6 +410,9 @@ function[varargout]=jlab_allhelp(varargin)
 %     col2mat    - Expands 'column-appended' data into a matrix.                       
 %     colbreaks  - Insert NANs into discontinuties in a vector.                        
 %     mat2col    - Compress NAN-padded matrix data into long columns.     
+%   
+%    Low-level functions 
+%     jhanning   - Hanning window. 
 %      
 %    See also jCell. 
 %   __________________________________________________________________ 
@@ -447,7 +455,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   See also jRidges, jSpectral, jEllipse. 
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp

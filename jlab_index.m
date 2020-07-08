@@ -31,6 +31,7 @@ function[]=jlab_index(varargin)
 %   celladd       - Addition acting on each element in a cell array.                                     
 %   cellchunk     - Converts cell array data into uniform length 'chunks'.                               
 %   celldiv       - Division acting on each element in a cell array.                                     
+%   celldot       - Dot product for arrays of column vectors.                                            
 %   cellength     - Length of each element in a cell array.                                              
 %   cellfill      - Fills missing data marked by INFs in a cell array.                                   
 %   cellfirst     - Returns the first (or last) element of each entry in a cell array.                   
@@ -77,6 +78,7 @@ function[]=jlab_index(varargin)
 %   dlines        - Add diagonal lines to a plot.                                                        
 %   doublen       - Interpolates a time series to double its length.                                     
 %   ecconv        - Converts between eccentricity measures.                                              
+%   eddyfit2d     - Least squares fit of 2D velocity data to an eddy profile.                            
 %   ellband       - Bandwidth of modulated elliptical signals in two or three dimensions.                
 %   ellcurves     - Returns curves corresponding to specified ellipse properties.                        
 %   elldiff       - Differentiation of modulated elliptical signals.                                     
@@ -115,6 +117,7 @@ function[]=jlab_index(varargin)
 %   jdawson       - The Dawson function and its derivatives. [With P.J. Acklam]                          
 %   jdeg2rad      - Converts degrees to radians.                                                         
 %   jfig          - Shorthand for tweaking figures.                                                      
+%   jhanning      - Hanning window.                                                                      
 %   jhelp         - Opens linked JLAB help files in Matlab's internal web browser.                       
 %   jlab_addpath  - Adds JLAB and JDATA subdirectories to your Matlab search path.                       
 %   jlab_allhelp  - Displays the help comments for all JLAB modules.                                     
@@ -226,6 +229,7 @@ function[]=jlab_index(varargin)
 %   maxprops      - Returns properties of wavelet transform maxima.                                      
 %   minmin        - MINMIN(X)=MIN(X(ISFINITE(X)))                                                        
 %   mom2cum       - Convert moments to cumulants.                                                        
+%   monthstats    - Mean month and standard deviation using circular statistics.                         
 %   morlfreq      - Compute Morlet wavelet carrier frequency given peak frequency.                       
 %   morlwave      - Morlet wavelet.                                                                      
 %   morseafun     - Returns the generalized Morse wavelet amplitude or a-function.                       
@@ -258,10 +262,13 @@ function[]=jlab_index(varargin)
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polysmooth    - Mapping using local polynomial fitting, also known as loess.    
+%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                         
+                                                                                                         
 %   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH.                          
+                                                                                                         
 %   polysmooth_kernel - Returns the weighting kernel employed by POLYSMOOTH.                             
 %   polysmooth_presort - Sort arguments to POLYSMOOTH in case of missing data.                           
+%   polysmooth_sortfield - Returns sorted field values for a mapping problem.                            
 %   printall      - Print and close all open figures.                                                    
 %   provec        - Generate progressive vector diagrams (simple and fancy).                             
 %   psi2fields    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
@@ -302,7 +309,7 @@ function[]=jlab_index(varargin)
 %   topo_copyright - Copyright statement for the Smith and Sandwell topography.                          
 %   topoplot      - Plot regional or global topography at one-sixth degree resolution.                   
 %   trackextract  - Extracts alongtrack altimetry segments within given region.                          
-%   trajchunk     - Converts Lagrangian trajectories into chunks based on the Coriolis period.           
+%   trajchunk     - Chunks Lagrangian trajectories based on the Coriolis period.                         
 %   trajextract   - Extracts Lagrangian trajectory segments within given region.                         
 %   trajunwrap    - Unwraps Lagrangian trajectories from a periodic domain.                              
 %   trajwrap      - Wraps Lagrangian trajectories to fit within a periodic domain.                       
@@ -352,10 +359,10 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks.                                                
+%   ztick         - Sets locations of z-axis tick marks.                                 
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2019 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_index

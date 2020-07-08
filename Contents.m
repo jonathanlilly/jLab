@@ -1,5 +1,5 @@
 %
-%  jLab v1.6.6 by J. M. Lilly
+%  jLab v1.6.7c by J. M. Lilly
 %
 %  A data analysis toolbox for Matlab, including routines for big data
 %  analysis, signal processing, mapping, and oceanographic applications.
