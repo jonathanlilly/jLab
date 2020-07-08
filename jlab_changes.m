@@ -1,6 +1,6 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.6.7b
+%   Changes new in version 1.6.7c
 %
 %   New functions:
 %
@@ -16,6 +16,10 @@
 %
 %   Changes and improvements:
 %
+%   MATERNFIT now includes an option to average over ensemble members.
+%   MATERNFIT, MATERNSPEC, MATERNCOV, and MATERNOISE now all support the 
+%        possibility of real-valued, as well as complex-valued processes.     
+%   MSPEC now uses two-sided, not one-sided, normalization for real data.
 %   POLYSMOOTH considerable speed improvements. 
 %   SPHERESORT and TWODSORT improvements and major change to output format.
 %   SPHERELAP now computes all the terms in the Hessian matrix.

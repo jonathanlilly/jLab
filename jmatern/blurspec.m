@@ -72,7 +72,7 @@ function[varargout]=blurspec(varargin)
 %          [f,Spp,Snn]=blurspec(dt,R,'aliased');        
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015 J.M. Lilly and A.M. Sykulski 
+%   (C) 2015--2020 J.M. Lilly and A.M. Sykulski 
 %                                 --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')

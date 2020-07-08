@@ -1,7 +1,6 @@
 function[]=makefigs_mspec
 %MAKEFIGS_MSPEC  Makes some sample figures for MSPEC.
 
-
 %First figure
 load bravo94
 use bravo94
@@ -61,6 +60,6 @@ end
 
 figure,
 plot(f,abs(gammauu)),xlog,yoffset 1,axis tight
-title('Coherence of u(t) at each depth vs. u(t) at \#3')
+title('Coherence of u(t) at each depth vs. u(t) at \#3','interpreter','latex')
 
 

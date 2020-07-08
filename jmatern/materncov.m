@@ -5,6 +5,9 @@ function[varargout]=materncov(varargin)
 %   function R of a length N complex-valued Matern random process having 
 %   variance SIGMA^2, slope parameter ALPHA, and damping parameter LAMBDA.
 %
+%   [TAU,R]=MATERNCOV(...,'real') instead forms the covariance of a real-
+%   valued Matern process.
+%
 %   DT is the sample interval.  Note that LAMBDA is understood to have the
 %   same units as the inverse sample interval 1/DT.
 %
@@ -79,7 +82,7 @@ function[varargout]=materncov(varargin)
 %          [tau,R]=materncov(dt,N,sigma,alpha,lambda,nu,mu,'composite');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2017  J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
 
 %   No longer supported, sorry
 %   __________________________________________________________________
@@ -102,6 +105,7 @@ end
 
 sid='one';
 model='forward';
+flag='complex';
 
 M=10;  %Specifying oversampling rates for composite model
 P=10;
@@ -109,6 +113,8 @@ for i=1:3
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
             model=varargin{end}(1:3);
+        elseif strcmpi(varargin{end}(1:3),'rea')||strcmpi(varargin{end}(1:3),'com')
+            flag=varargin{end};
         else
             sid=varargin{end};
         end
@@ -151,7 +157,7 @@ R=zeros(N,length(lambda));
 
 for i=1:length(lambda)
     if ~sigma(i)==0
-        R(:,i)=materncov_one(tau,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,M,P);
+        R(:,i)=materncov_one(tau,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,M,P,flag);
     end
 end
 
@@ -163,14 +169,13 @@ varargout{1}=tau;
 varargout{2}=R;
 
 
-function[R]=materncov_one(tau,sigma,alpha,lambda,nu,mu,model,M,P)
+function[R]=materncov_one(tau,sigma,alpha,lambda,nu,mu,model,M,P,flag)
 
 %sigma,alpha,lambda,mu,model
 if strcmpi(model(1:3),'com')
     N=length(tau);
     dt=tau(2)-tau(1);
-    [f,Spp,Snn]=maternspec(dt,M*N*P,sigma,alpha,lambda/P,nu/P,mu/P,'composite');
-    %[f,Spp,Snn]=maternspec(dt,M*N,sigma,alpha,lambda,nu,mu,'composite');
+    [f,Spp,Snn]=maternspec(dt,M*N*P,sigma,alpha,lambda/P,nu/P,mu/P,'composite',flag);
     S=[flipud(Snn(2:end));Spp];%figure,plot(S)
     Ri=ifft(ifftshift(S))./dt;  %Make sure it's ifftshift not fftshift
     Ri=Ri(1:P:end);
@@ -194,6 +199,10 @@ else
     end
 end
 R=R.*sigma.^2;
+
+if strcmpi(flag(1:3),'rea')
+     R=real(R);
+end
 
 % Extended Matern form reduces to this Bessel function form, test is below
 % if alpha=-1/2
@@ -230,6 +239,27 @@ b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
 b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
 
 reporttest('MATERNCOV Fourier transforms to MATERNSPEC for case with negligible aliasing, even N',b1&&b2)
+
+
+N=1000;
+[tau,R]=materncov(1,N,sigma,alpha,h,h/2);
+[f,Spp,Snn]=maternspec(1,N,sigma,alpha,h,h/2);
+[f,Spp2,Snn2]=blurspec(1,R,'aliased');
+
+b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
+b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
+
+reporttest('MATERNCOV Fourier transforms to MATERNSPEC for oscillatory Matern with negligible aliasing, even N',b1&&b2)
+
+N=1000;
+[tau,R]=materncov(1,N,sigma,alpha,h,h/2,'real');
+[f,Spp,Snn]=maternspec(1,N,sigma,alpha,h,h/2,'real');
+[f,Spp2,Snn2]=blurspec(1,R,'aliased');
+
+b1=aresame(Spp2./maxmax(Spp),Spp./maxmax(Spp),1e-4);
+b2=aresame(Snn2./maxmax(Snn),Snn./maxmax(Snn),1e-4);
+
+reporttest('MATERNCOV Fourier transforms to MATERNSPEC for real-valued oscillatory Matern with negligible aliasing, even N',b1&&b2)
 
 N=1000;
 dt=7;

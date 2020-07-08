@@ -24,6 +24,9 @@ function[varargout]=maternoise(varargin)
 %
 %   Special cases
 %
+%   X=MATERNOISE(...,'real') generates a real-valued Matern process with
+%   the specified parameters.
+%
 %   Z=MATERNOISE(DT,N,A,ALPHA,0) generates realizations of fractional
 %   Brownian motion.  In this case, the third input argument is the 
 %   spectral amplitude A, not the standard deviation SIGMA.
@@ -84,7 +87,7 @@ function[varargout]=maternoise(varargin)
 %          z=maternoise(dt,N,A,alpha,0);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2018  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2020  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details
 
 
@@ -102,6 +105,7 @@ end
 alg='chol';
 str='noerror';
 model='forward';
+flag='complex';
 for i=1:3
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'fas')||strcmpi(varargin{end}(1:3),'cho')
@@ -110,6 +114,8 @@ for i=1:3
             model=varargin{end};
         elseif strcmpi(varargin{end}(1:3),'err')||strcmpi(varargin{end}(1:3),'noe')
             str=varargin{end};
+        elseif strcmpi(varargin{end}(1:3),'rea')||strcmpi(varargin{end}(1:3),'com')
+            flag=varargin{end};
         end
         varargin=varargin(1:end-1);
     end
@@ -160,7 +166,7 @@ z=zeros(N,M,length(sigma));
 err=nan*zeros(size(sigma));
 if strcmpi(alg(1:3),'fas')
     for i=1:length(sigma)
-        [z(:,:,i),err(i)]=sim_noise_fast(dt,N,M,sigma(i),alpha(i),lambda(i),nu(i),str);
+        [z(:,:,i),err(i)]=sim_noise_fast(dt,N,M,sigma(i),alpha(i),lambda(i),nu(i),str,flag);
     end
 % elseif strcmpi(alg(1:3),'cir')
 %     for i=1:length(sigma)
@@ -168,22 +174,27 @@ if strcmpi(alg(1:3),'fas')
 %     end
 else
     [g,fact]=vempty;
+
     for i=1:length(sigma)
-        z(:,:,i)=sim_noise(dt,N,M,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
+        z(:,:,i)=sim_noise(dt,N,M,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
     end
 end
 
 varargout{1}=squeeze(z);
 varargout{2}=err;
 
-function [z]=sim_noise(dt,N,M,sigma,alpha,lambda,nu,mu,model)
+function [z]=sim_noise(dt,N,M,sigma,alpha,lambda,nu,mu,model,flag)
 %dt,N,M,sigma,alpha,lambda,nu,mu
 
 T=maternchol(dt,N,sigma,alpha,lambda,nu,mu,model);
 Z=frac(1,sqrt(2))*(randn(N,M)+sqrt(-1)*randn(N,M));
 z=T*Z;
 
-function [z,err]=sim_noise_fast(dt,N,M,sigma,alpha,lambda,nu,str)
+if strcmpi(flag(1:3),'rea')
+    z=real(z).*sqrt(2);
+end    
+
+function [z,err]=sim_noise_fast(dt,N,M,sigma,alpha,lambda,nu,str,flag)
 %dt,N,M,sigma,alpha,lambda,nu
 
 epsilon=0.01;
@@ -202,13 +213,20 @@ N2=(N+Ne).*k;
 %should otherwise appear, see note on the evaluation of the oversampled
 %sequence in Lilly et al. (2017).
 [t,g]=maternimp(N2,alpha,(lambda-1i*nu)./k);
+
 %This makes a unit variance complex sequence of length N2 in the time domain
 Z=frac(sqrt(N2),sqrt(2))*(randn(N2,M)+sqrt(-1)*randn(N2,M));
+
+    
 G=sigma*vrep(fft(g),M,2);
 z=ifft(G.*Z);
 %figure,plot(std(ifft(Z)))
 z=z(1:k:end,:);
 z=z(Ne+1:end,:);
+
+if strcmpi(flag(1:3),'rea')
+    z=real(z).*sqrt(2);
+end    
 
 err=nan;
 if strcmpi(str(1:3),'err')
@@ -409,7 +427,7 @@ alpha=1.4;
 clear rat
 n=0;
 rng(1);
-for i=[-3:1/2:0];
+for i=[-3:1/2:0]
     z1=maternoise(1,N,sigma,alpha,(10.^i));
     %Note when comparing spectra, it's important to  use adaptive 
     [fhat,Spphat,Snnhat]=mspec(z1-mean(z1),psi,psilambda,'adaptive');
@@ -427,7 +445,7 @@ dt=3600;
 clear rat
 n=0;
 rng(1);
-for i=[-3:1/2:0];
+for i=[-3:1/2:0]
     z1=maternoise(dt,N,sigma,alpha,(10.^i)/dt);
     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
     [f,Spp,Snn]=maternspec(dt,N,sigma,alpha,(10.^i)/dt);
@@ -437,6 +455,15 @@ for i=[-3:1/2:0];
 end
 reporttest('MATERNOISE spectrum matches MATERNSPEC for non-unit sample rate',allall(abs(rat-1)<0.21))
 
+dt=3600;
+rng(0);
+z1=maternoise(dt,N,sigma,alpha,100); 
+reporttest('MATERNOISE variance matches SIGMA^2',aresame(sigma,sqrt(squared(vstd(z1,1))),0.05))
+
+dt=3600;
+rng(0);
+z1=maternoise(dt,N,sigma,alpha,100,'real'); 
+reporttest('MATERNOISE variance matches SIGMA^2 for real flag',aresame(sigma,vstd(z1,1),0.05))
 
 N=1000;
 sigma=16;
@@ -446,7 +473,7 @@ alpha=1.4;
 clear rat
 n=0;
 rng(1);
-for i=[-3:1/2:0];
+for i=[-3:1/2:0]
     z1=maternoise(1,N,sigma,-1/2,(10.^i),0,alpha);
     [fhat,Spphat,Snnhat]=mspec(z1-mean(z1),psi,psilambda,'adaptive');
     [f,Spp,Snn]=maternspec(1,N,sigma,-1/2,(10.^i),0,alpha);
@@ -461,7 +488,7 @@ clear rat
 n=0;
 rng(1);
 dt=3600;
-for i=[-3:1/2:0];
+for i=[-3:1/2:0]
     z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
     [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);

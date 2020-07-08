@@ -2,8 +2,8 @@ function[varargout]=maternspec(varargin)
 %MATERNSPEC  Fourier spectrum of the Matern random process and variations.
 % 
 %   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA) returns the spectrum S of a  
-%   length N complex-valued Matern random process having variance SIGMA^2, 
-%   slope parameter ALPHA, and damping parameter LAMBDA.
+%   length N real-valued or complex-valued Matern random process having 
+%   variance SIGMA^2, slope parameter ALPHA, and damping parameter LAMBDA.
 %
 %   DT is the sample interval.  Note that LAMBDA is understood to have the
 %   same units as the inverse sample interval 1/DT.
@@ -23,6 +23,9 @@ function[varargout]=maternspec(varargin)
 %
 %   For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
 %   Brownian motion.  
+%
+%   Note the spectrum is the same whether the process is real-valued or 
+%   complex-valued.
 %
 %   For details on the Matern process and its spectrum, see:
 %
@@ -64,6 +67,10 @@ function[varargout]=maternspec(varargin)
 %
 %   With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
 %   Uhlenbeck process.
+%
+%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,'real') returns the
+%   rotary spectra of a real-valued oscillatory Matern, with SPP and SNN
+%   again being the same.  In this case the sign of NU does not matter.
 %
 %   Note that NU has units of radians per sample interval DT.
 %
@@ -150,7 +157,7 @@ function[varargout]=maternspec(varargin)
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu,mu);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   No longer supported, sorry
@@ -179,11 +186,14 @@ end
 
 cores='serial';
 model='forward';
+flag='complex';
 
 for i=1:3
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
             model=varargin{end}(1:3);
+        elseif strcmpi(varargin{end}(1:3),'rea')||strcmpi(varargin{end}(1:3),'com')
+            flag=varargin{end};
         else
             cores=varargin{end};
         end
@@ -220,15 +230,15 @@ end
 arrayify(sigma,alpha,lambda,nu,mu);
 
 if length(N)==1
-    [omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model);
+    [omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model,flag);
 else
     if strcmpi(cores(1:3),'ser')
         for i=1:length(N)
-            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
+            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
         end
     elseif strcmpi(cores(1:3),'par')
         parfor i=1:length(N)
-            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
+            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
         end
     end
 end
@@ -238,7 +248,7 @@ varargout{2}=Spp;
 varargout{3}=Snn;
 
     
-function[omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model)
+function[omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model,flag)
 %This loops and implements positive/negative rotary spectra
    
 omega=fourier(dt,N);
@@ -248,14 +258,17 @@ Snn=zeros(length(omega),length(lambda));
 for i=1:length(lambda)
     if sigma(i)~=0
         Spp(:,i)=maternspec_spec(omega,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
-        if nu(i)==0
+        if nu(i)~=0
+             Snn(:,i)=maternspec_spec(omega,sigma(i),alpha(i),lambda(i),-nu(i),mu(i),model);
+             if strcmpi(flag(1:3),'rea')
+                 Spp(:,i)=frac(1,2)*(Spp(:,i)+Snn(:,i));
+                 Snn(:,i)=Spp(:,i);
+             end
+        else 
             Snn(:,i)=Spp(:,i);
-        else
-            Snn(:,i)=maternspec_spec(omega,sigma(i),alpha(i),lambda(i),-nu(i),mu(i),model);
         end
     end
 end
-
 
 function[S]=maternspec_spec(omega,sigma,alpha,lambda,nu,mu,model)
 %This implements the single/composite and extended/exponential options
@@ -304,17 +317,17 @@ end
  
 %\*************************************************************************
     
+% % 
+% function[]=maternspec_figures;
 % 
-function[]=maternspec_figures;
-
-%[f,s]=maternspec(dt,N,sigma,alpha,lambda);
-%[f,spp,snn]=maternspec(1,1000,1,1,1/10,4/10);
-%figure,plot(f,spp),xlog,ylog
-
-[f,sppo,snno]=maternspec(1,1000,2,1,1/10,0,0);
-%[f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
-[f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
-figure,plot(f,[sppo spp]),xlog,ylog
+% %[f,s]=maternspec(dt,N,sigma,alpha,lambda);
+% %[f,spp,snn]=maternspec(1,1000,1,1,1/10,4/10);
+% %figure,plot(f,spp),xlog,ylog
+% 
+% [f,sppo,snno]=maternspec(1,1000,2,1,1/10,0,0);
+% %[f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
+% [f,spp,snn]=maternspec(1,1000,2,1,1/10,0,10);
+% figure,plot(f,[sppo spp]),xlog,ylog
 
 
 

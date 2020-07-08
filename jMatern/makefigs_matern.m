@@ -216,7 +216,7 @@ title('Matern Autocovariance Function'),xlabel('Nondimensional Time $\tau\lambda
 ylabel('Autocovariance Amplitude')
 subplot(1,3,3),plot(tauG*lambda,G),xlim([0 4]),ylim([0 0.3333])
 linestyle k E k E k E k E k E k E 3k
-title('Matern Green''s Function'),xlabel('Nondimensional Time $\tau\lambda$')
+title('Matern Green''s Function'),xlabel('Nondimensional Time $\tau\lambda$','in)
 ylabel('Green''s Function Amplitude')
 letterlabels(2)
 

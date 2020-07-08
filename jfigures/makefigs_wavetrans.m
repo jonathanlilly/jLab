@@ -2,7 +2,10 @@ function[]=makefigs_wavetrans
 %MAKEFIGS_WAVETRANS  Makes a sample figure for WAVETRANS.
 
 load bravo94
-use bravo94.rcm
+%not using 'use' as it's not compatible in scripts with some systems
+num=bravo94.rcm.num;
+cv=bravo94.rcm.cv;
+
 vindex(cv,2,2);
 
 gamma=3;beta=2;

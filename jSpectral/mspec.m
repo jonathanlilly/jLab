@@ -12,10 +12,11 @@ function[varargout]=mspec(varargin)
 %   MSPEC is to be run after calling SLEPTAP to compute the multitapers.
 %   _______________________________________________________________________
 %
-%   One-sided power spectrum
+%   Real-valued time series
 %
-%   [F,S]=MSPEC(X,PSI) returns the one-sided power spectrum of X at 
-%   positive frequencies using data tapers PSI. 
+%   [F,S]=MSPEC(X,PSI) returns the power spectrum of the real-valued time
+%   series X at positive frequencies using data tapers PSI.  The spectrum
+%   at negative frequencies, which is not returned, is identical.
 %
 %   X may be an array with an arbitrary number of dimensions and with time 
 %   along it first dimensions.  Let M be its number of rows, M=SIZE(X,1).
@@ -106,8 +107,11 @@ function[varargout]=mspec(varargin)
 %   [F,S]=MSPEC(DT,X,[]) where X is a real-valued time series of length M
 %   recovers the variance of X, STD(X,1).^2, as follows:
 %
-%     (1/2/pi)*(F(2)-F(1))*SUM(S(2:end))               -- M odd
-%     (1/2/pi)*(F(2)-F(1))*(SUM(S(2:end-1))+S(end)/2)  -- M even
+%     2*(1/2/pi)*(F(2)-F(1))*SUM(S(2:end))               -- M odd
+%     2*(1/2/pi)*(F(2)-F(1))*(SUM(S(2:end-1))+S(end)/2)  -- M even
+%
+%   where the initial factor of two accounts for the fact that the spectrum 
+%   at negative frequencies is the same as that at positive frequencies.
 %
 %   Note that the zero frequency is omitted in the summation, and for even 
 %   time series length, the power at the Nyquist S(end) must be divided by 
@@ -165,7 +169,7 @@ function[varargout]=mspec(varargin)
 %
 %   Let's say one has P different time series, X1, X2,..., XP.  Put these 
 %   into a cell array X{1}=X1, X{2}=X2, ..., X{P}=XP, and then use
-%   '[psi,lambda]=sleptap(cellength(x))' to make a cell array of tapers.
+%   "[psi,lambda]=sleptap(cellength(x))" to make a cell array of tapers.
 %
 %   [F,S]=MSPEC(X,PSI) then returns cell arrays F and S corresponding 
 %   to the Fourier frequencies and spectra of the P arrays.  
@@ -202,7 +206,7 @@ function[varargout]=mspec(varargin)
 %   'mspec --t' runs some tests.
 %   'mspec --f' generates the above sample figure from Bravo mooring data.
 %
-%   See also: SLEPTAP, HERMFUN, MTRANS, MSVD, TWOSPECPLOT.
+%   See also: SLEPTAP, HERMFUN, MSVD, TWOSPECPLOT.
 %
 %   Usage   [f,s]=mspec(x,psi);    
 %           [f,s]=mspec(dt,x,psi);     
@@ -370,16 +374,7 @@ if isempty(psi)
     psi=frac(1,sqrt(size(x,1)))+zeros(size(x(:,1)));
 end
 
-%In real cases, multiply by sqrt(2) to get one-sided spectrum
-if isempty(y)        %One real-valued
-     [f,mmatx]=mtrans(sqrt(2)*x,psi,dim);
-else
-     if ~isreal(x)   %Two complex-valued
-        [f,mmatx,mmaty]=mtrans(x,y,psi,dim);
-     else            %Two real-valued
-        [f,mmatx,mmaty]=mtrans(sqrt(2)*x,sqrt(2)*y,psi,dim); 
-     end
-end
+[f,mmatx,mmaty]=mtrans(x,y,psi,dim); 
 
 N=lnsd(x)+1;
 if isempty(y) %One time series
@@ -509,6 +504,13 @@ dim=varargin{end};
 psi=varargin{end-1};
 x=varargin(1:end-2);
 
+%Remove empties
+clear bool
+for i=1:length(x)
+    bool(i)=isempty(x{i});
+end
+x=x(~bool);
+
 %Size check
 bool=false(4,length(x));
 for i=1:4
@@ -550,8 +552,11 @@ f=fourier(size(x{1},dim));
 
 index=1:length(f);
 varargout{1}=f;
+varargout{2}=[];
+varargout{3}=[];
 
 for i=1:size(x,2)
+    
     Nnans=length(find(~isfinite(x{i})));
     if Nnans>0
         disp(['MSPEC finding non-finite data values.  Spectrum will be undefined.'])
@@ -560,7 +565,7 @@ for i=1:size(x,2)
     N=lnsd(x{i})+1;
     xmat=vrep(x{i},size(psimat,N),N);
     mmat=fft(psimat.*xmat,[],dim);
-   
+    
     mmat(isnan(mmat))=nan;%This is to prevent imaginary NaNs
     %    varargout{i+1}=mmat(index,:,:);
     varargout{i+1}=vindex(mmat,index,dim);
@@ -595,11 +600,11 @@ SZ(2,2,:,:)=snn;
 SZ(1,2,:,:)=spn;
 SZ(2,1,:,:)=conj(spn);
 
-T=vrep(vrep(tmat,size(S,3),3),size(S,4),4);
+T=sqrt(2)*vrep(vrep(tmat,size(S,3),3),size(S,4),4);
 
 SZ2=matmult(matmult(T,S,1),conj(permute(T,[2 1 3 4])),1);
 
-reporttest('MSPEC for (x,y) and (z,z^*) are unitary transforms with matrix T',aresame(SZ,SZ2,1e-10))
+reporttest('MSPEC for (x,y) and (z,z^*) are orthogonal transforms with matrix SQRT(2)*T',aresame(SZ,SZ2,1e-10))
 
 
 tol=1e-10;
@@ -613,19 +618,19 @@ psi=sleptap(length(x),8);
 
 p0=vsum(abs(real(x)-vmean(real(x),1)).^2,1)./length(x);
 [f,sp]=mspec(real(x),psi);
-p1=frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
+p1=2*frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for real Bravo, unit sample rate',abs(p1-p0)./p0<4/100);
 
 [f,sp]=mspec(t(2)-t(1),real(x),psi);
-p1=frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
+p1=2*frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for real Bravo, non-unit sample rate',abs(p1-p0)./p0<4/100);
 
 [f,sp]=mspec(t(2)-t(1),real(x),[]);
-p1=frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
+p1=2*frac(1,2*pi)*(vsum(sp,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for real Bravo, non-unit sample rate periodogram',abs(p1-p0)./p0<4/100);
 
 [f,sp]=mspec(t(2)-t(1),real(x),psi,'cyc');
-p1=(vsum(sp,1)).*(f(2)-f(1));
+p1=2*(vsum(sp,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for real Bravo, non-unit sample rate, cyclic frequency',abs(p1-p0)./p0<4/100);
 
 p0=vsum(abs(x-vmean(x,1)).^2,1)./length(x);
@@ -638,17 +643,15 @@ p1=frac(1,2*pi)*(vsum(sp,1)+vsum(sn,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for complex Bravo, non-unit sample rate',abs(p1-p0)./p0<4/100);
 
 [f,sx,sy]=mspec(real(x),imag(x),psi);
-p1=frac(1,2*pi)*(vsum(sx+sy,1)).*(f(2)-f(1));
+p1=2*frac(1,2*pi)*(vsum(sx+sy,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for bivariate Bravo, unit sample rate',abs(p1-p0)./p0<4/100);
 
 [f,sx,sy]=mspec(t(2)-t(1),real(x),imag(x),psi);
-p1=frac(1,2*pi)*(vsum(sx+sy,1)).*(f(2)-f(1));
+p1=2*frac(1,2*pi)*(vsum(sx+sy,1)).*(f(2)-f(1));
 reporttest('MSPEC satisfies Parseval''s theorem to within 4% for bivariate Bravo, non-unit sample rate',abs(p1-p0)./p0<4/100);
 
 
-
-
-reporttest('MSPEC SXX+SYY=SPP+SNN for Bravo, non-unit sample rate',aresame(sx+sy,sp+sn,tol));
+reporttest('MSPEC 2*(SXX+SYY)=SPP+SNN for Bravo, non-unit sample rate',aresame(2*sx+2*sy,sp+sn,tol));
 
 
 N=1001;

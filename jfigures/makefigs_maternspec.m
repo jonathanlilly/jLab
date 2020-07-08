@@ -37,7 +37,7 @@ for i=1:3
 end
 packfig(1,3,'columns')
 letterlabels(2)
-legend(' \alpha=1.1',' \alpha=1.5',' \alpha=2',' \alpha=4',' \alpha=8')
+legend('$\alpha=1.1$','  $\alpha=1.5$','  $\alpha=2$','  $\alpha=4$','  $\alpha=8$','interpreter','latex')
 fontsize 18 14 14 14
 set(gcf,'paperposition',[1 1 6 3])
 
@@ -81,7 +81,7 @@ end
 
 packfig(1,3,'columns')
 letterlabels(2)
-legend(' \omega_o/h=3',' \omega_o/h=8')
+legend(' $\omega_o/h=3$',' $\omega_o/h=8$','interpreter','latex')
 fontsize 18 14 14 14
 set(gcf,'paperposition',[1 1 6 3])
 
