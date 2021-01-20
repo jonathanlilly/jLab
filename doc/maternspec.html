@@ -19,16 +19,14 @@
       
     S is the postive or negative rotary spectrum given by
  
-         S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * LAMBDA^(2*ALPHA-1)/C
+         S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA 
+                            * LAMBDA^(2*ALPHA-1) / C
  
     where C is a normalizing constant dependent upon ALPHA.  Note that the
-    positive and negative spectra are identical for the Matern process.
+    positive and negative spectra are identical for this process.
  
     For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
     Brownian motion.  
- 
-    Note the spectrum is the same whether the process is real-valued or 
-    complex-valued.
  
     For details on the Matern process and its spectrum, see:
  
@@ -71,10 +69,6 @@
     With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
     Uhlenbeck process.
  
-    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,'real') returns the
-    rotary spectra of a real-valued oscillatory Matern, with SPP and SNN
-    again being the same.  In this case the sign of NU does not matter.
- 
     Note that NU has units of radians per sample interval DT.
  
     The oscillatory Matern is described in Lilly et al. (2017).
@@ -87,31 +81,53 @@
     be considered as 'beta features' that are to be used with caution.
     __________________________________________________________________
  
+    Generalized Matern
+ 
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') returns the
+    spectrum of the generalized Matern, or generalized Whittle-Matern,
+    process, introduced by Lim and Teo (2009)a,b.
+ 
+    This spectrum is defined as
+ 
+     S(F) = SIGMA^2 / [F^(2*GAMMA)+LAMBDA^(2*GAMMA)]^(ALPHA/GAMMA)
+                    * LAMBDA^(2*ALPHA-1) / C
+ 
+    where C is a normalizing constant dependent upon ALPHA and GAMMA. 
+ 
+    Here we use slightly different choices of parameters from  Lim and Teo.
+    With our choices, GAMMA=1 corresponds to the usual Matern process.
+ 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'generalized') 
+    is an oscillatory version of the generalized Matern process, shifting 
+    the spectrum to be centered on F=NU rather than F=0.
+    __________________________________________________________________
+ 
     Extended Matern
    
-    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
-    returns the spectrum of the four-parameter "extended" Matern process:
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended') returns the 
+    spectrum of what we will call the extended Matern process:
  
        S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
-                                     / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C              
+                                     / (MU*SQRT(F^2+LAMBDA^2))^ALPHA / C              
  
     where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
     The additional parameter, MU, has units of time.  Here ALPHA can 
     take on any real value, unlike for the standard Matern case.
  
-    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
-    extended Matern spectrum to be centered at F=NU rather than F=0.
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended') is an
+    oscillatory version of the extended Matern process.
  
-    As MU becomes large with ALPHA>1/2, this becomes the standard Matern 
-    spectrum.
+    As MU increases with ALPHA>1/2, this becomes the standard Matern form.
     __________________________________________________________________
  
     Damped exponential 
  
-    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,-1/2,LAMBDA,0,MU) with ALPHA set to -1/2
-    returns the spectrum of the damped exponential process, having the form
+    A special case of the extended Matern is the damped exponential.
  
-       S(F) = SIGMA^2 * EXP(-MU * SQRT(F^2+LAMBDA^2)) * C 
+    [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,-1/2,LAMBDA,MU,'extended') with ALPHA=-1/2
+    returns the spectrum of the damped exponential process, with spectrum
+ 
+       S(F) = SIGMA^2 * EXP(-MU * SQRT(F^2+LAMBDA^2)) / C 
                                
     where C is again a normalizing constant, dependent upon LAMBDA and MU. 
  
@@ -121,7 +137,7 @@
  
     Composite Matern
  
-    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite') 
     implements the "composite" Matern spectrum having the form
  
         SPP(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F-NU)^2 + LAMBDA^2] 
@@ -148,6 +164,17 @@
     SIGMA^2 be interpreted as an approximation to the inertial variance. 
     __________________________________________________________________
  
+    Real-valued processes
+ 
+    By default MATERSPEC returns the spectrum of a complex-valued process. 
+ 
+    <a href="maternspec.html">MATERNSPEC</a>(...,'real') instead returns the spectrum of a real-valued
+    process. This also works with any of extended versions described above.
+ 
+    In this case, the rotary spectra SPP and SNN be forced to be the same 
+    in models that return them.
+    __________________________________________________________________
+ 
     See also <a href="materncov.html">MATERNCOV</a>, <a href="maternimp.html">MATERNIMP</a>, <a href="maternoise.html">MATERNOISE</a>, <a href="maternfit.html">MATERNFIT</a>, <a href="blurspec.html">BLURSPEC</a>.
  
     '<a href="maternspec.html">maternspec</a> --f' generates some sample figures.
@@ -157,7 +184,7 @@
     Usage:  [f,s]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda);
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda);
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu);
-            [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu,mu);
+            [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,mu,'extended');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2013--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details

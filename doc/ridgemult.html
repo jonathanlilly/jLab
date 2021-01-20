@@ -1,0 +1,42 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>RIDGEMULT is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="ridgemult.html">RIDGEMULT</a>  Ridge multiplicity, the number of simultaneous ridges present.
+ 
+    MULT=<a href="ridgemult.html">RIDGEMULT</a>(IR) where IR is a column array index into wavelet ridge
+    temporal locations, as output by <a href="ridgewalk.html">RIDGEWALK</a>, returns the number of 
+    ridges present at each time, MULT, which is the same size as IR.
+ 
+    Following the convention of <a href="ridgewalk.html">RIDGEWALK</a>, IR may contain multiple ridges,
+    which are separated by a NaN at the end of each ridge.
+ 
+    [MULT,ZTOT]=<a href="ridgemult.html">RIDGEMULT</a>(IR,ZHAT), where ZHAT is the estimated signal
+    associated with the ridges, returns the total signal ZTOT. All input
+    and output arguments are the same size. 
+    _______________________________________________________________________
+ 
+    Cell array input
+ 
+    Often one has an array of K different time series, which are grouped 
+    into a cell array Z with one times series per cell.  In this case,
+    calling <a href="eddyridges.html">EDDYRIDGES</a> leads to output fields with one ridge per cell.  
+ 
+    In the output of <a href="eddyridges.html">EDDYRIDGES</a>, IR is now a cell array of indices into
+    time locations, with one ridge per cell, KR denotes  a cell array of
+    indices into the K different time series, and ZHAT is a cell array of
+    the corresponding estimated signals.
+ 
+    Note that KR will take on one value along the entirety of any ridge.
+ 
+    MULT=RIDGERECON(IR,KR) and [MULT,ZHAT]=RIDGERECON(IR,KR,ZHAT) also 
+    work in this case, where not MULT and ZHAT are also cell arrays.
+ 
+    Usage: mult=<a href="ridgemult.html">ridgemult</a>(ir);
+           [mult,ztot]=<a href="ridgemult.html">ridgemult</a>(ir,zhat);
+           mult=<a href="ridgemult.html">ridgemult</a>(ir,kr);
+           [mult,ztot]=<a href="ridgemult.html">ridgemult</a>(ir,kr,zhat);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

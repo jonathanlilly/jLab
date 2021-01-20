@@ -1,0 +1,60 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>EDDYLEVELS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="eddylevels.html">EDDYLEVELS</a>  Eddy ridge significance levels using the survival function.
+ 
+    RHO=<a href="eddylevels.html">EDDYLEVELS</a>(DX,XMID,YBIN,X,Y,XNOISE,YNOISE,N) returns the eddy ridge
+    significance levels RHO for a Lagrangian dataset, based on comparision 
+    of the survival function of the data with that of an ensemble of noise. 
+ 
+    For details and theory on the use of <a href="eddylevels.html">EDDYLEVELS</a>, see
+ 
+        Lilly, J. M. and P. Perez-Brunius (2021). Extracting statistically
+            significant eddy signals from large Lagrangian datasets using
+            wavelet ridge analysis, with application to the Gulf of Mexico.
+            Submitted to Nonlinear Processes in Geohysics.
+ 
+    This paper will be referred to as LPB21 afterwards.
+ 
+    The eddy ridges for the data and the noise are assumed to have been 
+    calculated using <a href="eddyridges.html">EDDYRIDGES</a>, while the noise itself is generated using 
+    <a href="noisedrifters.html">NOISEDRIFTERS</a>.  See MAKE_GOMED for an example.
+ 
+    The significance levels are computed in terms of X and Y, two ridge-
+    averaged quantities.  XNOISE and YNOISE are the comparable quantities 
+    in the noise ensemble, which is N times the size of the data. 
+ 
+    In LPB21, the ridge-averaged nondimensional frequency OMEGA_AST_BAR is
+    used for X, and the ridge length L times the square of the circularity 
+    XI is used for Y.  See therein for a discussion and other possibilties.
+ 
+    A survival function is created for Y as a function of X, with the 
+    x-bins centered on midpoints XMID and spanning XMID-DX/2 to XMID+DX/2,
+    and with YBIN giving the bin edges for the Y variable.  
+ 
+    RHO is then the significance level of the ridges based on interpolating
+    within the ratio of the two survival functions.  Smaller values of RHO 
+    correspond to higher significance levels.  RHO has the size of X and Y. 
+ 
+    [RHO,YMID,S,SNOISE,SRAT]=<a href="eddylevels.html">EDDYLEVELS</a>(...) also returns the y-bin 
+    midpoints YMID, the data and noise survival functions S and SNOISE, 
+    and their ratio SRAT=SNOISE./S.  The survival functions are all 
+    matrices with LENGTH(YMID) rows and LENGTH(XMID) columns.  
+ 
+    <a href="eddylevels.html">EDDYLEVELS</a>(...,'symmetric') optionally forces the noise survival
+    function to be symmetric about its x-axis, as expected if the x-axis
+    spans a symmetric band of frequencies centered about zero as in LPB21.
+ 
+    <a href="eddylevels.html">EDDYLEVELS</a>(...,'sort') optionally sorts the survival function ratio
+    SRAT along its y-axis in descending order, in order to remove
+    small-scale jaggedness that can arise in sparsely sampled bins.  This
+    is the recommended setting, for reasons discussed in LPB21.
+ 
+    Usage: rho=<a href="eddylevels.html">eddylevels</a>(dx,xmid,ybin,x,y,xnoise,ynoise,N);
+           [rho,ymid,S,Snoise,Srat]
+                  =<a href="eddylevels.html">eddylevels</a>(dx,xmid,ybin,x,y,xnoise,ynoise,N);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

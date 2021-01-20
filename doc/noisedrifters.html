@@ -1,0 +1,56 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>NOISEDRIFTERS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="noisedrifters.html">NOISEDRIFTERS</a>  Create a noise Lagrangian dataset matching mean and variance.
+ 
+    Given Lagrangian trajectories and their velocity spectra, NOISEDRIFTERS
+    creates a noise dataset that matches, for each trajectory, (i) the
+    starting location, (ii) the mean velocity, and (iii) the approximate
+    variance or eddy kinetic energy, with a velocity spectrum that is an 
+    isotropic version of the spectrum of the input trajectory.
+ 
+    [LATN,LONN,CVN]=<a href="noisedrifters.html">NOISEDRIFTERS</a>(NUM,LAT,LON,CV,SPP,SNN), where LAT and
+    LON are the latitudes and longitudes of Lagrangian trajectories
+    observed at Matlab date number NUM, and with complex velocities CV 
+    rotary velocity spectra SPP and SSN, outputs a noise dataset of 
+    trajectories with latitudes LATN, longitudes LONN, and velocities CVN.
+ 
+    All input arguments are cell arrays of the same size, with one
+    trajectory per cell, and all output arrays will also be of this size. 
+ 
+    Note that the units of CV are cm/s, as are those of CVN.  Similarly,
+    the spectral SPP and SNN should be computed with CV having those units.
+ 
+    <a href="noisedrifters.html">NOISEDRIFTERS</a> creates an isotropic spectrum by taking, at each
+    frequency, the minimum of SPP and SNN.  These are as output by <a href="mspec.html">MSPEC</a>, 
+    and should be formed with a sufficient degree of smoothing, e.g. not
+    the periodogram estimate.  
+ 
+    Once the spectral shape is established, <a href="noisedrifters.html">NOISEDRIFTERS</a> creates a random
+    Gaussian time series having exactly this spectral shape.  Each random 
+    velocity time series is then set to have the same mean value and 
+    variance as the corresponding original time series. 
+  
+    The random velocity time series are then integrated to give the output
+    trajectories LATN and LONN, using <a href="uv2latlon.html">UV2LATLON</a>.  The initial value of LAT 
+    and LON are the same as that of LATN and LONN.  
+ 
+    These noise trajectories are differenced again using <a href="latlon2uv.html">LATLON2UV</a> to
+    produce CVN, as this is how the velocities are produced from 
+    trajectories for the observations.  Because of the differences between 
+    numerically integrating with <a href="uv2latlon.html">UV2LATLON</a> and differencing with <a href="latlon2uv.html">LATLON2UV</a>,
+    the variancees of CVN and CV are approximately but not exactly equal.
+ 
+    <a href="noisedrifters.html">NOISEDRIFTERS</a>(NUM,LAT,LON,CV) with no spectra input alternately uses
+    white noise velocities to generate the output fields.
+ 
+    <a href="noisedrifters.html">NOISEDRIFTERS</a>(...,'parallel') parallelizes the computation using a 
+    PARFOR loop, which requires the Parallel Computing Toolbox.
+ 
+    Usage: [latn,lonn,cvn]=<a href="noisedrifters.html">noisedrifters</a>(num,lat,lon,cv,spp,snn);
+           [latn,lonn,cvn]=<a href="noisedrifters.html">noisedrifters</a>(num,lat,lon,cv);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -2,18 +2,18 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>MATERNCFUN is the <a href="jMatern.html">jMatern</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="materncfun.html">MATERNCFUN</a> Returns the normalization function C_ALPHA for a Matern process.
+ <a href="materncfun.html">MATERNCFUN</a> Returns the normalization or C-function for a Matern process.
  
     <a href="materncfun.html">MATERNCFUN</a> is a low-level function used in the <a href="jMatern.html">JMATERN</a> package.
  
-    <a href="materncfun.html">MATERNCFUN</a>(ALPHA) returns 
+    <a href="materncfun.html">MATERNCFUN</a>(ALPHA) returns the Matern C-function defined in Eqn. (44) of
+    Lilly et al. (2017).
  
-          (1/2/PI)*GAMMA(1/2)*GAMMA(|ALPHA-1/2|)/GAMMA(|ALPHA|) 
- 
-    where GAMMA is the usual gamma function.
+    <a href="materncfun.html">MATERNCFUN</a>(ALPHA,GAMMA) returns C-function for the two-parameter 
+    generalized Matern process.  See <a href="maternspec.html">MATERNSPEC</a> for details.
  
     Usage: c=<a href="materncfun.html">materncfun</a>(alpha);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

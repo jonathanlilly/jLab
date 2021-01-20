@@ -1,0 +1,233 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>EDDYRIDGES is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="eddyridges.html">EDDYRIDGES</a>  Coherent eddy ridges from Lagrangian trajectories.
+ 
+    <a href="eddyridges.html">EDDYRIDGES</a> extracts eddy-like displacement signals from a float or 
+    drifter position record using wavelet ridge analysis. 
+ 
+    By default, <a href="eddyridges.html">EDDYRIDGES</a> analyzes Lagrangian trajectories on the earth, 
+    or from an earth-like model.  For analsis of trajectories in Cartesian
+    model domains, see the 'Cartesian domains' section below.
+ 
+    STRUCT=<a href="eddyridges.html">EDDYRIDGES</a>(NUM,LAT,LON,FMAX,FMIN,P,M,RHO) runs the ellipse
+    extraction algorithm and returns the results in a data structure,
+    described below.
+ 
+    The input arguments are as follows:
+ 
+       NUM     Date in Matlab's DATENUM format 
+       LAT     Latitude record of float
+       LON     Longitude record of float
+       FMAX    Maximum ratio of frequency to Coriolis frequency
+       FMIN    Minimum ratio of frequency to Coriolis frequency
+       P       Wavelet duration, P>=1 
+       M       Ridge length cutoff in units of wavelet length 2P/pi
+       RHO     Ridge trimming factor, removing RHO*P/pi from each end
+ 
+    NUM, LAT, and LON are all column vectors of the same length, or cell 
+    arrays of column vectors, while the other arguments are all scalars.  
+ 
+    FMAX, FMIN, P, M, and RHO are parameters controlling the ridge
+    analysis, described in more detail next.
+    _______________________________________________________________________
+ 
+    Analysis parameters
+ 
+    <a href="eddyridges.html">EDDYRIDGES</a> works by calling <a href="ridgewalk.html">RIDGEWALK</a> to determine time/frequency
+    curves called "ridges" that are composed of special points, "ridge
+    points", that identify modulated oscillations such as the signal of a
+    coherent eddy.  <a href="ridgewalk.html">RIDGEWALK</a> in turn is based on a wavelet transform. 
+ 
+    FMAX and FMIN define the frequency band for the ridge analysis, P 
+    controls the wavelet used, and L and R are length and amplitude cutoffs
+    applied during the ridge analysis to minimize spurious features.
+ 
+    Frequency range: FMAX and FMIN
+ 
+    FMAX and FMIN define a moving band of frequencies with respect to the
+    local Coriolis frequency.  Both of these are positive numbers, with 1
+    being the Corilios frequency.  Ridge point lying outside this band are
+    rejected.  A typical choice of eddy band would be FMIN=1/32, FMAX=1/2.
+ 
+    Wavelet duration: P
+ 
+    The wavelet duration P controls the degree of time localization.  The 
+    number of oscillations contained within the wavelet is roughly 2P/pi,
+    so frequency resolution increases as P increases.  P should be greater
+    than about SQRT(3). 
+ 
+    Ridge length: M
+ 
+    M sets the minimum length for a ridge, in units of the approximate 
+    number of oscillations spanned by the wavelet, 2P/pi.  Thus the ridge
+    must contain about M times as many oscillations as the wavelet.  The 
+    ridges become more statistically significant as M increases.
+ 
+    Ridge trimming: RHO
+ 
+    After the ridge length criterion is applied, RHO*(2/pi) oscillations,
+    corresponding to one wavelet half-width, are removed from each end of
+    the ridge, as these are generally contaminated by edge effects.  The 
+    choice RHO=1/2 is recommended.  Note the minium ridge length will then 
+    be (M-RHO)*2P/pi. See <a href="ridgetrim.html">RIDGETRIM</a> for details.  
+    _______________________________________________________________________
+ 
+    Output 
+   
+    The following parameter are output as fields of the structure STRUCT. 
+    Type '<a href="use.html">use</a> struct' (using the actual name of the structure) to put these
+    fields into named variables in the workspace. 
+ 
+       -------------------------------------------------------------------     
+       Signal fields:
+ 
+       NUM       Date in Matlab's DATENUM format along each ridge
+       LAT       Latitude along each ridge
+       LON       Longitude along each ridge
+       LATRES    Latitude residual after subtracting eddy signal
+       LONRES    Longitude residual after subtracting eddy signal
+       ZHAT      Estimated eddy displacement XHAT+iYHAT, in kilometers     
+       -------------------------------------------------------------------
+       Ellipse fields:
+ 
+       KAPPA     Ellipse amplitude SQRT((A^2+B^2)/2), in kilometers 
+       XI        Ellipse circularity 2AB/(A^2+B^2), nondimensional
+       THETA     Ellipse orientation, in radians
+       PHI       Ellipse orbital phase, in radians
+       OMEGA     Ellipse instantaneous frequency, in radians/day 
+       UPSILON   Ellipse instantaneous bandwidth, in radians/day
+       CHI       Ellipse normalized instantaneous curvature, nondimensional
+       R         Ellipse geometric mean radius, in kilometers
+       V         Ellipse kinetic energy velocity, in cm/s
+       RO        Ellipse Rossby number, nondimensional
+       -------------------------------------------------------------------
+       Ridge fields:
+ 
+       IR      Indices into rows of wavelet transform (time) 
+       JR      Indices into columns of wavelet transform (scale) 
+       KR      Indices into data columns or cells (time series number)
+       LEN      Ridge length in number of complete periods
+       -------------------------------------------------------------------
+       PARAMS  Sub-structure of internal parameters used in the analysis
+   
+    PARAMS is a structure that contains the parameter values of FMAX, FMIN,
+    P, M, RHO, GAMMA, BETA, and FS used in the analysis.  BETA is an array
+    of length LENGTH(NUM), FS is a cell array of that length, and the other
+    elements of PARAMS are all scalars. 
+ 
+    Apart from PARAMS, all other output fields are cell arrays of column 
+    with one ridge per cell.  
+ 
+    Note that XI and V are signed quantities that are positive for
+    counterclockwise rotation and negative for counterclockwise rotation, 
+    while RO is a signed quantity that is positive for cyclonic and 
+    negative for anticyclonic rotations.
+  
+    If more than one time series is input, the ridge field KR provides an
+    index into the original column. To find all cells associated with the
+    5th time series, for instance, use the index FIND(<a href="cellfirst.html">CELLFIRST</a>(KR)==5).
+ 
+    If you want the ridges to be separated for each input signal, call 
+    <a href="eddyridges.html">EDDYRIDGES</a> with an external loop.
+    _______________________________________________________________________
+ 
+    Cartesian domains
+ 
+    <a href="eddyridges.html">EDDYRIDGES</a> can also be used to analyze trajectories from idealized 
+    model domains, which are better represented in Cartesian coordinates
+    rather than latitude and longitude. 
+ 
+    STRUCT=<a href="eddyridges.html">EDDYRIDGES</a>(F,NUM,Z,FMAX,FMIN,P,M,RHO) performs the eddy 
+    extraction on data with positions given in Cartesian coordinates.
+ 
+    The first three input arguments have changed from the planetary case:
+ 
+       F      Coriolis frequency of the model domain, in radians per second
+       NUM    Time in days along each float trajectory
+       Z      Complex-valued float location X+iY, in kilometers
+ 
+    F must be a scalar, with LENGTH(F)=1, in order for <a href="eddyridges.html">EDDYRIDGES</a> to know
+    that the Cartesian algorithm is intended.  F is used to calculate the
+    frequency range for the ridge analysis, and for the eddy Rossby number.  
+    
+    Note that for definiteness, <a href="eddyridges.html">EDDYRIDGES</a> requires that the model fields 
+    are expressed in particular physical units.
+ 
+    <a href="eddyridges.html">EDDYRIDGES</a>(F,FBETA,NUM,...) accounts for variations of the Coriolis
+    frequency due to the beta effect in calculating the ridge frequency
+    range.  FBETA is a scalar with units of radians per meter per second.
+ 
+    The output arguments are then all the same, *except* for the signal 
+    fields, which become
+ 
+       -------------------------------------------------------------------     
+       Signal fields:
+       NUM     Time in days along each ridge
+       Z       Complex-valued float location X+iY, in kilometers
+       ZRES    Residual after subtracting eddy XRES+iYRES, in kilometers
+       ZHAT    Estimated eddy displacement XHAT+iYHAT, in kilometers     
+       -------------------------------------------------------------------
+  
+    Only the signal fields changed.  All of the ellipse fields and ridge
+    fields are the same as in the planetary case.  
+   
+    The values of F and BETA used are included in the sub-structure PARAMS.
+    _______________________________________________________________________
+ 
+    Algorithm variations
+    
+    By default, <a href="eddyridges.html">EDDYRIDGES</a> uses a split-sides approach to finding the
+    ridges, in which ridges dominated by positive rotations (XI>1) and
+    those dominated by negative rotations (XI<1) are found separately
+    and then combined; this is done using RIDGEWALK's 'mask' functionality.
+ 
+    Under this approach, ridges are not permitted to change their sign of
+    rotation.  This is physically realistic as particle paths in eddies are
+    expected to be close to circular, with some distortion expected due
+    ambient strain and other processes.  Eddies do not suddenly change
+    their rotation sense from one sign to the other.  
+ 
+    This algorithm has the effect of attenuating the detection of events 
+    with wandering polarizations that are observed to occur regularly in 
+    noise, but that are unlikely to correspond to eddies.
+ 
+    For details, see 
+ 
+        Lilly and Perez-Brunius (2021b), Extracting statistically 
+            significant eddy signals from large Lagrangian datasets using
+            wavelet ridge analysis, with application to the Gulf of Mexico.
+  
+    <a href="eddyridges.html">EDDYRIDGES</a>(...,'nosplit') suppresses the use of this split-sides 
+    algorithm, such that any polarization senses are permitted.
+    _______________________________________________________________________
+ 
+    Outputting the transforms
+ 
+    Often it can be useful to look at the actual wavelet transforms, even
+    if one does not want to output these when analyzing large datasets.  
+ 
+    Therefore, if the input fields NUM, LAT, and LON contain only a single
+    time series, the rotary transforms WP and WN computed internally by
+    <a href="eddyridges.html">EDDYRIDGES</a> are returned as the last two sub-fields of PARAMS.
+    _______________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="eddyridges.html">EDDYRIDGES</a>(...,'parallel') parellelizes the computation by using a 
+    PARFOR when looping over multiple trajectories.
+    _______________________________________________________________________
+ 
+    '<a href="eddyridges.html">eddyridges</a> --t' runs a test.
+ 
+    See also <a href="ridgewalk.html">RIDGEWALK</a>.
+ 
+    Usage: struct=<a href="eddyridges.html">eddyridges</a>(num,lat,lon,1/2,1/64,3,0,1);
+           struct=<a href="eddyridges.html">eddyridges</a>(num,lat,lon,fmax,fmin,P,M,rho);
+           struct=<a href="eddyridges.html">eddyridges</a>(f,num,z,fmax,fmin,P,M,rho);
+           struct=<a href="eddyridges.html">eddyridges</a>(f,beta,num,z,fmax,fmin,P,M,rho);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2013--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

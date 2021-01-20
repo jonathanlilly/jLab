@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>STRUCTINDEX is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="structindex.html">STRUCTINDEX</a>  Applies an index to all array-valued fields in a structure. 
+ 
+    STRUCTOUT=<a href="structindex.html">STRUCTINDEX</a>(STRUCT,INDEX), where STRUCT is a structure
+    containing a set of fields that are non-string arrays all having the 
+    same length N>1, applies INDEX to all of them and returns the result in
+    STRUCTOUT.  All other fields of STRUCT are left unchanged. 
+ 
+    <a href="structindex.html">STRUCTINDEX</a>(STRUCT,BOOL) where BOOL is a boolean array of length N also 
+    works.  
+ 
+    <a href="structindex.html">STRUCTINDEX</a> is useful for dealing with the ridge structures output by 
+    <a href="eddyridges.html">EDDYRIDGES</a>.
+ 
+    See also <a href="eddyridges.html">EDDYRIDGES</a>.
+ 
+    Usage: struct=<a href="structindex.html">structindex</a>(struct,index);
+           struct=<a href="structindex.html">structindex</a>(struct,bool);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

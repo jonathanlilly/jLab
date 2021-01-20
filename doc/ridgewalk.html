@@ -4,22 +4,22 @@
 <div><h1>RIDGEWALK is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
   <a href="ridgewalk.html">RIDGEWALK</a>  Extract wavelet transform ridges, including bias estimates. 
  
-    [WR,IR,JR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W,FS) where W is a wavelet transform matrix 
+    [WR,IR,JR,OMEGA]=<a href="ridgewalk.html">RIDGEWALK</a>(W,FS) where W is a wavelet transform matrix 
     computed at frequecies FS, returns the wavelet ridges of transform W.
  
     See <a href="wavetrans.html">WAVETRANS</a> for details on the transform matrix W and frequencies FS.
  
     <a href="ridgewalk.html">RIDGEWALK</a> returns the following quantities along ridges
  
-        WR     Wavelet transfrom value along the ridge
-        IR     Ridge indices into rows of W (time) 
-        JR     Ridge indices into columns of W (scale) 
-        FR     Instantaneous frequency along the ridge
+        WR       Wavelet transfrom value along the ridge
+        IR       Ridge indices into rows of W (time) 
+        JR       Ridge indices into columns of W (scale) 
+        OMEGA    Instantaneous frequency along the ridge
  
     All output variables are column vectors with the ridges appended one
-    atop the next, separated by a NaN.  Use <a href="col2cell.html">COL2CELL</a>(WR,IR,JR,FR) to 
+    atop the next, separated by a NaN.  Use <a href="col2cell.html">COL2CELL</a>(WR,IR,JR,OMEGA) to 
     convert these concatenated column vectors into cell arrays, or else
-    <a href="col2mat.html">COL2MAT</a>(WR,IR,JR,FR) to convert them into matrices.  
+    <a href="col2mat.html">COL2MAT</a>(WR,IR,JR,OMEGA) to convert them into matrices.  
  
     The minimum length of any ridge is two data points. 
  
@@ -33,9 +33,9 @@
  
     Joint ridges
  
-    [W1R,W2R,...,WNR,IR,JR,FR]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) finds the joint
-    ridges of N transforms that all have the same size.  All output fields
-    remain column vectors.
+    [W1R,W2R,...,WNR,IR,JR,OMEGA]=<a href="ridgewalk.html">RIDGEWALK</a>(W1,W2,...,WN,FS) finds the 
+    joint ridges of N transforms that all have the same size.  All output
+    fields remain column vectors.
  
     In this case, there is only one set of ridges but N different transform
     values. FR is then called the joint instantaneous frequency.
@@ -48,16 +48,19 @@
  
     Error estimate
  
-    [...,FR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(...,FS,P), where P=SQRT(BETA*GAMMA) characterizes 
-    the generalized Morse wavelet used to form the wavelet transform, also
-    returns an error estimate CR along the ridges. CR is a normalized 
-    version of a quantity called the joint instantaneous curvature.  
+    [...,OMEGA,CHI]=<a href="ridgewalk.html">RIDGEWALK</a>(...,FS,P), where P=SQRT(BETA*GAMMA) 
+    characterizes the Morse wavelet used to form the wavelet transform, 
+    also returns an error estimate CHI along the ridges.
  
-    CR measures the error with which the transforms estimate the analytic 
+    CHI measures the error with which the transforms estimate the analytic 
     signals of modulated oscillations, arising from bias due to the 
-    modulation strength.  CR<<1 for signals that are accurately estimated. 
+    modulation strength.  CHI<<1 for signals that are accurately estimated. 
  
     This works for either univariate ridges or for the joint ridges.
+ 
+    CHI is defined as the right-hand side of Eqn. (62) of Lilly and Olhede 
+    (2012), "Analysis of modulated multivariate oscillations."  It is a
+    normalized version of a quantity known as the instantaneous curvature. 
     _______________________________________________________________________  
  
     Artifact removal
@@ -111,18 +114,14 @@
  
     Additional output arguments
  
-    [...,FR,ER,BR,CR]=<a href="ridgewalk.html">RIDGEWALK</a>(...,FS,P,...) additionally outputs the 
-    instantaneous bandwidth BR and curvature CR along ridges.  These may be
-    useful in error analysis, and are defined in equations (38) and (39) of 
+    [...,OMEGA,CHI,DEV1,DEV2]=<a href="ridgewalk.html">RIDGEWALK</a>(...,FS,P,...) additionally outputs 
+    the first and second order deviations DEV1 and DEV2 along ridges.
+    These are *arrays* with one column per input transform and defined in 
+    Eqns. (17) and (18) of Lilly and Olhede (2012). 
  
-       Lilly and Olhede (2010), On the analytic wavelet transform. 
-            IEEE Trans. Info. Theory, 56 (8), 4135--4156.
- 
-    For multivariate signals, BR and CR are *arrays* with one column per
-    input transform.  In this case, these quantities are defined by the
-    'deviation vectors' in equations (17) and (18) of Lilly and Olhede
-    (2012), divided by the squared norm of the wavelet transform. These 
-    reduce to the earlier definitions in the univariate case. 
+    The normalized magnitudes of the deviation vectors give generalizations
+    of the instantaeous bandwidth and instantaneous curvature, 
+    respectively, see Eqn. (19) of Lilly and Olhede (2012). 
     _______________________________________________________________________  
  
     See also <a href="wavetrans.html">WAVETRANS</a>, <a href="ridgemap.html">RIDGEMAP</a>, <a href="ridgetrim.html">RIDGETRIM</a>.
@@ -130,13 +129,14 @@
     '<a href="ridgewalk.html">ridgewalk</a> --t' runs a test.
     '<a href="ridgewalk.html">ridgewalk</a> --f' generates a sample figure.
  
-    Usage: [wr,ir,jr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,P);
-           [wr,ir,jr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,P,M);
-           [wr,ir,jr,wr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,P,M);
-           [wxr,wyr,ir,jr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M);
-           [wxr,wyr,ir,jr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M);
-           [wxr,wyr,ir,jr,fr,er,br,cr]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M,rho);
+    Usage: [wr,ir,jr,omega,chi,dev1,dev2]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,P);
+           [wr,ir,jr,omega,chi,dev1,dev2]=<a href="ridgewalk.html">ridgewalk</a>(w,fs,P,M);
+           [wr,ir,jr,omega,chi,dev1,dev2]=<a href="ridgewalk.html">ridgewalk</a>(dt,w,fs,P,M);
+           [wxr,wyr,ir,jr,omega,chi,dev1,dev2]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M);
+           [wxr,wyr,ir,jr,omega,chi,dev1,dev2]=<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M);
+           [wxr,wyr,ir,jr,omega,chi,dev1,dev2]...
+                                          =<a href="ridgewalk.html">ridgewalk</a>(dt,wx,wy,fs,P,M,rho);
     _______________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2004--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2004--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

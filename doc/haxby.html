@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>HAXBY is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="haxby.html">HAXBY</a>  The Haxby colormap.
+ 
+    <a href="haxby.html">HAXBY</a>(M) returns an M-by-3 matrix containing the Haxby colormap, see
+ 
+         https://www.mathworks.com/matlabcentral/fileexchange/
+                        25690-haxby-color-map?s_tid=prof_contriblnk
+ 
+    <a href="haxby.html">HAXBY</a> with no arguments returns a colormap having the same number of 
+    colors as the colormap of the current figure.
+ 
+    To make <a href="haxby.html">HAXBY</a> your default colormap, add to your startup.m file the
+    line "set(0,'DefaultFigureColormap',haxby)".
+ 
+    This implementation was written by Kelsey Jordahl, modified and 
+    redistributed in accordance with the copyright policies given in 
+    <a href="haxby_copyright.html">HAXBY_COPYRIGHT</a>.
+ 
+    Kelsey's original notes:
+ 
+    Colormap is based on the colors used by W. F. Haxby's Gravity Field of
+    World's oceans, 1985, developed for geoid and gravity maps.  The 
+    version used here is formed from a linear interpolation of the GMT 
+    color table used by MB-System by David W. Caress and Dale N. Chayes.
+ 
+         https://www.mbari.org/products/research-software/mb-system/
+ 
+    Usage: h=<a href="haxby.html">haxby</a>(M);
+           colormap haxby
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

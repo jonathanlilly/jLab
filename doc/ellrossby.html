@@ -4,31 +4,26 @@
 <div><h1>ELLROSSBY is the <a href="jEllipse.html">jEllipse</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="ellrossby.html">ELLROSSBY</a>  Ellipse Rossby number, for oceanographic applications.
  
-    RO=<a href="ellrossby.html">ELLROSSBY</a>(LAT,LAMBDA,OMEGA) returns the ellipse Rossby number RO 
-    for an ellipse with linearity LAMBDA and joint instantaneous frequency
-    OMEGA, in radians per day, at latitude LAT.
+    RO=<a href="ellrossby.html">ELLROSSBY</a>(LAT,XI,OMEGA) returns the vorticity Rossby number RO for 
+    an ellipse with signed circularity XI and joint instantaneous
+    frequency OMEGA, given in radians per day, at latitude LAT.
    
-    The magnitude of the ellipse Rossby number is |RO|=|2*OMEGA/F| where F
+    The vorticity Rossby number is defined as RO = (2/XI)*OMEGA/F where F
     is the signed Coriolis frequency at latitude LAT.  
  
-    The sign of RO is SIGN(RO)=-SIGN(LAMBDA/F), so that RO is positive for
-    cyclones, and negative for anticyclones, in both hemispheres. 
+    For details, see Lilly and Perez-Brunius (2021b).
  
-    For circular eddies, this definition of Rossby number is equivalent to
-    RO=-2V/(RF), where R is the radial distance to the eddy center and V is
-    the signed instantaneous azimuthal velocity. 
+    For steady, non-precessing ellipses, RO will be positive for cyclonic
+    motion and negative for anticyclonic motion in both hemispheres. 
  
     The input arguments may also be cell arrays of numeric arrays, all 
     having the same size.  RO will then be a similarly sized cell array.
-    Alternatively, LAMBDA and OMEGA may be cell arrays and LAT a constant.
- 
-    **Note** as of March 21, 2020, the factor of two has been included in
-    order to be consistent with definitions used elsewhere.
+    Alternatively, XI and OMEGA may be cell arrays and LAT a constant.
  
     '<a href="ellrossby.html">ellrossby</a> --t' runs a test.
  
-    Usage: ro=<a href="ellrossby.html">ellrossby</a>(lat,lambda,omega);
+    Usage: ro=<a href="ellrossby.html">ellrossby</a>(lat,xi,omega);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2011--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2011--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

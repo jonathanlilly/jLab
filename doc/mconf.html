@@ -1,0 +1,68 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MCONF is the <a href="jSpectral.html">jSpectral</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="mconf.html">MCONF</a>  Confidence intervals for the multitaper spectral estimate.
+ 
+    [RA,RB]=<a href="mconf.html">MCONF</a>(K,GAMMA) returns the level GAMMA confidence interval 
+    for the direct multitaper power spectral estimate of an average over K
+    eigenspectra.  RA and RB lower and upper ratios to the true value.
+ 
+    More specifically, if S0 is the true value of the spectrum, and if S is
+    the spectral estimate, then RA and RB satisfy
+ 
+          Probability that RA < S/S0 < RB = GAMMA
+ 
+    with RA and RB defined to be symmetrically placed around 1. 
+ 
+    For example, GAMMA=0.95 computes the 95% confidence interval.
+ 
+    For the default settings of the multitaper spectrum implemented by
+    <a href="mspec.html">MSPEC</a>, K is equal to 2P-1 where P is the time-bandwidth product.
+ 
+    The estimated confidence intervals can then be plotted as 
+ 
+          plot(f,S),hold on,plot(f,S*ra),plot(f,S*rb)
+ 
+    where S is the spectral estimated computed by <a href="mspec.html">MSPEC</a>, while is the 
+    Fourier frequencies. 
+ 
+    <a href="mconf.html">MCONF</a> relies upon the fact that S/S0 is approximately distributed
+    as 1/(2K) times a chi-squared distribution with 2K degrees of freedom.
+    _____________________________________________________________________
+   
+    Logarithmic confidence intervals  
+ 
+    When plotting the logarithm of the spectrum, one should use a different
+    set of confidence intervals.
+ 
+    <a href="mconf.html">MCONF</a>(K,GAMMA,'log10') returns the confidence intervals for the base-10
+    logarithm of the multitaper spectral estimate.  In this case, RA and RB
+    are defined such that
+  
+          Probability that RA < LOG10(S)/LOG10(S0) < RB = GAMMA
+ 
+    and the confidence intervals can be plotted using either
+ 
+          plot(f,S),hold on,plot(f,10.^ra*S),plot(f,10.^rb*S)
+          set(gca,'yscale','log')
+  
+    or else 
+ 
+          plot(f,log10(S)),hold on,plot(f,ra+log10(S)),plot(f,rb+log10(S)).
+ 
+    <a href="mconf.html">MCONF</a>(K,GAMMA,'natural') similarly returns the confidence intervals for
+    the natural logarithm of the multitaper spectral estimate.
+    _____________________________________________________________________
+ 
+    See also <a href="mspec.html">MSPEC</a>, <a href="chisquared.html">CHISQUARED</a>. 
+ 
+    '<a href="mconf.html">mconf</a> --t' runs a test.
+    '<a href="mconf.html">mconf</a> --f' generates a sample figure.
+ 
+    Usage: [ra,rb]=<a href="mconf.html">mconf</a>(K,gamma);
+           [ra,rb]=<a href="mconf.html">mconf</a>(K,gamma,'log10');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

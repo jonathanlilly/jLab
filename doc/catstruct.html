@@ -1,0 +1,43 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CATSTRUCT is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="catstruct.html">CATSTRUCT</a>  Concatenates the array elements of a cell array of structures.
+ 
+    Let C be a cell array of M structures having N identical fields, where 
+    all of the fields are themselves arrays,
+          
+       C{1}.F1=A11, C{1}.F2=A12, ... , C{1}.FN=A1N
+       C{2}.F1=A21, C{2}.F2=A22, ... , C{2}.FN=A2N
+          :        :        :        :        :
+       C{M}.F1=AM1, C{2}.F2=AM2, ... , C{M}.FN=AMN
+    
+     and where all the AMN for any particular field (F1,say), have the same
+     number of columns, that is, SIZE(A11,2)=SIZE(A21,2)= ... =SIZE(AM1,2).
+ 
+     S=<a href="catstruct.html">CATSTRUCT</a>(C) then returns a structure in which all fields of the
+     same type have been concatenated:
+ 
+       SNEW.F1=[A11;   SNEW.F2=[A12;    ...    SNEW.FN=[A1N;
+                A21;            A22;    ...             A2N;
+                 :               :      ...              :
+                AM1]            AM2]    ...             AMN];
+ 
+    Note S is a single structure, whereas C is a cell array of structures.
+ 
+    As a simple example, with C{1}.F=[1;2] and C{2}.F=[3;4], S=<a href="catstruct.html">catstruct</a>(C)
+    returns S with a field F such that S.F=[1;2;3;4].
+ 
+    One use of <a href="catstruct.html">CATSTRUCT</a> is in concatentating output from multiple cores
+    when using SPMD in the parallel computing toolbox. 
+ 
+    SNEW=<a href="catstruct.html">CATSTRUCT</a>(S,INDEX) only concatenates those fields listed in INDEX.
+    Here index is a list of numbers indicating the fields by the order in 
+    which they appear, e.g., INDEX=1:10 concatenates the first 10 fields.
+ 
+    Usage:  snew=<a href="catstruct.html">catstruct</a>(s);
+            snew=<a href="catstruct.html">catstruct</a>(s,index);
+    _________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
+    (C) 2003--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

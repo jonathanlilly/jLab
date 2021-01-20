@@ -2,7 +2,7 @@
 <style type="text/css" media="all"> @import "m2html.css";</style>
 <title>jLab Help Files</title></head><body>
 <div><h1>NCLOAD is the <a href="jCommon.html">jCommon</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
- <a href="ncload.html">NCLOAD</a>  Load all variables from a NetCDF file and convert columns to cells.
+ <a href="ncload.html">NCLOAD</a>  Load all variables from a NetCDF file and convert trajectories to cells.
  
     <a href="ncload.html">NCLOAD</a>(FILENAME) loads all variables from the NetCDF file FILENAME and
     places them into a structure of the same name in the calling workspace. 
@@ -10,6 +10,9 @@
  
     If FILENAME contains a full pathname, only the final portion after the
     last '/' or '\' is used for the structure name.
+ 
+    Note that any hyphens '-' in the filename are replaced with underscores
+    in the structure name, as the former are not allowed in variable names.
  
     For example, if FILENAME='/Home/data' contains variables 'num', 'lat', 
     and 'lon', then the result of calling <a href="ncload.html">NCLOAD</a>('data') will be a 
@@ -20,9 +23,35 @@
     <a href="ncload.html">NCLOAD</a>(FILENAME,VAR1,VAR2,...,VARN) will only load the variables with
     the names VAR1, VAR2,...VARN.
  
-    In addition, if any variables in FILENAME are of type 'column', these
-    will be interpreted as being in the NaN-separated column format used by
-    <a href="col2cell.html">COL2CELL</a>, which will be called to put then in cell array format. 
+    <a href="ncload.html">NCLOAD</a> will convert any variables that are numeric but not doubles to
+    doubles.  This is because experience has shown using other data types 
+    in code that is expecting doubles can lead to errors in Matlab.
+    __________________________________________________________________
+ 
+    Convert trajectory data
+ 
+    In addition, if FILENAME has the global  attribute  
+ 
+          featureType    = 'trajectory'
+ 
+    then any variables in FILENAME are have 'Dimensions: obs' will be
+    interpreted as concatentated trajectory data, following the NetCDF 
+    Climate and Forecast (CF) Metadata Conventions Appendix H.4.3
+ 
+          http://cfconventions.org/Data/cf-conventions/cf-conventions-1.8/cf-conventions.html
+ 
+    <a href="ncload.html">NCLOAD</a> adopts the convention that a variable named 'ids', having 
+    'Dimensions: obs', provides the id for all other variables.  
+ 
+    All variables of dimension obs will be converted to cell arrays by
+    first calling <a href="colbreaks.html">COLBREAKS</a> using ids as the first argument, then <a href="col2cell.html">COL2CELL</a>.
+ 
+    Alternatively, all variables with 'Dimensions: obs'  will be 
+    interpreted as being in the NaN-separated column format used by
+    <a href="col2cell.html">COL2CELL</a>, which will be called to put then in cell array format. This
+    format is supported to provide for reverse compatibility; it is 
+    recommended to use the CF trajectory convention instead. 
+    __________________________________________________________________
  
     The following formats also work:
  
@@ -41,5 +70,5 @@
            ncload filename num lat lon 
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2019--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

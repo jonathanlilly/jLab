@@ -9,15 +9,26 @@
     T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA) returns the Cholesky 
     decomposition of the N x N autocovariance matrix of a Matern process.
  
-    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) does the same, but for the
-    extended Matern process.   See <a href="materncov.html">MATERNCOV</a> for details.
- 
-    T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') does the same, 
-    but for the composite Matern process.  See <a href="materncov.html">MATERNCOV</a> for details.
- 
     T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,A,ALPHA,0) returns the Cholesky decomposition for
     fractional Brownian motion.  In this case, the third input argument is
     the spectral amplitude A, not the standard deviation SIGMA.
+    __________________________________________________________________
+ 
+    Extensions
+ 
+    Several extensions of the basic Matern form are supported, all of which
+    are discussed in more detail in <a href="maternspec.html">MATERNSPEC</a>.
+ 
+    Oscillatory Matern
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+    Generalized Matern (+ optional oscillations)
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+    Extended Matern  (+ optional oscillations)
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+    Composite Matern 
+        T=<a href="maternchol.html">MATERNCHOL</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
     __________________________________________________________________
  
     Non positive-definiteness adjustment
@@ -34,9 +45,10 @@
  
     '<a href="maternchol.html">maternchol</a> --t' runs a test.
  
-    Usage: T=<a href="maternchol.html">maternchol</a>(dt,N,sigma,alpha,lambda,nu,mu);
+    Usage: T=<a href="maternchol.html">maternchol</a>(dt,N,sigma,alpha,lambda,nu);
+           T=<a href="maternchol.html">maternchol</a>(dt,N,sigma,alpha,lambda,mu,nu,'extended');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2017  A.M. Sykulski and J.M. Lilly
+    (C) 2013--2020  A.M. Sykulski and J.M. Lilly
                                   --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

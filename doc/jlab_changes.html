@@ -4,25 +4,54 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
-    Changes new in version 1.6.7c
+    Changes new in version 1.6.9
  
-    New functions:
+    Figure making for two new publications, see JLAB_MAKEFIGS:
+       
+    Lilly and Perez-Brunius (2021b). Extracting statistically significant 
+        eddy signals from large Lagrangian datasets, with application to 
+        the Gulf of Mexico. In review at Nonlinear Processes in Geophysics.
  
+    Lilly and Perez-Brunius (2021a). A gridded surface current product for
+        the Gulf of Mexico from consolidated  drifter measurements.  
+        Accepted to Earth Science System Data.
+ 
+    Major new functions for Lagrangian eddy analysis and statistics:
+ 
+    <a href="eddyridges.html">eddyridges</a>    - Coherent eddy ridges from Lagrangian trajectories.   
+    <a href="noisedrifters.html">noisedrifters</a> - Create a noise Lagrangian dataset matching mean and variance.
+    <a href="eddylevels.html">eddylevels</a>    - Eddy ridge significance levels using the survival function.
+    <a href="griddrifters.html">griddrifters</a>  - Average drifter velocities onto a space/time 3D grid.
+ 
+    Other new functions:
+ 
+    <a href="spheretrans.html">spheretrans</a>   - Wavelet transform for oscillations on the surface of a sphere.
+    <a href="ridgemult.html">ridgemult</a>     - Ridge multiplicity, the number of simultaneous ridges present.
+    <a href="catstruct.html">catstruct</a>     - Concatenates the array elements of a cell array of structures.
+    <a href="structindex.html">structindex</a>   - Applies an index to all array-valued fields in a structure.
+    <a href="mconf.html">mconf</a>         - Confidence intervals for the multitaper spectral estimate.
+    <a href="chisquared.html">chisquared</a>    - The chi-squared distribution.
     <a href="eddyfit2d.html">eddyfit2d</a>     - Least squares fit of 2D velocity data to an eddy profile.
+    <a href="simpleddy.html">simpleddy</a>     - Streamfunction, velocity, and vorticity for various eddy profiles.
     <a href="monthstats.html">monthstats</a>    - Mean month and standard deviation using circular statistics.
     <a href="jhanning.html">jhanning</a>      - Hanning window.
     <a href="celldot.html">celldot</a>       - Dot product for arrays of column vectors.
-   
+    <a href="haxby.html">haxby</a>         - The Haxby colormap.  
+    <a href="seminfhaxby.html">seminfhaxby</a>   - The seminf-Haxby colormap.
+ 
     Updated datasets:  
     
     JTOPO global topography is now at 1/12th resolution.
     
- 
     Changes and improvements:
  
+    <a href="sleptap.html">SLEPTAP</a> vast speed improvements for handling multiple time series.
+    <a href="linecolor.html">LINECOLOR</a> bugfixes.
+    <a href="printall.html">PRINTALL</a> organization improvement and bugfix for R2020a.
     <a href="maternfit.html">MATERNFIT</a> now includes an option to average over ensemble members.
-    <a href="maternfit.html">MATERNFIT</a>, <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, and <a href="maternoise.html">MATERNOISE</a> now all support the 
-         possibility of real-valued, as well as complex-valued processes.     
+    <a href="maternfit.html">MATERNFIT</a>, <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, and <a href="maternoise.html">MATERNOISE</a> refactoring, support 
+         for new extensions of the Matern process, support real-valued as
+         well as complex-valued processes, and input argument changes. 
     <a href="mspec.html">MSPEC</a> now uses two-sided, not one-sided, normalization for real data.
     <a href="polysmooth.html">POLYSMOOTH</a> considerable speed improvements. 
     <a href="spheresort.html">SPHERESORT</a> and <a href="twodsort.html">TWODSORT</a> improvements and major change to output format.
@@ -35,9 +64,14 @@
     <a href="cellpack.html">CELLPACK</a> functionality change to key off of the first input argument.
     <a href="vstd.html">VSTD</a> redefined for complex-valued arguments.
     <a href="yearfrac.html">YEARFRAC</a> bugfix for NUM consisting of a ND array.
-    <a href="ellrossby.html">ELLROSSBY</a> factor of two change to be consisent with the literature.
+    <a href="ellrossby.html">ELLROSSBY</a> new definition of Rossby number based on inferred vorticity.
     <a href="trajextract.html">TRAJEXTRACT</a> and <a href="polysmooth.html">POLYSMOOTH</a> bugfixes for sample figures. 
     <a href="twodstats.html">TWODSTATS</a> and <a href="twodmed.html">TWODMED</a> fixed sample figures.
+    <a href="linecolor.html">LINECOLOR</a> can now take either a colormap matrix or a name as input.
+    <a href="ncload.html">NCLOAD</a> can now handle filenames including hyphens '-'.
+    <a href="ncload.html">NCLOAD</a> now supports cell conversion for the 'trajectory' feature type.
+    <a href="ncload.html">NCLOAD</a> now converts all non-double numeric variables into doubles.
+    <a href="ncload.html">NCLOAD</a> is now self-contained.
     -----------------------------------------------------------------------
  
     Changes new in version 1.6.6
@@ -68,7 +102,7 @@
     floats.mat and floats.nc     - Major update to the historical dataset of 
          eddy-resolving subsurface floats.  See <a href="about_floats.html">about_floats</a>.
     drifters.mat and drifters.nc - The global surface drifter dataset, 
-        updated through April 1, 2018.  See <a href="about_drifters.html">about_drifters</a>.
+        updated through April 1, 2018.  See about_drifters.
     tpjaos.mat and tpjaos.nc     - Alongtrack SSH anomalies from the 
         Beckley dataset, updated through May 30, 2018.  See <a href="about_tpjaos.html">about_tpjaos</a>.
     sandwell.mat and sandwell.nc - One minute resolution topography data 
@@ -172,7 +206,7 @@
     Updated datasets
  
     drifters.mat  - The global surface drifter dataset from NOAA's Global
-         Drifter Program, updated through Sept. 2016.  See <a href="about_drifters.html">about_drifters</a>.
+         Drifter Program, updated through Sept. 2016.  See about_drifters.
     tpjaos.mat    - Alongtrack sea surface height anomalies from the 
          Beckley dataset, updated through Oct. 12, 2016.  See <a href="about_tpjaos.html">about_tpjaos</a>.
   
@@ -220,7 +254,7 @@
     Changes and improvements
  
     DRIFTERS.MAT is now updated with data through December 2015.
-    <a href="about_drifters.html">ABOUT_DRIFTERS</a> contains updated and simplified internal processing.
+    ABOUT_DRIFTERS contains updated and simplified internal processing.
     TPJAOS.MAT updated through November 2015.
  
     <a href="twospecplot.html">TWOSPECPLOT</a> bugfix for omitting tidal lines.
@@ -347,7 +381,7 @@
  
     Improved datasets
  
-    <a href="about_drifters.html">about_drifters</a> - Modified to include data through June 2014.  Please
+    about_drifters - Modified to include data through June 2014.  Please
        note that the earlier verison of drifters.mat was missing half the 
        data on account of a read error.  The new version corrects this.
  

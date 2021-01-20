@@ -13,28 +13,31 @@
     
     For M<=512, <a href="sleptap.html">SLEPTAP</a> uses the tridiagonal method described in Percival 
     and Walden (1993).  For M>512, it first computes tapers for M=512 and 
-    then spline-interpolates.
-    
+    then spline-interpolates.  (Tests show spline interpolation is far
+    superior to linear interpolation for this problem.)   
+ 
+    The tapers are normalized to have unit energy.
+    _____________________________________________________________________
+ 
+    Computing multiple taper lengths simultaneously
+ 
     M may also be an array of lengths.  In this case PSI is a cell array of 
     matrices, with PSI{1} being M(1) x K, PSI{2} being M(2) x K, etc., 
-    while LAMBDA is K x LENGTH(M).  See 'Cell array input' under <a href="mspec.html">MSPEC</a>.
-    _____________________________________________________________________
+    while LAMBDA is again K x 1.
  
-    Normalization
+    By default, <a href="sleptap.html">SLEPTAP</a> will down-interpolate the M=512 tapers to all 
+    shorter lengths, an approximation that is very good for data lengths
+    greater than say M=64, and resulting in a vast computational savings. 
+    Because short data segments are difficult to extract reliable spectral
+    information from anyway, this should be sufficient for most purposes.
  
-    By default, the tapers are set to have unit energy. Alternatively
-    <a href="sleptap.html">SLEPTAP</a>(...,'bandpass') uses the "bandpass" normalization in which the
-    tapers are rescaled so that the maximum value of the Fourier transform
-    of the first taper is set to two. 
+    Alternatively, <a href="sleptap.html">SLEPTAP</a>(...,'exact') will directly compute solutions of 
+    PSI and LAMBDA for entries m for which M(m)<=512.  In this case, LAMBDA
+    will be a K x M matrix.  This algorithm, like the default behavior, 
+    will spline-interpolate PSI from the M=512 solution to larger M values.
  
-    See <a href="wavetrans.html">WAVETRANS</a> for details on bandpass normalization.  
-    _____________________________________________________________________
- 
-    Parallelization
- 
-    <a href="sleptap.html">SLEPTAP</a>(M, ...,'parallel') when M is an array of lengths parallelizes 
-    the taper computation using a PARFOR loop.  This requires that Matlab's
-    Parallel Computing Toolbox be installed.
+    <a href="sleptap.html">SLEPTAP</a>(...,'exact','parallel') will parallelize this computation using
+    a PARFOR loop.  This requires Matlab's Parallel Computing Toolbox.
     _____________________________________________________________________
  
     See also <a href="mspec.html">MSPEC</a>, <a href="msvd.html">MSVD</a>, <a href="twospecplot.html">TWOSPECPLOT</a>.
@@ -45,5 +48,5 @@
             [psi,lambda]=<a href="sleptap.html">sleptap</a>(n,p,k); 
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2000--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2000--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,0 +1,66 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>GRIDDRIFTERS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="griddrifters.html">GRIDDRIFTERS</a>  Average drifter velocities onto a space/time 3D grid.
+ 
+    STRUCT=<a href="griddrifters.html">GRIDDRIFTERS</a>(NUM,LAT,LON,U,V,FILLED,SOURCE,LATO,LONO,YO,MO,N)
+    returns a structure containing velocities averaged onto a 3D grid.  
+ 
+    The grid has bin edges given by LATO and LONO, and has month-long bins
+    in time with a semimonthly spacing beginning with year YO and month MO,
+    and having N total time steps.  
+ 
+    The grid size is thus LENGTH(LATO)-1 x LENGTH(LONO)-1 x N.  The first
+    time bin corresponds to year YO and month MO, i.e. it is centered on
+    the midpoint of this month.  Odd slices correspond to month bins, e.g.
+    Jan 1992, while even slices run between midpoints of adjacent months.
+ 
+    NUM,LAT,LON,U,V,FILLED,SOURCE are all cell arrays of Lagrangian drifter
+    or float data, with one instrument per cell, such as those used by the
+    FLOATS.MAT and DRIFTERS.MAT dataset.  These are all the same size. 
+ 
+    NUM is the date in Matlab's DATENUM format, LAT and LON are latitude
+    and longitude, U and V are eastward and northward velocity components, 
+    FILLED is a flag that is true if the data point is filled, and SOURCE
+    contains integers indicating a source dataset.
+ 
+    FILLED and SOURCE are both optional.  To omit one or both of these,
+    replace with the empty array, [], in the input list. 
+ 
+    If FILLED is included, only non-filled data is used for the averages.
+ 
+    The output structure STRUCT has the following fields:
+ 
+        STRUCT.NUM       Date of bin midpoint in DATENUM format
+        STRUCT.LAT       Latitudes of bin centers
+        STRUCT.LON       Longitudes of bin centers
+        STRUCT.U         Bin-averaged eastward velocity
+        STRUCT.V         Bin-averaged northward velocity
+        STRUCT.EPSUU     Instantaneous eastward local variance in each bin 
+        STRUCT.EPSVV     Instantaneous northward local variance in each bin
+        STRUCT.EPSUV     Instantaneous local covariance in each bin
+        STRUCT.COUNT     Number of data points averaged in each bin
+ 
+    These are all 3D arrays of the same size.  Array entries in which there
+    is no data are filled with NaNs, apart from COUNT which will be zero.
+ 
+    The "instantaneous local variance" is the variance relative to the 
+    local mean velocity computed withing each 3D bin.  See Lilly and Perez-
+    Brunius (2021), "A gridded surface current product for the Gulf of
+    Mexico from consolidated drifter measurements", for details.
+ 
+    If SOURCE is input, then STRUCT also includes another field:
+ 
+        STRUCT.COUNTS    Number of data points from each source in each bin
+ 
+    which is a 4D array of LENGTH(LATO)-1 x LENGTH(LONO)-1 x N x M, where M
+    is the maximum value occurring in SOURCE.
+ 
+    Usage: struct=<a href="griddrifters.html">griddrifters</a>(num,lat,lon,u,v,[],[],lato,lono,yo,mo,N);
+           struct=<a href="griddrifters.html">griddrifters</a>(num,lat,lon,u,v,filled,source,...
+                                                      lato,lono,yo,mo,N);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

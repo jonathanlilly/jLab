@@ -13,10 +13,12 @@
     greater than about 1/DT, the process becomes essentially white noise. 
     Thus typical values will have LAMBDA<(1/DT).
  
-    Z=<a href="maternoise.html">MATERNOISE</a>(DT,[N,M],SIGMA,ALPHA,LAMBDA) generate M realizations of  
-    this process, so that Z is of size N x M.
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,A,ALPHA,0) generates realizations of fractional
+    Brownian motion.  In this case, the third input argument is the 
+    spectral amplitude A, not the standard deviation SIGMA.
  
-    See <a href="maternspec.html">MATERNSPEC</a> for details on the input arguments. 
+    Z=<a href="maternoise.html">MATERNOISE</a>(DT,[N,M],SIGMA,ALPHA,LAMBDA) generate M realizations of  
+    the process, so that Z is of size N x M.
  
     For details, including the fast generation method described below, see:
  
@@ -25,18 +27,29 @@
          dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
     __________________________________________________________________
  
-    Special cases
+    Extensions
  
-    X=<a href="maternoise.html">MATERNOISE</a>(...,'real') generates a real-valued Matern process with
-    the specified parameters.
+    Several extensions of the basic Matern form are supported, all of which
+    are discussed in more detail in <a href="maternspec.html">MATERNSPEC</a>.
  
-    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,A,ALPHA,0) generates realizations of fractional
-    Brownian motion.  In this case, the third input argument is the 
-    spectral amplitude A, not the standard deviation SIGMA.
+    Oscillatory Matern
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+    Generalized Matern (+ optional oscillations)
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+    Extended Matern  (+ optional oscillations)
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+    Composite Matern 
+        Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
+    __________________________________________________________________
  
-    Z=<a href="maternoise.html">MATERNOISE</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) simulates extensions of 
-    the Matern process.  <a href="maternoise.html">MATERNOISE</a>(...,'composite') also works.  See 
-    <a href="maternspec.html">MATERNSPEC</a> for details on these options.
+    Real-valued processes
+ 
+    By default <a href="maternoise.html">MATERNOISE</a> generates a complex-valued process. 
+ 
+    X=<a href="maternoise.html">MATERNOISE</a>(...,'real') instead generates a real-valued Matern 
+    process. This also works with any of extended versions described above.
     __________________________________________________________________
  
     Multiple parameter values
@@ -86,7 +99,7 @@
     Usage: z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda);
            z=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda,'fast');
            [z,err]=<a href="maternoise.html">maternoise</a>(dt,N,sigma,alpha,lambda,'fast');
-           z=<a href="maternoise.html">maternoise</a>(dt,[N,M],sigma,alpha,lambda,nu,mu);
+           z=<a href="maternoise.html">maternoise</a>(dt,[N,M],sigma,alpha,lambda,mu,nu);
            z=<a href="maternoise.html">maternoise</a>(dt,N,A,alpha,0);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information

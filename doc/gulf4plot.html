@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>GULF4PLOT is the <a href="jGraph.html">jGraph</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="gulf4plot.html">GULF4PLOT</a>  A four-panel circulation plot for the Gulf of Mexico.
+ 
+    <a href="gulf4plot.html">GULF4PLOT</a>(LAT,LON,CV) makes a four-panel quiver plot in the Gulf of
+    Mexico with color shading being the speed of the mean flow.  CV is the 
+    complex-valued velocity U+iV of size LENGTH(LAT) x LENGTH(LON) x 4.
+ 
+    The plot has 2 rows and 2 columns, with a single colorbar centered 
+    beneath the four plots.  
+ 
+    <a href="gulf4plot.html">GULF4PLOT</a>(LAT,LON,CV,X) instead uses X, of the same size as CV, for the
+    color shading.
+ 
+    <a href="gulf4plot.html">GULF4PLOT</a>(...,CAX) uses CAX, a length 2 array, for the color axis.
+ 
+    <a href="gulf4plot.html">GULF4PLOT</a>(...,CAX,CLABEL,LABELS), where LABELS is a cell array of four
+    strings, prints LABELS{i} after the letter label of the ith subplot. 
+ 
+    LAT, LON, CV, and X can also be cell arrays of four elements.  This is
+    useful if the grid size is not the same in all four plots.
+ 
+    Usage: h=<a href="gulf4plot.html">gulf4plot</a>(lat,lon,cv);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

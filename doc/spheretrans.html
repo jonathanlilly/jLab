@@ -1,0 +1,31 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>SPHERETRANS is the <a href="jWavelet.html">jWavelet</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="spheretrans.html">SPHERETRANS</a>  Wavelet transform for oscillations on the surface of a sphere.
+ 
+    [WX,WY]=<a href="spheretrans.html">SPHERETRANS</a>(LAT,LON,PSI) implements a version of the wavelet
+    transform <a href="wavetrans.html">WAVETRANS</a> appropriate for analyzing oscillations in latitude
+    LAT and longitude LON on the surface of a sphere using wavelet PSI.
+ 
+    By default, <a href="spheretrans.html">SPHERETRANS</a> uses a sphere with the Earth's radius as given
+    by <a href="radearth.html">RADEARTH</a>.  <a href="spheretrans.html">SPHERETRANS</a>(R,...) insteads uses radius R, in kilometers.
+ 
+    <a href="spheretrans.html">SPHERETRANS</a> works by first converting latitude and longitude to three-
+    dimensional position in space, computing the wavelet transform in 3D,
+    and then projecting this back onto a tangent plane centered on the 
+    time-varying center of the oscillation in each wavelet band. 
+    
+    See <a href="wavetrans.html">WAVETRANS</a> for the format of PSI.  It can be either a matrix or a
+    cell array of parameters. 
+ 
+    <a href="spheretrans.html">SPHERETRANS</a> accepts any of the trailing strings accepted by <a href="wavetrans.html">WAVETRANS</a>, 
+    such as <a href="spheretrans.html">SPHERETRANS</a>(...,'parallel') to specify using a PARFOR loop.
+ 
+    '<a href="spheretrans.html">spheretrans</a> --t' runs a test.
+ 
+    Usage: [wx,wy]=<a href="spheretrans.html">spheretrans</a>(lat,lon,psi);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2016--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -55,22 +55,46 @@
     RF is constructed from R as RF=[FLIPUD(CONJ(R(2:end,:));R]. 
     __________________________________________________________________
  
-    Composite Matern
+    Extensions
  
-    [TAU,R]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite'), returns 
-    the autocovariance of the composite Matern process.  See <a href="maternspec.html">MATERNSPEC</a> for
-    more details.
+    Several extensions of the basic Matern form are supported, all of which
+    are discussed in more detail in <a href="maternspec.html">MATERNSPEC</a>.
  
-    This autocovariance does not have an analytic form, but is approximated 
-    to high precision by inverse Fourier transforming the spectrum with 
+    Oscillatory Matern
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+    Generalized Matern (+ optional oscillations)
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+    Extended Matern  (+ optional oscillations)
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+    Composite Matern 
+        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
+    __________________________________________________________________
+ 
+    Real-valued processes
+ 
+    By default <a href="materncov.html">MATERNCOV</a> returns the autocovariance of a complex-valued
+    process. 
+ 
+    <a href="materncov.html">MATERNCOV</a>(...,'real') instead returns the autocovariance of a real-
+    valued process. This also works with any of extended versions.
+    __________________________________________________________________
+ 
+    Computational notes
+ 
+    The autocovariances for the generalized and composite Matern spectra do
+    not have analytic forms. Rather, these are approximated to high
+    precision by inverse Fourier transforming the oversampled spectrum with 
     10 x oversampling over a 10 x longer time period, and then decimating.  
  
-    <a href="materncov.html">MATERNCOV</a>(...,'composite',M,P) specifies the numerical oversampling 
-    parameters used in the numerical calculation.  The spectrum is computed
-    over a time window of M times the duration required, and P times the 
-    required sampling density, for a total of M*P time more points.  These
-    flags may set to optimize the tradeoff between speed and accuracy.  
-    The default behavior corresponds to M=10 and P=10.
+    <a href="materncov.html">MATERNCOV</a>(...,'general',M,P) or  <a href="materncov.html">MATERNCOV</a>(...,'composite',M,P) 
+    specifies the numerical oversampling parameters in the calculation. 
+ 
+    The spectrum is then computed over a time window of M times the
+    required  duration, and P times the required sampling density, for a
+    total of M*P time more points.  These values may set to optimize the
+    tradeoff between speed and accuracy.  
  
     This computation method is expected to minimize aliasing effects and
     resolution errors.  
@@ -81,8 +105,8 @@
     '<a href="materncov.html">materncov</a> --t' runs some tests.
  
     Usage: [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda);
-           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu,mu);
-           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu,mu,'composite');
+           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,nu);
+           [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,mu,'composite');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
     (C) 2013--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
