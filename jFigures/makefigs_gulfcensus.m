@@ -32,32 +32,37 @@ if strcmp(str,'--f')
      makefigs_gulfcensus('noprint');return
 end
 
-%str='noprint';
-%This is where your files are kept
-basedir='/Users/lilly/Desktop/Dropbox/NetCDF/';
+try
+    %str='noprint';
+    %This is where your files are kept
+    basedir='/Users/lilly/Desktop/Dropbox/NetCDF/';
+    
+    %This is where you want things to be printed to
+    gulfdir='/Users/lilly/Desktop/Dropbox/Projects/gulfcensus/figures';
+    %--------------------------------------------------------------------------
+    %loading in the eddy and gridded data
+    ncload([basedir 'GulfFlow_OneTwelfth.nc'])
+    gulfflow_onetwelfth=GulfFlow_OneTwelfth;
+    clear GulfFlow_OneTwelfth
+    ncload([basedir 'gomed.nc']);
+    ncload([basedir 'gomed_noise.nc']);
+    load gulfnoisedrifters
+    %--------------------------------------------------------------------------
+    %loading in and preparing gulfdrifters
+    %ncload([basedir 'GulfDriftersAll.nc']);
+    %gulfdrifters=GulfDriftersAll;
+    %if you're using GulfDriftersOpen
+    ncload([basedir 'GulfDriftersOpen.nc']);
+    gulfdrifters=GulfDriftersOpen;
+    %if you're using GulfDriftersDWDE
+    %ncload([basedir 'GulfDriftersDWDE.nc']);
+    %gulfdrifters=GulfDriftersDWDE;
+    %--------------------------------------------------------------------------
+    load jtopo
+catch
+    disp('Looks like Matlab can''t file the required data files.  See MAKEFIGS_GULFCENSUS for details.')
+end
 
-%This is where you want things to be printed to
-gulfdir='/Users/lilly/Desktop/Dropbox/Projects/gulfcensus/figures';
-%--------------------------------------------------------------------------
-%loading in the eddy and gridded data
-ncload([basedir 'GulfFlow_OneTwelfth.nc'])
-gulfflow_onetwelfth=GulfFlow_OneTwelfth;
-clear GulfFlow_OneTwelfth
-ncload([basedir 'gomed.nc']);
-ncload([basedir 'gomed_noise.nc']);
-load gulfnoisedrifters
-%--------------------------------------------------------------------------
-%loading in and preparing gulfdrifters
-ncload([basedir 'GulfDriftersAll.nc']);
-gulfdrifters=GulfDriftersAll;
-%if you're using GulfDriftersOpen
-%ncload([basedir 'GulfDriftersOpen.nc']);
-%gulfdrifters=GulfDriftersOpen;
-%if you're using GulfDriftersDWDE
-%ncload([basedir 'GulfDriftersDWDE.nc']);
-%gulfdrifters=GulfDriftersDWDE;
-%--------------------------------------------------------------------------
-load jtopo
 alpha=1/80;  %stretch factor for quiver arrows
 set(0,'DefaultFigureColormap',feval('lansey'));
 %gulfdir='/Users/lilly/Desktop/Dropbox/web/jmlilly/talks/lilly-os20/figures';
