@@ -1,0 +1,110 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>EDDYFIT2D is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="eddyfit2d.html">EDDYFIT2D</a>  Least squares fit of 2D velocity data to an eddy profile.
+ 
+    FIT=<a href="eddyfit2d.html">EDDYFIT2D</a>(NUM,LAT,LON,U,V,LATO,LONO,D,INDEX,Z0,ZA,ZB) performs a
+    least squares fit of 2D velocity measurements to a Guassian eddy.
+   
+    The fit involves four parameters, the eddy center location as well as
+    the core radius R and peak velocity V.
+    __________________________________________________________________
+ 
+    Input
+ 
+    The velocity measurements U and V are 3D arrays taken at times NUM,
+    latitudes LAT, and longitudes LON, each of which is a 1D array. U and V
+    have LENGTH(LAT) rows, LENGTH(LON) columns, and LENGTH(NUM) pages along
+    the third dimension.  NUM is in Matlab's DATENUM format.
+    
+    A fit is performed to all data points less than D kilometers distant
+    from the point with coordinates LATO and LONO, as well as over sets of 
+    time slices specified by INDEX.  
+ 
+    INDEX can be one of the following:
+ 
+         INDEX = empty, []  -- Fit to velocity averaged over all pages
+         INDEX = array   -- Fit to velocity averaged over INDEX pages
+         INDEX = cell of N arrays --  N fits, averaged over INDEX{1}, etc.
+ 
+    The arrays Z0, ZA, and ZB provide the initial guesses, lower bounds,
+    and upper bounds for three of the four parameters of the fit, with 
+ 
+         Z0 = [L0 R0 V0],  ZA = [LA RA VA],   ZB = [LB RB VB].
+ 
+    Here L is the distance of the eddy center to the origin (LATO,LONO) in 
+    kilometers, R is the eddy core radius in kilometers, and V is the
+    signed azimuthal velocity at the core radius R in cm/s.
+ 
+    To have no upper bound or lower bound, use e.g. VB = inf or VB = -inf.
+ 
+    Only three rather than four parameters are initialized becaues the fit
+    is performed in cylindical coordinates, with no bounds being set on the
+    value of the azimuth angle. 
+    __________________________________________________________________
+ 
+    Output
+ 
+    The output FIT is a structure with the following fields:
+ 
+         FIT.NUM        Date in DATENUM format, as input 
+         FIT.LONE       Estimated eddy center longitudes  
+         FIT.R          Estimated eddy core radii in kilometers
+         FIT.V          Estimated signed peak azimuthal velocity in cm/s
+         FIT.ERR        Total root-mean-square velocity error 
+         FIT.ERRP       Root-mean-square error from azimuthal velocities 
+         FIT.ERRN       Root-mean-square error from normal velocities 
+         FIT.FLAG       The exit flag from the optimization
+         FIT.COUNT      Total number of good velocity points in the fit
+         FIT.OUTPUT     Output fields from the optimization
+         FIT.LAT        Latitudes of observations, as input
+         FIT.LON        Longitudes of observations, as input 
+         FIT.UM         3D array of observed averaged zonal velocities 
+         FIT.VM         3D array of observed averaged meridional velocities 
+         FIT.UE         3D array of zonal velocities implied by eddy 
+         FIT.VE         3D array of meridional velocities implied by eddy 
+         
+    All fields except OUTPUT and those following are N x 1 arrays, where N 
+    is the total number of fits. N = 1 unless INDEX is a cell array, in 
+    which case N = LENGTH(INDEX).  
+ 
+    COUNT keeps track of the totalnumber of good data points involved in 
+    the fit. OUTPUT is an N x 1 cell array of structures containing
+    information from the optimatization routine. 
+ 
+    UM, VM, UE, and VE are of size LENGTH(LAT) x LENGTH(LON) x N, with UM 
+    and VM containing the averaged velocites observed over each element of
+    INDEX, and UE and VE containing the velocities implied by the eddy fit. 
+ 
+    The errors are related by ERR.^2=ERRP.^2+ERRN.^2.  The error is related
+    to the observed mean (MU,MV) and predicted velocities (UE,VE) by 
+    ERR.^2 = MEAN((UM-UE).^2+(VM-VE).^2), where MEAN is over all finite 
+    values of velocity in the time slices specified by INDEX. 
+    __________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="eddyfit2d.html">EDDYFIT2D</a>(...,'parallel') parallelizes the computation with a PARFOR
+    loop over the elements of INDEX, provides this is a cell array.  This 
+    option requires Matlab's Parallel Computing Toolbox be installed.
+    __________________________________________________________________
+ 
+ 
+    Algorithm details
+ 
+    <a href="eddyfit2d.html">EDDYFIT2D</a> works by applying <a href="fminsearchbnd.html">FMINSEARCHBND</a> to solve the constrained
+    optimization problem.  <a href="fminsearchbnd.html">FMINSEARCHBND</a>, by is an open-source modification 
+    of Matlab's standard FMINSEARCH, and is distributed with <a href="jLab.html">JLAB</a>. 
+ 
+    In order to deal with the cyclic nature of the azimuth angle, two fits
+    are performed, first with bounds -pi and pi and guess 0, and second
+    with bounds 0 and 2pi and guess pi; then the better of these fits is
+    chosen.  This avoids the possibility of edge effects impacting the fit. 
+    __________________________________________________________________
+ 
+    Usage: fit=<a href="eddyfit2d.html">eddyfit2d</a>(num,lat,lon,u,v,lato,lono,D,index,z0,za,zb);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

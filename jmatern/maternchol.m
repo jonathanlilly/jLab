@@ -6,15 +6,26 @@ function[T,C]=maternchol(varargin)
 %   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA) returns the Cholesky 
 %   decomposition of the N x N autocovariance matrix of a Matern process.
 %
-%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) does the same, but for the
-%   extended Matern process.   See MATERNCOV for details.
-%
-%   T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') does the same, 
-%   but for the composite Matern process.  See MATERNCOV for details.
-%
 %   T=MATERNCHOL(DT,N,A,ALPHA,0) returns the Cholesky decomposition for
 %   fractional Brownian motion.  In this case, the third input argument is
 %   the spectral amplitude A, not the standard deviation SIGMA.
+%   __________________________________________________________________
+%
+%   Extensions
+%
+%   Several extensions of the basic Matern form are supported, all of which
+%   are discussed in more detail in MATERNSPEC.
+%
+%   Oscillatory Matern
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+%   Generalized Matern (+ optional oscillations)
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+%   Extended Matern  (+ optional oscillations)
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+%   Composite Matern 
+%       T=MATERNCHOL(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
 %   __________________________________________________________________
 %
 %   Non positive-definiteness adjustment
@@ -31,22 +42,20 @@ function[T,C]=maternchol(varargin)
 %
 %   'maternchol --t' runs a test.
 %
-%   Usage: T=maternchol(dt,N,sigma,alpha,lambda,nu,mu);
+%   Usage: T=maternchol(dt,N,sigma,alpha,lambda,nu);
+%          T=maternchol(dt,N,sigma,alpha,lambda,mu,nu,'extended');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2017  A.M. Sykulski and J.M. Lilly
+%   (C) 2013--2020  A.M. Sykulski and J.M. Lilly
 %                                 --- type 'help jlab_license' for details 
 if strcmp(varargin{1}, '--t')
     maternchol_test,return
 end
 
-alg='fast';
-model='forward';
+model='stardard';
 for i=1:2
     if ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'loo')||strcmpi(varargin{end}(1:3),'fas')
-            alg=varargin{end};
-        elseif strcmpi(varargin{end}(1:3),'for')||strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
+        if strcmpi(varargin{end}(1:3),'loo')||strcmpi(varargin{end}(1:3),'sta')||strcmpi(varargin{end}(1:3),'com')||strcmpi(varargin{end}(1:3),'ext')||strcmpi(varargin{end}(1:3),'gen')
             model=varargin{end};
         end
         varargin=varargin(1:end-1);
@@ -59,38 +68,24 @@ sigma=varargin{3};
 alpha=varargin{4};
 
 lambda=varargin{5};
-nu=0*alpha;
 mu=0*alpha;
+nu=0*alpha;
 
 if nargin>5
-    nu=varargin{6};
-    mu=varargin{7};
+    mu=varargin{6};%could be gamma instead if it's the generalized matern model
 end
-
-
-%dt,N,sigma,alpha,lambda,nu,mu
-
-%/*************************************************************************
-%Error checking
-if strcmpi(model(1:3),'rev')&&strcmpi(alg(1:3),'loo')
-    error('Sorry, MATERNCHOL cannot accept both the LOOP and REVERSE options.')
+if nargin>6
+    nu=varargin{7};
 end
-
-if strcmpi(model(1:3),'com')&&strcmpi(alg(1:3),'loo')
-    error('Sorry, MATERNCHOL cannot accept both the LOOP and COMPOSITE options.')
-end
-
-if strcmpi(model(1:3),'rev')&&(lambda==0)
-    error('Sorry, MATERNCHOL cannot employ REVERSE option with LAMBDA set to zero.')
-end
-%\*************************************************************************
-
-
 
 if lambda==0
-    C=fbm_matrix(dt,N,sigma,alpha,alg);
+    C=fbm_matrix(dt,N,sigma,alpha,model);
 else
-    [tau,tpz]=materncov(dt,N,sigma,alpha,lambda,nu,mu,model);
+    if strcmpi(model(1:3),'sta')
+        [tau,tpz]=materncov(dt,N,sigma,alpha,lambda,nu,model);
+    elseif strcmpi(model(1:3),'gen')||strcmpi(model(1:3),'ext')||strcmpi(model(1:3),'com')
+        [tau,tpz]=materncov(dt,N,sigma,alpha,lambda,mu,nu,model);
+    end
     C=toeplitz(tpz);
 end
 
@@ -104,6 +99,10 @@ end
 %figure,jpcolor(abs(C))
 
 %Note lower triangular is a causal filter.  Plot rows (not columns).
+
+if anyany(isnan(C))
+    error('The computed covariance matrix C contains NaNs.')
+end
 try
     T=conj(chol(C,'lower'));
 catch

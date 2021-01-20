@@ -50,7 +50,7 @@ function[varargout]=about_jtopo(varargin)
 %   Data and documentation
 %
 %   This dataset is based on the Smith and Sandwell Global Topography 
-%   Dataset v. 18.1 and IBCAO v. 3.0, which are included with JDATA.
+%   Dataset v. 19.1 and IBCAO v. 3.0, which are included with JDATA.
 %
 %   The source and reference for the Smith and Sandwell dataset are
 %

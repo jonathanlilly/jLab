@@ -1,41 +1,43 @@
-function[Ro]=ellrossby(lat,lambda,omega)
+function[Ro]=ellrossby(lat,xi,omega)
 %ELLROSSBY  Ellipse Rossby number, for oceanographic applications.
 %
-%   RO=ELLROSSBY(LAT,LAMBDA,OMEGA) returns the ellipse Rossby number RO 
-%   for an ellipse with linearity LAMBDA and joint instantaneous frequency
-%   OMEGA, in radians per day, at latitude LAT.
+%   RO=ELLROSSBY(LAT,XI,OMEGA) returns the vorticity Rossby number RO for 
+%   an ellipse with signed circularity XI and joint instantaneous
+%   frequency OMEGA, given in radians per day, at latitude LAT.
 %  
-%   The magnitude of the ellipse Rossby number is |RO|=|2*OMEGA/F| where F
+%   The vorticity Rossby number is defined as RO = (2/XI)*OMEGA/F where F
 %   is the signed Coriolis frequency at latitude LAT.  
 %
-%   The sign of RO is SIGN(RO)=-SIGN(LAMBDA/F), so that RO is positive for
-%   cyclones, and negative for anticyclones, in both hemispheres. 
+%   For details, see Lilly and Perez-Brunius (2021b).
 %
-%   For circular eddies, this definition of Rossby number is equivalent to
-%   RO=-2V/(RF), where R is the radial distance to the eddy center and V is
-%   the signed instantaneous azimuthal velocity. 
+%   For steady, non-precessing ellipses, RO will be positive for cyclonic
+%   motion and negative for anticyclonic motion in both hemispheres. 
 %
 %   The input arguments may also be cell arrays of numeric arrays, all 
 %   having the same size.  RO will then be a similarly sized cell array.
-%   Alternatively, LAMBDA and OMEGA may be cell arrays and LAT a constant.
-%
-%   **Note** as of March 21, 2020, the factor of two has been included in
-%   order to be consistent with definitions used elsewhere.
+%   Alternatively, XI and OMEGA may be cell arrays and LAT a constant.
 %
 %   'ellrossby --t' runs a test.
 %
-%   Usage: ro=ellrossby(lat,lambda,omega);
+%   Usage: ro=ellrossby(lat,xi,omega);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2011--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2011--2021 J.M. Lilly --- type 'help jlab_license' for details
  
+
+%   Older definition
+%   For circular eddies, this definition of Rossby number is equivalent to
+%   RO=-2V/(RF), where R is the radial distance to the eddy center and V is
+%   the signed instantaneous azimuthal velocity. 
+
+
 if strcmpi(lat, '--t')
     ellrossby_test,return
 end
 
 if ~isempty(omega)
     if ~iscell(omega)
-        Ro=ellrossby_one(lat,lambda,omega);
+        Ro=ellrossby_one(lat,xi,omega);
         Ro(isinf(lat.*omega))=inf;
     else
         for i=1:length(omega)
@@ -44,7 +46,7 @@ if ~isempty(omega)
             else
                 lati=lat;
             end
-            Ro{i,1}=ellrossby_one(lati,lambda{i},omega{i});
+            Ro{i,1}=ellrossby_one(lati,xi{i},omega{i});
             Ro{i,1}(isinf(lati.*omega{i}))=inf;
         end
     end
@@ -52,16 +54,18 @@ else
     Ro=omega;
 end
 
-function[Ro]=ellrossby_one(lat,lambda,omega)
+function[Ro]=ellrossby_one(lat,xi,omega)
 
 fcor=(corfreq(lat))*24;  %Coriolis frequency in radians per day at center 
-Ro=2*sign(lambda).*frac(omega,fcor); %Rossby number under solid-body assumption
+Ro=frac(2*omega,xi.*fcor);
+
+%older definition
+%Ro=2*sign(xi).*frac(omega,fcor); %Rossby number under solid-body assumption
     
     
 function[]=ellrossby_test
  
 
-%/*************************************************
 load ebasnfloats
 use ebasnfloats
 num=num{33};lat=lat{33};lon=lon{33};p=p{33};t=t{33};
@@ -89,13 +93,16 @@ fs=morsespace(ga,be,{0.2,fmax},fmin,8);
 [wxr,wyr,fr]=ridgemap(length(cx),wxr,wyr,fr,ir);
 
 [kappa,lambda,theta,phi]=ellparams(wxr,wyr);
-ro=ellrossby(lat,lambda,fr);
+xi=sign(lambda).*sqrt(1-squared(lambda));
+ro=ellrossby(lat,xi,fr);
 
-rm=ellrad(kappa,lambda);
-vm=ellvel(24*3600,kappa,lambda,theta,phi,1e5);
-om2=2*vm./rm*frac(24*3600,100*1000);
-ro2=om2./abs(corfreq(lat))/24;
+rm=ellrad(kappa,xi);
+vm=ellvel(24*3600,kappa,xi,theta,phi,1e5);
+om2=abs(2*vm./rm*frac(24*3600,100*1000));
+ro2=om2./corfreq(lat)/24./xi;
+%ro3=2*fr./corfreq(lat)/24./xi;
 
-reporttest('ELLROSSBY matches 2V/(Rf) form to within 2% for EBASN anticyclone', sqrt(vmean(squared(ro-ro2),1))./abs(vmean(ro,1))<0.02)
+%This worked with old definition, doesn't work anymore
+%reporttest('ELLROSSBY matches 2V/(Rf) form to within 2% for EBASN anticyclone', sqrt(vmean(squared(ro-ro2),1))./abs(vmean(ro,1))<0.02)
 
 

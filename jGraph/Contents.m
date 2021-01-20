@@ -36,8 +36,10 @@
 %   ztick      - Sets locations of z-axis tick marks.
 %
 % Color and colormaps
-%   colorquant - Sets the color axis according to quantiles of the data.
-%   lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+%   colorquant  - Sets the color axis according to quantiles of the data.
+%   lansey      - The Lansey modification of Cynthia Brewer's "Spectral" colormap.
+%   haxby       - The Haxby colormap.
+%   seminfhaxby - The seminf-Haxby colormap.
 %
 % Printing
 %   jprint     - Print to a specified directory and crop the resulting file.
@@ -56,11 +58,13 @@
 %   ylin       - Sets y-axis scale to linear.                                      
 %   ylog       - Sets y-axis scale to log.        
 %
-% Low-level functions
+% Low-level or specialized functions
 %   axeshandles - Returns handles to all axes children.
 %   crop        - Gets rid of whitespace around an image. [by A. Bliss]             
 %   linehandles - Finds all line and patch handles from a given set of axes.
 %   linestyleparse - Parses the input string to LINESTYLE.
+%   gulf4plot     - A four-panel circulation plot for the Gulf of Mexico.
+
                 
 help jGraph
          

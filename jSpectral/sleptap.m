@@ -10,28 +10,31 @@ function[v,lambda]=sleptap(varargin)
 %   
 %   For M<=512, SLEPTAP uses the tridiagonal method described in Percival 
 %   and Walden (1993).  For M>512, it first computes tapers for M=512 and 
-%   then spline-interpolates.
-%   
+%   then spline-interpolates.  (Tests show spline interpolation is far
+%   superior to linear interpolation for this problem.)   
+%
+%   The tapers are normalized to have unit energy.
+%   _____________________________________________________________________
+%
+%   Computing multiple taper lengths simultaneously
+%
 %   M may also be an array of lengths.  In this case PSI is a cell array of 
 %   matrices, with PSI{1} being M(1) x K, PSI{2} being M(2) x K, etc., 
-%   while LAMBDA is K x LENGTH(M).  See 'Cell array input' under MSPEC.
-%   _____________________________________________________________________
+%   while LAMBDA is again K x 1.
 %
-%   Normalization
+%   By default, SLEPTAP will down-interpolate the M=512 tapers to all 
+%   shorter lengths, an approximation that is very good for data lengths
+%   greater than say M=64, and resulting in a vast computational savings. 
+%   Because short data segments are difficult to extract reliable spectral
+%   information from anyway, this should be sufficient for most purposes.
 %
-%   By default, the tapers are set to have unit energy. Alternatively
-%   SLEPTAP(...,'bandpass') uses the "bandpass" normalization in which the
-%   tapers are rescaled so that the maximum value of the Fourier transform
-%   of the first taper is set to two. 
+%   Alternatively, SLEPTAP(...,'exact') will directly compute solutions of 
+%   PSI and LAMBDA for entries m for which M(m)<=512.  In this case, LAMBDA
+%   will be a K x M matrix.  This algorithm, like the default behavior, 
+%   will spline-interpolate PSI from the M=512 solution to larger M values.
 %
-%   See WAVETRANS for details on bandpass normalization.  
-%   _____________________________________________________________________
-%
-%   Parallelization
-%
-%   SLEPTAP(M, ...,'parallel') when M is an array of lengths parallelizes 
-%   the taper computation using a PARFOR loop.  This requires that Matlab's
-%   Parallel Computing Toolbox be installed.
+%   SLEPTAP(...,'exact','parallel') will parallelize this computation using
+%   a PARFOR loop.  This requires Matlab's Parallel Computing Toolbox.
 %   _____________________________________________________________________
 %
 %   See also MSPEC, MSVD, TWOSPECPLOT.
@@ -42,21 +45,21 @@ function[v,lambda]=sleptap(varargin)
 %           [psi,lambda]=sleptap(n,p,k); 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2017 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2021 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1}, '--t')
   sleptap_test,return
 end
 n=varargin{1};
-str='energy';
 cores='serial';
+computestr='interpolate';
 
 for i=1:2
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'par')||strcmpi(varargin{end}(1:3),'ser')
             cores=varargin{end};
-        else
-        str=varargin{end};
+        elseif strcmpi(varargin{end}(1:3),'exa')||strcmpi(varargin{end}(1:3),'int')
+            computestr=varargin{end};
         end
         varargin=varargin(1:end-1);
     end
@@ -70,8 +73,6 @@ if strcmpi(cores(1:3),'par')
         cores='serial';
     end
 end
-
-
 
 %Nmax=256;
 Nmax=512;
@@ -87,97 +88,100 @@ else
     k=varargin{3};
 end
 
-
-%if n>Nmax, interpolate
-if anyany(n>=Nmax)
-    [v1,d]=sleptap_one(Nmax,p,k);
+if length(n)==1
+    computestr='exact';
 end
-     
-if strcmpi(cores(1:3),'ser')||(length(n)==1)  
-    for j=1:length(n)
-        if length(n)>1
-            disp(['SLEPTAP computing tapers for time series #' int2str(j) ' of ' int2str(length(n)) '.'])
-        end
-        if n(j)==Nmax
-            v{j,1}=v1;
-        elseif n(j)<=Nmax
-            v{j,1}=sleptap_one(n(j),p,k);
-        elseif n(j)>Nmax
-            disp(['SLEPTAP interpolating to length ',int2str(n(j)),'.'])
-            for i=1:k
-                vi=sinterp(v1(:,i),n(j));
-                vi=vi./sqrt(vi'*vi);
-                v{j,1}(:,i)=vi;
-            end
-        end
-    end
-    if nargout==2
-        lambda=zeros(k,length(n));
-        for j=1:length(n)
-            if n(j)>=Nmax
-                lambda(:,j)=sleptap_lambda_one(Nmax,p,k,v1);
-            else
-                lambda(:,j)=sleptap_lambda_one(n(j),p,k,v{j});
-            end
-        end
-    end
+
+
+if length(n)==1
+    [v,lambda]=sleptap_one(min(n,Nmax),p,k,n);
 else
-    %Exactly the same as the above but with two changes to parfors
-    parfor j=1:length(n)  %Parfor
-        if length(n)>1
-            disp(['SLEPTAP computing tapers for time series #' int2str(j) ' of ' int2str(length(n)) '.'])
+    %In this case we have a cell array input
+    %--------------------------------------------------------------------------
+    %this code computes all tapers for a multi-component dataset using a
+    %one-time interpolation, much faster than looping
+    
+    [v1,lambda1]=sleptap_one(Nmax,p,k);
+    x=[0:size(v1,1)-1]'./(size(v1,1)-1);
+    xnew=cell(length(n),1);
+    for i=1:length(n)
+        xnew{i}=[0:n(i)-1]'./(n(i)-1);
+    end
+    vnew=cell(size(v1,2),1);
+    for j=1:size(v1,2) %these are the K eigenvectors
+        vnew{j}=interp1(x,v1(:,j),cell2col(xnew),'spline');
+        vnew{j}(isnan(cell2col(xnew)))=nan;
+        vnew{j}=col2cell(vnew{j});
+        for i=1:length(vnew{j})%normalize to unit energy
+            vnew{j}{i}=vnew{j}{i}./sqrt(sum(squared(vnew{j}{i})));
         end
-        if n(j)==Nmax
-            v{j,1}=v1;
-        elseif n(j)<=Nmax
-            v{j,1}=sleptap_one(n(j),p,k);
-        elseif n(j)>Nmax
-            disp(['SLEPTAP interpolating to length ',int2str(n(j)),'.'])
-            for i=1:k
-                vi=sinterp(v1(:,i),n(j));
-                vi=vi./sqrt(vi'*vi);
-                if vi(round(end/2))<0
-                    vi=-vi;
+    end
+    %need to reorganize to be a cell array of matrices
+    vnew_former=vnew;
+    vnew=vnew{1};%that's the first eigenvector
+    for j=2:size(v1,2)
+        for i=1:length(vnew)
+            vnew{i}(:,j)=vnew_former{j}{i};
+        end
+    end
+    
+    %compute exactly if requested, otherwise use interpolation
+    %---------------------------------------------------------------------
+    lambda=zeros(k,length(n));
+    if strcmpi(cores(1:3),'ser')
+        if strcmpi(computestr(1:3),'exa')
+            for j=1:length(n)
+                disp(['SLEPTAP computing tapers for time series #' int2str(j) ' of ' int2str(length(n)) '.'])
+                if n(j)==Nmax
+                    v{j,1}=v1;
+                    lambda(:,j)=lambda1;
+                elseif n(j)<Nmax
+                    v{j,1}=sleptap_one(n(j),p,k);
+                    lambda(:,j)=sleptap_lambda_one(n(j),p,k,v{j,1});
+                elseif n(j)>Nmax
+                    v{j,1}=vnew{j};
+                    lambda(:,j)=lambda1;
                 end
-                v{j,1}(:,i)=vi;
             end
+        else
+            v=vnew;
+            lambda=lambda1;
+        end
+    else
+        %Exactly the same as the above but with two changes to parfors
+        if strcmpi(computestr(1:3),'exa')
+            parfor j=1:length(n)
+                disp(['SLEPTAP computing tapers for time series #' int2str(j) ' of ' int2str(length(n)) '.'])
+                if n(j)==Nmax
+                    v{j,1}=v1;
+                    lambda(:,j)=lambda1;
+                elseif n(j)<Nmax
+                    v{j,1}=sleptap_one(n(j),p,k);
+                    lambda(:,j)=sleptap_lambda_one(n(j),p,k,v{j,1});%wow, need the ",1" for Matlab's parfor to work
+                elseif n(j)>Nmax
+                    v{j,1}=vnew{j};
+                    lambda(:,j)=lambda1;
+                end
+            end
+        else
+            v=vnew;
+            lambda=lambda1;
         end
     end
-    if nargout==2
-        lambda=zeros(k,length(n));
-        parfor j=1:length(n)  %Parfor
-            if n(j)>=Nmax
-                lambda(:,j)=sleptap_lambda_one(Nmax,p,k,v1);
-            else
-                lambda(:,j)=sleptap_lambda_one(n(j),p,k,v{j});
-            end
-        end
-    end
 end
 
 
-
-
-
-
-if length(v)==1
-    v=v{1};
-end
-
-%Bandpass normalization
-if strfind(str,'ban')
-    Vmax=max(abs(fft(v(:,1))));
-    v=v*frac(2,Vmax);
-end
-
-function[v,d]=sleptap_one(n,p,k)
+function[v,lambda]=sleptap_one(n,p,k,nnew)
 disp(['SLEPTAP calculating tapers of length ',int2str(n),'.'])
 
+%n,p,k,nnew
 
 w=p./n;
 
 %taper calculation using tridiagonal matrix
-%tic 
+%see SAPA Section 8.3 
+%you have to calculate the eigenvalues separately 
+
 mat=zeros(n,n);
 index=(1:n+1:n*n);
 mat(index)=((n-1-2*(0:n-1))./2).^2.*cos(2*pi*w);
@@ -187,28 +191,36 @@ mat(index2)=(1:n-1).*(n-(1:n-1))./2;
 mat(index3)=(1:n-1).*(n-(1:n-1))./2;
 %toc
 
-%tic
-%t=[0:n-1]';
-%tmat=osum(t,-t);
-%mat=frac(sin(2*pi*w*tmat),pi*tmat);
-%vswap(mat,nan,2*w);
-%toc
-
 OPTIONS.disp=0;
 OPTIONS.maxit=2000;
 %OPTIONS.tol=1e-8;
 
-[v,d]=eigs(mat,k,'LA',OPTIONS);
-%[v,d]=eigs(double(mat),max(2*p-1,k),'LM',OPTIONS);
-%v=v(:,1:k);d=d(1:k);
+[v,~]=eigs(mat,min(k,size(mat,1)),'LA',OPTIONS);
 
+for i=size(mat,1)+1:k
+    v(:,i)=nan;
+end
 
 for i=1:size(v,2)
-    if v(round(end/2),i)<0
+    if v(floor(end/2),i)<0
         v(:,i)=-v(:,i);
     end
 end
 
+lambda=sleptap_lambda_one(n,p,k,v);
+
+if nargin==4
+    if n~=nnew
+        x=[0:size(v,1)-1]'./(size(v,1)-1);
+        xnew=[0:nnew-1]'./(nnew-1);
+        vnew=zeros(nnew,k);
+        for j=1:size(v,2)
+            vnew(:,j)=interp1(x,v(:,j),xnew,'spline');
+            vnew(:,j)=vnew(:,j)./sqrt(sum(squared(vnew(:,j))));
+        end
+        v=vnew;
+    end
+end
 
 function[lambda]=sleptap_lambda_one(n,p,k,v)
 w=p./n;
@@ -227,84 +239,11 @@ for i=1:k
     lambda(i,1)=(A*v(:,i))'/v(:,i)';
 end
 
-%/***************************************************
-%here's some garbage
-if 0
-%see how much spline-interpolated ones vary from others
-xx=v(:,1);xx=xx/sqrt(xx'*xx);%figure,plot(xx)
-xx=diff(xx);xx=xx/sqrt(xx'*xx);hold on,plot(xx,'g')
-xx=diff(xx);xx=xx/sqrt(xx'*xx);plot(xx,'r')
-xx=diff(xx);xx=xx/sqrt(xx'*xx);plot(xx,'c');
-
-for i=1:4
-v(:,i)=v(:,i)/sqrt(v(:,i)'*v(:,i));
-end
-
-%figure,plot(v)
-
-l1=lambda;
-v1=v;
-
-
-k=4;
-n=256;
-w=4/n;
-mat=zeros(n,n);
-index=(1:n+1:n*n);
-mat(index)=((n-1-2*(0:n-1))./2).^2.*cos(2*pi*w);
-index2=index(1:length(index)-1)+1;
-index3=index(2:length(index))-1;
-mat(index2)=(1:n-1).*(n-(1:n-1))./2;
-mat(index3)=(1:n-1).*(n-(1:n-1))./2;
-[v,d]=eigs(mat,k);
-%[d,index]=sort(diag(d));
-%v=v(:,index);
-%d=flipud(d);
-%v=fliplr(v);
-for i=1:4
-v(:,i)=v(:,i)/sqrt(v(:,i)'*v(:,i));
-end
-
-A=calcdefmat(n,w);
-
-for i=1:k
-	lambda(i,1)=mean((A*v(:,i))\v(:,i));
-end
-v=v(:,1:k);
- 
-for i=1:4
-	v1i(:,i)=interp1((1:100)/100',v1(:,i),(1:256)'/256,'cubic');
-end
-for i=1:4
-v1i(:,i)=v1i(:,i)/sqrt(v1i(:,i)'*v1i(:,i));
-end
-end
-%end garbage
-%\***************************************************
-
-
-
-function[a]=calcdefmat(n,w)
-i=(0:n-1)'*ones(1,n);
-j=i';
-a=sin(2*pi*w*(i-j))./(pi*(i-j));
-a(isnan(a))=2*w;
-
-function [yi] = sinterp(y,n2)
-%SINTERP  Spline-interpolates a column vector to a new length.
-%
-%   YI=SINTERP(Y,NI) spline-interpolates the column vector Y to the
-%   new length NI.
-%   _________________________________________________________________
-%   This is part of JLAB --- type 'help jlab' for more information (C)
-%   1993, 2004 J.M. Lilly --- type 'help jlab_license' for details
-
-n1=length(y);
-x=zeros(1,n1);
-xi=zeros(1,n2);
-x=(1:n1)';
-xi=(1:(n1-1)/(n2-1):n1)';
-yi=interp1(x,y,xi,'spline');  %This is much better than linear
+% function[a]=calcdefmat(n,w)
+% i=(0:n-1)'*ones(1,n);
+% j=i';
+% a=sin(2*pi*w*(i-j))./(pi*(i-j));
+% a(isnan(a))=2*w;
 
 function[]=sleptap_test
 
@@ -317,18 +256,52 @@ for j=1:size(psi,2)
 end
 reporttest('SLEPTAP unit energy',allall(bool))
 
-[psi,lambda]=sleptap([200 512 1024]);
+%testing bulk calculation 
+N=[400:77:800];%just make some weird lengths
+clear psi1 lambda1 
+for i=1:length(N)
+     [psi1{i,1},lambda1{i,1}]=sleptap(N(i),4);
+end
+[psi2,lambda2]=sleptap(N,4);
+[psi3,lambda3]=sleptap(N,4,'exact');
+b1=aresame(psi1,psi2,1e-3)&&aresame(psi1,psi3,1e-3);
+b2=aresame(lambda1{end},lambda2)&&aresame(lambda1{end},lambda3(:,end));
+reporttest('SLEPTAP computing multiple tapers simultaneously',b1&&b2)
 
-tol=1e-6;
-bool=false(length(psi),size(psi{1},2));
-for i=1:length(psi)
-    for j=1:size(psi{1},2)       
-        bool(i,j)=aresame(vsum(psi{i}(:,j).^2,1),1,tol);
-    end
+
+function[]=sleptap_interpolation_test
+
+%comparing spline vs. pchip vs. linear interpolation
+
+N1=512;
+N2=2*N1;%doubling experiment
+N2=N1./2%halving experiment
+[psi,lambda]=sleptap(N1); 
+[psi2,lambda]=sleptap(N2); 
+
+x1=[0:N1-1]'./(N1-1);
+x2=[0:N2-1]'./(N2-1);
+
+psi2l=interp1(x1,psi,x2,'linear');
+psi2s=interp1(x1,psi,x2,'spline');
+psi2p=interp1(x1,psi,x2,'pchip');
+
+for i=1:size(psi,2)
+    psi2(:,i)=psi2(:,i)./sqrt(sum(squared(psi2(:,i))));
+    psi2l(:,i)=psi2l(:,i)./sqrt(sum(squared(psi2l(:,i))));
+    psi2s(:,i)=psi2s(:,i)./sqrt(sum(squared(psi2s(:,i))));
+    psi2p(:,i)=psi2p(:,i)./sqrt(sum(squared(psi2p(:,i))));
 end
 
-reporttest('SLEPTAP unit energy with interpolation & cell output',allall(bool))
+projl=abs(squeeze(vsum(psi2l.*psi2,1)))
+projs=abs(squeeze(vsum(psi2s.*psi2,1)))
+projp=abs(squeeze(vsum(psi2p.*psi2,1)))
 
-[psi,lambda]=sleptap(200,4,1,'bandpass');
+figure,
+subplot(1,3,1),plot(psi2l-psi2)
+subplot(1,3,2),plot(psi2s-psi2)
+subplot(1,3,3),plot(psi2p-psi2)
+%spline interpolation is much better than the other two for doubling
+%for halving, it doesn't matter, they are all the same
 
-reporttest('SLEPTAP bandpass normalization',aresame(maxmax(abs(fft(psi))),2,1e-10))
+

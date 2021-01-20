@@ -123,3 +123,14 @@ end
 b=now;
 disp(['JLAB_RUNTESTS took ' num2str((b-a)*24*60) ' minutes running on a ' computer ' running Matlab ' version '.'])
 ver
+
+% %checking to see if anything in jlocal is excluded that I should have included
+% files=findfiles('/Users/lilly/Desktop/Dropbox/Matlab/jlocal','m');
+% cd /Users/lilly/Desktop/Dropbox/Matlab/jLab
+% for i=1:length(files)
+%     eval(['!grep -r ''$1'' --include=''*.m'' ' files{i}(1:end-2)])
+% end
+% %nice idea but not working
+
+
+

@@ -9,8 +9,9 @@
 %   ridgetrim   - Trim edge effect regions from wavelet ridges.
 %   ridgelen    - Wavelet ridge length expressed as number of full cycles.    
 %   periodindex - Returns time index in increments of instantaneous period.  
+%   ridgemult   - Ridge multiplicity, the number of simultaneous ridges present.
 %
-%  See also jEllipse, jWavelet.
+%  See also jEllipse, jWavelet, jOceans
 
 %   Low-level functions
 %   isridgepoint - Finds wavelet ridge points using one of several criterion.

@@ -142,6 +142,10 @@ if nargin~=0 && ~bmname
    evalin('base',['cd ' olddir])
 end
 
+if nargout ==0 
+    clear str
+end
+
 
 function[y]=safeindex(a,b,x)
 % SAFEINDEX   Indexes an array; returns empty if index is empty

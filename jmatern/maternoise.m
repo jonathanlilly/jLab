@@ -10,10 +10,12 @@ function[varargout]=maternoise(varargin)
 %   greater than about 1/DT, the process becomes essentially white noise. 
 %   Thus typical values will have LAMBDA<(1/DT).
 %
-%   Z=MATERNOISE(DT,[N,M],SIGMA,ALPHA,LAMBDA) generate M realizations of  
-%   this process, so that Z is of size N x M.
+%   Z=MATERNOISE(DT,N,A,ALPHA,0) generates realizations of fractional
+%   Brownian motion.  In this case, the third input argument is the 
+%   spectral amplitude A, not the standard deviation SIGMA.
 %
-%   See MATERNSPEC for details on the input arguments. 
+%   Z=MATERNOISE(DT,[N,M],SIGMA,ALPHA,LAMBDA) generate M realizations of  
+%   the process, so that Z is of size N x M.
 %
 %   For details, including the fast generation method described below, see:
 %
@@ -22,18 +24,29 @@ function[varargout]=maternoise(varargin)
 %        dispersion.  Nonlinear Processes in Geophysics, 24: 481--514.
 %   __________________________________________________________________
 %
-%   Special cases
+%   Extensions
 %
-%   X=MATERNOISE(...,'real') generates a real-valued Matern process with
-%   the specified parameters.
+%   Several extensions of the basic Matern form are supported, all of which
+%   are discussed in more detail in MATERNSPEC.
 %
-%   Z=MATERNOISE(DT,N,A,ALPHA,0) generates realizations of fractional
-%   Brownian motion.  In this case, the third input argument is the 
-%   spectral amplitude A, not the standard deviation SIGMA.
+%   Oscillatory Matern
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+%   Generalized Matern (+ optional oscillations)
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+%   Extended Matern  (+ optional oscillations)
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+%   Composite Matern 
+%       Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
+%   __________________________________________________________________
 %
-%   Z=MATERNOISE(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) simulates extensions of 
-%   the Matern process.  MATERNOISE(...,'composite') also works.  See 
-%   MATERNSPEC for details on these options.
+%   Real-valued processes
+%
+%   By default MATERNOISE generates a complex-valued process. 
+%
+%   X=MATERNOISE(...,'real') instead generates a real-valued Matern 
+%   process. This also works with any of extended versions described above.
 %   __________________________________________________________________
 %
 %   Multiple parameter values
@@ -83,7 +96,7 @@ function[varargout]=maternoise(varargin)
 %   Usage: z=maternoise(dt,N,sigma,alpha,lambda);
 %          z=maternoise(dt,N,sigma,alpha,lambda,'fast');
 %          [z,err]=maternoise(dt,N,sigma,alpha,lambda,'fast');
-%          z=maternoise(dt,[N,M],sigma,alpha,lambda,nu,mu);
+%          z=maternoise(dt,[N,M],sigma,alpha,lambda,mu,nu);
 %          z=maternoise(dt,N,A,alpha,0);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
@@ -104,13 +117,13 @@ end
 %Sort out if string is input
 alg='chol';
 str='noerror';
-model='forward';
+model='standard';
 flag='complex';
 for i=1:3
     if ischar(varargin{end})
         if strcmpi(varargin{end}(1:3),'fas')||strcmpi(varargin{end}(1:3),'cho')
             alg=varargin{end};
-        elseif strcmpi(varargin{end}(1:3),'for')||strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
+        elseif strcmpi(varargin{end}(1:3),'sta')||strcmpi(varargin{end}(1:3),'com')||strcmpi(varargin{end}(1:3),'gen')||strcmpi(varargin{end}(1:3),'ext')
             model=varargin{end};
         elseif strcmpi(varargin{end}(1:3),'err')||strcmpi(varargin{end}(1:3),'noe')
             str=varargin{end};
@@ -127,13 +140,13 @@ sigma=varargin{3};
 alpha=varargin{4};
 lambda=varargin{5};
 
-nu=0;
 mu=0;
+nu=0;
 if length(varargin)>5
-    nu=varargin{6};
+    mu=varargin{6};%could be gamma for the generalized matern model
 end
 if length(varargin)>6
-    mu=varargin{7};
+    nu=varargin{7};
 end
 
 %dt, N, sigma, alpha, nu
@@ -150,17 +163,37 @@ for i=1:length(alpha(:))
         alpha(i)=1/2+1e-10;
     end
 end
+
 % if anyany(alpha<1/2)
 %     error('Sorry, ALPHA must be greater than 1/2.')
 % end
 
 arrayify(sigma,alpha,lambda,mu,nu);
 
+
+%/*************************************************************************
+%checking the algorithm
 if anyany(lambda==0)&&strcmpi(alg(1:3),'fas')
     disp('Sorry, MATERNOISE cannot use fast algorithm with fBm case of LAMBDA=0.')
     disp('Reverting to Cholesky algorithm.')
     alg='chol';
 end
+if strcmpi(model(1:3),'gen')&&strcmpi(alg(1:3),'fas')
+    disp('Sorry, MATERNOISE cannot use fast algorithm with the generalized Matern model.')
+    disp('Reverting to Cholesky algorithm.')
+    alg='chol';
+end
+if strcmpi(model(1:3),'com')&&strcmpi(alg(1:3),'fas')
+    disp('Sorry, MATERNOISE cannot use fast algorithm with the composite Matern model.')
+    disp('Reverting to Cholesky algorithm.')
+    alg='chol';
+end
+if strcmpi(model(1:3),'ext')&&strcmpi(alg(1:3),'fas')
+    disp('Sorry, MATERNOISE cannot use fast algorithm with the extended Matern model.')
+    disp('Reverting to Cholesky algorithm.')
+    alg='chol';
+end
+%\*************************************************************************
 
 z=zeros(N,M,length(sigma));
 err=nan*zeros(size(sigma));
@@ -176,17 +209,17 @@ else
     [g,fact]=vempty;
 
     for i=1:length(sigma)
-        z(:,:,i)=sim_noise(dt,N,M,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
+        z(:,:,i)=sim_noise(dt,N,M,sigma(i),alpha(i),lambda(i),mu(i),nu(i),model,flag);
     end
 end
 
 varargout{1}=squeeze(z);
 varargout{2}=err;
 
-function [z]=sim_noise(dt,N,M,sigma,alpha,lambda,nu,mu,model,flag)
-%dt,N,M,sigma,alpha,lambda,nu,mu
+function [z]=sim_noise(dt,N,M,sigma,alpha,lambda,mu,nu,model,flag)
 
-T=maternchol(dt,N,sigma,alpha,lambda,nu,mu,model);
+%sigma,alpha,lambda,mu,nu,model
+T=maternchol(dt,N,sigma,alpha,lambda,mu,nu,model);
 Z=frac(1,sqrt(2))*(randn(N,M)+sqrt(-1)*randn(N,M));
 z=T*Z;
 
@@ -424,36 +457,41 @@ alpha=1.4;
 [psi,psilambda]=sleptap(N,4);
 
 
-clear rat
+clear err
 n=0;
 rng(1);
 for i=[-3:1/2:0]
-    z1=maternoise(1,N,sigma,alpha,(10.^i));
+    z1=maternoise(1,N,sigma,alpha,(10.^i),'fast');
     %Note when comparing spectra, it's important to  use adaptive 
     [fhat,Spphat,Snnhat]=mspec(z1-mean(z1),psi,psilambda,'adaptive');
     %This is how to compute the blurred spectrum
     %[tau,R]=materncov(N,A,alpha,(10.^i));
     %[f,Spp,Snn]=blurspec(R); 
     [f,Spp,Snn]=maternspec(1,N,sigma,alpha,(10.^i));
+    fit=maternfit(1,z1,1);
+    [f,Spp2,Snn2]=maternspec(1,N,fit.sigma,fit.alpha,fit.lambda);
     n=n+1;
-    rat(n)=median(Spphat./Spp);
-    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+    err(n)=sum(abs(log(Spp)-log(Spp2)))./sum(abs(log(Spp)+log(Spp2)));
+    %subplot(4,2,n),plot(f,Spp),hold on,plot(fhat,Spp2),xlog,ylog,axis tight
+    %subplot(4,2,n),plot(f,Spp./Spp2),xlog,ylog,axis tight
 end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for unit sample rate',allall(abs(rat-1)<0.21))
+reporttest('MATERNOISE spectrum matches MATERNSPEC for unit sample rate',allall(err<0.025))
 
 dt=3600;
-clear rat
+clear err
 n=0;
 rng(1);
 for i=[-3:1/2:0]
     z1=maternoise(dt,N,sigma,alpha,(10.^i)/dt);
     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
     [f,Spp,Snn]=maternspec(dt,N,sigma,alpha,(10.^i)/dt);
+    fit=maternfit(dt,z1,1./dt);
+    [f,Spp2,Snn2]=maternspec(dt,N,fit.sigma,fit.alpha,fit.lambda);
     n=n+1;
-    rat(n)=median(Spphat./Spp);
-    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+    err(n)=sum(abs(log(Spp)-log(Spp2)))./sum(abs(log(Spp)+log(Spp2)));
+    %subplot(4,2,n),plot(f,Spp),hold on,plot(fhat,Spp2),xlog,ylog,axis tight
 end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for non-unit sample rate',allall(abs(rat-1)<0.21))
+reporttest('MATERNOISE spectrum matches MATERNSPEC for non-unit sample rate',allall(err<0.025))
 
 dt=3600;
 rng(0);
@@ -470,34 +508,38 @@ sigma=16;
 alpha=1.4;
 [psi,psilambda]=sleptap(N,4);
 
-clear rat
-n=0;
-rng(1);
-for i=[-3:1/2:0]
-    z1=maternoise(1,N,sigma,-1/2,(10.^i),0,alpha);
-    [fhat,Spphat,Snnhat]=mspec(z1-mean(z1),psi,psilambda,'adaptive');
-    [f,Spp,Snn]=maternspec(1,N,sigma,-1/2,(10.^i),0,alpha);
-    n=n+1;
-    rat(n)=median(Spphat./Spp);
-    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
-end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.21))
-
-
-clear rat
-n=0;
-rng(1);
-dt=3600;
-for i=[-3:1/2:0]
-    z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
-    [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
-    [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,0,alpha*dt);
-    n=n+1;
-    rat(n)=median(Spphat./Spp);
-   %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
-end
-reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and non-unit sample rate',allall(abs(rat-1)<0.2))
-
+% clear rat
+% n=0;
+% rng(1);
+% for i=[-3:1/2:0]
+%     z1=maternoise(1,N,sigma,-1/2,(10.^i),alpha,0,'extended');
+%     [fhat,Spphat,Snnhat]=mspec(z1-mean(z1),psi,psilambda,'adaptive');
+%     [f,Spp,Snn]=maternspec(1,N,sigma,-1/2,(10.^i),alpha,'extended');
+%     fit=maternfit(1,z1,1);
+%     [f,Spp2,Snn2]=maternspec(1,N,fit.sigma,-1/2,fit.lambda,fit.alpha,'extended');
+%     n=n+1;
+%     err(n)=sum(abs(log(Spp)-log(Spp2)))./sum(abs(log(Spp)+log(Spp2)));
+%     subplot(4,2,n),plot(f,Spp),hold on,plot(fhat,Spp2),xlog,ylog,axis tight
+% end
+% reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and unit sample rate',allall(abs(rat-1)<0.21))
+% 
+% 
+% clear rat
+% n=0;
+% rng(1);
+% dt=3600;
+% for i=[-3:1/2:0]
+%     z1=maternoise(dt,N,sigma,-1/2,(10.^i)/dt,alpha*dt,0,'extended');
+%     [fhat,Spphat,Snnhat]=mspec(dt,z1-mean(z1),psi,psilambda,'adaptive'); 
+%     [f,Spp,Snn]=maternspec(dt,N,sigma,-1/2,(10.^i)/dt,alpha*dt,'extended');
+%     fit=maternfit(dt,z1,1./dt);
+%     [f,Spp2,Snn2]=maternspec(dt,N,fit.sigma,fit.alpha,fit.lambda);
+%     n=n+1;
+%     err(n)=sum(abs(log(Spp)-log(Spp2)))./sum(abs(log(Spp)+log(Spp2)));
+%    %figure,plot(f,Spp),hold on,plot(fhat,Spphat),xlog,ylog
+% end
+% reporttest('MATERNOISE spectrum matches MATERNSPEC for exponential spectrum and non-unit sample rate',allall(abs(rat-1)<0.2))
+% 
 
 N=1000;alpha=1.5;H=1/100;nu=2*H;
 [z,err]=maternoise(1,N,10,alpha,H,nu,'fast','err');

@@ -1,22 +1,22 @@
 function[varargout]=ridgewalk(varargin)
 % RIDGEWALK  Extract wavelet transform ridges, including bias estimates. 
 %
-%   [WR,IR,JR,FR]=RIDGEWALK(W,FS) where W is a wavelet transform matrix 
+%   [WR,IR,JR,OMEGA]=RIDGEWALK(W,FS) where W is a wavelet transform matrix 
 %   computed at frequecies FS, returns the wavelet ridges of transform W.
 %
 %   See WAVETRANS for details on the transform matrix W and frequencies FS.
 %
 %   RIDGEWALK returns the following quantities along ridges
 %
-%       WR     Wavelet transfrom value along the ridge
-%       IR     Ridge indices into rows of W (time) 
-%       JR     Ridge indices into columns of W (scale) 
-%       FR     Instantaneous frequency along the ridge
+%       WR       Wavelet transfrom value along the ridge
+%       IR       Ridge indices into rows of W (time) 
+%       JR       Ridge indices into columns of W (scale) 
+%       OMEGA    Instantaneous frequency along the ridge
 %
 %   All output variables are column vectors with the ridges appended one
-%   atop the next, separated by a NaN.  Use COL2CELL(WR,IR,JR,FR) to 
+%   atop the next, separated by a NaN.  Use COL2CELL(WR,IR,JR,OMEGA) to 
 %   convert these concatenated column vectors into cell arrays, or else
-%   COL2MAT(WR,IR,JR,FR) to convert them into matrices.  
+%   COL2MAT(WR,IR,JR,OMEGA) to convert them into matrices.  
 %
 %   The minimum length of any ridge is two data points. 
 %
@@ -30,9 +30,9 @@ function[varargout]=ridgewalk(varargin)
 %
 %   Joint ridges
 %
-%   [W1R,W2R,...,WNR,IR,JR,FR]=RIDGEWALK(W1,W2,...,WN,FS) finds the joint
-%   ridges of N transforms that all have the same size.  All output fields
-%   remain column vectors.
+%   [W1R,W2R,...,WNR,IR,JR,OMEGA]=RIDGEWALK(W1,W2,...,WN,FS) finds the 
+%   joint ridges of N transforms that all have the same size.  All output
+%   fields remain column vectors.
 %
 %   In this case, there is only one set of ridges but N different transform
 %   values. FR is then called the joint instantaneous frequency.
@@ -45,16 +45,19 @@ function[varargout]=ridgewalk(varargin)
 %
 %   Error estimate
 %
-%   [...,FR,CR]=RIDGEWALK(...,FS,P), where P=SQRT(BETA*GAMMA) characterizes 
-%   the generalized Morse wavelet used to form the wavelet transform, also
-%   returns an error estimate CR along the ridges. CR is a normalized 
-%   version of a quantity called the joint instantaneous curvature.  
+%   [...,OMEGA,CHI]=RIDGEWALK(...,FS,P), where P=SQRT(BETA*GAMMA) 
+%   characterizes the Morse wavelet used to form the wavelet transform, 
+%   also returns an error estimate CHI along the ridges.
 %
-%   CR measures the error with which the transforms estimate the analytic 
+%   CHI measures the error with which the transforms estimate the analytic 
 %   signals of modulated oscillations, arising from bias due to the 
-%   modulation strength.  CR<<1 for signals that are accurately estimated. 
+%   modulation strength.  CHI<<1 for signals that are accurately estimated. 
 %
 %   This works for either univariate ridges or for the joint ridges.
+%
+%   CHI is defined as the right-hand side of Eqn. (62) of Lilly and Olhede 
+%   (2012), "Analysis of modulated multivariate oscillations."  It is a
+%   normalized version of a quantity known as the instantaneous curvature. 
 %   _______________________________________________________________________  
 %
 %   Artifact removal
@@ -108,8 +111,36 @@ function[varargout]=ridgewalk(varargin)
 %
 %   Additional output arguments
 %
-%   [...,FR,ER,BR,CR]=RIDGEWALK(...,FS,P,...) additionally outputs the 
-%   instantaneous bandwidth BR and curvature CR along ridges.  These may be
+%   [...,OMEGA,CHI,DEV1,DEV2]=RIDGEWALK(...,FS,P,...) additionally outputs 
+%   the first and second order deviations DEV1 and DEV2 along ridges.
+%   These are *arrays* with one column per input transform and defined in 
+%   Eqns. (17) and (18) of Lilly and Olhede (2012). 
+%
+%   The normalized magnitudes of the deviation vectors give generalizations
+%   of the instantaeous bandwidth and instantaneous curvature, 
+%   respectively, see Eqn. (19) of Lilly and Olhede (2012). 
+%   _______________________________________________________________________  
+%
+%   See also WAVETRANS, RIDGEMAP, RIDGETRIM.
+%
+%   'ridgewalk --t' runs a test.
+%   'ridgewalk --f' generates a sample figure.
+%
+%   Usage: [wr,ir,jr,omega,chi,dev1,dev2]=ridgewalk(w,fs,P);
+%          [wr,ir,jr,omega,chi,dev1,dev2]=ridgewalk(w,fs,P,M);
+%          [wr,ir,jr,omega,chi,dev1,dev2]=ridgewalk(dt,w,fs,P,M);
+%          [wxr,wyr,ir,jr,omega,chi,dev1,dev2]=ridgewalk(dt,wx,wy,fs,P,M);
+%          [wxr,wyr,ir,jr,omega,chi,dev1,dev2]=ridgewalk(dt,wx,wy,fs,P,M);
+%          [wxr,wyr,ir,jr,omega,chi,dev1,dev2]...
+%                                         =ridgewalk(dt,wx,wy,fs,P,M,rho);
+%   _______________________________________________________________________
+%   This is part of JLAB --- type 'help jlab' for more information
+%   (C) 2004--2020 J.M. Lilly --- type 'help jlab_license' for details
+
+%   Note that (62) of L&O (2012) reduces to (64) of L&O (2010)
+
+%
+%   Previous comment about DEV1 and DEV2: These may be
 %   useful in error analysis, and are defined in equations (38) and (39) of 
 %
 %      Lilly and Olhede (2010), On the analytic wavelet transform. 
@@ -120,24 +151,6 @@ function[varargout]=ridgewalk(varargin)
 %   'deviation vectors' in equations (17) and (18) of Lilly and Olhede
 %   (2012), divided by the squared norm of the wavelet transform. These 
 %   reduce to the earlier definitions in the univariate case. 
-%   _______________________________________________________________________  
-%
-%   See also WAVETRANS, RIDGEMAP, RIDGETRIM.
-%
-%   'ridgewalk --t' runs a test.
-%   'ridgewalk --f' generates a sample figure.
-%
-%   Usage: [wr,ir,jr,fr,er,br,cr]=ridgewalk(w,fs,P);
-%          [wr,ir,jr,fr,er,br,cr]=ridgewalk(w,fs,P,M);
-%          [wr,ir,jr,wr,fr,er,br,cr]=ridgewalk(dt,w,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M);
-%          [wxr,wyr,ir,jr,fr,er,br,cr]=ridgewalk(dt,wx,wy,fs,P,M,rho);
-%   _______________________________________________________________________
-%   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2019 J.M. Lilly --- type 'help jlab_license' for details
-
-%   Note that (62) of L&O (2012) reduces to (64) of L&O (2010)
 
 %   For your information
 %   _______________________________________________________________________
@@ -235,7 +248,7 @@ rho=0;   %Trimming parameter
 alpha=1/4;   %Ridge chaining parameter
 P=[];
 L=0;
-chi=0;     %This is no longer changeable
+delta=0;     %This is no longer changeable
 fmax=[];
 fmin=[];
 mask=[];  
@@ -290,7 +303,7 @@ elseif length(args)==4
     rho=args{4};
 end
 
-[ir,jr,wr,fr,er,br,cr]=ridgewalk_one(varargin,P,L,alg,alpha,chi,dt,fmin,fmax,fs,mask);
+[ir,jr,wr,fr,er,br,cr]=ridgewalk_one(varargin,P,L,alg,alpha,delta,dt,fmin,fmax,fs,mask);
 
 %vsize(P,rho,fr,ir,jr,wr,er,br,cr)
 if rho>0
@@ -316,7 +329,7 @@ varargout{n+6}=cr;
 
 disp('RIDGEWALK finished.')
 
-function[ir,jr,wr,fr,er,br,cr]=ridgewalk_one(winput,P,L,alg,alpha,chi,dt,fmin,fmax,fs,mask)
+function[ir,jr,wr,fr,er,br,cr]=ridgewalk_one(winput,P,L,alg,alpha,delta,dt,fmin,fmax,fs,mask)
 
 [ir,jr,wr,fr,er,br,cr]=vempty;
 
@@ -333,7 +346,7 @@ if size(w,3)
     disp(['RIDGEWALK detecting a set of ' int2str(size(w,3)) ' transforms.'])
 end
 
-[bool,rq,wjoint,omjoint]=isridgepoint(w,fs,chi,alg,fmin,fmax,mask);
+[bool,rq,wjoint,omjoint]=isridgepoint(w,fs,delta,alg,fmin,fmax,mask);
 
 %figure,jpcolor(omjoint'),
 %figure,jpcolor(diff(omjoint)')

@@ -8,24 +8,27 @@
     for an ellipse with linearity LAMBDA and joint instantaneous frequency
     OMEGA, in radians per day, at latitude LAT.
    
-    The magnitude of the ellipse Rossby number is |RO|=|OMEGA/F| where F
+    The magnitude of the ellipse Rossby number is |RO|=|2*OMEGA/F| where F
     is the signed Coriolis frequency at latitude LAT.  
  
     The sign of RO is SIGN(RO)=-SIGN(LAMBDA/F), so that RO is positive for
     cyclones, and negative for anticyclones, in both hemispheres. 
  
     For circular eddies, this definition of Rossby number is equivalent to
-    RO=-V/(R*F), where R is the radial distance to the eddy center and V is
+    RO=-2V/(RF), where R is the radial distance to the eddy center and V is
     the signed instantaneous azimuthal velocity. 
  
     The input arguments may also be cell arrays of numeric arrays, all 
     having the same size.  RO will then be a similarly sized cell array.
     Alternatively, LAMBDA and OMEGA may be cell arrays and LAT a constant.
  
+    **Note** as of March 21, 2020, the factor of two has been included in
+    order to be consistent with definitions used elsewhere.
+ 
     '<a href="ellrossby.html">ellrossby</a> --t' runs a test.
  
     Usage: ro=<a href="ellrossby.html">ellrossby</a>(lat,lambda,omega);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2011--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2011--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

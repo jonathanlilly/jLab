@@ -773,6 +773,11 @@ timeindexkk=find(yearfrac(num)>=2007&yearfrac(num)<2008);
 offsetmatrix=vrep(offsetter*[0:length(timeindex)-1],size(ssh,1),1);
 atdaxis=labseatpjaos.atd(a:b,31)-bravoatd;
 
+
+length(find(~isnan(ssh(:,timeindex)))) %5216
+%67/5216*100
+
+
 figure
 %subplot(1,3,1),plot(atdaxis,ssh(:,timeindex)+offsetmatrix,'k');linestyle 2E k
 subplot(1,3,1),plot(atdaxis,ssh(:,timeindex)+offsetmatrix);
@@ -814,6 +819,7 @@ end
 %--------------------------------------------------------------------------
 %\*************************************************************************
 
-
-
+if 0
+%determining resolution
+h=plot(atdaxis,abs(vdiff(sshhat(:,timeindex),1)));yoffset 1
 

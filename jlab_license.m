@@ -9,8 +9,8 @@
 %   resulting in a scientific presentation or publication, the software 
 %   should be acknowledged and cited as:
 %
-%   Lilly, J. M. (2020),  jLab: A data analysis package for Matlab, 
-%       v. 1.6.7c, http://www.jmlilly.net/jmlsoft.html.
+%   Lilly, J. M. (2021),  jLab: A data analysis package for Matlab, 
+%       v. 1.6.9, http://www.jmlilly.net/jmlsoft.html.
 %   _______________________________________________________________________
 %
 %   License
@@ -54,6 +54,6 @@
 %   _______________________________________________________________________
 %
 %   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 1993--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 1993--2021 J.M. Lilly --- type 'help jlab_license' for details
 
 help jlab_license

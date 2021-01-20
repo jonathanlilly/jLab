@@ -5,6 +5,7 @@
 %   morsewave    - Generalized Morse wavelets of Olhede and Walden (2002).              
 %   morsespace   - Logarithmically-spaced frequencies for generalized Morse wavelets.   
 %   wavespecplot - Plot of wavelet spectra together with time series.
+%   spheretrans  - Wavelet transform for oscillations on the surface of a sphere.
 %
 % Details of generalized Morse wavelets 
 %   morsearea   - Time-frequency concentration area of Morse wavelets. [with F. Rekibi]

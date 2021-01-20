@@ -34,6 +34,7 @@
     <a href="celladd.html">celladd</a>       - Addition acting on each element in a cell array.                                     
     <a href="cellchunk.html">cellchunk</a>     - Converts cell array data into uniform length 'chunks'.                               
     <a href="celldiv.html">celldiv</a>       - Division acting on each element in a cell array.                                     
+    <a href="celldot.html">celldot</a>       - Dot product for arrays of column vectors.                                            
     <a href="cellength.html">cellength</a>     - Length of each element in a cell array.                                              
     <a href="cellfill.html">cellfill</a>      - Fills missing data marked by INFs in a cell array.                                   
     <a href="cellfirst.html">cellfirst</a>     - Returns the first (or last) element of each entry in a cell array.                   
@@ -80,6 +81,7 @@
     <a href="dlines.html">dlines</a>        - Add diagonal lines to a plot.                                                        
     <a href="doublen.html">doublen</a>       - Interpolates a time series to double its length.                                     
     <a href="ecconv.html">ecconv</a>        - Converts between eccentricity measures.                                              
+    <a href="eddyfit2d.html">eddyfit2d</a>     - Least squares fit of 2D velocity data to an eddy profile.                            
     <a href="ellband.html">ellband</a>       - Bandwidth of modulated elliptical signals in two or three dimensions.                
     <a href="ellcurves.html">ellcurves</a>     - Returns curves corresponding to specified ellipse properties.                        
     <a href="elldiff.html">elldiff</a>       - Differentiation of modulated elliptical signals.                                     
@@ -118,6 +120,7 @@
     <a href="jdawson.html">jdawson</a>       - The Dawson function and its derivatives. [With P.J. Acklam]                          
     <a href="jdeg2rad.html">jdeg2rad</a>      - Converts degrees to radians.                                                         
     <a href="jfig.html">jfig</a>          - Shorthand for tweaking figures.                                                      
+    <a href="jhanning.html">jhanning</a>      - Hanning window.                                                                      
     <a href="jhelp.html">jhelp</a>         - Opens linked <a href="jLab.html">JLAB</a> help files in Matlab's internal web browser.                       
     <a href="jlab_addpath.html">jlab_addpath</a>  - Adds <a href="jLab.html">JLAB</a> and <a href="jData.html">JDATA</a> subdirectories to your Matlab search path.                       
     <a href="jlab_allhelp.html">jlab_allhelp</a>  - Displays the help comments for all <a href="jLab.html">JLAB</a> modules.                                     
@@ -229,6 +232,7 @@
     <a href="maxprops.html">maxprops</a>      - Returns properties of wavelet transform maxima.                                      
     <a href="minmin.html">minmin</a>        - <a href="minmin.html">MINMIN</a>(X)=MIN(X(ISFINITE(X)))                                                        
     <a href="mom2cum.html">mom2cum</a>       - Convert moments to cumulants.                                                        
+    <a href="monthstats.html">monthstats</a>    - Mean month and standard deviation using circular statistics.                         
     <a href="morlfreq.html">morlfreq</a>      - Compute Morlet wavelet carrier frequency given peak frequency.                       
     <a href="morlwave.html">morlwave</a>      - Morlet wavelet.                                                                      
     <a href="morseafun.html">morseafun</a>     - Returns the generalized Morse wavelet amplitude or a-function.                       
@@ -261,102 +265,5 @@
     <a href="periodindex.html">periodindex</a>   - Returns time index in increments of instantaneous period.                            
     <a href="periodize.html">periodize</a>     - Returns a doubly periodic version of an input array.                                 
     <a href="polparams.html">polparams</a>     - Spectral matrix polarization parameters.                                             
-    <a href="polysmooth.html">polysmooth</a>    - Mapping using local polynomial fitting, also known as loess.    
-    <a href="polysmooth_bandwidth.html">polysmooth_bandwidth</a> - Determine bandwidth given population for <a href="polysmooth.html">POLYSMOOTH</a>.                          
-    <a href="polysmooth_kernel.html">polysmooth_kernel</a> - Returns the weighting kernel employed by <a href="polysmooth.html">POLYSMOOTH</a>.                             
-    <a href="polysmooth_presort.html">polysmooth_presort</a> - Sort arguments to <a href="polysmooth.html">POLYSMOOTH</a> in case of missing data.                           
-    <a href="printall.html">printall</a>      - Print and close all open figures.                                                    
-    <a href="provec.html">provec</a>        - Generate progressive vector diagrams (simple and fancy).                             
-    <a href="psi2fields.html">psi2fields</a>    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
-    <a href="quadinterp.html">quadinterp</a>    - Fast quadratic interpolation for arbitrary-sized arrays.                             
-    <a href="radearth.html">radearth</a>      - The radius of the earth in kilometers.                                               
-    <a href="regionplot.html">regionplot</a>    - Plots a simple box indicating a latitude / longitude region.                         
-    <a href="reporttest.html">reporttest</a>    - Reports the result of an m-file function auto-test.                                  
-    <a href="res.html">res</a>           - Residual after flooring:  <a href="res.html">RES</a>(X)=X-FLOOR(X)                                          
-    <a href="ridgechains.html">ridgechains</a>   - Forms ridge curves by connecting transform ridge points.                             
-    <a href="ridgeinterp.html">ridgeinterp</a>   - Interpolate quantity values onto ridge locations.                                    
-    <a href="ridgelen.html">ridgelen</a>      - Wavelet ridge length expressed as number of full cycles.                             
-    <a href="ridgemap.html">ridgemap</a>      - Maps ridge quantities back onto the time series.                                     
-    <a href="ridgetrim.html">ridgetrim</a>     - Trim edge effect regions from wavelet ridges.                                        
-    <a href="ridgewalk.html">ridgewalk</a>     - Extract wavelet transform ridges, including bias estimates.                          
-    <a href="rot.html">rot</a>           - Complex-valued rotation:  <a href="rot.html">ROT</a>(X)=EXP(SQRT(-1)*X)                                     
-    <a href="sampletimes.html">sampletimes</a>   - Computes mean sampling intervals and their statistics.                               
-    <a href="sig2latlon.html">sig2latlon</a>    - Converts an oscillatory signal to lat/lon displacements.                             
-    <a href="simplepdf.html">simplepdf</a>     - Gaussian, uniform, Cauchy, and exponential pdfs.                                     
-    <a href="sleptap.html">sleptap</a>       - Calculate Slepian tapers.                                                            
-    <a href="slidetrans.html">slidetrans</a>    - Sliding-window ('moving-window') Fourier transform.                                  
-    <a href="specdiag.html">specdiag</a>      - Diagonalize a 2 x 2 spectral matrix.                                                 
-    <a href="sphere2uvw.html">sphere2uvw</a>    - Converts a 3D spherical vector to a 3D Cartesian vector.                             
-    <a href="spherecurl.html">spherecurl</a>    - Curl of a vector field on the surface of a sphere.                                   
-    <a href="spheredist.html">spheredist</a>    - Computes great circle distances on a sphere.                                         
-    <a href="spherediv.html">spherediv</a>     - Divergence of a vector field on the surface of a sphere.                             
-    <a href="spheregrad.html">spheregrad</a>    - Gradient of a field on the surface of a sphere.                                      
-    <a href="sphereinterp.html">sphereinterp</a>  - Fast linear interpolation on the sphere from non-plaid grids.                        
-    <a href="spherelap.html">spherelap</a>     - Laplacian of a field on the surface of a sphere.                                     
-    <a href="spheresort.html">spheresort</a>    - Sorted great circle distances to nearby points on the earth.                         
-    <a href="squared.html">squared</a>       - Squares the modulus of its argument:  <a href="squared.html">SQUARED</a>(X)=ABS(X).^2                           
-    <a href="standalone.html">standalone</a>    - Create stand-alone version of an m-file, including dependencies.                     
-    <a href="stickvect.html">stickvect</a>     - Plots "stick vectors" for multicomponent velocity time series.                       
-    <a href="tidefreq.html">tidefreq</a>      - Frequencies of the eight major tidal components.                                     
-    <a href="timeseries_boundary.html">timeseries_boundary</a> - Apply boundary conditions to data before transform.                            
-    <a href="tmat.html">tmat</a>          - 2x2 complex grouping matrix.  <a href="tmat.html">TMAT</a> = [1  i; 1 -i] / SQRT(2)                          
-    <a href="to_grab_from_caller.html">to_grab_from_caller</a> - Returns a string to grab variable values from caller.                          
-    <a href="to_overwrite.html">to_overwrite</a>  - Returns a string to overwrite original arguments.                                    
-    <a href="topo_copyright.html">topo_copyright</a> - Copyright statement for the Smith and Sandwell topography.                          
-    <a href="topoplot.html">topoplot</a>      - Plot regional or global topography at one-sixth degree resolution.                   
-    <a href="trackextract.html">trackextract</a>  - Extracts alongtrack altimetry segments within given region.                          
-    <a href="trajchunk.html">trajchunk</a>     - Converts Lagrangian trajectories into chunks based on the Coriolis period.           
-    <a href="trajextract.html">trajextract</a>   - Extracts Lagrangian trajectory segments within given region.                         
-    <a href="trajunwrap.html">trajunwrap</a>    - Unwraps Lagrangian trajectories from a periodic domain.                              
-    <a href="trajwrap.html">trajwrap</a>      - Wraps Lagrangian trajectories to fit within a periodic domain.                       
-    <a href="transmax.html">transmax</a>      - Locates modulus maximum points of wavelet transform.                                 
-    <a href="transmaxdist.html">transmaxdist</a>  - Distributions of wavelet transform maxima in noise.                                  
-    <a href="twodhist.html">twodhist</a>      - Two-dimensional histogram.                                                           
-    <a href="twodmed.html">twodmed</a>       - Median value of a function of two variables.                                         
-    <a href="twodsort.html">twodsort</a>      - Distances from data points to nearby grid points.                                    
-    <a href="twodstats.html">twodstats</a>     - Mean, variance, and covariance of functions of two variables.                        
-    <a href="twospecplot.html">twospecplot</a>   - Plots a pair of rotary or Cartesian spectra.                                         
-    <a href="use.html">use</a>           - Copies structure fields into named variables in workspace.                           
-    <a href="uv2latlon.html">uv2latlon</a>     - Integrates horizontal velocity to give latitude and longitude.                       
-    <a href="uvplot.html">uvplot</a>        - Plots the real and imaginary parts of a signal on the same axis.                     
-    <a href="vcolon.html">vcolon</a>        - Condenses its arguments, like X(:).                                                  
-    <a href="vdiff.html">vdiff</a>         - Length-preserving first central difference.                                          
-    <a href="vectmult.html">vectmult</a>      - Matrix multiplication for arrays of vectors.                                         
-    <a href="vempty.html">vempty</a>        - Initializes multiple variables to empty sets or empty cell arrays.                   
-    <a href="vfilt.html">vfilt</a>         - Filtering along rows without change in length.                                       
-    <a href="vindex.html">vindex</a>        - Indexes an N-D array along a specified dimension.                                    
-    <a href="vindexinto.html">vindexinto</a>    - Indexes into N-D array along a specified dimension.                                  
-    <a href="vlines.html">vlines</a>        - Add vertical lines to a plot.                                                        
-    <a href="vmean.html">vmean</a>         - Mean over non-NaN elements along a specified dimension.                              
-    <a href="vmedian.html">vmedian</a>       - Median over finite elements along a specified dimension.                             
-    <a href="vmoment.html">vmoment</a>       - Central moment over non-NaN elements along a specfied dimension.                     
-    <a href="vrep.html">vrep</a>          - Replicates an array along a specified dimension.                                     
-    <a href="vrms.html">vrms</a>          - Root-mean-square of non-NaN elements along a specified dimension.                    
-    <a href="vshift.html">vshift</a>        - Cycles the elements of an array along a specified dimension.                         
-    <a href="vsize.html">vsize</a>         - Returns the sizes of multiple arguments.                                             
-    <a href="vsqueeze.html">vsqueeze</a>      - Squeezes multiple input arguments simultaneously.                                    
-    <a href="vstd.html">vstd</a>          - Standard deviation over non-NaN elements along a specfied dimension.                 
-    <a href="vsum.html">vsum</a>          - Sum over non-NaN elements along a specified dimension.                               
-    <a href="vswap.html">vswap</a>         - <a href="vswap.html">VSWAP</a>(X,A,B) replaces A with B in numeric array X.                                   
-    <a href="vtranspose.html">vtranspose</a>    - Transpose multiple input arguments simultaneously.                                   
-    <a href="vzeros.html">vzeros</a>        - Initializes multiple variables to arrays of zeros or nans.                           
-    <a href="wavespecplot.html">wavespecplot</a>  - Plot of wavelet spectra together with time series.                                   
-    <a href="wavetrans.html">wavetrans</a>     - Continuous wavelet transform.                                                        
-    <a href="whichdir.html">whichdir</a>      - Returns directory name containing file in search path.                               
-    <a href="wigdist.html">wigdist</a>       - Wigner distribution (alias-free algorithm).                                          
-    <a href="xlin.html">xlin</a>          - Sets x-axis scale to linear.                                                         
-    <a href="xlog.html">xlog</a>          - Sets x-axis scale to logarithmic.                                                    
-    <a href="xoffset.html">xoffset</a>       - Offsets lines in the x-direction after plotting.                                     
-    <a href="xtick.html">xtick</a>         - Sets locations of x-axis tick marks.                                                 
-    <a href="xy2latlon.html">xy2latlon</a>     - Converts tangent plane coordinates into latitude and longitude.                      
-    <a href="xyz2latlon.html">xyz2latlon</a>    - Converts 3D Cartesian coordinates into latitude and longitude.                       
-    <a href="yearfrac.html">yearfrac</a>      - Converts a DATENUM into 'year.fraction' and 'month.fraction'.                        
-    <a href="ylin.html">ylin</a>          - Sets y-axis scale to linear.                                                         
-    <a href="ylog.html">ylog</a>          - Sets y-axis scale to log.                                                            
-    <a href="yoffset.html">yoffset</a>       - Offsets lines in the y-direction after plotting.                                     
-    <a href="ytick.html">ytick</a>         - Sets locations of y-axis tick marks.                                                 
-    <a href="ztick.html">ztick</a>         - Sets locations of z-axis tick marks.                                                
-    __________________________________________________________________
-    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    <a href="polysmooth.html">polysmooth</a>    - Mapping using local polynomial fitting, also known as loess.
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

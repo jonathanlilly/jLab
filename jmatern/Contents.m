@@ -13,7 +13,7 @@
 %   fminsearchbnd  - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico]
 %
 % Low-level Matern functions
-%   materncfun - Returns the normalization function C_ALPHA for a Matern process.
+%   materncfun - Returns the normalization or C-function for a Matern process.
 %   maternchol - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]
 %   maternedge - Long-time cutoff edge for the Matern impulse response function.               
 %

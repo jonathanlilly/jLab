@@ -5,14 +5,20 @@
 %   uv2latlon   - Integrates horizontal velocity to give latitude and longitude.  
 %
 % Manipulating Lagrangian trajectories [see also jCell]
-%   trajextract - Extracts Lagrangian trajectory segments within given region.        
-%   trajunwrap  - Unwraps Lagrangian trajectories from a periodic domain.              
-%   trajwrap    - Wraps Lagrangian trajectories to fit within a periodic domain.       
-%   trajchunk   - Chunks Lagrangian trajectories based on the Coriolis period.
+%   trajextract  - Extracts Lagrangian trajectory segments within given region.        
+%   trajunwrap   - Unwraps Lagrangian trajectories from a periodic domain.              
+%   trajwrap     - Wraps Lagrangian trajectories to fit within a periodic domain.       
+%   trajchunk    - Chunks Lagrangian trajectories based on the Coriolis period.
+%   griddrifters - Average drifter velocities onto a space/time 3D grid.
 %
 % Idealized numerical model tools
 %   psi2fields   - Velocity and other fields from the streamfunction. [with P.E. Isachsen]    
 %   periodize    - Returns a doubly periodic version of an input array.   
+%
+% Lagrangian eddy identification and analysis
+%   eddyridges    - Coherent eddy ridges from Lagrangian trajectories.   
+%   noisedrifters - Create a noise Lagrangian dataset matching mean and variance.
+%   eddylevels    - Eddy ridge significance levels using the survival function.
 %
 % Eulerian eddy identification and analysis
 %   inellipse    - Locates points on the interior of ellipses.                          
@@ -20,6 +26,7 @@
 %   curvemoments - Centroid, area, and many other moments of a closed curve.          
 %   divgeom      - Geometric decomposition of eddy vorticity flux divergence.     
 %   eddyfit2d    - Least squares fit of 2D velocity data to an eddy profile.
+%   simpleddy     - Streamfunction, velocity, and vorticity for various eddy profiles.
 %
 % Plotting tools for mooring data
 %   hodograph  - Generate hodograph plots (simple and fancy).                                   

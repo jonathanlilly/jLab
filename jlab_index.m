@@ -2,13 +2,12 @@ function[]=jlab_index(varargin)
 %JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.
 %
 % JDATA index
-%   about_drifters - Global surface drifter dataset from the Global Drifter Program. 
-%   about_floats  - Historical dataset of eddy-resolving subsurface floats.          
-%   about_ibcao   - International Bathymetric Chart of the Arctic Ocean topography.  
-%   about_sandwell - One minute resolution topography data from Smith and Sandwell.  
-%   about_tpjaos  - Sea surface height anomalies from the Beckley merged dataset.    
-%   readtopo      - Read one-minute topography data from Smith and Sandwell.         
-%   topo_copyright - Copyright statement for the Smith and Sandwell topography.      
+%   about_floats  - Historical dataset of eddy-resolving subsurface floats.         
+%   about_ibcao   - International Bathymetric Chart of the Arctic Ocean topography. 
+%   about_sandwell - One minute resolution topography data from Smith and Sandwell. 
+%   about_tpjaos  - Sea surface height anomalies from the Beckley merged dataset.   
+%   readtopo      - Read one-minute topography data from Smith and Sandwell.        
+%   topo_copyright - Copyright statement for the Smith and Sandwell topography.     
 %
 % JLAB index
 %   ab2kl         - Converts A and B to ellipse parameters Kappa and Lambda.                             
@@ -26,6 +25,7 @@ function[]=jlab_index(varargin)
 %   blurspec      - Returns the blurred and aliased spectrum given the autocovariance.                   
 %   boxon         - Sets 'box' property to 'off'.                                                        
 %   boxon         - Sets 'box' property to 'on'.                                                         
+%   catstruct     - Concatenates the array elements of a cell array of structures.                       
 %   cell2col      - Converts cell arrays of numeric arrays into 'column-appended' form.                  
 %   cellabs       - Absolute value of each element in a cell array.                                      
 %   celladd       - Addition acting on each element in a cell array.                                     
@@ -56,6 +56,7 @@ function[]=jlab_index(varargin)
 %   cellstd       - Standard deviation of each element a cell array, possibly weighted.                  
 %   cellstrip     - Strips INF values from the beginnings or ends of cell arrays.                        
 %   cellsum       - Sum of each element a cell array, possibly weighted.                                 
+%   chisquared    - The chi-squared distribution.                                                        
 %   choose        - Binomial coefficient: CHOOSE(N,K) = N!K!/(N-K)!                                      
 %   closedcurves  - Locate and interpolate closed curves in a possibly periodic domain.                  
 %   cms2kmd       - Converts centimeters per second to kilometers per day.                               
@@ -77,8 +78,10 @@ function[]=jlab_index(varargin)
 %   divgeom       - Geometric decomposition of eddy vorticity flux divergence.                           
 %   dlines        - Add diagonal lines to a plot.                                                        
 %   doublen       - Interpolates a time series to double its length.                                     
-%   ecconv        - Converts between eccentricity measures.                                              
+%   ecconv        - Converts between eccentricity measures.           
 %   eddyfit2d     - Least squares fit of 2D velocity data to an eddy profile.                            
+%   eddylevels    - Eddy ridge significance levels using the survival function.                          
+%   eddyridges    - Coherent eddy ridges from Lagrangian trajectories.                                   
 %   ellband       - Bandwidth of modulated elliptical signals in two or three dimensions.                
 %   ellcurves     - Returns curves corresponding to specified ellipse properties.                        
 %   elldiff       - Differentiation of modulated elliptical signals.                                     
@@ -100,6 +103,10 @@ function[]=jlab_index(varargin)
 %   fontsize      - Rapidly set title, axes, label, and text fontsizes.                                  
 %   fourier       - Returns the Fourier frequencies for a given length time series.                      
 %   frac          - Fraction: FRAC(A,B)=A./B                                                             
+%   griddrifters  - Average drifter velocities onto a space/time 3D grid.                                
+%   gulf4plot     - A four-panel circulation plot for the Gulf of Mexico.                                
+%   haxby         - The Haxby colormap.                                                                  
+%   haxby_copyright - Copyright statement for the HAXBY colormap.                                        
 %   hermfun       - Orthonormal Hermite functions. [with F. Rekibi]                                      
 %   hermpoly      - Hermite polynomials. [with F. Rekibi]                                                
 %   hlines        - Add horizontal lines to a plot.                                                      
@@ -163,6 +170,8 @@ function[]=jlab_index(varargin)
 %   makefigs_ellband - Makes a sample figure for ELLBAND.                                                
 %   makefigs_ellipseplot - Makes a sample figure for ELLIPSEPLOT.                                        
 %   makefigs_ellvel - Makes a sample figure for ELLVEL.                                                  
+%   makefigs_gulfcensus - Makes all figures for Lilly and Perez-Brunius (2021b).                         
+%   makefigs_gulfdrifters - Makes all figures for Lilly and Perez-Brunius (2021a).                       
 %   makefigs_hermfun - Makes a sample figure for HERMFUN.                                                
 %   makefigs_inellipse - Makes a sample figure for INELLIPSE.                                            
 %   makefigs_instmom - Makes some sample figures for INSTMOM.                                            
@@ -174,6 +183,7 @@ function[]=jlab_index(varargin)
 %   makefigs_matern - Makes all figures for Lilly et al. 2017.                                           
 %   makefigs_maternoise - Makes a sample figure for MATERNOISE.                                          
 %   makefigs_maternspec - Makes some sample figures for MATERNSPEC.                                      
+%   makefigs_mconf - Makes sample figure for MCONF.                                                      
 %   makefigs_morlfreq - Makes a sample figure for MORLFREQ.                                              
 %   makefigs_morlwave - Makes a sample figure for MORLWAVE.                                              
 %   makefigs_morsearea - Makes a sample figure for MORSEAREA.                                            
@@ -194,6 +204,7 @@ function[]=jlab_index(varargin)
 %   makefigs_ridges - has been moved to JLAB_MAKEFIGS.                                                   
 %   makefigs_ridgetrim - Makes a sample figure for RIDGETRIM.                                            
 %   makefigs_ridgewalk - Makes a sample figure for RIDGEWALK.                                            
+%   makefigs_seminfhaxby - Makes a sample figure for SEMINFHAXBY.                                        
 %   makefigs_simplepdf - Makes a sample figure for SIMPLEPDF.                                            
 %   makefigs_slidetrans - Makes a sample figure for SLIDETRANS.                                          
 %   makefigs_sphereinterp - Makes two sample figures for SPHEREINTERP.                                   
@@ -212,7 +223,7 @@ function[]=jlab_index(varargin)
 %   makefigs_wavetrans - Makes a sample figure for WAVETRANS.                                            
 %   makefigs_widgist - Makes some sample figures for WIGDIST.                                            
 %   mat2col       - Compress NAN-padded matrix data into long columns.                                   
-%   materncfun    - Returns the normalization function C_ALPHA for a Matern process.                     
+%   materncfun    - Returns the normalization or C-function for a Matern process.                        
 %   maternchol    - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]             
 %   materncov     - Autocovariance of the Matern random process and variations.                          
 %   maternedge    - Long-time cutoff edge for the Matern impulse response function.                      
@@ -227,6 +238,7 @@ function[]=jlab_index(varargin)
 %   max2eddy      - Converts transform maxima into oceanic coherent eddy properties.                     
 %   maxmax        - MAXMAX(X)=MAX(X(ISFINITE(X)))                                                        
 %   maxprops      - Returns properties of wavelet transform maxima.                                      
+%   mconf         - Confidence intervals for the multitaper spectral estimate.                           
 %   minmin        - MINMIN(X)=MIN(X(ISFINITE(X)))                                                        
 %   mom2cum       - Convert moments to cumulants.                                                        
 %   monthstats    - Mean month and standard deviation using circular statistics.                         
@@ -248,8 +260,9 @@ function[]=jlab_index(varargin)
 %   mspec         - Multitaper power and cross spectra.                                                  
 %   msvd          - Singular value decomposition for polarization analysis.                              
 %   ncinterp      - One-line interpolation from 3D lat/lon/time field in NetCDF file.                    
-%   ncload        - Load all variables from a NetCDF file and convert columns to cells.                  
+%   ncload        - Load all variables from a NetCDF file and convert trajectories to cells.             
 %   nocontours    - Removes contours from a CONTOURF plot.                                               
+%   noisedrifters - Create a noise Lagrangian dataset matching mean and variance.                        
 %   nonnan        - Return all non-NAN elements of an array.                                             
 %   noxlabels     - Remove some or all x-axis tick mark labels.                                          
 %   noylabels     - Remove some or all y-axis tick mark labels.                                          
@@ -262,10 +275,8 @@ function[]=jlab_index(varargin)
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                         
-                                                                                                         
-%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH.                          
-                                                                                                         
+%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                                                                                                                              
+%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH. 
 %   polysmooth_kernel - Returns the weighting kernel employed by POLYSMOOTH.                             
 %   polysmooth_presort - Sort arguments to POLYSMOOTH in case of missing data.                           
 %   polysmooth_sortfield - Returns sorted field values for a mapping problem.                            
@@ -281,11 +292,14 @@ function[]=jlab_index(varargin)
 %   ridgeinterp   - Interpolate quantity values onto ridge locations.                                    
 %   ridgelen      - Wavelet ridge length expressed as number of full cycles.                             
 %   ridgemap      - Maps ridge quantities back onto the time series.                                     
+%   ridgemult     - Ridge multiplicity, the number of simultaneous ridges present.                       
 %   ridgetrim     - Trim edge effect regions from wavelet ridges.                                        
 %   ridgewalk     - Extract wavelet transform ridges, including bias estimates.                          
 %   rot           - Complex-valued rotation:  ROT(X)=EXP(SQRT(-1)*X)                                     
 %   sampletimes   - Computes mean sampling intervals and their statistics.                               
+%   seminfhaxby   - The seminf-Haxby colormap.                                                           
 %   sig2latlon    - Converts an oscillatory signal to lat/lon displacements.                             
+%   simpleddy     - Streamfunction, velocity, and vorticity for various eddy profiles.                   
 %   simplepdf     - Gaussian, uniform, Cauchy, and exponential pdfs.                                     
 %   sleptap       - Calculate Slepian tapers.                                                            
 %   slidetrans    - Sliding-window ('moving-window') Fourier transform.                                  
@@ -298,9 +312,11 @@ function[]=jlab_index(varargin)
 %   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.                        
 %   spherelap     - Laplacian of a field on the surface of a sphere.                                     
 %   spheresort    - Sorted great circle distances to nearby points on the earth.                         
+%   spheretrans   - Wavelet transform for oscillations on the surface of a sphere.                       
 %   squared       - Squares the modulus of its argument:  SQUARED(X)=ABS(X).^2                           
 %   standalone    - Create stand-alone version of an m-file, including dependencies.                     
 %   stickvect     - Plots "stick vectors" for multicomponent velocity time series.                       
+%   structindex   - Applies an index to all array-valued fields in a structure.                          
 %   tidefreq      - Frequencies of the eight major tidal components.                                     
 %   timeseries_boundary - Apply boundary conditions to data before transform.                            
 %   tmat          - 2x2 complex grouping matrix.  TMAT = [1  i; 1 -i] / SQRT(2)                          
@@ -359,10 +375,10 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks.                                 
+%   ztick         - Sets locations of z-axis tick marks.                                       
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_index
@@ -398,6 +414,7 @@ for k=1:2
     end
     clear comments
     for i=1:size(mfiles,1)
+        %mfiles(i,:)
         comments{i}=commentlines(mfiles(i,:));
     end
     switch k 

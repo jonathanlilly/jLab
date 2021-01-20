@@ -12,6 +12,26 @@ hc=packfig(1,3);
 for i=1:3,axes(hc(i)),colorbar('southoutside'),end
 set(gcf,'paperposition',[1 1 12 6])
 
+
+
+% figure
+% subplot(2,2,1),contourf(peaks(200),60),colormap(gca,'lansey'),%xlabel('lansey')
+% subplot(2,2,2),contourf(peaks(200),60),colormap(gca,'parula'),%xlabel('parula')
+% subplot(2,2,3),contourf(peaks(200),60),colormap(gca,'jet'),%xlabel('jet')
+% subplot(2,2,4),contourf(peaks(200),60),colormap(gca,'seminfhaxby'),%xlabel('seminf-haxby')
+% for i=1:4,subplot(2,2,i),axis equal,axis tight,caxis([-7 7]),...
+%         noxlabels,noylabels,nocontours,ylim([-50 200])
+% end
+% h=packfig(2,2,'both');
+% str={'lansey','parula','jet','seminf-haxby'};
+% for i=1:4,axes(h(i))
+%     hc=colorbar('south'),
+%     %hc.AxisLocation='out';
+%     hc.Label.String=str{i};
+% end
+% set(gcf,'paperposition',[1 1 8 9.5 ])
+
+
 %To print
 if 0
     currentdir=pwd;

@@ -15,9 +15,9 @@
     <a href="cellpack.html">CELLPACK</a> does not remove empty cells.  This is done by <a href="cellprune.html">CELLPRUNE</a>.
  
     [Y1,Y2,...YN]=<a href="cellpack.html">CELLPACK</a>(X1,X2,...XN) with multiple input arguments, all
-    of the same size, removes locations of INFs that occur in *any* of the 
-    input variables.  The output variables Y1,Y2,...YN will all be the same
-    size, and none of them will contain any INFs.
+    of the same size, removes locations of INFs that occur in *first* input
+    variable X1 only, while ignoring INFs in the others. The output
+    variables Y1,Y2,...YN will all be the same size.
  
     <a href="cellpack.html">CELLPACK</a>(X1,X2,...XN); with no output arguments overwrites the 
     original input variables.   
@@ -29,5 +29,5 @@
            <a href="cellpack.html">cellpack</a>(x1,x2,x3);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

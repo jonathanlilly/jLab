@@ -16,16 +16,14 @@ function[varargout]=maternspec(varargin)
 %     
 %   S is the postive or negative rotary spectrum given by
 %
-%        S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA * LAMBDA^(2*ALPHA-1)/C
+%        S(F) = SIGMA^2 / (F^2+LAMBDA^2)^ALPHA 
+%                           * LAMBDA^(2*ALPHA-1) / C
 %
 %   where C is a normalizing constant dependent upon ALPHA.  Note that the
-%   positive and negative spectra are identical for the Matern process.
+%   positive and negative spectra are identical for this process.
 %
 %   For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
 %   Brownian motion.  
-%
-%   Note the spectrum is the same whether the process is real-valued or 
-%   complex-valued.
 %
 %   For details on the Matern process and its spectrum, see:
 %
@@ -68,10 +66,6 @@ function[varargout]=maternspec(varargin)
 %   With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
 %   Uhlenbeck process.
 %
-%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,'real') returns the
-%   rotary spectra of a real-valued oscillatory Matern, with SPP and SNN
-%   again being the same.  In this case the sign of NU does not matter.
-%
 %   Note that NU has units of radians per sample interval DT.
 %
 %   The oscillatory Matern is described in Lilly et al. (2017).
@@ -84,31 +78,53 @@ function[varargout]=maternspec(varargin)
 %   be considered as 'beta features' that are to be used with caution.
 %   __________________________________________________________________
 %
+%   Generalized Matern
+%
+%   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') returns the
+%   spectrum of the generalized Matern, or generalized Whittle-Matern,
+%   process, introduced by Lim and Teo (2009)a,b.
+%
+%   This spectrum is defined as
+%
+%    S(F) = SIGMA^2 / [F^(2*GAMMA)+LAMBDA^(2*GAMMA)]^(ALPHA/GAMMA)
+%                   * LAMBDA^(2*ALPHA-1) / C
+%
+%   where C is a normalizing constant dependent upon ALPHA and GAMMA. 
+%
+%   Here we use slightly different choices of parameters from  Lim and Teo.
+%   With our choices, GAMMA=1 corresponds to the usual Matern process.
+%
+%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'generalized') 
+%   is an oscillatory version of the generalized Matern process, shifting 
+%   the spectrum to be centered on F=NU rather than F=0.
+%   __________________________________________________________________
+%
 %   Extended Matern
 %  
-%   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,0,MU) with seven arguments
-%   returns the spectrum of the four-parameter "extended" Matern process:
+%   [F,S]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended') returns the 
+%   spectrum of what we will call the extended Matern process:
 %
 %      S(F) = SIGMA^2 * BESSELK(ALPHA,MU*SQRT(F^2+LAMBDA^2))
-%                                    / (MU*SQRT(F^2+LAMBDA^2))^ALPHA * C              
+%                                    / (MU*SQRT(F^2+LAMBDA^2))^ALPHA / C              
 %
 %   where C is a normalizing constant dependent upon ALPHA, LAMBDA, and MU. 
 %   The additional parameter, MU, has units of time.  Here ALPHA can 
 %   take on any real value, unlike for the standard Matern case.
 %
-%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU) shifts the 
-%   extended Matern spectrum to be centered at F=NU rather than F=0.
+%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended') is an
+%   oscillatory version of the extended Matern process.
 %
-%   As MU becomes large with ALPHA>1/2, this becomes the standard Matern 
-%   spectrum.
+%   As MU increases with ALPHA>1/2, this becomes the standard Matern form.
 %   __________________________________________________________________
 %
 %   Damped exponential 
 %
-%   [F,S]=MATERNSPEC(DT,N,SIGMA,-1/2,LAMBDA,0,MU) with ALPHA set to -1/2
-%   returns the spectrum of the damped exponential process, having the form
+%   A special case of the extended Matern is the damped exponential.
 %
-%      S(F) = SIGMA^2 * EXP(-MU * SQRT(F^2+LAMBDA^2)) * C 
+%   [F,S]=MATERNSPEC(DT,N,SIGMA,-1/2,LAMBDA,MU,'extended') with ALPHA=-1/2
+%   returns the spectrum of the damped exponential process, with spectrum
+%
+%      S(F) = SIGMA^2 * EXP(-MU * SQRT(F^2+LAMBDA^2)) / C 
 %                              
 %   where C is again a normalizing constant, dependent upon LAMBDA and MU. 
 %
@@ -118,7 +134,7 @@ function[varargout]=maternspec(varargin)
 %
 %   Composite Matern
 %
-%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,NU,MU,'composite') 
+%   [F,SPP,SNN]=MATERNSPEC(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite') 
 %   implements the "composite" Matern spectrum having the form
 %
 %       SPP(F) = B * SIGMA^2 / (F^2 + MU^2)^ALPHA / [(F-NU)^2 + LAMBDA^2] 
@@ -145,6 +161,17 @@ function[varargout]=maternspec(varargin)
 %   SIGMA^2 be interpreted as an approximation to the inertial variance. 
 %   __________________________________________________________________
 %
+%   Real-valued processes
+%
+%   By default MATERSPEC returns the spectrum of a complex-valued process. 
+%
+%   MATERNSPEC(...,'real') instead returns the spectrum of a real-valued
+%   process. This also works with any of extended versions described above.
+%
+%   In this case, the rotary spectra SPP and SNN be forced to be the same 
+%   in models that return them.
+%   __________________________________________________________________
+%
 %   See also MATERNCOV, MATERNIMP, MATERNOISE, MATERNFIT, BLURSPEC.
 %
 %   'maternspec --f' generates some sample figures.
@@ -154,7 +181,7 @@ function[varargout]=maternspec(varargin)
 %   Usage:  [f,s]=maternspec(dt,N,sigma,alpha,lambda);
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda);
 %           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu);
-%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu,mu);
+%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,mu,'extended');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
@@ -185,14 +212,14 @@ if strcmpi(varargin{1}, '--f')
 end
 
 cores='serial';
-model='forward';
+model='standard';
 flag='complex';
 
 for i=1:3
     if ischar(varargin{end})
-        if strcmpi(varargin{end}(1:3),'rev')||strcmpi(varargin{end}(1:3),'com')
+        if strcmpi(varargin{end}(1:3),'sta')||strcmpi(varargin{end}(1:3),'com')||strcmpi(varargin{end}(1:3),'ext')||strcmpi(varargin{end}(1:3),'gen')
             model=varargin{end}(1:3);
-        elseif strcmpi(varargin{end}(1:3),'rea')||strcmpi(varargin{end}(1:3),'com')
+        elseif strcmpi(varargin{end}(1:3),'rea')
             flag=varargin{end};
         else
             cores=varargin{end};
@@ -211,34 +238,28 @@ end
 
 dt=double(varargin{1});
 N=floor(varargin{2});
-sigma=varargin{3};
-alpha=varargin{4};
-lambda=varargin{5};
 
-nu=0;
-mu=0;
-if length(varargin)>5
-    nu=varargin{6};
+parcell=varargin(3:end);
+%this will be easier as a matrix
+M=max(cellength(parcell));
+params=zeros(M,length(parcell));
+for i=1:length(parcell)
+    params(:,i)=parcell{i};
 end
-if length(varargin)>6
-    mu=varargin{7};
-end
-
 
 %dt,N,sigma,alpha,lambda,nu,mu
-
-arrayify(sigma,alpha,lambda,nu,mu);
-
+%arrayify(sigma,alpha,lambda,nu,mu);
+    
 if length(N)==1
-    [omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model,flag);
+    [omega,Spp,Snn]=maternspec_one(dt,N,params,model,flag);
 else
     if strcmpi(cores(1:3),'ser')
         for i=1:length(N)
-            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
+            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),params(i,:),model,flag);
         end
     elseif strcmpi(cores(1:3),'par')
         parfor i=1:length(N)
-            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),sigma(i),alpha(i),lambda(i),nu(i),mu(i),model,flag);
+            [omega{i,1},Spp{i,1},Snn{i,1}]=maternspec_one(dt,N(i),params(i,:),model,flag);
         end
     end
 end
@@ -248,49 +269,74 @@ varargout{2}=Spp;
 varargout{3}=Snn;
 
     
-function[omega,Spp,Snn]=maternspec_one(dt,N,sigma,alpha,lambda,nu,mu,model,flag)
+function[omega,Spp,Snn]=maternspec_one(dt,N,params,model,flag)
 %This loops and implements positive/negative rotary spectra
    
 omega=fourier(dt,N);
-Spp=zeros(length(omega),length(lambda));
-Snn=zeros(length(omega),length(lambda));
+Spp=zeros(length(omega),size(params,1));
+Snn=zeros(length(omega),size(params,1));
 
-for i=1:length(lambda)
-    if sigma(i)~=0
-        Spp(:,i)=maternspec_spec(omega,sigma(i),alpha(i),lambda(i),nu(i),mu(i),model);
-        if nu(i)~=0
-             Snn(:,i)=maternspec_spec(omega,sigma(i),alpha(i),lambda(i),-nu(i),mu(i),model);
-             if strcmpi(flag(1:3),'rea')
-                 Spp(:,i)=frac(1,2)*(Spp(:,i)+Snn(:,i));
-                 Snn(:,i)=Spp(:,i);
-             end
-        else 
-            Snn(:,i)=Spp(:,i);
-        end
+for i=1:size(params,1)
+    Spp(:,i)=maternspec_spec(omega,params(i,:),model);
+    Snn(:,i)=maternspec_spec(-omega,params(i,:),model);
+    if strcmpi(flag(1:3),'rea')
+        Spp(:,i)=frac(1,2)*(Spp(:,i)+Snn(:,i));
+        Snn(:,i)=Spp(:,i);
     end
 end
 
-function[S]=maternspec_spec(omega,sigma,alpha,lambda,nu,mu,model)
+function[S]=maternspec_spec(omega,params,model)
 %This implements the single/composite and extended/exponential options
 
+
+sigma=params(1);
+alpha=params(2);
+lambda=params(3);
+
+%switch to extended if alpha<1/2 
+if strcmpi(model(1:3),'sta') && alpha<1/2  
+    model='extended';
+end
+ 
+nu=0;
 if strcmpi(model(1:3),'com')
+    %Composite Matern form
+    mu=params(4);
+    nu=params(5);
+    %[sigma,alpha,lambda,mu,nu]
     fact=2*sigma.^2.*lambda.*(nu.^2+mu.^2).^alpha;
     S1=frac(fact,(omega.^2+mu.^2).^alpha);
     S2=frac(1,(omega-nu).^2+lambda.^2);
     S=S1.*S2;
-else  %using the extended matern form
-    omega=omega-nu;
-    if mu==0 && alpha>1/2
-        %I am only coding this separately because it is somewhat quicker
-        d=frac(lambda.^(2*alpha-1),materncfun(alpha));
-        S=frac(sigma.^2,(omega.^2+lambda.^2).^alpha).*d;
-    else
-        %Extended Matern, reduces to the standard Matern form for mu=0
-        omnorm=mu*sqrt(omega.^2+lambda.^2);
-        S1=frac(sigma.^2,lambda.*materncfun(alpha).*(omega.^2/lambda.^2+1).^alpha);
-        S2=frac(maternfun(alpha+1/2,omnorm),maternfun(alpha,lambda*mu));
-        S=S1.*S2;
+elseif strcmpi(model(1:3),'gen')
+    %Generalized Matern form
+    gamma=params(4);
+    if length(params)==5
+        nu=params(5);
     end
+    omega=omega-nu;
+ %   sigma,alpha,lambda,gamma,nu
+    d=frac(lambda.^(2*alpha-1),materncfun(alpha,gamma));
+    S=frac(sigma.^2,(abs(omega).^(2*gamma)+lambda.^(2*gamma)).^(alpha./gamma)).*d;
+elseif strcmpi(model(1:3),'ext')
+    %Extended Matern, reduces to the standard Matern form for mu=0
+    mu=params(4);
+    if length(params)==5
+        nu=params(5);
+    end
+    omega=omega-nu;
+    omnorm=mu*sqrt(omega.^2+lambda.^2);
+    S1=frac(sigma.^2,lambda.*materncfun(alpha).*(omega.^2/lambda.^2+1).^alpha);
+    S2=frac(maternfun(alpha+1/2,omnorm),maternfun(alpha,lambda*mu));
+    S=S1.*S2;
+elseif strcmpi(model(1:3),'sta') 
+    %Standard Matern form
+    if length(params)==4
+        nu=params(4);
+    end
+    omega=omega-nu;
+    d=frac(lambda.^(2*alpha-1),materncfun(alpha));
+    S=frac(sigma.^2,(omega.^2+lambda.^2).^alpha).*d;
 end
 
 %Extended Matern form reduces to this exponential form, see notes
@@ -298,7 +344,6 @@ end
 %   fact=lambda.*besselk(1,lambda.*mu);
 %   S=frac(pi*sigma.^2,fact).*exp(-sqrt(omega.^2+lambda.^2).*mu);
 %end
-
 %elseif strcmpi(model(1:3),'rev')
 %    S=2*pi*materncfun(alpha).*frac(sigma.^2,lambda).*maternfun(alpha-1/2,(omega-nu)./lambda);
 % elseif strcmpi(model(1:3),'com')

@@ -21,6 +21,7 @@
       <a href="celladd.html">celladd</a>    - Addition acting on each element in a cell array.                    
       <a href="cellmult.html">cellmult</a>   - Multiplication acting on each element in a cell array.    
       <a href="celldiv.html">celldiv</a>    - Division acting on each element in a cell array. 
+      <a href="celldot.html">celldot</a>    - Dot product for arrays of column vectors. 
     
     Reshaping, indexing, and sizes 
       <a href="cell2col.html">cell2col</a>   - Converts cell arrays of numeric arrays into 'column-appended' form. 
@@ -255,7 +256,7 @@
       <a href="trajextract.html">trajextract</a> - Extracts Lagrangian trajectory segments within given region.         
       <a href="trajunwrap.html">trajunwrap</a>  - Unwraps Lagrangian trajectories from a periodic domain.               
       <a href="trajwrap.html">trajwrap</a>    - Wraps Lagrangian trajectories to fit within a periodic domain.        
-      <a href="trajchunk.html">trajchunk</a>   - Converts cell array data into chunks based on the Coriolis period. 
+      <a href="trajchunk.html">trajchunk</a>   - Chunks Lagrangian trajectories based on the Coriolis period. 
     
     Idealized numerical model tools 
       <a href="psi2fields.html">psi2fields</a>   - Velocity and other fields from the streamfunction. [with P.E. Isachsen]     
@@ -266,6 +267,7 @@
       <a href="closedcurves.html">closedcurves</a> - Locate and interpolate closed curves in a possibly periodic domain. 
       <a href="curvemoments.html">curvemoments</a> - Centroid, area, and many other moments of a closed curve.           
       <a href="divgeom.html">divgeom</a>      - Geometric decomposition of eddy vorticity flux divergence.      
+      <a href="eddyfit2d.html">eddyfit2d</a>    - Least squares fit of 2D velocity data to an eddy profile. 
     
     Plotting tools for mooring data 
       <a href="hodograph.html">hodograph</a>  - Generate <a href="hodograph.html">hodograph</a> plots (simple and fancy).                                    
@@ -277,6 +279,9 @@
     
     NetCDF tools 
       <a href="ncinterp.html">ncinterp</a>    - One-line interpolation from 3D lat/lon/time field in NetCDF file. 
+    
+    Date and time 
+      <a href="monthstats.html">monthstats</a>  - Mean month and standard deviation using circular statistics. 
     
     Topography tools and data 
       jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.               
@@ -408,6 +413,9 @@
       <a href="col2mat.html">col2mat</a>    - Expands 'column-appended' data into a matrix.                       
       <a href="colbreaks.html">colbreaks</a>  - Insert NANs into discontinuties in a vector.                        
       <a href="mat2col.html">mat2col</a>    - Compress NAN-padded matrix data into long columns.     
+    
+     Low-level functions 
+      <a href="jhanning.html">jhanning</a>   - Hanning window. 
        
      See also <a href="jCell.html">jCell</a>. 
     __________________________________________________________________ 
@@ -450,5 +458,5 @@
     See also <a href="jRidges.html">jRidges</a>, <a href="jSpectral.html">jSpectral</a>, <a href="jEllipse.html">jEllipse</a>. 
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2015--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

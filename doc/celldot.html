@@ -1,0 +1,25 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>CELLDOT is the <a href="jCell.html">jCell</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="celldot.html">CELLDOT</a>  Dot product for arrays of column vectors.
+ 
+    P=<a href="celldot.html">CELLDOT</a>(X,Y), with X and Y being cell arrays of column vectors,
+    returns a column vector P of length LENGTH(X), such that the nth 
+    element of P is given by P(n)=SUM(X{n}.*CONJ(Y{n})).
+ 
+    Note that this dot product is defined to conjugate the second input 
+    argument, unlike Matlab's DOT which conjugates the first argument.
+ 
+    P=<a href="celldot.html">CELLDOT</a>(X,Y,'norm') normalizes the magnitude of dot product to be
+    between zero and one.  This is done by dividing the nth element by
+    SQRT(SUM(ABS(X{n}).^2).*SUM(ABS(Y{n}).^2)).
+ 
+    <a href="celldot.html">CELLDOT</a> uses 'omitnan' to exclude any NaNs from the summation.
+ 
+    Usage: p=<a href="celldot.html">celldot</a>(x,y);
+           p=<a href="celldot.html">celldot</a>(x,y,'norm');
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

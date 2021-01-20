@@ -6,19 +6,20 @@
  
     This function is part of 'element analysis' described in Lilly (2017), 
     "Element analysis: a wavelet-based method for analyzing time-localized
-    events in noisy time series", submitted.  Available at www.jmlilly.net.
+    events in noisy time series", available at www.jmlilly.net.
    
-    [A,R,RO]=<a href="max2eddy.html">MAX2EDDY</a>(DX,LAT,C,RHO) converts the wavelet transform maxmima
-    properties C and RHO, at latitudes LAT and with alongtrack sample
-    intervals of DX, into estimated coherent eddy properties A, R, and Ro.
+    [A,R,V,RO]=<a href="max2eddy.html">MAX2EDDY</a>(DX,LAT,C,RHO) converts the wavelet transform 
+    maxmima properties C and RHO, at latitudes LAT and with alongtrack 
+    sample intervals of DX, into estimated eddy properties A, R, V, and Ro.
  
     C and RHO are as output by <a href="maxprops.html">MAXPROPS</a>.
  
     The real part of A is the *apparent* coherent eddy displacement in 
     centimeters, while R is the apparent eddy radius in kilometers.  The 
-    real part of Ro is a Rossby number estimate formed from A and Ro.  
+    real part of V is a velocity estimate formed from A and R, and the 
+    real part of Ro is a similarly formed Rossby number estimate.
  
-    Note that the imaginary parts of A and Ro reflect the magnitude of
+    Note that the imaginary parts of A, V, and Ro reflect the magnitude of
     the locally odd, or sin-like, portion of the anomaly.  These will 
     vanish for the noise-free transform of a Gaussian eddy.
  
@@ -30,8 +31,8 @@
  
     '<a href="max2eddy.html">max2eddy</a> --t' runs a test.
  
-    Usage: [A,R,Ro]=<a href="max2eddy.html">max2eddy</a>(dx,lat,C,rho);
+    Usage: [A,R,V,Ro]=<a href="max2eddy.html">max2eddy</a>(dx,lat,C,rho);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

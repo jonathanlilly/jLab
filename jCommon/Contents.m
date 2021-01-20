@@ -36,18 +36,21 @@
 %   tmat       - 2x2 complex grouping matrix.  TMAT = [1  i; 1 -i] / SQRT(2)
 %   bellpoly   - Complete Bell polynomials.  
 %   hermpoly   - Hermite polynomials. [with F. Rekibi]   
-%   hermfun    - Orthonormal Hermite functions. [with F. Rekibi]                    
+%   hermfun    - Orthonormal Hermite functions. [with F. Rekibi]   
+%   chisquared - The chi-squared distribution.
 %
 % Dataset organization as structures
-%   make       - Create a structure containing named variables as fields.  
-%   matsave    - Create and save structure of variables as a mat-file. 
-%   use        - Copies structure fields into named variables in workspace.         
+%   make        - Create a structure containing named variables as fields.  
+%   matsave     - Create and save structure of variables as a mat-file. 
+%   use         - Copies structure fields into named variables in workspace.         
+%   catstruct   - Concatenates the array elements of a cell array of structures.
+%   structindex - Applies an index to all array-valued fields in a structure.
 %
 % Statistics
-%   cum2mom    - Convert cumulants to moments.    
-%   mom2cum    - Convert moments to cumulants.                                      
-%   pdfprops   - Mean and variance associated with a probability distribution.  
-%   simplepdf  - Gaussian, uniform, Cauchy, and exponential pdfs.                   
+%   cum2mom   - Convert cumulants to moments.    
+%   mom2cum   - Convert moments to cumulants.                                      
+%   pdfprops  - Mean and variance associated with a probability distribution.  
+%   simplepdf - Gaussian, uniform, Cauchy, and exponential pdfs.                   
 %
 % Filling bad data points
 %   fillbad    - Linearly interpolate over bad data points.  

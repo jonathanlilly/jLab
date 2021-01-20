@@ -7,15 +7,19 @@
     <a href="maternfit.html">MATERNFIT</a> performs a parametric fit of the spectrum of a time series to
     that expected for a Matern process plus optional spin.  
  
+    The time series may either be real-valued or complex-valued.
+ 
     The Matern process plus spin has a spectrum given by, see <a href="maternspec.html">MATERNSPEC</a>, 
  
          SPP(F) = SIGMA^2 / [(F-NU)^2/LAMBDA^2 + 1]^ALPHA 
-                                     / (LAMBDA * MATERNC(ALPHA))
+                            / (LAMBDA * MATERNC(ALPHA)) + 2*pi * EPSILON^2
  
     where SIGMA is the standard deviation, NU is a frequency shift, LAMBDA 
-    is a damping coefficient, and ALPHA is 1/2 of the spectral slope.  The
-    coefficient on the second line lets us parameterize the spectrum in 
-    terms of the process variance SIGMA^2.
+    is a damping coefficient, ALPHA is 1/2 of the spectral slope, and 
+    EPSILON^2 is the variance of an optional additive noise component.
+ 
+    The coefficient LAMBDA * MATERNC(ALPHA) in the above form lets us 
+    parameterize the spectrum in terms of the process variance SIGMA^2.
  
     The optimal parameters are found using a frequency-domain maximum
     likelihood method, accounting for both aliasing and spectral blurring.
@@ -26,8 +30,8 @@
          models for ocean surface drifter trajectories. Journal of the 
          Royal Statisical Society, Series C. 65 (1): 29--50.
  
-      Sykulski, Olhede, and Lilly (2018). The de-biased Whittle likelihood 
-         for second-order stationary stochastic processes.  ArXiv preprint.
+      Sykulski, Olhede, Guillaumin, Lilly, and Early (2019). The de-biased
+         Whittle likelihood. Biometrika, 106 (2): 251--266.
  
     For details on the Matern process and its spectrum, see:
  
@@ -38,9 +42,9 @@
  
     Usage
  
-    FIT=<a href="maternfit.html">MATERNFIT</a>(DT,Z,FO) where Z is a complex-valued time series, returns
-    the result of a fitting the periodogram of Z to a background process
-    having a non-shifted Matern form, fit over all frequencies. The range 
+    FIT=<a href="maternfit.html">MATERNFIT</a>(DT,Z,FO) where Z is a times series oriented as column 
+    vector, returns the result of a fitting the periodogram of Z to a
+    spectrum having a Matern form, fit over all frequencies. The range 
     of frequencies involved in the fit can be modified, as described below.
  
     DT is the sample interval, which has units of days, while FO is a
@@ -52,13 +56,25 @@
  
     The default search ranges and initial guess values are as follows:
   
-                     Low  Guess  High 
-         SIGMA   =   [0      1    100] * STD(Z)
-         ALPHA   =   [1/2    1     10] 
-         LAMBDA  =   [1e-3  2e-3   10] * ABS(FO)
-         NU      =   [0      0      0] * ABS(FO)
+                       Low  Guess  High 
+         SIGMA    =   [0      1    100] * STD(Z)
+         ALPHA    =   [1/2    1     10] 
+         LAMBDA   =   [1e-3  2e-3   10] * ABS(FO)
+         EPSILON  =   [0      0      0] * STD(Z)
+         NU       =   [0      0      0] * ABS(FO)
  
-    These can be modified, as described below. 
+    Note that by default, neither the EPSILON nor NU parameters are used. 
+ 
+    The search ranges and guesses can all be modified, as described below. 
+ 
+    A common special case is the inclusion of an additive noise component. 
+    Calling flag <a href="maternfit.html">MATERNFIT</a>(...'noisy'), which sets
+  
+         EPSILON  =   [0     1/2     2] * STD(Z)
+ 
+    for the range of the EPSILON parameter.  According to the spectral
+    normalizations used here, a white noice time series with standard 
+    deviation EPSILON will have a spectral  
     __________________________________________________________________
  
     Output format
@@ -101,7 +117,7 @@
     These parameters are described in more detail below.
     __________________________________________________________________
     
-    Multiple input time series
+    Options for multiple input time series
  
     FIT=<a href="maternfit.html">MATERNFIT</a>(DT,Z,FO) may have Z being a matrix with N columns, or a 
     cell array of N different time series.  In both of these cases, DT and 
@@ -110,6 +126,11 @@
     In these cases, the fields SIGMA, ALPHA, LAMBDA, and NU of FIT will 
     also be arrays with N elements, as all non-string fields of PARAMS. The 
     fields of RANGE will then all be N x 3 arrays.  
+ 
+    Alternatively, <a href="maternfit.html">MATERNFIT</a>(...,'average') with Z a matrix or a cell
+    array of matrices causes the columns of each matrix to be interpreted 
+    as members of an ensemble, averaging over columns to create an average 
+    spectrum. One fit per matrix is returned, rather than one per column. 
     __________________________________________________________________
     
     Specifiying frequencies
@@ -307,6 +328,6 @@
            fit=<a href="maternfit.html">maternfit</a>(dt,z,fc,a,b);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2018 J.M. Lilly and A.M. Sykulski
+    (C) 2014--2020 J.M. Lilly and A.M. Sykulski
                                  --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

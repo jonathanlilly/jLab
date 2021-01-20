@@ -1,6 +1,7 @@
 function[varargout]=jlab_allhelp(varargin)
 %JLAB_ALLHELP  Displays the help comments for all JLAB modules. 
 %
+
 %   jCell:  Tools for operating on cell arrays of column vectors 
 %   
 %   Basic mathematical operations 
@@ -83,18 +84,21 @@ function[varargout]=jlab_allhelp(varargin)
 %     tmat       - 2x2 complex grouping matrix.  TMAT = [1  i; 1 -i] / SQRT(2) 
 %     bellpoly   - Complete Bell polynomials.   
 %     hermpoly   - Hermite polynomials. [with F. Rekibi]    
-%     hermfun    - Orthonormal Hermite functions. [with F. Rekibi]                     
+%     hermfun    - Orthonormal Hermite functions. [with F. Rekibi]    
+%     chisquared - The chi-squared distribution. 
 %   
 %   Dataset organization as structures 
-%     make       - Create a structure containing named variables as fields.   
-%     matsave    - Create and save structure of variables as a mat-file.  
-%     use        - Copies structure fields into named variables in workspace.          
+%     make        - Create a structure containing named variables as fields.   
+%     matsave     - Create and save structure of variables as a mat-file.  
+%     use         - Copies structure fields into named variables in workspace.          
+%     catstruct   - Concatenates the array elements of a cell array of structures. 
+%     structindex - Applies an index to all array-valued fields in a structure. 
 %   
 %   Statistics 
-%     cum2mom    - Convert cumulants to moments.     
-%     mom2cum    - Convert moments to cumulants.                                       
-%     pdfprops   - Mean and variance associated with a probability distribution.   
-%     simplepdf  - Gaussian, uniform, Cauchy, and exponential pdfs.                    
+%     cum2mom   - Convert cumulants to moments.     
+%     mom2cum   - Convert moments to cumulants.                                       
+%     pdfprops  - Mean and variance associated with a probability distribution.   
+%     simplepdf - Gaussian, uniform, Cauchy, and exponential pdfs.                    
 %   
 %   Filling bad data points 
 %     fillbad    - Linearly interpolate over bad data points.   
@@ -172,8 +176,10 @@ function[varargout]=jlab_allhelp(varargin)
 %     ztick      - Sets locations of z-axis tick marks. 
 %   
 %   Color and colormaps 
-%     colorquant - Sets the color axis according to quantiles of the data. 
-%     lansey     - The Lansey modification of Cynthia Brewer's "Spectral" colormap. 
+%     colorquant  - Sets the color axis according to quantiles of the data. 
+%     lansey      - The Lansey modification of Cynthia Brewer's "Spectral" colormap. 
+%     haxby       - The Haxby colormap. 
+%     seminfhaxby - The seminf-Haxby colormap. 
 %   
 %   Printing 
 %     jprint     - Print to a specified directory and crop the resulting file. 
@@ -192,18 +198,22 @@ function[varargout]=jlab_allhelp(varargin)
 %     ylin       - Sets y-axis scale to linear.                                       
 %     ylog       - Sets y-axis scale to log.         
 %   
-%   Low-level functions 
+%   Low-level or specialized functions 
 %     axeshandles - Returns handles to all axes children. 
 %     crop        - Gets rid of whitespace around an image. [by A. Bliss]              
 %     linehandles - Finds all line and patch handles from a given set of axes. 
 %     linestyleparse - Parses the input string to LINESTYLE. 
+%     gulf4plot     - A four-panel circulation plot for the Gulf of Mexico. 
 %   __________________________________________________________________ 
 %  
 %   jMap:  Mapping scattered data using local polynomial fitting 
 %   
 %     polysmooth - Smoothing scattered 2D data with local polynomial fitting.  
 %     spheresort - Sorted great circle distances to nearby points on the earth. 
-%     twodsort   - Distances from data points to nearby grid points. 
+%     twodsort   - Distances from data points to nearby grid points.    
+%   
+%     Low level functions 
+%     matinv     - Fast inversion of arrays of small matrices. 
 %   __________________________________________________________________ 
 %  
 %   jMatern:  Parametric spectral analysis based on the Matern process 
@@ -221,7 +231,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     fminsearchbnd  - FMINSEARCH, but with bound constraints by transformation. [By J. D'Errico] 
 %   
 %   Low-level Matern functions 
-%     materncfun - Returns the normalization function C_ALPHA for a Matern process. 
+%     materncfun - Returns the normalization or C-function for a Matern process. 
 %     maternchol - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski] 
 %     maternedge - Long-time cutoff edge for the Matern impulse response function.                
 %   
@@ -250,14 +260,20 @@ function[varargout]=jlab_allhelp(varargin)
 %     uv2latlon   - Integrates horizontal velocity to give latitude and longitude.   
 %   
 %   Manipulating Lagrangian trajectories [see also jCell] 
-%     trajextract - Extracts Lagrangian trajectory segments within given region.         
-%     trajunwrap  - Unwraps Lagrangian trajectories from a periodic domain.               
-%     trajwrap    - Wraps Lagrangian trajectories to fit within a periodic domain.        
-%     trajchunk   - Chunks Lagrangian trajectories based on the Coriolis period. 
+%     trajextract  - Extracts Lagrangian trajectory segments within given region.         
+%     trajunwrap   - Unwraps Lagrangian trajectories from a periodic domain.               
+%     trajwrap     - Wraps Lagrangian trajectories to fit within a periodic domain.        
+%     trajchunk    - Chunks Lagrangian trajectories based on the Coriolis period. 
+%     griddrifters - Average drifter velocities onto a space/time 3D grid. 
 %   
 %   Idealized numerical model tools 
 %     psi2fields   - Velocity and other fields from the streamfunction. [with P.E. Isachsen]     
 %     periodize    - Returns a doubly periodic version of an input array.    
+%   
+%   Lagrangian eddy identification and analysis 
+%     eddyridges    - Coherent eddy ridges from Lagrangian trajectories.    
+%     noisedrifters - Create a noise Lagrangian dataset matching mean and variance. 
+%     eddylevels    - Eddy ridge significance levels using the survival function. 
 %   
 %   Eulerian eddy identification and analysis 
 %     inellipse    - Locates points on the interior of ellipses.                           
@@ -265,6 +281,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     curvemoments - Centroid, area, and many other moments of a closed curve.           
 %     divgeom      - Geometric decomposition of eddy vorticity flux divergence.      
 %     eddyfit2d    - Least squares fit of 2D velocity data to an eddy profile. 
+%     simpleddy     - Streamfunction, velocity, and vorticity for various eddy profiles. 
 %   
 %   Plotting tools for mooring data 
 %     hodograph  - Generate hodograph plots (simple and fancy).                                    
@@ -298,15 +315,17 @@ function[varargout]=jlab_allhelp(varargin)
 %     ridgetrim   - Trim edge effect regions from wavelet ridges. 
 %     ridgelen    - Wavelet ridge length expressed as number of full cycles.     
 %     periodindex - Returns time index in increments of instantaneous period.   
+%     ridgemult   - Ridge multiplicity, the number of simultaneous ridges present. 
 %   
-%    See also jEllipse, jWavelet. 
+%    See also jEllipse, jWavelet, jOceans 
 %   __________________________________________________________________ 
 %  
 %    jSpectral:  Multitaper spectral analysis, and other time series tools 
 %    
 %    Multitaper spectral analysis 
 %     sleptap    - Calculate Slepian tapers.                                         
-%     mspec      - Multitaper power and cross spectra.        
+%     mspec      - Multitaper power and cross spectra. 
+%     mconf      - Confidence intervals for the multitaper spectral estimate. 
 %   
 %    Multitaper polarization analysis 
 %     msvd       - Singular value decomposition for polarization analysis.    
@@ -323,8 +342,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     fourier     - The one-sided Fourier frequencies for a given length time series. 
 %     sampletimes - Computes mean sampling intervals and their statistics.           
 %   
-%    Plotting tools 
-%     twospecplot - Plots a pair of rotary or Cartesian spectra.    
+%    Plotting tools  
+%     twospecplot - Plots a pair of rotary or Cartesian spectra.   
 %   
 %    See also jWavelet, jEllipse, jMatern. 
 %   __________________________________________________________________ 
@@ -424,6 +443,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     morsewave    - Generalized Morse wavelets of Olhede and Walden (2002).               
 %     morsespace   - Logarithmically-spaced frequencies for generalized Morse wavelets.    
 %     wavespecplot - Plot of wavelet spectra together with time series. 
+%     spheretrans  - Wavelet transform for oscillations on the surface of a sphere. 
 %   
 %   Details of generalized Morse wavelets  
 %     morsearea   - Time-frequency concentration area of Morse wavelets. [with F. Rekibi] 
@@ -455,7 +475,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   See also jRidges, jSpectral, jEllipse. 
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp

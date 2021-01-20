@@ -5,8 +5,8 @@
  <a href="maternspec.html">MATERNSPEC</a>  Fourier spectrum of the Matern random process and variations.
   
     [F,S]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA) returns the spectrum S of a  
-    length N complex-valued Matern random process having variance SIGMA^2, 
-    slope parameter ALPHA, and damping parameter LAMBDA.
+    length N real-valued or complex-valued Matern random process having 
+    variance SIGMA^2, slope parameter ALPHA, and damping parameter LAMBDA.
  
     DT is the sample interval.  Note that LAMBDA is understood to have the
     same units as the inverse sample interval 1/DT.
@@ -26,6 +26,9 @@
  
     For LAMBDA=0, the Matern spectrum reduces to the spectrum of fractional
     Brownian motion.  
+ 
+    Note the spectrum is the same whether the process is real-valued or 
+    complex-valued.
  
     For details on the Matern process and its spectrum, see:
  
@@ -67,6 +70,10 @@
  
     With ALPHA=1, the oscillatory Matern becomes the complex Ornstein-
     Uhlenbeck process.
+ 
+    [F,SPP,SNN]=<a href="maternspec.html">MATERNSPEC</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU,'real') returns the
+    rotary spectra of a real-valued oscillatory Matern, with SPP and SNN
+    again being the same.  In this case the sign of NU does not matter.
  
     Note that NU has units of radians per sample interval DT.
  
@@ -153,5 +160,5 @@
             [f,spp,snn]=<a href="maternspec.html">maternspec</a>(dt,N,sigma,alpha,lambda,nu,mu);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2013--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

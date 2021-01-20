@@ -1,11 +1,11 @@
-function[bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask)
+function[bool,rq,w,om]=isridgepoint(w,fs,delta,str,fmin,fmax,mask)
 %ISRIDGEPOINT  Finds wavelet ridge points using one of several criterion.
 %
 %   ISRIDGEPOINT is a low-level function called by RIDGEWALK.
 %  
-%   BOOL=ISRIDGEPOINT(W,FS,CHI,STR) where W is a wavelet transform matrix  
+%   BOOL=ISRIDGEPOINT(W,FS,DELTA,STR) where W is a wavelet transform matrix  
 %   at *radian* frequecies FS, finds all ridge points of W with amplitudes
-%   |W| exceeding the amplitude cutoff A.  Several different different 
+%   |W| exceeding the amplitude cutoff DELTA.  Several different different 
 %   ridge defintions may be used and are specified by STR.
 %
 %   BOOL is a matrix of the same size as W, which is equal to one for 
@@ -24,11 +24,11 @@ function[bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask)
 %   amplitude minima, or if the frequency anomaly (transform frequency
 %   minus scale frequency) is a maximum.
 %
-%   BOOL=ISRIDGEPOINT(W,FS,CHI,STR,FMIN,FMAX) only returns ridge points
+%   BOOL=ISRIDGEPOINT(W,FS,DELTA,STR,FMIN,FMAX) only returns ridge points
 %   between frequencies FMIN and FMAX, which may be either scalars or 
 %   arrays of length SIZE(W,1).
 %
-%   BOOL=ISRIDGEPOINT(W,FS,CHI,STR,FMIN,FMAX,MASK), where MASK is a boolean
+%   BOOL=ISRIDGEPOINT(W,FS,DELTA,STR,FMIN,FMAX,MASK), where MASK is a boolean
 %   variable of the same size as W, only returns ridge points at locations
 %   at which MASK is true.
 %
@@ -38,12 +38,12 @@ function[bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask)
 %
 %   See also RIDGEINTERP, RIDGEWALK.
 %
-%   Usage: [bool,rq,w,om]=isridgepoint(w,fs,chi,str);
-%          [bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax);
-%          [bool,rq,w,om]=isridgepoint(w,fs,chi,str,fmin,fmax,mask);
+%   Usage: [bool,rq,w,om]=isridgepoint(w,fs,delta,str);
+%          [bool,rq,w,om]=isridgepoint(w,fs,delta,str,fmin,fmax);
+%          [bool,rq,w,om]=isridgepoint(w,fs,delta,str,fmin,fmax,mask);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2019 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 %        'groove'      Joint amplitude / phase definition
 
@@ -94,7 +94,7 @@ bool((bool&circshift(bool,-1,2))&err>circshift(err,-1,2))=0;
 bool((bool&circshift(bool,+1,2))&err>circshift(err,+1,2))=0; 
 
 bool1= ~isnan(w);   %Remove NANs
-bool2=~(abs(w)<chi);  %Remove those less than cutoff amplitude
+bool2=~(abs(w)<delta);  %Remove those less than cutoff amplitude
 bool=bool.*bool1.*bool2;
 bool(:,[1 end])=0;
 

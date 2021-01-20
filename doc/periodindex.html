@@ -4,17 +4,18 @@
 <div><h1>PERIODINDEX is the <a href="jRidges.html">jRidges</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="periodindex.html">PERIODINDEX</a>  Returns time index in increments of instantaneous period.
  
-    INDEX=<a href="periodindex.html">PERIODINDEX</a>(DT,OMEGA,N) returns a time index INDEX that skips 
-    every N times the instantaneous period 2*pi/OMEGA.
+    INDEX=<a href="periodindex.html">PERIODINDEX</a>(DT,OMEGA,N) returns an index INDEX giving the start
+    of every Nth cycle completed by the instantaneous frequency OMEGA.
  
     OMEGA is a column vector of instantaneous frequency in radians per unit 
     time as computed by <a href="instmom.html">INSTMOM</a>. DT is the sample time, a scalar.  The
     units of 2*pi/OMEGA should be the same as the units of DT.
  
-    <a href="periodindex.html">PERIODINDEX</a> constructs an index into a vector of the same length as 
-    OMEGA that skips every N times the instantaneous period 2*pi/OMEGA.
-    Thus N=1 returns an index with one sample per period, etc.  The first N
-    periods, and last N periods, are both omitted from the index. 
+    For example, N=1 returns the start of every cycle, N=2 the start of 
+    every second cycle, and N=0.5 the start of every half-cycle.
+ 
+    When N does not fit evenly into the total number of cycles completed by
+    OMEGA, the remainder is split evenly between the beginning and the end.
  
     If NaNs are found within OMEGA, this is interpreted as being separate
     ridges output by <a href="ridgewalk.html">RIDGEWALK</a>.  Then <a href="periodindex.html">PERIODINDEX</a> applies itself to each 
@@ -23,13 +24,18 @@
     INDEX=<a href="periodindex.html">PERIODINDEX</a>(OMEGA,N) also works, with DT defaulting to unity.  In
     this case OMEGA must have units of radians per sample interval.
  
+    [INDEX,BOOL]=<a href="periodindex.html">PERIODINDEX</a>(OMEGA,N) also returns a boolean array BOOL of
+    the same size as OMEGA that is true at the locations given by INDEX,
+    and false otherwise. 
+ 
     <a href="periodindex.html">PERIODINDEX</a> is useful with <a href="ellipseplot.html">ELLIPSEPLOT</a> for plotting ellipses a
     specified number of periods apart.
  
     See also <a href="ellipseplot.html">ELLIPSEPLOT</a>.
  
     Usage: index=<a href="periodindex.html">periodindex</a>(dt,omega,N);
+           [index,bool]=<a href="periodindex.html">periodindex</a>(dt,omega,N);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2011--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2011--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

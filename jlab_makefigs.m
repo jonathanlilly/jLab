@@ -3,6 +3,11 @@ function[varargout]=jlab_makefigs(namestr,str)
 %
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
+%  'jlab_makefigs gulfdrifters':
+%   Lilly, J. M. and P. Perez-Brunius (2021). A gridded surface current
+%       product for the Gulf of Mexico from consolidated  drifter
+%       measurements.  Submitted to Earth Science System Data.
+%
 %  'jlab_makefigs kinematics':
 %   Lilly, J. M. (2018) Kinematics of a fluid ellipse in a linear flow. 
 %       Fluids, 3 (1) 16: 1--29.
@@ -68,7 +73,7 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   .eps files in the current diretory, e.g. 'jlab_makefigs ridges print'. 
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2017 J.M. Lilly --- type 'help jlab_license' for details     
+%   (C) 2000--2020 J.M. Lilly --- type 'help jlab_license' for details     
  
 
 if nargin==1
@@ -88,6 +93,7 @@ jj=jj+1;names{jj}='superfamily';
 jj=jj+1;names{jj}='element';
 jj=jj+1;names{jj}='matern';
 jj=jj+1;names{jj}='kinematics';
+jj=jj+1;names{jj}='gulfdrifters';
 
 %cd(jlab_settings('dirnames.figures'))
 
@@ -112,6 +118,9 @@ end
 
 set(0,'defaultTextInterpreter',dti)
 set(0,'defaultLegendInterpreter',dli)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function[varargout]=jlab_makefigs_gulfdrifters(str) 
+makefigs_gulfdrifters(str);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[]=jlab_makefigs_kinematics(str) 
 %cd /Users/lilly/Desktop/Dropbox/Projects/kinematics

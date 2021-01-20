@@ -15,4 +15,4 @@
 %   Science Foundation (NSF).
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2017 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2007--2020 J.M. Lilly --- type 'help jlab_license' for details        

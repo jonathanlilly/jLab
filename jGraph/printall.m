@@ -23,7 +23,7 @@ function[varargout]=printall(varargin)
 %          printall(h,'-djpeg')
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
  
 str='-dpng';
 name=[];
@@ -57,21 +57,16 @@ elseif contains(str,'tiff')
 end
 
 if isempty(h)
-    a=findall(0);
-    bool=false(size(a));
-    for i=1:length(a)
-        bool(i)=strcmpi(a(i).Type,'figure');
-    end
-    index=find(bool);
-    for i=length(index):-1:1
-        figure(a(index(i)).Number)
+    a=findobj('Type','Figure');
+    for i=length(a):-1:1
+        figure(a(i).Number)
         filename= datestr(now,31);filename(11)='+';filename(14:3:end)='|';
-        namestr=[name filename '-' int2str(a(index(i)).Number)];
+        namestr=[name filename '-' int2str(a(i).Number)];
         eval(['print ' str ' ' namestr])
         if ~isempty(ext)
             eval(['crop ' namestr ext])
         end
-        %close(a(index(i)).Number);
+        close(a(i).Number);
     end
 else
     for i=1:length(h)
@@ -82,7 +77,7 @@ else
         if ~isempty(ext)
             eval(['crop ' namestr ext])
         end
-        %close(h(i));
+        close(h(i));
     end
 end
-close all
+%close all

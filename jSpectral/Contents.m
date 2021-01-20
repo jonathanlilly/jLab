@@ -2,7 +2,8 @@
 % 
 %  Multitaper spectral analysis
 %   sleptap    - Calculate Slepian tapers.                                        
-%   mspec      - Multitaper power and cross spectra.       
+%   mspec      - Multitaper power and cross spectra.
+%   mconf      - Confidence intervals for the multitaper spectral estimate.
 %
 %  Multitaper polarization analysis
 %   msvd       - Singular value decomposition for polarization analysis.   
@@ -19,8 +20,8 @@
 %   fourier     - The one-sided Fourier frequencies for a given length time series.
 %   sampletimes - Computes mean sampling intervals and their statistics.          
 %
-%  Plotting tools
-%   twospecplot - Plots a pair of rotary or Cartesian spectra.   
+%  Plotting tools 
+%   twospecplot - Plots a pair of rotary or Cartesian spectra.  
 %
 %  See also jWavelet, jEllipse, jMatern.
 

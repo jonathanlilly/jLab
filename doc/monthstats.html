@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MONTHSTATS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="monthstats.html">MONTHSTATS</a>  Mean month and standard deviation using circular statistics.
+ 
+    [MFBAR,MFSTD]=<a href="monthstats.html">MONTHSTATS</a>(NUM,DIM) where NUM is an ND array of dates in 
+    Matlab's DATENUM format, finds the mean and standard deviation of the
+    month number in NUM over dimension DIM using circular statistics.
+ 
+    MFBAR and MFSTD are the mean and standard deviations of the month dot
+    fraction, defined such that 1.0 is January first and 12.99999 is the 
+    end of December, as computed from <a href="yearfrac.html">YEARFRAC</a>.
+ 
+    <a href="monthstats.html">MONTHSTATS</a> works by converting month number, computed using <a href="yearfrac.html">YEARFRAC</a>, 
+    into angles, finding the circular statistics, and converting back. 
+ 
+    For a complex-valued, unit magnitude quanity z, one can find the 
+    statistics of its angles through R e^{1i* Theta} = <z> where "<>" is
+    an averaging operator.  Then Theta is the average angle, and the
+    standard deviation of angles is sqrt(-2 ln R).  
+ 
+    See e.g. https://en.wikipedia.org/wiki/Directional_statistics.
+ 
+    Usage: [mfbar,mfstd]=<a href="monthstats.html">monthstats</a>(num,dim);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

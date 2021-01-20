@@ -11,13 +11,13 @@
     TPJAOS.MAT and TPJAOS.NC contain sea surface height anomalies from the 
     integrated alongtrack altimetry dataset, available online at
  
-      https://podaac.jpl.nasa.gov/Integrated_Multi-Mission_Ocean_AltimeterData
+      https://podaac.jpl.nasa.gov/dataset/MERGED_TP_J1_OSTM_OST_ALL_V42
  
     This dataset is produced by Brian Beckley and collaborators on NASA's
     Ocean Surface Topography Science Team (OSTST).  It contains data from
     the TOPEX/Poseidon, Jason-1, OSTM/Jason-2, and Jason-3 satellites.
  
-    Currently TPJAOS contains data through May 30, 2018.
+    Currently TPJAOS contains data through October 27, 2019.
  
     TPJAOS is a slightly reorganized matfile version of the NetCDF files
     distributed at PO.DAAC, and is redistributed with permission.
@@ -38,7 +38,7 @@
     NetCdf version, leads to a structure containing the following fields:
  
       tpjaos.about     Pointer to this document                   
-      tpjaos.num       Cycle start in DATENUM format     [946 x 1]
+      tpjaos.num       Cycle start in DATENUM format     [999 x 1]
       tpjaos.dnum      Days from cycle start date        [3375 x 254]
       tpjaos.lat       Latitude                          [3375 x 254]
       tpjaos.lon       Longitude                         [3375 x 254]
@@ -46,7 +46,7 @@
       tpjaos.dfc       Distance from coast (km)          [3375 x 254]
       tpjaos.depth     Bathymetry depth (km)             [3375 x 254]
       tpjaos.mss       Mean sea surface height (cm)      [3375 x 254]
-      tpjaos.ssh       Sea surface height anomaly (cm)   [3375 x 254 x 946] 
+      tpjaos.ssh       Sea surface height anomaly (cm)   [3375 x 254 x 999] 
    
     The mean sea surface height is given in the PO.DAAC documentation as 
     being the DTU10 Global Gravity field of Anderson (2010). 
@@ -148,16 +148,23 @@
  
     Dataset creation
  
-    The NetCDF files on which TPJAOS is based are available for download
-    from PO.DAAC as follows 
- 
-        ftp ftp://podaac.jpl.nasa.gov
-        cd  allData/merged_alt/L2/TP_J1_OSTM/cycles
-        mget *
-   
-    Note that PO.DAAC distributes two versions, one with each cycle in its 
-    own file, and one (at TP_J1_OSTM/all) that has all data in one file.  
+    PO.DAAC distributes two versions of this data, one with each cycle in 
+    its own file, and one (at TP_J1_OSTM/all) that has all data in one file.  
     We use the former because updates are available more frequently. 
+ 
+    To access the cycle data, go here
+ 
+       https://podaac.jpl.nasa.gov/dataset/MERGED_TP_J1_OSTM_OST_ALL_V42
+ 
+    then click 'Data Access', 'PO.DAAC DRIVE', then in 'Current Location'
+    click 'TP_J1_OSTM' and finally 'cycles'.
+ 
+    Alternatively, a direct link is here
+ 
+       https://podaac-tools.jpl.nasa.gov/drive/files/allData/merged_alt/L2/TP_J1_OSTM/cycles
+ 
+    Unfortunately, since FTP is no longer supported, is is not
+    straightforward to mass download all of the files.
  
     For completeness, the m-file TPJAOS also contains the processing 
     steps used in the creation of the corresponding matfile.  This 
@@ -186,5 +193,5 @@
            about_tpjaos --create     
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2014--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2014--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

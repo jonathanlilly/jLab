@@ -10,6 +10,8 @@ function[varargout]=mspec(varargin)
 %   taper method for real or complex-valued data, and along any dimension.
 %
 %   MSPEC is to be run after calling SLEPTAP to compute the multitapers.
+%
+%   Confidence intervals can be computed by calling MCONF.
 %   _______________________________________________________________________
 %
 %   Real-valued time series
@@ -206,7 +208,7 @@ function[varargout]=mspec(varargin)
 %   'mspec --t' runs some tests.
 %   'mspec --f' generates the above sample figure from Bravo mooring data.
 %
-%   See also: SLEPTAP, HERMFUN, MSVD, TWOSPECPLOT.
+%   See also:  SLEPTAP, MCONF, HERMFUN, MSVD, TWOSPECPLOT.
 %
 %   Usage   [f,s]=mspec(x,psi);    
 %           [f,s]=mspec(dt,x,psi);     
@@ -452,6 +454,12 @@ end
 %figure,plot(lambdamat)
 bkmat=var.*(1-lambdamat);  %Outer product;
    
+
+% sold=s;
+% smat=vrep(s,size(eigspec,N),N);
+% dk=(smat.*real(sqrt(lambdamat)))./(smat.*lambdamat+bkmat);  %Outer products
+% s=frac(sum(dk.^2.*eigspec,N),sum(abs(dk).^2,N));
+    
 i=0;
 %maxmax(abs(s-sold)./sold)
 while anyany(abs(s-sold)./sold>tol)&&i<20
@@ -556,7 +564,6 @@ varargout{2}=[];
 varargout{3}=[];
 
 for i=1:size(x,2)
-    
     Nnans=length(find(~isfinite(x{i})));
     if Nnans>0
         disp(['MSPEC finding non-finite data values.  Spectrum will be undefined.'])
@@ -580,14 +587,14 @@ cv=bravo94.rcm.cv(:,2:end);
 
 [~,spp,snn,spn]=mspec(cv,psi,lambda,'adaptive');
 [~,spp2,snn2,spn2]=mspec(conj(cv)',psi,2,lambda,'adaptive');
-bool=aresame(spp,spp2')&&aresame(snn,snn2')&&aresame(spn,conj(spn2)');
+bool=aresame(spp,spp2',1e-9)&&aresame(snn,snn2',1e-9)&&aresame(spn,conj(spn2)',1e-9);
 reporttest('MSPEC transposed input for adaptive spectrum',bool)
 
 [~,sxx,syy,sxy]=mspec(real(cv),imag(cv),psi);
 [~,spp,snn,spn]=mspec(cv,psi);
 
 [~,spp2,snn2,spn2]=mspec(conj(cv)',psi,2);
-bool=aresame(spp,spp2')&&aresame(snn,snn2')&&aresame(spn,conj(spn2)');
+bool=aresame(spp,spp2',1e-9)&&aresame(snn,snn2',1e-9)&&aresame(spn,conj(spn2)',1e-9);
 reporttest('MSPEC transposed input for average spectrum',bool)
 
 S(1,1,:,:)=sxx;

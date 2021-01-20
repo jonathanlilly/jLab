@@ -23,8 +23,8 @@ function[cv,zeta,n,s,p]=psi2fields(varargin)
 %   computing the gradient fields. By default, DX is set to unity. 
 %   
 %   PSI is taken to have units of meters squared per second.  The units of
-%   CV are given in centimeters per second, N and S have units of inverse
-%   seconds, and P has units of inverse seconds squared. 
+%   CV are given in centimeters per second, ZETA, N, and S have units of
+%   inverse seconds, and P has units of inverse seconds squared. 
 %   __________________________________________________________________
 %
 %   Algorithm choice

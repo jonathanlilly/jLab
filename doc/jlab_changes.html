@@ -4,6 +4,42 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.6.7c
+ 
+    New functions:
+ 
+    <a href="eddyfit2d.html">eddyfit2d</a>     - Least squares fit of 2D velocity data to an eddy profile.
+    <a href="monthstats.html">monthstats</a>    - Mean month and standard deviation using circular statistics.
+    <a href="jhanning.html">jhanning</a>      - Hanning window.
+    <a href="celldot.html">celldot</a>       - Dot product for arrays of column vectors.
+   
+    Updated datasets:  
+    
+    JTOPO global topography is now at 1/12th resolution.
+    
+ 
+    Changes and improvements:
+ 
+    <a href="maternfit.html">MATERNFIT</a> now includes an option to average over ensemble members.
+    <a href="maternfit.html">MATERNFIT</a>, <a href="maternspec.html">MATERNSPEC</a>, <a href="materncov.html">MATERNCOV</a>, and <a href="maternoise.html">MATERNOISE</a> now all support the 
+         possibility of real-valued, as well as complex-valued processes.     
+    <a href="mspec.html">MSPEC</a> now uses two-sided, not one-sided, normalization for real data.
+    <a href="polysmooth.html">POLYSMOOTH</a> considerable speed improvements. 
+    <a href="spheresort.html">SPHERESORT</a> and <a href="twodsort.html">TWODSORT</a> improvements and major change to output format.
+    <a href="spherelap.html">SPHERELAP</a> now computes all the terms in the Hessian matrix.
+    <a href="ab2kl.html">AB2KL</a> bugfix for B=0.
+    <a href="readtopo.html">READTOPO</a> bugfixes when using interpolation option.
+    <a href="periodindex.html">PERIODINDEX</a> new, faster algorithm based on ridge age.
+    <a href="vmoment.html">VMOMENT</a> bugfix affecting all odd moments.
+    <a href="letterlabels.html">LETTERLABELS</a> bugfix to avoid legend handles, if present. 
+    <a href="cellpack.html">CELLPACK</a> functionality change to key off of the first input argument.
+    <a href="vstd.html">VSTD</a> redefined for complex-valued arguments.
+    <a href="yearfrac.html">YEARFRAC</a> bugfix for NUM consisting of a ND array.
+    <a href="ellrossby.html">ELLROSSBY</a> factor of two change to be consisent with the literature.
+    <a href="trajextract.html">TRAJEXTRACT</a> and <a href="polysmooth.html">POLYSMOOTH</a> bugfixes for sample figures. 
+    <a href="twodstats.html">TWODSTATS</a> and <a href="twodmed.html">TWODMED</a> fixed sample figures.
+    -----------------------------------------------------------------------
+ 
     Changes new in version 1.6.6
  
     Figure making for a new publications:
@@ -23,6 +59,7 @@
     <a href="cellmed.html">cellmed</a>      - Median value of each element a cell array.
     <a href="cellsum.html">cellsum</a>      - Sum of each element a cell array, possibly weighted.
     <a href="interplatlon.html">interplatlon</a> - Interpolation for working with latitude and longitude.
+    <a href="jhanning.html">jhanning</a>      - Hanning window.
  
     Updated datasets:  All datasets now include both a mat-file version and
          a NetCDF version.  The NetCDF versions are larger but load faster.
@@ -340,5 +377,5 @@
     Removed a large number of obsolete functions; consolidated many others.
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information 
-    (C) 2002--2015 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2002--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

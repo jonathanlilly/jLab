@@ -14,10 +14,11 @@
     <a href="mspec.html">MSPEC</a> is to be run after calling <a href="sleptap.html">SLEPTAP</a> to compute the multitapers.
     _______________________________________________________________________
  
-    One-sided power spectrum
+    Real-valued time series
  
-    [F,S]=<a href="mspec.html">MSPEC</a>(X,PSI) returns the one-sided power spectrum of X at 
-    positive frequencies using data tapers PSI. 
+    [F,S]=<a href="mspec.html">MSPEC</a>(X,PSI) returns the power spectrum of the real-valued time
+    series X at positive frequencies using data tapers PSI.  The spectrum
+    at negative frequencies, which is not returned, is identical.
  
     X may be an array with an arbitrary number of dimensions and with time 
     along it first dimensions.  Let M be its number of rows, M=SIZE(X,1).
@@ -108,8 +109,11 @@
     [F,S]=<a href="mspec.html">MSPEC</a>(DT,X,[]) where X is a real-valued time series of length M
     recovers the variance of X, STD(X,1).^2, as follows:
  
-      (1/2/pi)*(F(2)-F(1))*SUM(S(2:end))               -- M odd
-      (1/2/pi)*(F(2)-F(1))*(SUM(S(2:end-1))+S(end)/2)  -- M even
+      2*(1/2/pi)*(F(2)-F(1))*SUM(S(2:end))               -- M odd
+      2*(1/2/pi)*(F(2)-F(1))*(SUM(S(2:end-1))+S(end)/2)  -- M even
+ 
+    where the initial factor of two accounts for the fact that the spectrum 
+    at negative frequencies is the same as that at positive frequencies.
  
     Note that the zero frequency is omitted in the summation, and for even 
     time series length, the power at the Nyquist S(end) must be divided by 
@@ -167,7 +171,7 @@
  
     Let's say one has P different time series, X1, X2,..., XP.  Put these 
     into a cell array X{1}=X1, X{2}=X2, ..., X{P}=XP, and then use
-    '[psi,lambda]=<a href="sleptap.html">sleptap</a>(<a href="cellength.html">cellength</a>(x))' to make a cell array of tapers.
+    "[psi,lambda]=<a href="sleptap.html">sleptap</a>(<a href="cellength.html">cellength</a>(x))" to make a cell array of tapers.
  
     [F,S]=<a href="mspec.html">MSPEC</a>(X,PSI) then returns cell arrays F and S corresponding 
     to the Fourier frequencies and spectra of the P arrays.  
@@ -204,7 +208,7 @@
     '<a href="mspec.html">mspec</a> --t' runs some tests.
     '<a href="mspec.html">mspec</a> --f' generates the above sample figure from Bravo mooring data.
  
-    See also: <a href="sleptap.html">SLEPTAP</a>, <a href="hermfun.html">HERMFUN</a>, MTRANS, <a href="msvd.html">MSVD</a>, <a href="twospecplot.html">TWOSPECPLOT</a>.
+    See also: <a href="sleptap.html">SLEPTAP</a>, <a href="hermfun.html">HERMFUN</a>, <a href="msvd.html">MSVD</a>, <a href="twospecplot.html">TWOSPECPLOT</a>.
  
     Usage   [f,s]=<a href="mspec.html">mspec</a>(x,psi);    
             [f,s]=<a href="mspec.html">mspec</a>(dt,x,psi);     
@@ -214,5 +218,5 @@
             [f,sxx,syy,sxy]=<a href="mspec.html">mspec</a>(x,y,psi,dim);
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2000--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2000--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

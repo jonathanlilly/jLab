@@ -14,10 +14,11 @@
  
         http://www.aoml.noaa.gov/phod/dac/index.php
  
-    This data differs from AOML's version in that all gaps up to two days 
-    have been filled with linear interpolation, trajectory segments have 
-    been split at any gaps longer than two days, and only drifter records 
-    with at least one week of data are returned.  
+    This is essentially just a reorganized version of the AOML dataset.
+ 
+    The only substantial difference is that the data is interpolated to a
+    uniform six-hourly time grid with no gaps in the time index. All data
+    values during gaps greater than 6 hours are flagged with values of INF.
  
     DRIFTERS.MAT is a Matlab version, and DRIFTERS.NC is a NetCDF version.
  
@@ -30,21 +31,25 @@
     LOAD DRIFTERS loads the structure DRIFTERS, with the following fields:
  
         drifters.about     Pointer to this document            
-        drifters.id        Drifter ids                 [22058 x 1 array] 
-        drifters.buoy      Drifter buoy type           [22058 x 1 array] 
-        drifters.num       Date in DATENUM format      {22058 x 1 cell} 
-        drifters.lat       Latitudes                   {22058 x 1 cell} 
-        drifters.lon       Longitudes                  {22058 x 1 cell} 
-        drifters.u         Eastward velocity in cm/s   {22058 x 1 cell}   
-        drifters.v         Northward velocity in cm/s  {22058 x 1 cell}   
-        drifters.t         Temperature in centigrade   {22058 x 1 cell} 
-        drifters.flag      Drogue presence flag        {22058 x 1 cell}   
-        drifters.filled    True if data was filled     {22058 x 1 cell}   
+        drifters.id        Drifter ids                  [24928 x 1 array] 
+        drifters.buoy      Drifter buoy type            [24928 x 1 array] 
+        drifters.num       Date in DATENUM format       {24928 x 1 cell} 
+        drifters.lat       Latitudes                    {24928 x 1 cell} 
+        drifters.lon       Longitudes                   {24928 x 1 cell} 
+        drifters.u         Eastward velocity in cm/s    {24928 x 1 cell}   
+        drifters.v         Northward velocity in cm/s   {24928 x 1 cell}   
+        drifters.t         Temperature in centigrade    {24928 x 1 cell} 
+        drifters.drogue    Drogue presence flag         {24928 x 1 cell}   
+        drifters.laterr    Estimated latitude error     {24928 x 1 cell} 
+        drifters.lonerr    Estimated longitude error    {24928 x 1 cell} 
+        drifters.terr      Estimated temperature error  {24928 x 1 cell} 
  
-    NUM, LAT, LON, U, V, T, and FLAG are all cell arrays, with one drifter 
-    per cell.
+    NUM, LAT, LON, U, V, T, and DROGUE are all cell arrays, with one 
+    drifter per cell.
  
-    BUOY, FLAG and FILLED are metadata information described below.
+    BUOY and DROGUE are metadata information described below.
+ 
+    LATERR, LONERR, and TERR are error estimates from the original files.
  
     A number of routines are available in <a href="jLab.html">JLAB</a> to work directly with such
     cell arrays, see <a href="jCell.html">JCELL</a>.  In particular, <a href="cellplot.html">CELLPLOT</a> will plot such data.
@@ -65,16 +70,13 @@
  
     Metadata
  
-    The fields BUOY and FLAG give metadata information. BUOY is the drifter
+    The fields BUOY and DROGUE give metadata information. BUOY is the drifter
     design type according to the following code:
  
        1=SVP,  2=SVPB, 3=SVPC, 4=SVPBS, 5=SVPW, 6=SVPBW.
  
-    FLAG is true when the drifter's drogue is estimated to be present, and
+    DROGUE is true when the drifter's drogue is estimated to be present, and
     false otherwise. 
- 
-    FILLED is true for data points that have been filled with linear 
-    interpolation.  This is done for all gaps up to two days.
     _______________________________________________________________________
  
     NetCDF version
@@ -100,16 +102,16 @@
     '<a href="about_drifters.html">about_drifters</a> --create' will recreate DRIFTERS.MAT and DRIFTERS.NC
     by reading in the original downloaded data.  This will take a while.
  
-    As of January 2019, the AOML drifter dataset consists of eight files:
+    As of January 2020, the AOML drifter dataset consists of eight files:
     
             buoydata_1_5000.dat
             buoydata_5001_10000.dat
             buoydata_10001_15000.dat
-            buoydata_15001_jun18.dat
+            buoydata_15001_jun19.dat
             dirfl_1_5000.dat
             dirfl_5001_10000.dat
             dirfl_10001_15000.dat
-            dirfl_15001_jun18.dat
+            dirfl_15001_jun19.dat
  
     You'll need to make sure to put the directory containing the files on
     your Matlab search path using ADDPATH, e.g. 'addpath ~/Data/aoml'.
@@ -123,5 +125,5 @@
            about_drifters --create     
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2007--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2007--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

@@ -1,24 +1,53 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.6.7c
+%   Changes new in version 1.6.9
 %
-%   New functions:
+%   Figure making for two new publications, see JLAB_MAKEFIGS:
+%      
+%   Lilly and Perez-Brunius (2021b). Extracting statistically significant 
+%       eddy signals from large Lagrangian datasets, with application to 
+%       the Gulf of Mexico. In review at Nonlinear Processes in Geophysics.
 %
+%   Lilly and Perez-Brunius (2021a). A gridded surface current product for
+%       the Gulf of Mexico from consolidated  drifter measurements.  
+%       Accepted to Earth Science System Data.
+%
+%   Major new functions for Lagrangian eddy analysis and statistics:
+%
+%   eddyridges    - Coherent eddy ridges from Lagrangian trajectories.   
+%   noisedrifters - Create a noise Lagrangian dataset matching mean and variance.
+%   eddylevels    - Eddy ridge significance levels using the survival function.
+%   griddrifters  - Average drifter velocities onto a space/time 3D grid.
+%
+%   Other new functions:
+%
+%   spheretrans   - Wavelet transform for oscillations on the surface of a sphere.
+%   ridgemult     - Ridge multiplicity, the number of simultaneous ridges present.
+%   catstruct     - Concatenates the array elements of a cell array of structures.
+%   structindex   - Applies an index to all array-valued fields in a structure.
+%   mconf         - Confidence intervals for the multitaper spectral estimate.
+%   chisquared    - The chi-squared distribution.
 %   eddyfit2d     - Least squares fit of 2D velocity data to an eddy profile.
+%   simpleddy     - Streamfunction, velocity, and vorticity for various eddy profiles.
 %   monthstats    - Mean month and standard deviation using circular statistics.
 %   jhanning      - Hanning window.
 %   celldot       - Dot product for arrays of column vectors.
-%  
+%   haxby         - The Haxby colormap.  
+%   seminfhaxby   - The seminf-Haxby colormap.
+%
 %   Updated datasets:  
 %   
 %   JTOPO global topography is now at 1/12th resolution.
 %   
-%
 %   Changes and improvements:
 %
+%   SLEPTAP vast speed improvements for handling multiple time series.
+%   LINECOLOR bugfixes.
+%   PRINTALL organization improvement and bugfix for R2020a.
 %   MATERNFIT now includes an option to average over ensemble members.
-%   MATERNFIT, MATERNSPEC, MATERNCOV, and MATERNOISE now all support the 
-%        possibility of real-valued, as well as complex-valued processes.     
+%   MATERNFIT, MATERNSPEC, MATERNCOV, and MATERNOISE refactoring, support 
+%        for new extensions of the Matern process, support real-valued as
+%        well as complex-valued processes, and input argument changes. 
 %   MSPEC now uses two-sided, not one-sided, normalization for real data.
 %   POLYSMOOTH considerable speed improvements. 
 %   SPHERESORT and TWODSORT improvements and major change to output format.
@@ -31,9 +60,14 @@
 %   CELLPACK functionality change to key off of the first input argument.
 %   VSTD redefined for complex-valued arguments.
 %   YEARFRAC bugfix for NUM consisting of a ND array.
-%   ELLROSSBY factor of two change to be consisent with the literature.
+%   ELLROSSBY new definition of Rossby number based on inferred vorticity.
 %   TRAJEXTRACT and POLYSMOOTH bugfixes for sample figures. 
 %   TWODSTATS and TWODMED fixed sample figures.
+%   LINECOLOR can now take either a colormap matrix or a name as input.
+%   NCLOAD can now handle filenames including hyphens '-'.
+%   NCLOAD now supports cell conversion for the 'trajectory' feature type.
+%   NCLOAD now converts all non-double numeric variables into doubles.
+%   NCLOAD is now self-contained.
 %   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.6.6

@@ -53,12 +53,12 @@ function [structout] = maternfit(varargin)
 %
 %   The default search ranges and initial guess values are as follows:
 % 
-%                      Low  Guess  High 
-%        SIGMA    =   [0      1    100] * STD(Z)
-%        ALPHA    =   [1/2    1     10] 
-%        LAMBDA   =   [1e-3  2e-3   10] * ABS(FO)
-%        EPSILON  =   [0      0      0] * STD(Z)
-%        NU       =   [0      0      0] * ABS(FO)
+%                     Low  Guess  High 
+%        SIGMA    =  [0      1    100] * STD(Z)
+%        ALPHA    =  [1/2    1     10] 
+%        LAMBDA   =  [1e-3  2e-3   10] * ABS(FO)
+%        EPSILON  =  [0      0      0] * STD(Z)
+%        NU       =  [0      0      0] * ABS(FO)
 %
 %   Note that by default, neither the EPSILON nor NU parameters are used. 
 %
@@ -67,7 +67,7 @@ function [structout] = maternfit(varargin)
 %   A common special case is the inclusion of an additive noise component. 
 %   Calling flag MATERNFIT(...'noisy'), which sets
 % 
-%        EPSILON  =   [0     1/2     2] * STD(Z)
+%        EPSILON  =  [0     0.01     2] * STD(Z)
 %
 %   for the range of the EPSILON parameter.  According to the spectral
 %   normalizations used here, a white noice time series with standard 
@@ -112,6 +112,42 @@ function [structout] = maternfit(varargin)
 %      PARAMS.CORES   String specifying series or parallel computation
 %  
 %   These parameters are described in more detail below.
+%   __________________________________________________________________
+%
+%   Extensions
+%
+%   Two extensions of the basic Matern form are supported, discussed in 
+%   more detail in MATERNSPEC.
+% 
+%   An oscillatory version, with nonzero MU, and a noisy version, with 
+%   nonzero EPSILON, are available as options with these two extensions.
+%
+%   Generalized Matern
+%
+%   MATERFIT(...,'general') fits to the spectrum of generalized Matern
+%   process. A parameter GAMMA is used with the default range
+%
+%        GAMMA  =  [1/2     1    20] 
+%
+%   such that the initial guess is the standard Matern process.  
+%
+%   The difference between the generalized Matern and standard Matern is
+%   limited to frequency band in the vicinity of the falloff frequency, so 
+%   unless you are averaging over many time series (decribed below), you
+%   can expect a lot of variability in the fit value of GAMMA.
+%
+%   Extended Matern
+%
+%   MATERFIT(...,'extended') fits to the spectrum of an extended Matern
+%   process. A parameter MU is used with the default range
+%
+%            MU  =  [1/100  10  100] * ABS(FO)
+%
+%   and in this case, the ALPHA parameter has the default range
+%
+%       ALPHA    =  [-1/2    1    10]
+%
+%   which has a different lower bound than for the standard Matern process.
 %   __________________________________________________________________
 %   
 %   Options for multiple input time series
@@ -321,12 +357,18 @@ function [structout] = maternfit(varargin)
 %
 %   'maternfit --t' runs a test.
 %
-%   Usage: fit=maternfit(dt,z);
-%          fit=maternfit(dt,z,fc,a,b);
+%   Usage: fit=maternfit(dt,z,fo);
+%          fit=maternfit(dt,z,fo,a,b);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2014--2020 J.M. Lilly and A.M. Sykulski
 %                                --- type 'help jlab_license' for details
+
+
+%   Composite Matern
+%
+%   MATERFIT(...,'composite') fits to the spectrum of an composite Matern
+%   process. A parameter MU is used with the default range
 
 %Notes to self:
 %Note, this is all set up to run the 5-parameter Matern process, I have
@@ -348,20 +390,17 @@ end
 range=struct;
 
 %Ranges for the background process
-range.background.sigma=[0 1 100];            %Range of standard deviation as fraction of total
-range.background.alpha=[1/2 1 10];           %Range of slope parameter
-range.background.lambda=[1/1000 2/1000 10];  %Range of decay parameter as multiple of Coriolis
-range.background.nu=[0 0 0];                 %Frequency shift is fixed at NU=0
-range.background.mu=[0 0 0];                 %Range of damping parameter as multiple of inverse Coriolis
-range.background.epsilon=[0 1/2 2];          %Noise level
+range.sigma=[0 1 100];            %Range of standard deviation as fraction of total
+range.alpha=[1/2 1 10];           %Range of slope parameter
+range.lambda=[1/1000 2/1000 10];  %Range of decay parameter as multiple of Coriolis
+range.mu=[0 0 0];                 %Range of damping parameter as multiple of inverse Coriolis
+range.nu=[0 0 0];                 %Frequency shift is fixed at NU=0
+range.epsilon=[0 0.01 2];         %Noise level
 %--------------------------------------------------------------------------
 %Initialize value structure
 names=fieldnames(range);
 for i=1:length(names)
-    subnames=fieldnames(eval(['range.' names{i}]));
-    for j=1:length(subnames)
-        eval(['value.' names{i} '.' subnames{j} '=[];'])
-    end
+    eval(['value.' names{i} '=[];'])
 end
 %--------------------------------------------------------------------------
 dt=double(varargin{1});
@@ -374,7 +413,7 @@ opts.side='both';            %Determines side: opposite, same, or both
 opts.alg='bnd';              %Algorithm: bnd, con, or nlopt
 opts.ver='difference';       %Fit version: difference or raw
 opts.cores='serial';         %Serial or parallel computation
-opts.bgtype='matern';        %Type of model for background
+opts.bgtype='mat';      %Type of model for background
 opts.noise='clean';          %Noisy or clean
 opts.cols='fit';             %Fit or average
 
@@ -398,7 +437,7 @@ for i=1:30
             opts.cores=varargin{end};
         elseif strcmpi(varargin{end}(1:3),'sta')||strcmpi(varargin{end}(1:3),'com')
             opts.model=varargin{end};
-        elseif strcmpi(varargin{end}(1:3),'mat')||strcmpi(varargin{end}(1:3),'exp')||strcmpi(varargin{end}(1:3),'ext')
+        elseif strcmpi(varargin{end}(1:3),'mat')||strcmpi(varargin{end}(1:3),'exp')||strcmpi(varargin{end}(1:3),'ext')||strcmpi(varargin{end}(1:3),'gen')
             opts.bgtype=varargin{end};
         elseif strcmpi(varargin{end}(1:3),'noi')||strcmpi(varargin{end}(1:3),'cle')
             opts.noise=varargin{end};
@@ -412,54 +451,61 @@ for i=1:30
                 psi=varargin{end};
             elseif strcmpi(varargin{end-1}(1:3),'ran')
                 name=varargin{end-1}(7:end);
-                range.background=setfield(range.background,name,varargin{end});
+                range=setfield(range,name,varargin{end});
             elseif strcmpi(varargin{end-1}(1:3),'val')
                 name=varargin{end-1}(7:end);
-                value.background=setfield(value.background,name,varargin{end});
+                value=setfield(value,name,varargin{end});
             end
             varargin=varargin(1:end-2);
         end
     end
 end
 %--------------------------------------------------------------------------
-%Convert value structure to a cell array
+%Make sure ranges and flags are set correctly for specified model type
+if strcmpi(opts.bgtype(1:3),'exp')
+    range.alpha=[-1/2 -1/2 -1/2];
+    range.mu=[1/100 10 100];  
+    %range.lambda=[1/100000 2/1000 10];  %Range of decay parameter as multiple of Coriolis
+elseif strcmpi(opts.bgtype(1:3),'ext')
+    range.alpha=[-1/2 1 10];
+    range.mu=[1/100 10 100];  
+elseif strcmpi(opts.bgtype(1:3),'gen')
+    range.mu=[1/2 1 20];  
+elseif strcmp(opts.bgtype(1:3),'mat')
+    if range.alpha(1)<=1/2
+        %Correction for alpha being less than permitted value
+        range.alpha(1)=1/2+1e-10;
+    end
+end
+if strcmpi(opts.noise(1:3),'cle')
+    range.epsilon=[0 0 0];
+end
+if isfield(range,'gamma')
+    range.mu=range.gamma;
+    range=rmfield(range,'gamma');
+end
+%--------------------------------------------------------------------------
+%Convert value structure to a numeric array
 if iscell(z)
     N=length(z);
 else
     N=size(z,2);
 end
-names=fieldnames(range);
-for i=1:length(names)
-    subnames=fieldnames(eval(['range.' names{i}]));
-    for j=1:length(subnames)
-        subvalue=eval(['value.' names{i} '.' subnames{j}]);
-        if ~isempty(subvalue)
-            values(i,j)=subvalue;
-        else
-            values(i,j)=nan;
-        end
-    end
-end
+values=nan*zeros(6,3);
+values(1,:)=range.sigma;
+values(2,:)=range.alpha;
+values(3,:)=range.lambda;
+values(4,:)=range.mu;
+values(5,:)=range.nu;
+values(6,:)=range.epsilon;
+if ~isempty(value.sigma),   values(1,:)=value.sigma;end
+if ~isempty(value.alpha),   values(1,:)=value.alpha;end
+if ~isempty(value.lambda),  values(1,:)=value.lambda;end
+if ~isempty(value.mu),      values(1,:)=value.mu;end
+if ~isempty(value.nu),      values(1,:)=value.nu;end
+if ~isempty(value.epsilon), values(1,:)=value.epsilon;end
 %Have to convert this to numeric values because I can't pass a structure
 %through to the workers, for some unknown reason
-%--------------------------------------------------------------------------
-%Make sure ranges and flags are set correctly for specified model type
-if strcmpi(opts.bgtype(1:3),'exp')
-    range.background.alpha=[-1/2 -1/2 -1/2];
-    range.background.mu=[1/100 10 100];  
-    %range.background.lambda=[1/100000 2/1000 10];  %Range of decay parameter as multiple of Coriolis
-elseif strcmpi(opts.bgtype(1:3),'ext')
-    range.background.alpha=[-1/2 1 10];
-    range.background.mu=[1/100 10 100];  
-elseif strcmp(opts.bgtype(1:3),'mat')
-    if range.background.alpha(1)<=1/2
-        %Correction for alpha being less than permitted value
-        range.background.alpha(1)=1/2+1e-10;
-    end
-end
-if strcmpi(opts.noise(1:3),'cle')
-    range.background.epsilon=[0 0 0];
-end
 %--------------------------------------------------------------------------
 %Frequency range
 flow=0;
@@ -550,13 +596,11 @@ else
         psi=[];
     end
 end
-
-%range.background
 %--------------------------------------------------------------------------
 if ~iscell(z)&&( size(z,2)==1 || strcmpi(opts.cols(1:3),'ave'))
     %Single time series input, no loop
     [x,xa,xb,xo,like,aicc,P,a,b,err,exitflag,iters]=...
-        maternfit_one(dt,z,flow,fhigh,range,opts,fc,psi,win,stdz,values);
+        maternfit_one(dt,z,flow,fhigh,opts,fc,psi,win,stdz,values);
     %The rest of this simply implements different types of loops
 elseif ~iscell(z)
     %Loop over matrix columns
@@ -567,16 +611,16 @@ elseif ~iscell(z)
         for i=1:size(z,2)
             disp(['MATERNFIT processing series ' int2str(i) ' of ' int2str(size(z,2)) '.'])
             [x(i,:),xa(i,:),xb(i,:),xo(i,:),like(i),aicc(i),P(i),a(i),b(i),err(i),exitflag(i),iters(i)]=...
-                maternfit_one(dt(i),z(:,i),flow,fhigh,range,opts,fc(i),psi,win,stdz(i),values);
+                maternfit_one(dt(i),z(:,i),flow,fhigh,opts,fc(i),psi,win,stdz(i),values);
         end
     elseif strcmpi(opts.cores(1:3),'par')
         %For parallel loop over matrix columns
         disp('MATERNFIT using parallel for loop...')
         parfor i=1:size(z,2)
-            %dt(i),flow,fhigh,range,opts,fc(i),fit
+            %dt(i),flow,fhigh,opts,fc(i),fit
             disp(['MATERNFIT processing series ' int2str(i) ' of ' int2str(size(z,2)) '.'])
             [x(i,:),xa(i,:),xb(i,:),xo(i,:),like(i),aicc(i),P(i),a(i),b(i),err(i),exitflag(i),iters(i)]=...
-                maternfit_one(dt(i),z(:,i),flow,fhigh,range,opts,fc(i),psi,win,stdz(i),values);
+                maternfit_one(dt(i),z(:,i),flow,fhigh,opts,fc(i),psi,win,stdz(i),values);
         end
     end
 elseif iscell(z)
@@ -588,7 +632,7 @@ elseif iscell(z)
         for i=1:length(z)
             disp(['MATERNFIT processing series ' int2str(i) ' of ' int2str(length(z)) '.'])
             [x(i,:),xa(i,:),xb(i,:),xo(i,:),like(i),aicc(i),P(i),a(i),b(i),err(i),exitflag(i),iters(i)]=...
-                maternfit_one(dt(i),z{i},flow,fhigh,range,opts,fc(i),psi{i},win{i},stdz{i},values);
+                maternfit_one(dt(i),z{i},flow,fhigh,opts,fc(i),psi{i},win{i},stdz{i},values);
         end
     elseif strcmpi(opts.cores(1:3),'par')
         %For parallel loop over cell array
@@ -596,7 +640,7 @@ elseif iscell(z)
         parfor i=1:length(z) 
             disp(['MATERNFIT processing series ' int2str(i) ' of ' int2str(length(z)) '.'])
             [x(i,:),xa(i,:),xb(i,:),xo(i,:),like(i),aicc(i),P(i),a(i),b(i),err(i),exitflag(i),iters(i)]=...
-                maternfit_one(dt(i),z{i},flow,fhigh,range,opts,fc(i),psi{i},win{i},stdz{i},values);
+                maternfit_one(dt(i),z{i},flow,fhigh,opts,fc(i),psi{i},win{i},stdz{i},values);
         end
     end
 end
@@ -604,16 +648,20 @@ end
 sigma=x(:,1);
 alpha=x(:,2);
 lambda=x(:,3);
-nu=x(:,4);
-mu=x(:,5);
+mu=x(:,4);
+nu=x(:,5);
 epsilon=x(:,6);
 
 clear range
 range.sigma=  [xa(:,1)  xo(:,1)  xb(:,1)];
 range.alpha=  [xa(:,2)  xo(:,2)  xb(:,2)];
 range.lambda= [xa(:,3)  xo(:,3)  xb(:,3)];
-range.nu=     [xa(:,4)  xo(:,4)  xb(:,4)];
-range.mu=     [xa(:,5)  xo(:,5)  xb(:,5)];
+if strcmpi(opts.bgtype(1:3),'gen')
+    range.gamma=[xa(:,4)  xo(:,4)  xb(:,4)];
+else
+    range.mu=[xa(:,4)  xo(:,4)  xb(:,4)];
+end
+range.nu=     [xa(:,5)  xo(:,5)  xb(:,5)];
 range.epsilon=[xa(:,6)  xo(:,6)  xb(:,6)];
 
 structout=[];
@@ -622,12 +670,29 @@ use opts
 
 make params dt fc a b P like aicc err exitflag iters side alg ver cores 
 %make params dt fc a b P like aicc err exitflag iters side alg ver bgtype cores 
-make structout sigma alpha lambda epsilon nu mu range params
 
-if ~(strcmpi(opts.bgtype(1:3),'exp')||strcmpi(opts.bgtype(1:3),'ext'))
+if strcmpi(opts.bgtype(1:3),'gen')
+    gamma=mu;
+    make structout sigma alpha lambda gamma nu epsilon range params
+else
+    make structout sigma alpha lambda mu nu epsilon range params
+end
+
+%remove some fields I don't use
+if strcmpi(opts.bgtype(1:3),'mat')
     structout=rmfield(structout,'mu');
     structout.range=rmfield(structout.range,'mu');
 end
+if strcmpi(opts.noise(1:3),'cle')
+    structout=rmfield(structout,'epsilon');
+    structout.range=rmfield(structout.range,'epsilon');
+end
+if all(range.nu==0)
+    structout=rmfield(structout,'nu');
+    structout.range=rmfield(structout.range,'nu');
+end
+
+
 
 %--------------------------------------------------------------------------
 function[x,exitflag,iters]=maternfit_optimize(dt,N,om,spp,snn,index,xa,xo,xb,opts,realflag)
@@ -698,7 +763,7 @@ elseif strcmpi(opts.ver(1:3),'sec')
 end
 
 %Compute the blurred spectrum by first computing the covariance.  
-R=maternfit_materncov(dt,N,x,realflag);    
+R=maternfit_materncov(dt,N,x,realflag,opts.bgtype);    
 [f,Spp,Snn]=maternfit_blurspec(dt,R,opts.ver,opts.win);
 
 %length(R)
@@ -726,16 +791,16 @@ like=double(like);
 %hold on,plot(f,spphat),plot(-f, Spp)
 %--------------------------------------------------------------------------
 %function[x,xar,xbr,like,aicc,P,f,spp,snn,Spp,Snn,a,b,err]=maternfit_one(dt,z,flow,fhigh,side,alg,ver,range,fc)
-function[x,xa,xb,xo,like,aicc,P,a,b,err,exitflag,iters]=maternfit_one(dt,z,flow,fhigh,range,opts,fc,psi,win,stdz,values)
+function[x,xa,xb,xo,like,aicc,P,a,b,err,exitflag,iters]=maternfit_one(dt,z,flow,fhigh,opts,fc,psi,win,stdz,values)
 
 %This is pretty dumb, but Matlab doesn't want me to pass a structure 
 %through parfor.  Thus I have to convert to a matrix and then back again.
-value.background.sigma=values(1,1);
-value.background.alpha=values(1,2);
-value.background.lambda=values(1,3);
-value.background.nu=values(1,4);
-value.background.mu=values(1,5);
-value.background.epsilon=values(1,6);
+sigma=values(1,:);
+alpha=values(2,:);
+lambda=values(3,:);
+mu=values(4,:);
+nu=values(5,:);
+epsilon=values(6,:);
 
 [x,xa,xb,xo]=vzeros(1,6,nan);
 [like,aicc,P,a,b,err,exitflag,iters]=vzeros(1,1,nan);
@@ -753,33 +818,18 @@ if strcmpi(opts.cols(1:3),'ave')
     stdz=sqrt(vmean(squared(stdz),2));
 end
 
-use range
 %Multiply standard deviation ranges by sample standard deviation 
-background.sigma    = background.sigma*stdz;
-background.epsilon  = background.epsilon*stdz;
+sigma    = sigma*stdz;
+epsilon  = epsilon*stdz;
 
 %Multiply damping and frequency ranges by Coriolis frequency
-background.lambda  = background.lambda*abs(fc);     
-background.mu      = background.mu.*abs(fc);   %Is this a time or frequency scale?
-
-%Determine if any explicit values are input
-names=fieldnames(value);
-for i=1:length(names)
-    subnames=fieldnames(eval(['value.' names{i}]));
-    for j=1:length(subnames)
-        subvalue=eval(['value.' names{i} '.' subnames{j}]);
-        if ~isempty(subvalue)&&~isnan(subvalue)
-            %Overwrite parameter ranges with explicit values
-            eval([names{i} '.' subnames{j} '(1)=subvalue;'])
-            eval([names{i} '.' subnames{j} '(2)=subvalue;'])
-            eval([names{i} '.' subnames{j} '(3)=subvalue;'])
-        end
-    end
+lambda  = lambda*abs(fc);   
+if ~strcmpi(opts.bgtype(1:3),'gen')
+    mu      = mu.*abs(fc);   %Is this a time or frequency scale?
 end
-
-xa=[background.sigma(1)  background.alpha(1)   background.lambda(1)  background.nu(1)  background.mu(1)  background.epsilon(1)];
-xo=[background.sigma(2)  background.alpha(2)   background.lambda(2)  background.nu(2)  background.mu(2)  background.epsilon(2)];
-xb=[background.sigma(3)  background.alpha(3)   background.lambda(3)  background.nu(3)  background.mu(3)  background.epsilon(3)];
+xa=[sigma(1)  alpha(1)   lambda(1)  mu(1)  nu(1)  epsilon(1)];
+xo=[sigma(2)  alpha(2)   lambda(2)  mu(2)  nu(2)  epsilon(2)];
+xb=[sigma(3)  alpha(3)   lambda(3)  mu(3)  nu(3)  epsilon(3)];
 
 %Periodogram from mspec  ... use dt = 1
 %vsize(dt,z,psi),length(find(isfinite(z))),isreal(z)
@@ -818,6 +868,7 @@ end
 %Fit to background on requested side
 %xa,xo,xb
 %vsize(dt,N,om,spp,snn,a:b,xa,xo,xb,opts,realflag)
+%[xa;xo;xb]
 [x,exitflag,iters]=maternfit_optimize(dt,N,om,spp,snn,a:b,xa,xo,xb,opts,realflag);
 
 %Final value of likelihood and spectra
@@ -901,12 +952,12 @@ omega=frac(1,dt)*2*pi*(0:floor(N/2))'./N;
 Spp=S(1:length(omega),:);
 Snn=[S(1,:);S(end:-1:end-length(omega)+2,:)];
 %--------------------------------------------------------------------------
-function[R]=maternfit_materncov(dt,N,x,realflag)
+function[R]=maternfit_materncov(dt,N,x,realflag,model)
 sigma=x(1);
 alpha=x(2);
 lambda=x(3);
-nu=x(4);
-mu=x(5);
+mu=x(4);
+nu=x(5);
 epsilon=x(6);
 
 tau=dt*[0:N-1]';
@@ -915,10 +966,11 @@ if isnan(sigma)
     R=[];
 else
     %This is just copied from MATERNCOV, but it is faster to have it internal
-    if mu==0
+    if strcmpi(model(1:3),'mat')
         fact=2*frac(1,gamma(alpha-1/2).*pow2(alpha-1/2));
         R=fact.*((lambda*tau).^(alpha-1/2)).*besselk(abs(alpha-1/2),lambda*tau);
-    else
+        R(1)=1;%because of being undefiend there
+    elseif strcmpi(model(1:3),'ext')
         if alpha==-1/2
             tnorm=sqrt(tau.^2+mu.^2);
             fact=besselk(1,mu.*lambda);
@@ -928,13 +980,28 @@ else
             fact=1./(abs(mu.*lambda)).^(alpha-1/2)./besselk(abs(alpha-1/2),abs(mu.*lambda));
             R=fact*tnorm.^(alpha-1/2).*besselk(abs(alpha-1/2),tnorm);
         end
+    elseif strcmpi(model(1:3),'gen')
+        M=10;P=10;  %Specifying oversampling rates for numerical computations
+        [f,Spp,Snn]=maternspec(dt,M*N*P,sigma,alpha,lambda/P,mu,'generalized');
+        S=[flipud(Snn(2:end));Spp];%plot(Spp),hold on
+        Ri=ifft(ifftshift(S))./dt;  %Make sure it's ifftshift not fftshift
+        Ri=Ri(1:P:end);
+        R=Ri(1:N);%plot(Ri),hold on
+        R=R./R(1);
+    elseif strcmpi(model(1:3),'com')
+        M=10;P=10;  %Specifying oversampling rates for numerical computations
+        [f,Spp,Snn]=maternspec(dt,M*N*P,sigma,alpha,lambda/P,mu/P,nu/P,'composite');
+        S=[flipud(Snn(2:end));Spp];%figure,plot(S)
+        Ri=ifft(ifftshift(S))./dt;  %Make sure it's ifftshift not fftshift
+        Ri=Ri(1:P:end);
+        R=Ri(1:N);
+        R=R./R(1);
     end
-    if nu~=0
+    if (nu~=0)&&~strcmpi(model(1:3),'com')
         R=R.*exp(sqrt(-1)*tau*nu);
     end
-    R(tau==0)=1;
     R=R.*sigma.^2;
-    R(tau==0)=R(tau==0)+squared(epsilon);
+    R(1)=R(1)+squared(epsilon);
 end
 
 if realflag
@@ -1005,7 +1072,7 @@ reporttest('MATERNFIT recovers Matern parameters with unit sample rate and real 
 
 rng(0);
 fit=maternfit(dt,z+zn,frac(1,2)*pi,'noisy');
-bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.5)&&aresame(fit.lambda,h,0.1)&&aresame(abs(fit.epsilon./epsilono-1),0,0.25);
+bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.5)&&aresame(fit.lambda,h,0.1)&&aresame(abs(fit.epsilon./epsilono-1),0,0.3);
 reporttest('MATERNFIT recovers Matern parameters with unit sample rate and real signal, noisy version',allall(bool))
 %--------------------------------------------------------------------------
 
@@ -1046,6 +1113,44 @@ fit=maternfit(dt,z,frac(1,2)*pi./dt,'tapered',psi,'difference');
 bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002);
 reporttest('MATERNFIT recovers Matern parameters with non-unit sample rate, differenced tapered version',allall(bool))
 etime1=toc;
+
+sigo=17;
+alpha=1.5;
+h=1/10;
+rng(0);
+
+dt=3600;
+gamma=5;
+N=1000;
+% clf
+% z=maternoise(dt,[N,2000],sigo,alpha,h./dt,1,'generalized');
+% plot(vmean(abs(fft(z)),2)),xlog,ylog
+% z=maternoise(dt,[N,2000],sigo,alpha,h./dt,'chol');
+% hold on,plot(vmean(abs(fft(z)),2)),xlog,ylog
+z=maternoise(dt,[N,5000],sigo,alpha,h./dt,5,'generalized');
+zn=epsilono.*randn(size(z,1),5000);
+%hold on,plot(vmean(abs(fft(z)),2))
+
+% [tau,tpz1]=materncov(dt,N,sigo,alpha,h./dt);
+% [tau,tpz2]=materncov(dt,N,sigo,alpha,h./dt,1,'generalized');
+% [tau,tpz3]=materncov(dt,N,sigo,alpha,h./dt,2,'generalized');
+% [tau,tpz4]=materncov(dt,N,sigo,alpha,h./dt,5,'generalized');
+% figure,plot(tau,[tpz1 tpz2 tpz3 tpz4])
+
+%[f,s]=maternspec(dt,N,sigo,alpha,h./dt,5,'generalized');plot(f,s./maxmax(s))
+%[f,s]=maternspec(dt,N,sigo,alpha,h./dt,1,'generalized');hold on,plot(f,s./maxmax(s))
+%[f,s]=maternspec(dt,N,sigo,alpha,h./dt,1/2,'generalized');hold on,plot(f,s./maxmax(s))
+%[f,s]=maternspec(dt,N,sigo,alpha,h./dt,1/10,'generalized');hold on,plot(f,s./maxmax(s))
+
+fit=maternfit(dt,z,frac(1,2)*pi./dt,'generalized','average');
+%fit=maternfit(dt,z,frac(1,2)*pi./dt,'generalized');
+bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002)&&aresame(fit.gamma,5,0.25);
+reporttest('MATERNFIT recovers generalized Matern parameters with non-unit sample rate',allall(bool))
+
+fit=maternfit(dt,z+zn,frac(1,2)*pi./dt,'generalized','average','noisy');
+%fit=maternfit(dt,z,frac(1,2)*pi./dt,'generalized');
+bool=aresame(abs(fit.sigma./sigo-1),0,0.2)&&aresame(fit.alpha,alpha,0.06)&&aresame(fit.lambda,h./dt,0.002)&&aresame(fit.gamma,5,0.25)&&aresame(abs(fit.epsilon./epsilono-1),0,0.1);
+reporttest('MATERNFIT recovers generalized Matern parameters with non-unit sample rate, noisy version',allall(bool))
 
 % if exist('nlopt_optimize')==3
 %     psi=sleptap(size(z,1)-1,3,1);
