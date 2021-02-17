@@ -4,15 +4,20 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   JLAB_MAKEFIGS NAME makes all figures for the publication NAME, as follows. 
 %
 %  'jlab_makefigs gulfcensus':
-%   Lilly, J. M. and P. Perez-Brunius (2021).  Extracting statistically 
+%   Lilly, J. M. and P. Perez-Brunius (2021b).  Extracting statistically 
 %       significant eddy signals from large Lagrangian datasets using 
 %       wavelet ridge analysis, with application to the Gulf of Mexico.
 %       Submitted to Nonlinear Processes in Geophysics.
 %
 %  'jlab_makefigs gulfdrifters':
-%   Lilly, J. M. and P. Perez-Brunius (2021). A gridded surface current
+%   Lilly, J. M. and P. Perez-Brunius (2021a). A gridded surface current
 %       product for the Gulf of Mexico from consolidated  drifter
 %       measurements.  Accepted to Earth Science System Data.
+%
+%  'jlab_makefigs transfer':
+%   Lilly, J. M. and S. Elipot (2021). A unifying perspective on transfer
+%       function solutions to the unsteady Ekman problem.  Fluids, 6 (2): 
+%       85, 1--36. 
 %
 %  'jlab_makefigs kinematics':
 %   Lilly, J. M. (2018) Kinematics of a fluid ellipse in a linear flow. 
@@ -99,6 +104,7 @@ jj=jj+1;names{jj}='superfamily';
 jj=jj+1;names{jj}='element';
 jj=jj+1;names{jj}='matern';
 jj=jj+1;names{jj}='kinematics';
+jj=jj+1;names{jj}='transfer';
 jj=jj+1;names{jj}='gulfdrifters';
 jj=jj+1;names{jj}='gulfcensus';
 
@@ -125,8 +131,14 @@ end
 set(0,'defaultTextInterpreter',dti)
 set(0,'defaultLegendInterpreter',dli)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function[varargout]=jlab_makefigs_gulfcensus(str) 
+makefigs_gulfcensus(str);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[varargout]=jlab_makefigs_gulfdrifters(str) 
 makefigs_gulfdrifters(str);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function[varargout]=jlab_makefigs_transfer(str) 
+makefigs_transfer(str);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function[]=jlab_makefigs_kinematics(str) 
 %cd /Users/lilly/Desktop/Dropbox/Projects/kinematics

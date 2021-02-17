@@ -1,6 +1,6 @@
 %JLAB_LICENSE  License statement and permissions for JLAB package.
 %
-%   Copyright (C) 1993--2020 J.M. Lilly
+%   Copyright (C) 1993--2021 J.M. Lilly
 %   _______________________________________________________________________
 %
 %   Citation
@@ -10,7 +10,7 @@
 %   should be acknowledged and cited as:
 %
 %   Lilly, J. M. (2021),  jLab: A data analysis package for Matlab, 
-%       v. 1.6.9, http://www.jmlilly.net/software
+%       v. 1.7.0, http://www.jmlilly.net/software
 %   _______________________________________________________________________
 %
 %   License

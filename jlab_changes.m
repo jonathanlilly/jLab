@@ -1,8 +1,8 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.6.9
+%   Changes new in version 1.7.0
 %
-%   Figure making for two new publications, see JLAB_MAKEFIGS:
+%   Code in support of three new publications, see JLAB_MAKEFIGS:
 %      
 %   Lilly and Perez-Brunius (2021b). Extracting statistically significant 
 %       eddy signals from large Lagrangian datasets, with application to 
@@ -10,10 +10,15 @@
 %
 %   Lilly and Perez-Brunius (2021a). A gridded surface current product for
 %       the Gulf of Mexico from consolidated  drifter measurements.  
-%       Accepted to Earth Science System Data.
+%       In press at Earth Science System Data.
 %
-%   Major new functions for Lagrangian eddy analysis and statistics:
+%   Lilly, J. M. and S. Elipot (2021). A unifying perspective on transfer
+%       function solutions to the unsteady Ekman problem.  Fluids, 6 (2): 
+%       85, 1--36. 
 %
+%   Major new functions for Ekman theory and for Lagrangian eddy analysis:
+%
+%   windtrans     - Ekman-like transfer-functions for the wind-driven response.
 %   eddyridges    - Coherent eddy ridges from Lagrangian trajectories.   
 %   noisedrifters - Create a noise Lagrangian dataset matching mean and variance.
 %   eddylevels    - Eddy ridge significance levels using the survival function.

@@ -19,6 +19,8 @@ function[]=jlab_index(varargin)
 %   arrayify      - Converts a set of scalars or arrays into column arrays.                              
 %   axeshandles   - Returns handles to all axes children.                                                
 %   bellpoly      - Complete Bell polynomials.                                                           
+%   besselitilde  - I-type Bessel function after factoring off exponential growth.                       
+%   besselktilde  - K-type Bessel function after factoring off exponential decay.                        
 %   bindata       - Rapidly sort data into adjacent bins.                                                
 %   blocklen      - Counts the lengths of 'blocks' in an array.                                          
 %   blocknum      - Numbers the contiguous blocks of an array.                                           
@@ -78,7 +80,7 @@ function[]=jlab_index(varargin)
 %   divgeom       - Geometric decomposition of eddy vorticity flux divergence.                           
 %   dlines        - Add diagonal lines to a plot.                                                        
 %   doublen       - Interpolates a time series to double its length.                                     
-%   ecconv        - Converts between eccentricity measures.           
+%   ecconv        - Converts between eccentricity measures.                                              
 %   eddyfit2d     - Least squares fit of 2D velocity data to an eddy profile.                            
 %   eddylevels    - Eddy ridge significance levels using the survival function.                          
 %   eddyridges    - Coherent eddy ridges from Lagrangian trajectories.                                   
@@ -214,6 +216,7 @@ function[]=jlab_index(varargin)
 %   makefigs_trackextract - Makes a sample figure for TRACKEXTRACT.                                      
 %   makefigs_trajextract - Makes a sample figure for TRAJEXTRACT.                                        
 %   makefigs_trajwrap - Makes a sample figure for TRAJWRAP.                                              
+%   makefigs_transfer - Makes all figures for Lilly and Elipot (2021).                                   
 %   makefigs_trivariate - has been moved to JLAB_MAKEFIGS.                                               
 %   makefigs_twodhist - Makes a sample figure for TWODHIST.                                              
 %   makefigs_twodmed - Makes a sample figure for TWODMED.                                                
@@ -275,8 +278,8 @@ function[]=jlab_index(varargin)
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                                                                                                                              
-%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH. 
+%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                         
+%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH.                          
 %   polysmooth_kernel - Returns the weighting kernel employed by POLYSMOOTH.                             
 %   polysmooth_presort - Sort arguments to POLYSMOOTH in case of missing data.                           
 %   polysmooth_sortfield - Returns sorted field values for a mapping problem.                            
@@ -364,6 +367,7 @@ function[]=jlab_index(varargin)
 %   wavetrans     - Continuous wavelet transform.                                                        
 %   whichdir      - Returns directory name containing file in search path.                               
 %   wigdist       - Wigner distribution (alias-free algorithm).                                          
+%   windtrans     - Ekman-like transfer-functions for the wind-driven response.                          
 %   xlin          - Sets x-axis scale to linear.                                                         
 %   xlog          - Sets x-axis scale to logarithmic.                                                    
 %   xoffset       - Offsets lines in the x-direction after plotting.                                     
@@ -375,7 +379,7 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks.                                       
+%   ztick         - Sets locations of z-axis tick marks.                                                 
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
@@ -392,6 +396,7 @@ end
 function[]=jlab_index_create
 jlab_dir=whichdir('jlab_license');
 jdata_dir=[jlab_dir(1:end-4) 'jdata'];
+
 
 for k=1:2
     switch k
@@ -425,10 +430,12 @@ for k=1:2
     end
 end
 
+
 % clear comments
 % comments{1}=comments2;
 % comments{2}=comments1;
 
+disp('Start here -->')
 disp('%JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.')
 disp('%')
 disp('% JDATA index')
@@ -436,6 +443,7 @@ disp(comments2)
 disp('%')
 disp('% JLAB index')
 disp(comments1)
+
 
 function[mat]=strs2mat(strcell)
 

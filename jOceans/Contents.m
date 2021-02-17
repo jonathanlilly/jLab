@@ -36,6 +36,9 @@
 % Alongtrack altimetry tools
 %   trackextract  - Extracts alongtrack altimetry segments within given region.
 %
+% Wind-driven surface currents
+%    windtrans  - Ekman-like transfer-functions for the wind-driven response.
+%
 % NetCDF tools
 %   ncinterp    - One-line interpolation from 3D lat/lon/time field in NetCDF file.
 %
@@ -46,11 +49,14 @@
 %   jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.              
 %   topoplot    - Plot regional or global topography at one-sixth degree resolution.
 % 
+% Low-level functions
+%   besselktilde  - K-type Bessel function after factoring off exponential decay.
+%   besselitilde  - I-type Bessel function after factoring off exponential growth.
+%   curveinterp  - Interpolate a field or its gradient onto a set of curves.           
+%   orbitbreaks  - Separate orbit into passes based on turning points.          
+%   topo_copyright - Copyright statement for the Smith and Sandwell topography.
+%
 %  See also jData.
 
-%  Low-level functions
-%  topo_copyright - Copyright statement for the Smith and Sandwell topography.
-%  curveinterp  - Interpolate a field or its gradient onto a set of curves.           
-%  orbitbreaks  - Separate orbit into passes based on turning points.          
 
 help joceans

@@ -5,7 +5,7 @@ function[varargout]=makefigs_gulfdrifters(str)
 %
 %        Lilly, J. M. and P. Perez-Brunius (2021a). A gridded surface
 %            current product for the Gulf of Mexico from consolidated  
-%            drifter measurements.  Submitted to Earth Science System Data.
+%            drifter measurements.  In press at Earth Science System Data.
 % 
 %   To use this function, you'll need to download several datasets
 %

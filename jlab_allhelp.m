@@ -1,7 +1,6 @@
 function[varargout]=jlab_allhelp(varargin)
 %JLAB_ALLHELP  Displays the help comments for all JLAB modules. 
 %
-
 %   jCell:  Tools for operating on cell arrays of column vectors 
 %   
 %   Basic mathematical operations 
@@ -291,6 +290,9 @@ function[varargout]=jlab_allhelp(varargin)
 %   Alongtrack altimetry tools 
 %     trackextract  - Extracts alongtrack altimetry segments within given region. 
 %   
+%   Wind-driven surface currents 
+%      windtrans  - Ekman-like transfer-functions for the wind-driven response. 
+%   
 %   NetCDF tools 
 %     ncinterp    - One-line interpolation from 3D lat/lon/time field in NetCDF file. 
 %   
@@ -301,6 +303,13 @@ function[varargout]=jlab_allhelp(varargin)
 %     jtopo.mat   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.               
 %     topoplot    - Plot regional or global topography at one-sixth degree resolution. 
 %    
+%   Low-level functions 
+%     besselktilde  - K-type Bessel function after factoring off exponential decay. 
+%     besselitilde  - I-type Bessel function after factoring off exponential growth. 
+%     curveinterp  - Interpolate a field or its gradient onto a set of curves.            
+%     orbitbreaks  - Separate orbit into passes based on turning points.           
+%     topo_copyright - Copyright statement for the Smith and Sandwell topography. 
+%   
 %    See also jData. 
 %   __________________________________________________________________ 
 %  
@@ -473,7 +482,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     morlfreq   - Compute Morlet wavelet carrier frequency given peak frequency.    
 %   
 %   See also jRidges, jSpectral, jEllipse. 
-%   __________________________________________________________________
+%   __________________________________________________________________ 
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
  
