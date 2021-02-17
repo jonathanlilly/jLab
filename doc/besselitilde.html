@@ -1,0 +1,32 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>BESSELITILDE is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="besselitilde.html">BESSELITILDE</a>  I-type Bessel function after factoring off exponential growth.
+ 
+    ITILDE=<a href="besselitilde.html">BESSELITILDE</a>(NU,Z) returns the modified Bessel function of the
+    first kind of order NU at argument Z, after factoring off the  
+    asymptotic behavior of EXP(Z).
+ 
+    <a href="besselitilde.html">BESSELITILDE</a> is useful for products of modified Bessel functions in
+    which the exponential behaviors cancel, but that cannot be evaluated
+    directly because of numerical overflow.
+ 
+    <a href="besselitilde.html">BESSELITILDE</a>(NU,Z,N) use a summation truncated at N terms. The default
+    behavior uses N=30 and is highly accurate.
+ 
+    See 10.40.1 of https://dlmf.nist.gov/10.40.
+ 
+    This is low-level code used by <a href="windtrans.html">WINDTRANS</a> using an algorithm described 
+    in Lilly and Elipot (2021).
+ 
+    See also <a href="besselktilde.html">BESSELKTILDE</a>.
+ 
+    '<a href="besselitilde.html">besselitilde</a> --t' runs a test.
+ 
+    Usage: I=<a href="besselitilde.html">besselitilde</a>(nu,z);
+           I=<a href="besselitilde.html">besselitilde</a>(nu,z,nterms);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

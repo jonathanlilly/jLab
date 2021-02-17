@@ -1,0 +1,73 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>WINDTRANS is the <a href="jOceans.html">jOceans</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="windtrans.html">WINDTRANS</a>  Ekman-like transfer-functions for the wind-driven response.
+ 
+    G=<a href="windtrans.html">WINDTRANS</a>(OMEGA,Z,FC,DELTA,MU,H) returns the no-slip transfer 
+    function for the wind-driven currents evaluated at frequencies OMEGA
+    and at depths Z.  G will have LENGTH(OMEGA) rows and LENGTH(Z) columns.
+ 
+    Here FC is the local Coriolis frequency, DELTA is the Ekman depth.
+    MU is the Madsen depth, and H is the boundary layer depth.
+ 
+    The units of these quantitites are important.  For consistency with 
+    other routines, OMEGA and FC are in radians per day, while Z, DELTA,
+    MU, and H are all in meters.  The units of G are then m^2 s / kg.
+ 
+    <a href="windtrans.html">WINDTRANS</a>(...,'free') instead returns the free slip transfer function.
+ 
+    For details on the expressions implemented by this function, see
+ 
+         Lilly, J. M. and S. Elipot (2021). A unifying perspective on 
+             transfer function solutions to the unsteady Ekman problem. 
+             Fluids, 6 (2): 85, 1--36. 
+    __________________________________________________________________
+ 
+    Special forms
+ 
+    By default <a href="windtrans.html">WINDTRANS</a> uses the general transfer function.  <a href="windtrans.html">WINDTRANS</a> 
+    will also employ limiting expressions for special cases, as follows.
+ 
+        H = Inf                --  Mixed Ekman / Madsen solution
+        H = Inf, MU = 0        --  Ekman solution
+        H = Inf, DELTA = 0     --  Madsen solution
+        MU = 0                 --  Finite-layer Ekman solution
+        DELTA = 0              --  Finite-layer Madsen solution
+ 
+    These have to be coded separately because the full solution is singular
+    in these cases.
+    __________________________________________________________________
+ 
+    Computational options
+ 
+    When computed over a wide range of parameter space, the transfer
+    function tends to be encounter numerical overflow when the arguments to
+    Bessel functions become large, causing its computation to fail.
+ 
+    To avoid this problems, by default <a href="windtrans.html">WINDTRANS</a> switches to using a highly
+    accurate thirty-term expansion about the large-argument exponential 
+    behavior of the Bessel functions when their arguments exceed 10^2.9. 
+ 
+    Two other options are available, primarily for testing purposes. Both
+    of these other algorithms lead to artifacts and are not recommended.
+ 
+    <a href="windtrans.html">WINDTRANS</a>(...'far',...) switches instead to use the (inferior) one-term 
+    expansion, also known as the far-inertial limit.
+ 
+    <a href="windtrans.html">WINDTRANS</a>(...,'general',...) uses the general formula with no switch.
+ 
+    Note that these options only apply to no-slip solution.  The free-slip
+    solution, which is not deemed to be physically relevant, is only
+    computed with the general formula.
+ 
+    For details on these algorithms, see Lilly and Elipot (2021).
+    __________________________________________________________________
+ 
+    '<a href="windtrans.html">windtrans</a> --t' runs a some tests.
+ 
+    Usage: G=<a href="windtrans.html">windtrans</a>(omega,z,fc,delta,mu,h);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2019--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
