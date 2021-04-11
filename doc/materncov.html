@@ -55,23 +55,6 @@
     RF is constructed from R as RF=[FLIPUD(CONJ(R(2:end,:));R]. 
     __________________________________________________________________
  
-    Extensions
- 
-    Several extensions of the basic Matern form are supported, all of which
-    are discussed in more detail in <a href="maternspec.html">MATERNSPEC</a>.
- 
-    Oscillatory Matern
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,NU)
-    Generalized Matern (+ optional oscillations)
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
-    Extended Matern  (+ optional oscillations)
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
-    Composite Matern 
-        [F,SPP,SNN]=<a href="materncov.html">MATERNCOV</a>(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
-    __________________________________________________________________
- 
     Real-valued processes
  
     By default <a href="materncov.html">MATERNCOV</a> returns the autocovariance of a complex-valued
@@ -109,5 +92,5 @@
            [tau,R]=<a href="materncov.html">materncov</a>(dt,N,sigma,alpha,lambda,mu,'composite');
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2013--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2013--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

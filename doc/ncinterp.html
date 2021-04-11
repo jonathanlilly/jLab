@@ -11,11 +11,15 @@
     The interpolation is linear interpolation performed with INTERP3.
     Longitude boundaries and near-polar latitudes are both accommodated.
  
-    The NetCDF file must a have a particular format.  The field VARNAME has
-    three dimensions, latitude, longitude, and time, in that order.  The 
-    file also has variables named 'lat', 'lon', and 'num' which give the 
-    values along the dimensions.  Both lat and lon are oriented in order of
-    increasing values.  The time NUM is given in Matlab's DATENUM format.   
+    The field VARNAME must have three dimensions, latitude, longitude, and 
+    time.  By default, the dimension order is expected to be (1) latitude,
+    (2) longitude, and (3) time.  <a href="ncinterp.html">NCINTERP</a>(...,'transpose') specifies that
+    the order is instead (1) longitude, (2) latitude, and (3) time.
+ 
+    The NetCDF fil must also have variables named 'lat', 'lon', and 'num'
+    which give the values along the dimensions.  Both lat and lon are 
+    oriented in order of increasing values (i.e. lon cannot be 
+    discontinuous), while the time NUM is given in Matlab's DATENUM format.   
  
     <a href="ncinterp.html">NCINTERP</a> detects if longitude in FILENAME spans 360 degrees, and if so,
     interpolation across the longitudinal boundaries is correctly handled.
@@ -63,5 +67,5 @@
            [x1,x2]=<a href="ncinterp.html">ncinterp</a>(filename,num,lat,lon,varname1,varname2);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2016--2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2016--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>
