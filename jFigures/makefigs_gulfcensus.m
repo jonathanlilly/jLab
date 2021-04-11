@@ -6,7 +6,7 @@ function[varargout]=makefigs_gulfcensus(str)
 %       Lilly, J. M. and P. Perez-Brunius (2021). Extracting statistically
 %           significant eddy signals from large Lagrangian datasets using
 %           wavelet ridge analysis, with application to the Gulf of Mexico.
-%           Submitted to Nonlinear Processes in Geohysics.
+%           In press at Nonlinear Processes in Geohysics.
 % 
 %   To use this function, you'll need to download several datasets
 %
@@ -260,7 +260,7 @@ set(gcf,'paperposition',[2 2 3.5 3.5])
 
 imag(log(a.*cos(phi)+1i*b.*sin(phi)))
 sqrt(frac(a.^2+b.^2,2))
-sqrt(frac(2*a*b,a.^2+b.^2))
+frac(2*a*b,a.^2+b.^2)
 
 if strcmp(str,'print')
 %    jprint(gulfdir,'ellipsesketch','jpeg -r500')

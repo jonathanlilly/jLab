@@ -1,6 +1,7 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
-%   Changes new in version 1.7.0
+%
+%   Changes new in version 1.7.1
 %
 %   Code in support of three new publications, see JLAB_MAKEFIGS:
 %      
@@ -51,8 +52,8 @@
 %   PRINTALL organization improvement and bugfix for R2020a.
 %   MATERNFIT now includes an option to average over ensemble members.
 %   MATERNFIT, MATERNSPEC, MATERNCOV, and MATERNOISE refactoring, support 
-%        for new extensions of the Matern process, support real-valued as
-%        well as complex-valued processes, and input argument changes. 
+%        for real-valued as well as complex-valued processes, and input 
+%        argument changes. 
 %   MSPEC now uses two-sided, not one-sided, normalization for real data.
 %   POLYSMOOTH considerable speed improvements. 
 %   SPHERESORT and TWODSORT improvements and major change to output format.
@@ -69,6 +70,7 @@
 %   TRAJEXTRACT and POLYSMOOTH bugfixes for sample figures. 
 %   TWODSTATS and TWODMED fixed sample figures.
 %   LINECOLOR can now take either a colormap matrix or a name as input.
+%   NCINTERP now handles either latitude-first or longitude-first formats.
 %   NCLOAD can now handle filenames including hyphens '-'.
 %   NCLOAD now supports cell conversion for the 'trajectory' feature type.
 %   NCLOAD now converts all non-double numeric variables into doubles.

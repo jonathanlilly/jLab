@@ -10,7 +10,7 @@
 %   should be acknowledged and cited as:
 %
 %   Lilly, J. M. (2021),  jLab: A data analysis package for Matlab, 
-%       v. 1.7.0, http://www.jmlilly.net/software
+%      v.1.7.1, doi:10.5281/zenodo.4547006, http://www.jmlilly.net/software.
 %   _______________________________________________________________________
 %
 %   License

@@ -113,42 +113,6 @@ function [structout] = maternfit(varargin)
 %  
 %   These parameters are described in more detail below.
 %   __________________________________________________________________
-%
-%   Extensions
-%
-%   Two extensions of the basic Matern form are supported, discussed in 
-%   more detail in MATERNSPEC.
-% 
-%   An oscillatory version, with nonzero MU, and a noisy version, with 
-%   nonzero EPSILON, are available as options with these two extensions.
-%
-%   Generalized Matern
-%
-%   MATERFIT(...,'general') fits to the spectrum of generalized Matern
-%   process. A parameter GAMMA is used with the default range
-%
-%        GAMMA  =  [1/2     1    20] 
-%
-%   such that the initial guess is the standard Matern process.  
-%
-%   The difference between the generalized Matern and standard Matern is
-%   limited to frequency band in the vicinity of the falloff frequency, so 
-%   unless you are averaging over many time series (decribed below), you
-%   can expect a lot of variability in the fit value of GAMMA.
-%
-%   Extended Matern
-%
-%   MATERFIT(...,'extended') fits to the spectrum of an extended Matern
-%   process. A parameter MU is used with the default range
-%
-%            MU  =  [1/100  10  100] * ABS(FO)
-%
-%   and in this case, the ALPHA parameter has the default range
-%
-%       ALPHA    =  [-1/2    1    10]
-%
-%   which has a different lower bound than for the standard Matern process.
-%   __________________________________________________________________
 %   
 %   Options for multiple input time series
 %
@@ -361,9 +325,46 @@ function [structout] = maternfit(varargin)
 %          fit=maternfit(dt,z,fo,a,b);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2014--2020 J.M. Lilly and A.M. Sykulski
+%   (C) 2014--2021 J.M. Lilly and A.M. Sykulski
 %                                --- type 'help jlab_license' for details
 
+%   __________________________________________________________________
+%
+%   Extensions
+%
+%   Two extensions of the basic Matern form are supported, discussed in 
+%   more detail in MATERNSPEC.
+% 
+%   An oscillatory version, with nonzero MU, and a noisy version, with 
+%   nonzero EPSILON, are available as options with these two extensions.
+%
+%   Generalized Matern
+%
+%   MATERFIT(...,'general') fits to the spectrum of generalized Matern
+%   process. A parameter GAMMA is used with the default range
+%
+%        GAMMA  =  [1/2     1    20] 
+%
+%   such that the initial guess is the standard Matern process.  
+%
+%   The difference between the generalized Matern and standard Matern is
+%   limited to frequency band in the vicinity of the falloff frequency, so 
+%   unless you are averaging over many time series (decribed below), you
+%   can expect a lot of variability in the fit value of GAMMA.
+%
+%   Extended Matern
+%
+%   MATERFIT(...,'extended') fits to the spectrum of an extended Matern
+%   process. A parameter MU is used with the default range
+%
+%            MU  =  [1/100  10  100] * ABS(FO)
+%
+%   and in this case, the ALPHA parameter has the default range
+%
+%       ALPHA    =  [-1/2    1    10]
+%
+%   which has a different lower bound than for the standard Matern process.
+%   __________________________________________________________________
 
 %   Composite Matern
 %

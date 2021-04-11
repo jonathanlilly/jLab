@@ -8,11 +8,15 @@ function[varargout]=ncinterp(varargin)
 %   The interpolation is linear interpolation performed with INTERP3.
 %   Longitude boundaries and near-polar latitudes are both accommodated.
 %
-%   The NetCDF file must a have a particular format.  The field VARNAME has
-%   three dimensions, latitude, longitude, and time, in that order.  The 
-%   file also has variables named 'lat', 'lon', and 'num' which give the 
-%   values along the dimensions.  Both lat and lon are oriented in order of
-%   increasing values.  The time NUM is given in Matlab's DATENUM format.   
+%   The field VARNAME must have three dimensions, latitude, longitude, and 
+%   time.  By default, the dimension order is expected to be (1) latitude,
+%   (2) longitude, and (3) time.  NCINTERP(...,'transpose') specifies that
+%   the order is instead (1) longitude, (2) latitude, and (3) time.
+%
+%   The NetCDF fil must also have variables named 'lat', 'lon', and 'num'
+%   which give the values along the dimensions.  Both lat and lon are 
+%   oriented in order of increasing values (i.e. lon cannot be 
+%   discontinuous), while the time NUM is given in Matlab's DATENUM format.   
 %
 %   NCINTERP detects if longitude in FILENAME spans 360 degrees, and if so,
 %   interpolation across the longitudinal boundaries is correctly handled.
@@ -60,14 +64,12 @@ function[varargout]=ncinterp(varargin)
 %          [x1,x2]=ncinterp(filename,num,lat,lon,varname1,varname2);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2016--2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2016--2021 J.M. Lilly --- type 'help jlab_license' for details
  
 filename=varargin{1};
 numi=varargin{2};
 lati=varargin{3};
 loni=varargin{4};
-
-str='fas';
 
 if ~ischar(varargin{end})
     M=varargin{end};
@@ -76,15 +78,20 @@ else
     M=16;
 end
 
-if ischar(varargin{end})
-    if length(varargin{end})>=3
-        if strcmp(varargin{end}(1:3),'loo')||strcmp(varargin{end}(1:3),'fas')
-            str=varargin{end};
-            varargin=varargin(1:end-1);
+str='fas';
+orderstr='reg';
+for i=1:2
+    if ischar(varargin{end})
+        if length(varargin{end})>=3
+            if strcmp(varargin{end}(1:3),'loo')||strcmp(varargin{end}(1:3),'fas')
+                str=varargin{end};
+                varargin=varargin(1:end-1);
+            elseif strcmp(varargin{end}(1:3),'reg')||strcmp(varargin{end}(1:3),'tra')
+                orderstr=varargin{end};
+                varargin=varargin(1:end-1);
+            end
         end
     end
-else
-    str='loop';
 end
 
 
@@ -120,14 +127,6 @@ lon=double(ncread(filename,'lon'));
 %if anyany(abs(diff(lon))>180)
 %    lon=lonold;
 %end
-    
-bperiodic=false;
-if (max(lon)-min(lon)+(lon(2)-lon(1)))==360
-    disp('NCINTERP detecting 360 degrees of longitude.')
-    lon=[lon(end)-360;lon;lon(1)+360];
-    bperiodic=true;
-end
-num=double(ncread(filename,'num'));
 
 %determine whether to use +/- 180 or 360
 if anyany(lon<0)
@@ -136,30 +135,141 @@ elseif anyany(lon>180)
     loni=deg360(loni);
 end
 
+bperiodic=false;
+if (max(lon)-min(lon)+(lon(2)-lon(1)))==360
+    disp('NCINTERP detecting 360 degrees of longitude.')
+    %[min(lon) max(lon)]
+    lon=[lon(end)-360;lon;lon(1)+360];
+    %[min(lon) max(lon)]
+    bperiodic=true;
+end
+num=double(ncread(filename,'num'));
+
+
+%datestr(minmin(numi)),datestr(maxmax(numi))
+%datestr(minmin(num)),datestr(maxmax(num))
+
 %Set dates to NaNs when outside of range
-bool=(numi<=min(num))|(numi>=max(num));
+bool=(numi<=minmin(num))|(numi>=maxmax(num));
 numi(bool)=nan;
 
-a=find(num>=min(numi),1,'first');  %Note that a>=2
-b=find(num<=max(numi),1,'last')+1; %Note that b<=length(num) 
+%size(numi)
+%minmin(numi),maxmax(numi)
+%length(find(~isnan(numi(:))))
 
-for i=1:length(varnames)
-    disp(['NCINTERP interpolating variable ' int2str(i) ' of ' int2str(length(varnames)) '.'])
-    if strcmp(str(1:3),'loo')
-        temp=ncinterp_one_loop(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b);
-    elseif strcmp(str(1:3),'fas')
-        temp=ncinterp_one_fast(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b,M);
-    end
-    if bwascell
-        lattemp=lati;
-        col2cell(lattemp,temp);
-    end
-    varargout{i}=temp;
+if length(find(~isnan(numi(:))))>1
+    a=find(num>=minmin(numi),1,'first');  %Note that a>=2
+    b=find(num<=maxmax(numi),1,'last')+1; %Note that b<=length(num) 
+else
+    a=[];
+    b=[];
 end
+
+if isempty(a)||isempty(b)
+    for i=1:length(varnames)
+        varargout{i}=nan*numi;
+    end
+else
+    if strcmpi(orderstr(1:3),'reg')
+        for i=1:length(varnames)
+            disp(['NCINTERP interpolating variable ' int2str(i) ' of ' int2str(length(varnames)) '.'])
+            if strcmp(str(1:3),'loo')
+                temp=ncinterp_one_loop(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b);
+            elseif strcmp(str(1:3),'fas')
+                temp=ncinterp_one_fast(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b,M);
+            end
+            if bwascell
+                lattemp=lati;
+                col2cell(lattemp,temp);
+            end
+            varargout{i}=temp;
+        end
+    elseif  strcmpi(orderstr(1:3),'tra')
+        for i=1:length(varnames)
+            disp(['NCINTERP interpolating variable ' int2str(i) ' of ' int2str(length(varnames)) '.'])
+            if strcmp(str(1:3),'loo')
+                temp=ncinterp_one_loop_lonlat(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b);
+            elseif strcmp(str(1:3),'fas')
+                temp=ncinterp_one_fast_lonlat(filename,num,lat,lon,numi,lati,loni,varnames{i},blatup,blatdown,bperiodic,a,b,M);
+            end
+            if bwascell
+                lattemp=lati;
+                col2cell(lattemp,temp);
+            end
+            varargout{i}=temp;
+        end
+    end
+end
+
+function[xk]=ncinterp_one_fast_lonlat(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b,M)
+maxN=ceil(M*frac(1000*1000*1000,length(lat)*length(lon)*8)); %maximum number of time slices
+xk=nan*zeros(size(numi));
+n=0;
+
+%a,N,b,return
+
+for i=a:maxN:b
+    n=n+1;
+    disp(['NCINTERP reading chunk ' int2str(n) ' of ' int2str(length(a:maxN:b)) '.'])
+    if n==1
+        %Initialize xp
+        xp=double(ncread(filename,varname,[1 1 1],[inf inf 1]));
+        if blatdown,xp=[xp(:,1) xp];end    %Extra column for southern latitudes
+        if blatup,  xp=[xp xp(:,end)];end  %Extra column for northern latitudes
+    else
+        if bperiodic
+            xp=x([2:end-1],:,end);%Set xp back to last page of x
+        else
+            xp=x(:,:,end);
+        end
+    end
+    
+    %a,b,maxN,length(num)-i+1,b-i+1
+    pagecount=min([maxN,length(num)-i+1,b-i+1]);
+    %pagecount
+    
+    %datestr(num(i))
+    %datestr(minmin(numi))
+    %datestr(num(i+pagecount-1))
+    %datestr(maxmax(numi))
+    
+    xn=double(ncread(filename,varname,[1 1 i],[inf inf pagecount]));
+    
+    x=vzeros(length(lon),length(lat),size(xn,3)+1);
+    jj=1+blatdown:length(lat)-blatup;
+    
+    if bperiodic
+        x([1 end],jj,1)=xp([end 1],jj);      %Extra row for longitudes
+        x([1 end],jj,2:end)=xn([end 1],:,:); %Extra row for longitudes
+        x(2:end-1,jj,1)=xp(:,jj);            %Central portion
+        x(2:end-1,jj,2:end)=xn;              %Central portion
+    else
+        x(:,jj,1)=xp(:,jj);
+        x(:,jj,2:end)=xn;
+    end
+    
+    if blatdown,x(:,1,:)=x(:,2,:);end         %Extra column for southern latitudes
+    if blatup,  x(:,end,:)=x(:,end-1,:);end   %Extra column for northern latitudes
+    
+    %vsize(x,xn,xp)
+    
+    %vsize(num,lat,lon,numi,lati,loni,x,xn,xp)%return
+    bool=(numi>=num(i))&(numi<=num(i+pagecount-1));
+    %vsize(numi,lati,loni,bool)
+    [numk,latk,lonk]=vindex(numi(:),lati(:),loni(:),bool(:),1);  
+    %round([min(lon) min(lonk) max(lon) max(lonk)])
+    %vsize(lat,lon,num(i-1:i+pagecount-1),x,latk,lonk,numk)
+    xk(bool) = interp3(lat,lon,num(i-1:i+pagecount-1),x,latk,lonk,numk,'linear');
+end
+
+%length(find(isfinite(xk)))
+
+bool=isnan(xk)&~isnan(lati);
+xk(bool)=inf;
 
 function[xk]=ncinterp_one_fast(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b,M)
 N=ceil(M*frac(1000*1000*1000,length(lat)*length(lon)*8));
-   
+ 
 % size(lon)
 % lon(1:10)
 % minmin(diff(lon))
@@ -183,7 +293,9 @@ for i=a:N:b
             xp=x(:,:,end);
         end
     end
-    xn=double(ncread(filename,varname,[1 1 i],[inf inf min(N,length(num)-i+1)]));
+    
+    pagecount=min([maxN,length(num)-i+1,b-i+1]);
+    xn=double(ncread(filename,varname,[1 1 i],[inf inf pagecount]));
     
     x=vzeros(length(lat),length(lon),size(xn,3)+1);
     ii=1+blatdown:length(lat)-blatup;
@@ -203,8 +315,7 @@ for i=a:N:b
     if blatdown,x(1,:,:)=x(2,:,:);end         %Extra row for southern latitudes
     if blatup,  x(end,:,:)=x(end-1,:,:);end   %Extra row for northern latitudes
     
-    Ni=min(N-1,length(num)-i);
-    bool=(numi>=num(i-1))&(numi<=num(i+Ni));
+    bool=(numi>=num(i))&(numi<=num(i+pagecount-1));
     [numk,latk,lonk]=vindex(numi,lati,loni,bool,1);  
 %    vsize(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk)
     %Note that INTERP3 bizarrely has reversed the first two input arguments
@@ -212,13 +323,51 @@ for i=a:N:b
 %     length(find(bool))
 %     [1,length(find(isfinite(x)))]
 %     plot(lon)
-    xk(bool) = interp3(lon,lat,num((i-1):(i+Ni)),x,lonk,latk,numk,'linear');
+    xk(bool) = interp3(lon,lat,num(i-1:i+pagecount-1),x,lonk,latk,numk,'linear');
 end
-
-%length(find(isfinite(xk)))
 
 bool=isnan(xk)&~isnan(lati);
 xk(bool)=inf;
+
+function[xk]=ncinterp_one_loop_lonlat(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b)
+
+xn=double(ncread(filename,varname,[1 1 1],[inf inf 1]));
+xk=nan*zeros(size(numi));
+for i=a:b
+    disp(['NCINTERP reading time ' int2str(i-a+1) ' of ' int2str(b-a+1) '.'])
+    xp=xn;
+    xn=double(ncread(filename,varname,[1 1 i],[inf inf 1]));
+    
+    x=vzeros(length(lon),length(lat),2);
+    %ii=1+blatdown:size(xp,1)+blatdown;
+    jj=1+blatdown:length(lat)-blatup;
+    
+    if bperiodic   
+        x([1 end],jj,1)=xp([end 1],:); %Extra rows for longitudes
+        x([1 end],jj,2)=xn([end 1],:); %Extra rows for longitudes
+        x(2:end-1,jj,1)=xp;            %Central portion
+        x(2:end-1,jj,2)=xn;            %Central portion
+    else
+        x(:,jj,1)=xp;
+        x(:,jj,2)=xn;
+    end
+    
+    if blatdown
+        x(:,1,:)=x(:,2,:);         %Extra column for southern latitudes
+    end
+    if blatup
+        x(:,end,:)=x(:,end-1,:);   %Extra column for northern latitudes
+    end
+    
+    bool=(numi>=num(i-1))&(numi<=num(i));
+    [numk,latk,lonk]=vindex(numi,lati,loni,bool,1);  
+    %Note that INTERP3 bizarrely has reversed the first two input arguments
+    xk(bool) = interp3(lat,lon,[num(i-1) num(i)],x,latk,lonk,numk,'linear');
+end
+
+bool=isnan(xk)&~isnan(lati);
+xk(bool)=inf;
+
 
 function[xk]=ncinterp_one_loop(filename,num,lat,lon,numi,lati,loni,varname,blatup,blatdown,bperiodic,a,b)
 

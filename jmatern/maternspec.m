@@ -71,6 +71,51 @@ function[varargout]=maternspec(varargin)
 %   The oscillatory Matern is described in Lilly et al. (2017).
 %   __________________________________________________________________
 %
+%   Real-valued processes
+%
+%   By default MATERSPEC returns the spectrum of a complex-valued process. 
+%
+%   MATERNSPEC(...,'real') instead returns the spectrum of a real-valued
+%   process. This also works with any of extended versions described above.
+%
+%   In this case, the rotary spectra SPP and SNN be forced to be the same 
+%   in models that return them.
+%   __________________________________________________________________
+%
+%   See also MATERNCOV, MATERNIMP, MATERNOISE, MATERNFIT, BLURSPEC.
+%
+%   'maternspec --f' generates some sample figures.
+%
+%   Tests for MATERNSPEC can be found in MATERNCOV.
+%
+%   Usage:  [f,s]=maternspec(dt,N,sigma,alpha,lambda);
+%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda);
+%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu);
+%   __________________________________________________________________
+%   This is part of JLAB --- type 'help jlab' for more information
+%   (C) 2013--2021 J.M. Lilly --- type 'help jlab_license' for details
+
+
+%   No longer supported, sorry
+%   Reverse Matern
+%
+%   [F,S]=MATERNSPEC(N,SIGMA,ALPHA,H,'reverse') returns the spectrum of the
+%   reverse Matern process, in which the roles of the spectrum and the
+%   autocovariance functions are swapped.  The spectrum is given by
+%
+%      S(F) = SIGMA^2 * C * (F/H)^(ALPHA-1/2) * BESSELK(ALPHA-1/2,F/H)
+%
+%   where C = 2 * SQRT(PI) / GAMMA(ALPHA) / 2^(ALPHA-1/2) / H is a 
+%   normalizing constant.  Note that the parameter H has been inverted 
+%   so that it still has units of frequency. 
+%
+%   [F,SPP,SNN]=MATERNSPEC(N,SIGMA,ALPHA,C,'reverse') for complex C also
+%   works and gives the spectrum of an oscillatory reverse Matern.  
+%   __________________________________________________________________
+
+
+%   __________________________________________________________________
+%
 %   Experimental extensions
 %
 %   The remaining features are experimental extensions to the Matern 
@@ -159,51 +204,6 @@ function[varargout]=maternspec(varargin)
 %
 %   Here B = 2 * LAMBDA * (NU^2 + MU^2) is a normalizing constant that lets
 %   SIGMA^2 be interpreted as an approximation to the inertial variance. 
-%   __________________________________________________________________
-%
-%   Real-valued processes
-%
-%   By default MATERSPEC returns the spectrum of a complex-valued process. 
-%
-%   MATERNSPEC(...,'real') instead returns the spectrum of a real-valued
-%   process. This also works with any of extended versions described above.
-%
-%   In this case, the rotary spectra SPP and SNN be forced to be the same 
-%   in models that return them.
-%   __________________________________________________________________
-%
-%   See also MATERNCOV, MATERNIMP, MATERNOISE, MATERNFIT, BLURSPEC.
-%
-%   'maternspec --f' generates some sample figures.
-%
-%   Tests for MATERNSPEC can be found in MATERNCOV.
-%
-%   Usage:  [f,s]=maternspec(dt,N,sigma,alpha,lambda);
-%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda);
-%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,nu);
-%           [f,spp,snn]=maternspec(dt,N,sigma,alpha,lambda,mu,'extended');
-%   __________________________________________________________________
-%   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
-
-
-%   No longer supported, sorry
-%   Reverse Matern
-%
-%   [F,S]=MATERNSPEC(N,SIGMA,ALPHA,H,'reverse') returns the spectrum of the
-%   reverse Matern process, in which the roles of the spectrum and the
-%   autocovariance functions are swapped.  The spectrum is given by
-%
-%      S(F) = SIGMA^2 * C * (F/H)^(ALPHA-1/2) * BESSELK(ALPHA-1/2,F/H)
-%
-%   where C = 2 * SQRT(PI) / GAMMA(ALPHA) / 2^(ALPHA-1/2) / H is a 
-%   normalizing constant.  Note that the parameter H has been inverted 
-%   so that it still has units of frequency. 
-%
-%   [F,SPP,SNN]=MATERNSPEC(N,SIGMA,ALPHA,C,'reverse') for complex C also
-%   works and gives the spectrum of an oscillatory reverse Matern.  
-%   __________________________________________________________________
-
 
 if strcmpi(varargin{1}, '--f')
     type makefigs_maternspec

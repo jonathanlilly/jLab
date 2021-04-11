@@ -27,7 +27,7 @@ function[varargout]=ncload(varargin)
 %
 %   Convert trajectory data
 %
-%   In addition, if FILENAME has the global  attribute  
+%   In addition, if FILENAME has the global attribute  
 %
 %         featureType    = 'trajectory'
 %

@@ -9,8 +9,8 @@ function[znew]=interplatlon(varargin)
 %   2D Interpolation
 %
 %   Z=INTERPLATLON(LATO,LONO,[],ZO,LAT,LON) performs a 2D interpolation
-%   from the array ZO, which has latitude varying in LENGTH(LATO) columns
-%   and longitude varying in LENGTH(LONO) rows, onto locations (LAT,LON).
+%   from the array ZO, which has latitude varying in LENGTH(LATO) rows and
+%   longitude varying in LENGTH(LONO) columns, onto locations (LAT,LON).
 %
 %   Here LAT and LON are 2D arrays of the same size.  LATO and LONO should
 %   1D arrays such that ZO is plaid; otherwise see SPHEREINTERP.

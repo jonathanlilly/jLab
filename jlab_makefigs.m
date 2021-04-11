@@ -7,7 +7,7 @@ function[varargout]=jlab_makefigs(namestr,str)
 %   Lilly, J. M. and P. Perez-Brunius (2021b).  Extracting statistically 
 %       significant eddy signals from large Lagrangian datasets using 
 %       wavelet ridge analysis, with application to the Gulf of Mexico.
-%       Submitted to Nonlinear Processes in Geophysics.
+%       In press at Nonlinear Processes in Geophysics.
 %
 %  'jlab_makefigs gulfdrifters':
 %   Lilly, J. M. and P. Perez-Brunius (2021a). A gridded surface current

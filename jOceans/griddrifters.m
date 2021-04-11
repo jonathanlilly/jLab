@@ -59,7 +59,7 @@ function[varargout]=griddrifters(varargin)
 %                                                     lato,lono,yo,mo,N);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2020--2021 J.M. Lilly --- type 'help jlab_license' for details
  
 %if strcmp(varargin{1}, '--t')
 %    griddrifters_test,return
@@ -78,7 +78,9 @@ yo=varargin{10};
 mo=varargin{11};
 N=varargin{12};
 
+disp('GRIDDRIFTERS preparing arguments...')
 cv=cellpair(u,v);
+clear u v
 
 if ~isempty(source1)
     sourceinput=true;
@@ -124,10 +126,15 @@ monum=(floor(yf)-yo)*12+mf-mo+1;%month number . fraction from start date
 [nums,mnums]=vzeros(N,1,nan);
 
 count=vzeros(length(lato)-1,length(lono)-1,N);
-counts=vzeros(length(lato)-1,length(lono)-1,N,maxmax(source));
+
+if sourceinput
+    counts=vzeros(length(lato)-1,length(lono)-1,N,maxmax(source));
+end
 
 for i=1:N
     %nums(i)=yf2num(yo+mo+i/24+(mo-1)/12); %not quite right
+    disp(['GRIDDRIFTERS working time slice ' int2str(i) ' of ' int2str(N) '...'])
+    
     if isodd(i)
         bool=(floor(monum)==(i-1)/2+1);%[1,3,5,7] => [1,2,3,4]
         nums(i)=(1/2)*(datenum(yo,mo+(i-1)/2,1)+datenum(yo,mo+1+(i-1)/2,1)-1);
@@ -135,10 +142,8 @@ for i=1:N
         bool=(monum>=i/2+1/2)&(monum<i/2+3/2);  %half-months [>1.5<2.5, etc.]
         nums(i)=datenum(yo,mo+i/2,1);
     end
-    %datestr(nums)
-          
-      % [ length(find(bool)),length(find(isfinite(abs(cv(bool)))))]
-   
+%    datestr(nums(i))
+     % [ length(find(bool)),length(find(isfinite(abs(cv(bool)))))]  
     if ~isempty(find(bool))
         [matmat(:,:,i),xmid,ymid,count(:,:,i)]=twodstats(lon(bool),lat(bool),abs(cv(bool)),lono,lato);
         [mz,~,~,numz,cov]=twodstats(lon(bool),lat(bool),[real(cv(bool)),imag(cv(bool))],lono,lato);
@@ -204,6 +209,7 @@ if sourceinput
 end
 
 varargout{1}=struct;
+disp(['GRIDDRIFTERS finished.'])
 
     
 %function[]=griddrifters_test

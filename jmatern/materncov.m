@@ -52,23 +52,6 @@ function[varargout]=materncov(varargin)
 %   RF is constructed from R as RF=[FLIPUD(CONJ(R(2:end,:));R]. 
 %   __________________________________________________________________
 %
-%   Extensions
-%
-%   Several extensions of the basic Matern form are supported, all of which
-%   are discussed in more detail in MATERNSPEC.
-%
-%   Oscillatory Matern
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,NU)
-%   Generalized Matern (+ optional oscillations)
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
-%   Extended Matern  (+ optional oscillations)
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
-%   Composite Matern 
-%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
-%   __________________________________________________________________
-%
 %   Real-valued processes
 %
 %   By default MATERNCOV returns the autocovariance of a complex-valued
@@ -106,7 +89,7 @@ function[varargout]=materncov(varargin)
 %          [tau,R]=materncov(dt,N,sigma,alpha,lambda,mu,'composite');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2021 J.M. Lilly --- type 'help jlab_license' for details
 
 %   No longer supported, sorry
 %   __________________________________________________________________
@@ -122,6 +105,24 @@ function[varargout]=materncov(varargin)
 %   Note that the parameter LAMBDA has been inverted so that it still has units
 %   of frequency, as in the case of the forward Matern process. 
 
+
+%   __________________________________________________________________
+%
+%   Extensions
+%
+%   Several extensions of the basic Matern form are supported, all of which
+%   are discussed in more detail in MATERNSPEC.
+%
+%   Oscillatory Matern
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,NU)
+%   Generalized Matern (+ optional oscillations)
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,'general') 
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,GAMMA,NU,'general') 
+%   Extended Matern  (+ optional oscillations)
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,'extended')
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'extended')
+%   Composite Matern 
+%       [F,SPP,SNN]=MATERNCOV(DT,N,SIGMA,ALPHA,LAMBDA,MU,NU,'composite')
 
 if strcmpi(varargin{1}, '--t')
     materncov_test,return

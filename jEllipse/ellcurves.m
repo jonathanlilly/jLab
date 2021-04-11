@@ -63,7 +63,7 @@ if na>4
     end
 end
 
-if length(varargin)==5;
+if length(varargin)==5
     phi=varargin{4};
     x=varargin{5};
 else
@@ -101,11 +101,10 @@ end
 
 function[z]=ellcurves_one(kappa,lambda,theta,phi,x,ar,npoints)
 phio=linspace(0,2*pi,npoints);
-z=zeros(length(phio),length(kappa));
 %x=conj(x');
 
 z=zeros(length(phio),length(kappa));
-for i=1:length(phio)  %Look over phio, very fast
+for i=1:length(phio)  %Loop over phio, very fast
     [xc,yc]=ellsig(kappa,lambda,theta,phi+phio(i),'real');
     %vsize(xc,yc,x)
     z(i,:)=ar(1)*xc+sqrt(-1)*ar(2)*yc+x;

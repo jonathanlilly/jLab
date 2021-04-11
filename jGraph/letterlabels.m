@@ -24,7 +24,7 @@ function[h]=letterlabels(arg1,arg2,arg3)
 %   nonstandard order, do this by reordering H.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2000--2021 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(arg1,'--t')
