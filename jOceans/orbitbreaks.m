@@ -35,7 +35,7 @@ function[varargout]=orbitbreaks(varargin)
 %          orbitbreaks(lat,lon,x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2022 J.M. Lilly --- type 'help jlab_license' for details
  
 %This functionality is removed: 
 %Also, INFs are inserted into LON whenever LON jumps by more 
@@ -154,8 +154,7 @@ function[bool]=turningpoint(x)
 %   along the first dimension, i.e. along rows.
 %
 %   Note that if any two adjacent points are identical, TURNINGPOINT
-%   adds a very small amount of numerical noise to one of the points
-%   in order to make a choise about which is larger.
+%   chooses to identify the first one as the turning point.
 %
 %   See also CROSSINGS.
 %
@@ -170,10 +169,10 @@ function[bool]=turningpoint(x)
 %    turningpoint_test,return
 %end
 
-%Add very small amout of noise to keep identical points from occurring
 index=find(x==vshift(x,-1,1));
 if ~isempty(index)
-    x(index)=x(index)+randn(size(x(index)))*1e-10;
+%     x(index)=x(index)+randn(size(x(index)))*1e-10;
+     x(index)=x(index)-1e-10;
 end
 
 boolmin=~(x>vshift(x,1,1)|x>vshift(x,-1,1));
@@ -191,8 +190,7 @@ reporttest('TURNINGPOINT',aresame(b,turningpoint(x)))
 
 x= [ 4 5 6 7 7 6 5 6]';
 b1=[ 0 0 0 1 0 0 1 0]';
-b2=[ 0 0 0 0 1 0 1 0]';
 
 y1=turningpoint(x);
-reporttest('TURNINGPOINT with repeated entry',aresame(y1,b1) || aresame(y1,b2))
+reporttest('TURNINGPOINT with repeated entry',aresame(y1,b1))
 

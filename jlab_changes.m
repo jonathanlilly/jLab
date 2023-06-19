@@ -1,5 +1,57 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.7.2
+%
+%   This version contains a completely refactored mapping package jMap,
+%   with considerable speed and memory improvements, a new, simpler, and
+%   more general formulation of the mapping kernel, major new options, and
+%   several bug fixes.     
+%
+%   polymap       - Mapping using local polynomial fitting, also known as loess. 
+%   pm_apply      - Apply weights to data to generate a local polynomial fit.     
+%   pm_index      - Applies an index output by PM_SORT to sort data for POLYMAP.  
+%   pm_kernmom    - Moments of smoothing kernels for local polynomial fitting.    
+%   pm_sort       - Sort data points according to distance from grid points in 2D.
+%   pm_weight     - Weighting function for local polynomial fitting.              
+%   pm_window     - Remove data outside of time window for POLYMAP.      
+%   pm_robust     - Returns a weighting function used in robustifying POLYMAP.
+%
+%   Changes and improvements:
+%
+%   WAVETRANS normalization change for complex-valued signals.
+%   VINDEX refactorization.
+%   MATINV convention change such that the matrices to be inverted occupy
+%       the first two, rather than the last two, dimensions.
+%   MATERNFIT documentation error for spectrum of noise component fixed;
+%        it should be DT*EPSILON^2.  Thanks to S. Elipot the bug report.
+%   SLIDETRANS was outdated and has been removed.
+%   SPHERESORT, TWODSORT, and POLYSMOOTH documentation improvements and 
+%       bugfixes to support the "One grid, many fields" POLYSMOOTH option.
+%   POLYSMOOTH refactorization and speed improvements.
+%   POLYSMOOTH bugfix for spatially-varying bandwidth.
+%   POLYSMOOTH now uses a general, two-parameter kernel formulation. 
+%   POLYSMOOTH now supports both a spatially bandwidth and spatially 
+%       varying kernel properties.
+%   POLYSMOOTH is now quiet, rather than verbose, by default.
+%   POLYSMOOTH now includes an option for a guaranteed minimum population.
+%   POLSYMOOTH now supports the use of equivalent kernels for a
+%       considerable acceleration mapping repeated designs.
+%   TWODSORT and SPHERESORT have been refactored and combined into the new
+%       function PM_SORT.
+%   INTERPLATLON bugfix for the fact that the longitude being interpolated 
+%       from may start at an arbitrary value, not necessarily -180 or 0.
+%   INTERPLATLON added option to pass interpolation method to INTERP2/3.
+%   COLORQUANT bugfix.
+%   JPRINT changed to work with R2022b.
+%   ELLIPSEPLOT bugfix.
+%
+%   Removed functions:
+%
+%   POLYSMOOTH has been completely refactored and renamed POLYMAP.
+%   TWODSORT and SPHERESORT have been refactored and combined into PM_SORT.
+%   MATMULT has been removed.  Use the faster built-in Matlab function
+%       PAGEMTIMES for this functionality instead. 
+%   -----------------------------------------------------------------------
 %
 %   Changes new in version 1.7.1
 %
@@ -7,15 +59,15 @@
 %      
 %   Lilly and Perez-Brunius (2021b). Extracting statistically significant 
 %       eddy signals from large Lagrangian datasets, with application to 
-%       the Gulf of Mexico. In review at Nonlinear Processes in Geophysics.
+%       the Gulf of Mexico. Nonlinear Processes in Geophysics, 28: 181–212.
 %
 %   Lilly and Perez-Brunius (2021a). A gridded surface current product for
 %       the Gulf of Mexico from consolidated  drifter measurements.  
-%       In press at Earth Science System Data.
+%       Earth System Science Data, 13: 64–669.
 %
 %   Lilly, J. M. and S. Elipot (2021). A unifying perspective on transfer
 %       function solutions to the unsteady Ekman problem.  Fluids, 6 (2): 
-%       85, 1--36. 
+%       85, 1–36. 
 %
 %   Major new functions for Ekman theory and for Lagrangian eddy analysis:
 %
@@ -113,7 +165,7 @@
 %   ibcao.mat and ibcao.nc       -  International Bathymetric Chart of the 
 %      Arctic Ocean topography. See about_ibcao.
 %
-%   Major bugfix
+%   Major bugfix:
 %
 %   SPHERELAP for computing the Laplacian in spherical geometry 
 %   unfortunately had a major bug in earlier versions that rendered its
@@ -206,14 +258,14 @@
 %
 %   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.
 %
-%   Updated datasets
+%   Updated datasets:
 %
 %   drifters.mat  - The global surface drifter dataset from NOAA's Global
 %        Drifter Program, updated through Sept. 2016.  See about_drifters.
 %   tpjaos.mat    - Alongtrack sea surface height anomalies from the 
 %        Beckley dataset, updated through Oct. 12, 2016.  See about_tpjaos.
 % 
-%   Changes and improvements
+%   Changes and improvements:
 %
 %   JPCOLOR now SQUEEZEs input arguments by default. 
 %   POLYSMOOTH improved organization of output arguments, speed improvments,
@@ -244,7 +296,7 @@
 %      the Matern process, and stochastic modeling of turbulent dispersion.
 %      Available at http://jmlilly.net/jmlpubs.html.   
 %
-%   New functions
+%   New functions:
 %
 %   ncinterp      - Interpolate field from NetCDF file onto specified positions.
 %   cellget       - Indexes a cell array of numerical arrays by ID number.
@@ -254,7 +306,7 @@
 %   degunwrap     - Unwraps arrays given in degrees.
 %   trackextract  - Extracts alongtrack altimetry segments within given region.
 %
-%   Changes and improvements
+%   Changes and improvements:
 %
 %   DRIFTERS.MAT is now updated with data through December 2015.
 %   ABOUT_DRIFTERS contains updated and simplified internal processing.
@@ -301,7 +353,7 @@
 %
 %   jLab is now on GitHub at https://github.com/jonathanlilly/jLab.
 %
-%   Changes and improvements
+%   Changes and improvements:
 %
 %   WAVETRANS now supports parallelization.
 %   LINECOLOR bugfix for colormaps of lengths different from 64.
@@ -316,11 +368,11 @@
 %
 %   Changes new in version 1.6
 %
-%   New datasets
+%   New datasets:
 %
 %   about_ibcao - International Bathymetric Chart of the Arctic Ocean topography.
 %
-%   New functions
+%   New functions:
 %
 %   jlab_index - Alphabetical index into JLAB and JDATA contents.
 %   standalone - Create stand-alone version of an m-file, including dependencies.
@@ -335,7 +387,7 @@
 %   cellfill   - Fills missing data marked by NaNs in a cell array.
 %   cellfirst  - Returns the first element of each entry in a cell array.
 %
-%   Changes and improvements
+%   Changes and improvements:
 %
 %   All example figures now echo code to the Matlab command window.
 %
@@ -367,7 +419,7 @@
 %     --- Completely new organization with a more modular approach
 %     --- Many obsolete functions removed and redundancies eliminated
 %
-%   New functions
+%   New functions:
 %
 %   divgeom        - Geometric decomposition of eddy vorticity flux divergence.
 %   blurspec       - Returns the blurred and aliased spectrum given the autocovariance.
@@ -382,13 +434,13 @@
 %   whichdir       - Returns directory name containing file in search path.
 %   jlab_allhelp   - Displays the help comments for all JLAB modules.
 %
-%   Improved datasets
+%   Improved datasets:
 %
 %   about_drifters - Modified to include data through June 2014.  Please
 %      note that the earlier verison of drifters.mat was missing half the 
 %      data on account of a read error.  The new version corrects this.
 %
-%   Minor changes and improvements
+%   Minor changes and improvements:
 %
 %   SPHERESORT speed improvements, bug fix, and support for parallel computing.
 %   READTOPO now works with Smith and Sandwell v. 18.1

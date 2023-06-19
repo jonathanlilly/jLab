@@ -6,7 +6,6 @@
 %   blocklen   - Counts the lengths of 'blocks' in an array.                        
 %   blocknum   - Numbers the contiguous blocks of an array.   
 %   lnsd       - Last non-singleton dimension of an array.                          
-%   matmult    - Matrix multiplication for arrays of matrices.                      
 %   nonnan     - Return all non-NAN elements of an array.                           
 %   vectmult   - Matrix multiplication for arrays of vectors.    
 %

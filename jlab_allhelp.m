@@ -53,7 +53,6 @@ function[varargout]=jlab_allhelp(varargin)
 %     blocklen   - Counts the lengths of 'blocks' in an array.                         
 %     blocknum   - Numbers the contiguous blocks of an array.    
 %     lnsd       - Last non-singleton dimension of an array.                           
-%     matmult    - Matrix multiplication for arrays of matrices.                       
 %     nonnan     - Return all non-NAN elements of an array.                            
 %     vectmult   - Matrix multiplication for arrays of vectors.     
 %   
@@ -210,8 +209,10 @@ function[varargout]=jlab_allhelp(varargin)
 %     polysmooth - Smoothing scattered 2D data with local polynomial fitting.  
 %     spheresort - Sorted great circle distances to nearby points on the earth. 
 %     twodsort   - Distances from data points to nearby grid points.    
+%     equivkern  - Equivalent kernels for local polynomial fitting. 
 %   
 %     Low level functions 
+%     kernmom    - Moments of smoothing kernels for local polynomial fitting. 
 %     matinv     - Fast inversion of arrays of small matrices. 
 %   __________________________________________________________________ 
 %  
@@ -342,7 +343,6 @@ function[varargout]=jlab_allhelp(varargin)
 %     specdiag   - Diagonalize a 2 x 2 spectral matrix.         
 %   
 %   Assorted other transforms  
-%     slidetrans  - Sliding-window ('moving-window') Fourier transform.    
 %     anatrans    - Analytic part of signal.                                          
 %     wigdist     - Wigner distribution (alias-free algorithm).    
 %    
@@ -484,7 +484,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   See also jRidges, jSpectral, jEllipse. 
 %   __________________________________________________________________ 
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2023 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp

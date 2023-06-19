@@ -329,13 +329,14 @@ ylabel('Fourier Power Spectral Density')
 subplot(1,2,2)
 [mo,ffun]=morsemom(0,ga,be);
 a=ffun.*morsefreq(ga,be).^(-1);
+%I think there is a factor of 2 missing in front of a*fs
 plot(2*pi./fs,[mean(squared(w),1)' mean(squared(wo),1)' mean(squared(we),1)'  a*fs])
 xlog,ylog,xlim(2*pi./[max(f) f(2)]),ylim([10^(-4) 1])
 linestyle k 3k 4D k--
 hold on,plot(2*pi./fs,mean(squared(w),1),'k')
 title('Wavelet Spectrum with 1/s Normalization')
 xlabel('Transform Period $2\pi/\omega_s$')
-text(3,10^(-3.75),'(b)')
+text(3,10^(-3.75),'(b)')f
 set(gca,'yaxislocation','right')
 packfig(1,2,'columns')
 set(gca','YTickLabelMode','auto')

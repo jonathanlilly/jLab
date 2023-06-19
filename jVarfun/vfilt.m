@@ -50,7 +50,7 @@ function[varargout]=vfilt(varargin)
 %
 %   Usage: y=vfilt(x,filter);
 %          y=vfilt(x,filter,'zeros');
-%          y=vfilt(x,N,'median,'zeros');
+%          y=vfilt(x,N,'median','zeros');
 %          [y1,y2,y3]=vfilt(x1,x2,x3,filter);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information

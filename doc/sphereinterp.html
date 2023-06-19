@@ -9,7 +9,7 @@
     _______________________________________________________________________
  
     <a href="sphereinterp.html">SPHEREINTERP</a> takes a 2D array ZO, defined for latitudes and longitudes
-    LATO and LONO, and linearly interpolate the values of ZO onto a plaid 
+    LATO and LONO, and linearly interpolates the values of ZO onto a plaid 
     grid defined by 1-D arrays LAT and LON, leading to the output array Z.
  
     LATO, LONO, and ZO are all the same size.  It is not necessary for LATO
@@ -75,7 +75,7 @@
     in the original LATO, LONO fields nearest each target LAT, LON point, 
     as well as the three points adjacent to this closest point.  
     
-    DX and DY are arrays of the same size and LAT and LON giving the column
+    DX and DY are arrays of the same size as LAT and LON giving the column
     and row deviations, respectively, within LATO and LONO from the closest
     point in those arrays to the linearly interpolated LAT/LON value.
  
@@ -152,14 +152,14 @@
     University of Alaska Fairbanks.
     _________________________________________________________________
  
-    See also <a href="spheresort.html">SPHERESORT</a>, <a href="jSphere.html">JSPHERE</a>.
+    See also SPHERESORT, <a href="jSphere.html">JSPHERE</a>.
  
     '<a href="sphereinterp.html">sphereinterp</a> --t' runs a test.
     '<a href="sphereinterp.html">sphereinterp</a> --f' generates the two figures shown above.
  
     Usage: [dx,dy,index,bool]=<a href="sphereinterp.html">sphereinterp</a>(lato,lono,lat,lon,'parallel');
-           z=<a href="sphereinterp.html">sphereinterp</a>(dx,dy,index,bool);
+           z=<a href="sphereinterp.html">sphereinterp</a>(dx,dy,index,bool,zo);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2017 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2017--2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

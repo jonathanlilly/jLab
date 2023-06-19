@@ -7,7 +7,7 @@ function[varargout]=sphereinterp(varargin)
 %   _______________________________________________________________________
 %
 %   SPHEREINTERP takes a 2D array ZO, defined for latitudes and longitudes
-%   LATO and LONO, and linearly interpolate the values of ZO onto a plaid 
+%   LATO and LONO, and linearly interpolates the values of ZO onto a plaid 
 %   grid defined by 1-D arrays LAT and LON, leading to the output array Z.
 %
 %   LATO, LONO, and ZO are all the same size.  It is not necessary for LATO
@@ -73,7 +73,7 @@ function[varargout]=sphereinterp(varargin)
 %   in the original LATO, LONO fields nearest each target LAT, LON point, 
 %   as well as the three points adjacent to this closest point.  
 %   
-%   DX and DY are arrays of the same size and LAT and LON giving the column
+%   DX and DY are arrays of the same size as LAT and LON giving the column
 %   and row deviations, respectively, within LATO and LONO from the closest
 %   point in those arrays to the linearly interpolated LAT/LON value.
 %
@@ -157,10 +157,10 @@ function[varargout]=sphereinterp(varargin)
 %   'sphereinterp --f' generates the two figures shown above.
 %
 %   Usage: [dx,dy,index,bool]=sphereinterp(lato,lono,lat,lon,'parallel');
-%          z=sphereinterp(dx,dy,index,bool);
+%          z=sphereinterp(dx,dy,index,bool,zo);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2017--2022 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     sphereinterp_test,return
@@ -319,11 +319,17 @@ M21(bool)=dlatdx(index(bool));
 M22(bool)=dlatdy(index(bool));
 
 clear M
-M=zeros(size(latg,1),size(latg,2),2,2);
-M(:,:,1,1)=M11;
-M(:,:,1,2)=M12;
-M(:,:,2,1)=M21;
-M(:,:,2,2)=M22;
+M=zeros(2,2,size(latg,1),size(latg,2));
+M(1,1,:,:)=M11;
+M(1,2,:,:)=M12;
+M(2,1,:,:)=M21;
+M(2,2,:,:)=M22;
+
+%M=zeros(size(latg,1),size(latg,2),2,2);
+%M(:,:,1,1)=M11;
+%M(:,:,1,2)=M12;
+%M(:,:,2,1)=M21;
+%M(:,:,2,2)=M22;
 
 invM=matinv(M);%Inverting this matrix
 %squeeze(M(10,10,:,:))*squeeze(invM(10,10,:,:))  %Just checking
@@ -337,8 +343,11 @@ lati(bool)=lato(index(bool));
 dlat=latg-lati;
 dlon=angle(rot(frac(2*pi,360)*(long-loni)))*frac(360,2*pi);
 
-dx=invM(:,:,1,1).*dlon+invM(:,:,1,2).*dlat;
-dy=invM(:,:,2,1).*dlon+invM(:,:,2,2).*dlat;
+%dx=invM(:,:,1,1).*dlon+invM(:,:,1,2).*dlat;
+%dy=invM(:,:,2,1).*dlon+invM(:,:,2,2).*dlat;
+
+dx=squeeze(invM(1,1,:,:)).*dlon+squeeze(invM(1,2,:,:)).*dlat;
+dy=squeeze(invM(2,1,:,:)).*dlon+squeeze(invM(2,2,:,:)).*dlat;
 
 %Generally, these will be less than one, because they represent shifts
 %within the (lato,lono) grid.  But a small fraction, for numerical reasons,
@@ -391,10 +400,10 @@ bool=isfinite(index{1}.*index{2}.*index{3}.*index{4});
 
 %Condition number loop
 C=nan*ones(size(M(:,:,1,1)));
-for i=1:size(M,1)
-    for j=1:size(M,2)
-        if allall(isfinite(M(i,j,:)))
-            C(i,j)=cond(squeeze(M(i,j,:,:)));
+for i=1:size(M,3)
+    for j=1:size(M,4)
+        if allall(isfinite(M(:,:,i,j)))
+            C(i,j)=cond(squeeze(M(:,:,i,j)));
         end
     end
 end
@@ -410,7 +419,7 @@ zo=slasnapshot.sla;
 %lon=-64:1/10:-46;lat=26:1/10:42;
 lon=-64:1/5:-46;lat=26:1/5:42;
 
-[dx,dy,index,bool]=sphereinterp(lato,lono,lat,lon);
+tic;[dx,dy,index,bool]=sphereinterp(lato,lono,lat,lon);toc
 tic;[zlin,z2]=sphereinterp(dx,dy,index,bool,zo);toc
 
 [long,latg]=meshgrid(lon,lat);

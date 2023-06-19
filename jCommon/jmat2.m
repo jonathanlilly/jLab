@@ -16,21 +16,9 @@ function[x]=jmat2(theta)
 %   This is part of JLAB --- type 'help jlab' for more information
 %   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details        
 
-
-
 x=zeros(2,2,size(theta,1),size(theta,2),size(theta,3),size(theta,4));
 x(1,1,:,:,:,:)=cos(theta);
 x(1,2,:,:,:,:)=-sin(theta);
 x(2,1,:,:,:,:)=sin(theta);
 x(2,2,:,:,:,:)=cos(theta);
 
-% x=zeros(2,2,length(theta(:)));
-% x(1,1,:)=cos(theta(:));
-% x(1,2,:)=-sin(theta(:));
-% x(2,1,:)=sin(theta(:));
-% x(2,2,:)=cos(theta(:));
-% 
-% 
-% if size(theta,1)~=length(theta(:));
-%     x=reshape(x,[2,2,size(theta)]);
-% end

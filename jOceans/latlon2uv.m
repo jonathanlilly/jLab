@@ -254,9 +254,9 @@ gamma=atan2(yy,xx);
 %gamma2=imag(log(xx+1i*yy));
 %aresame(gamma,gamma2,1e-10)
 
-%From http://www.movable-type.co.uk/scripts/latlong.html
-%ATAN2(COS(lat1)*SIN(lat2)-SIN(lat1)*COS(lat2)*COS(lon2-lon1),SIN(lon2-lon1)*COS(lat2)) 
-%But note, that source actually reverses the inputs to the inverse tangent function 
+%From http://www.siranah.de/html/sail042e.htm
+%But need to swap the inputs to the inverse tangent function to get angle 
+%relative to eastward
 
 dt(end+1,:)=dt(end,:);
 dr(end,:)=dr(end-1,:);

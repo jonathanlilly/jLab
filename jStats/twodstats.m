@@ -103,7 +103,7 @@ function[mat,xmid,ymid,num,stdz]=twodstats(varargin)
 %          [mz,xmid,ymid,numz,stdz]=twodstats(x,y,z,xbin,ybin);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2007--2022 J.M. Lilly --- type 'help jlab_license' for details    
 
 %   You can use TWODSTATS for fast binning of data over the plane.  For
 %   the case in which Z is so sparsely distributed over X and Y, such 
@@ -144,7 +144,8 @@ vcolon(xdata,ydata);
 K=length(zdata(:))/length(xdata);
 zdata=reshape(zdata,length(xdata),K);
   
-bool=isfinite(xdata)&isfinite(ydata)&isfinite(sum(zdata,2));
+%bool=isfinite(xdata)&isfinite(ydata)&isfinite(sum(zdata,2));
+bool=~isnan(xdata)&~isnan(ydata)&~isnan(sum(zdata,2));
 xdata=xdata(bool);
 ydata=ydata(bool);
 zdata=zdata(bool,:);

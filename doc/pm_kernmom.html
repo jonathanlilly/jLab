@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PM_KERNMOM is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pm_kernmom.html">PM_KERNMOM</a>  Moments of smoothing kernels for local polynomial fitting.
+    
+    [MU2,NU0]=<a href="pm_kernmom.html">PM_KERNMOM</a>(ALPHA,BETA) returns the moments of the generalized 
+    beta family of smoothing kernels in 2D. These are of the form
+ 
+         K(R) = KAPPA * (1-R^ALPHA)^BETA,   R<1
+     
+    and are defined to vanish for R>=1.   MU2 is the second moment of K(R),
+    while NU0 is the first moment of the squared kernel K^2(R).
+ 
+    [MU2,NU0,RHO]=<a href="pm_kernmom.html">PM_KERNMOM</a>(ALPHA,BETA) also returns RHO, a combination of
+    higher-order moments that appears in the variance of quadratic fits.
+ 
+    [MU2,NU0,RHO,NU2,MU4,NU4]=<a href="pm_kernmom.html">PM_KERNMOM</a>(ALPHA,BETA) also returns further
+    higher-order moments.
+ 
+    '<a href="pm_kernmom.html">pm_kernmom</a> --t' runs some tests.
+ 
+    Usage: [mu2,nu0]=<a href="pm_kernmom.html">pm_kernmom</a>(alpha,beta);
+           [mu2,nu0,rho]=<a href="pm_kernmom.html">pm_kernmom</a>(alpha,beta);
+           [mu2,nu0,rho,nu2,mu4,nu4]=<a href="pm_kernmom.html">pm_kernmom</a>(alpha,beta);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

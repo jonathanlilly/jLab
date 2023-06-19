@@ -296,7 +296,7 @@ end
 %\*************************************************************************
 
 %/*************************************************************************
-%Velocity vectors with polysmooth
+%Velocity vectors with polymap
 use gulfflow_onetwelfth
 [long,latg]=meshgrid(lon,lat);
 cv=vmean(u+1i*v,3)*100;
@@ -310,9 +310,14 @@ depth=-jtopo.topo(ii,jj);
 
 total_count=vsum(total_count,3);
 index=total_count>0;
-[ds,xs,ys,zs,ws]=spheresort(latg(index),long(index),cv(index),total_count(index),lat,lon,50); 
-%[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,[],0,50);
-[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,ws,0,50);
+%former version
+%[ds,xs,ys,zs,ws]=spheresort(latg(index),long(index),cv(index),total_count(index),lat,lon,50); 
+%[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,ws,0,50);
+tic;[zhat,beta,aux]=polymap(long(index),latg(index),[],total_count(index),...
+    cv(index),lon,lat,{0,40,2,1},'parallel','sphere');toc
+%this will differ very slightly from the published version because the 
+%Gaussian kernel is no longer supported
+
 zhat(depth<0)=nan;
 %zhat(count<=1)=nan;
 %111/12*[1 2 3 4 5]
@@ -833,7 +838,8 @@ end
 if 0
 %/*************************************************************************
 %mean circulation and streamlines without ngom
-use GulfDriftersAll
+%use GulfDriftersAll
+use GulfDriftersOpen
 
 lono=[-99-1/24:1/12:-80.5];
 lato=[18-1/24:1/12:31];
@@ -843,7 +849,7 @@ use gulfflow_nongom
 total_count=count;
 
 %The rest is just copied from above
-%Velocity vectors with polysmooth
+%Velocity vectors with polymap
 [long,latg]=meshgrid(lon,lat);
 cv=vmean(u+1i*v,3)*100;
 
@@ -856,9 +862,12 @@ depth=-jtopo.topo(ii,jj);
 
 total_count=vsum(total_count,3);
 index=total_count>0;
-[ds,xs,ys,zs,ws]=spheresort(latg(index),long(index),cv(index),total_count(index),lat,lon,50); 
-%[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,[],0,50);
-[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,ws,0,50);
+%former version:
+%[ds,xs,ys,zs,ws]=spheresort(latg(index),long(index),cv(index),total_count(index),lat,lon,50); 
+%[zhat,beta,aux]=polysmooth(ds,xs,ys,[],zs,ws,0,50);
+tic;[zhat,beta,aux]=polymap(long(index),latg(index),[],total_count(index),...
+    cv(index),lon,lat,{0,40,2,1},'parallel','sphere');toc
+
 zhat(depth<0)=nan;
 %zhat(count<=1)=nan;
 %111/12*[1 2 3 4 5]

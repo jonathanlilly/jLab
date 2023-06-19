@@ -1,0 +1,22 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PM_ROBUST is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pm_robust.html">PM_ROBUST</a>  Returns a weighting function used in robustifying <a href="polymap.html">POLYMAP</a>.
+ 
+    <a href="pm_robust.html">PM_ROBUST</a> is called internally by <a href="polymap.html">POLYMAP</a>.  However, for large problems
+    it may be preferable to call it externally, as documented in <a href="polymap.html">POLYMAP</a>.
+ 
+    WS=<a href="pm_robust.html">PM_ROBUST</a>(WS,RES) where WS is a set of weights output by <a href="pm_sort.html">PM_SORT</a> and
+    <a href="res.html">RES</a> are the residuals between the observations and the fi  output by
+    <a href="pm_apply.html">PM_APPLY</a>, returns modified weights WS.
+ 
+    These output weights are used for downweighting outliers in the median-
+    based iterative robust algorithm of Cleveland (1979).  They quantify 
+    the departures of the residuals from the median absolute residual.
+ 
+    Usage: ws=<a href="pm_robust.html">pm_robust</a>(ws,res);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

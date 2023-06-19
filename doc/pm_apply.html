@@ -1,0 +1,57 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PM_APPLY is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pm_apply.html">PM_APPLY</a>  Apply weights to data to generate a local polynomial fit.
+ 
+    <a href="pm_apply.html">PM_APPLY</a> is the final stage in local polynomial fitting as implemented
+    by <a href="polymap.html">POLYMAP</a>.  It applies the weighting function computed by <a href="pm_weight.html">PM_WEIGHT</a> 
+    to observational values in order to generate a fit.
+ 
+    <a href="pm_apply.html">PM_APPLY</a> is called internally by <a href="polymap.html">POLYMAP</a>.  However, for large problems
+    it may be preferable to call it externally, as documented in <a href="polymap.html">POLYMAP</a>.
+    _________________________________________________________________
+ 
+    ZHAT=<a href="pm_apply.html">PM_APPLY</a>(ZS,AMAT,XMAT), where ZS contains sorted data values as
+    output by <a href="pm_sort.html">PM_SORT</a> or <a href="pm_index.html">PM_INDEX</a>, and AMAT and XMAT as output by 
+    <a href="pm_weight.html">PM_WEIGHT</a>, returns the local polynomial fit ZHAT.
+ 
+    See <a href="pm_sort.html">PM_SORT</a> for a description of <a href="pm_weight.html">PM_WEIGHT</a>, and <a href="pm_apply.html">PM_APPLY</a> for a
+    description of AMAT and XMAT.
+ 
+    ZHAT will be an L x M matrix, where L and M are arrays of the y- and x-  
+    coordinates of the mapping grid originally input into <a href="pm_sort.html">PM_SORT</a>.
+ 
+    [ZHAT,BETAHAT]=<a href="pm_apply.html">PM_APPLY</a>(...) also returns the estimated derivatives, 
+    up to the order P specified in the input to <a href="polymap.html">POLYMAP</a> or <a href="pm_weight.html">PM_WEIGHT</a>.  
+    See <a href="polymap.html">POLYMAP</a> for more details on BETAHAT.  
+ 
+    [ZHAT,BETAHAT,AUX]=<a href="pm_apply.html">PM_APPLY</a>(ZS,AMAT,XMAT,WMAT,H,C), where WMAT, H, and 
+    C are output by <a href="pm_weight.html">PM_WEIGHT</a>, also returns an L x M x 5 array AUX with 
+    some additional diagnostic information, as described in <a href="polymap.html">POLYMAP</a>.
+ 
+    [ZHAT,BETAHAT,AUX,RES]=<a href="pm_apply.html">PM_APPLY</a>(ZS,AMAT,XMAT,WMAT,H,C) also returns the
+    residual <a href="res.html">RES</a>, a cell array of numeric arrays of the same size as ZS,
+    which contains the residual Z-ZHAT at all observation points.
+    __________________________________________________________________
+ 
+    Other options
+  
+    <a href="pm_apply.html">PM_APPLY</a>(...,'verbose') displays the row it is currently working on.
+ 
+    <a href="pm_apply.html">PM_APPLY</a>(...,'parallel') parallelizes the computation using PARFOR.
+ 
+    <a href="pm_apply.html">PM_APPLY</a>(...'parallel',Nworkers) parallelizes the computation with a
+    specified number of workers.
+    __________________________________________________________________
+ 
+    See also <a href="polymap.html">POLYMAP</a>, <a href="pm_sort.html">PM_SORT</a>, and <a href="pm_weight.html">PM_WEIGHT</a>.
+ 
+    Usage: zhat=<a href="pm_apply.html">pm_apply</a>(zs,amat,xmat);
+           [zhat,beta]=<a href="pm_apply.html">pm_apply</a>(zs,amat,xmat);
+           [zhat,beta,aux]=<a href="pm_apply.html">pm_apply</a>(zs,amat,xmat,wmat,H,C);
+           [zhat,beta,aux,res]=<a href="pm_apply.html">pm_apply</a>(zs,amat,xmat,wmat,H,C);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

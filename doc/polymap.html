@@ -1,0 +1,373 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>POLYMAP is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="polymap.html">POLYMAP</a>  Mapping using local polynomial fitting, also known as loess.  
+ 
+    <a href="polymap.html">POLYMAP</a> generates a map from scattered data in two dimensions using
+    a locally weighted least squares fit to a polynomial.
+ 
+    This method is variously known as local polynomial fitting, local
+    polynomial smoothing, multivariate locally weighted least squares 
+    regression, lowess (originally for LOcally WEighted Scatterplot
+    Smoothing), and loess.  All of these are essentially synonyms.
+ 
+    <a href="polymap.html">POLYMAP</a> has the support for all of the following options:
+ 
+        --- Cartesian or spherical geometry
+        --- a constant, linear, or quadratic fit in space
+        --- an additional linear or quadratic fit in time
+        --- fixed bandwidth or fixed population algorithms
+        --- a broad family of possible choices for the kernel
+        --- spatially-varying bandwidth, population, or kernel
+        --- additional datapoint weighting factors, e.g. by confidence
+        --- parallelization using Matlab's Parallel Computing toolbox 
+        --- the median-based robustification of Cleveland (1979) XXX
+ 
+    <a href="polymap.html">POLYMAP</a> is implemented using a numerically efficient algorithm that
+    avoids an explicit loop over individual grid points.  Instead, there is
+    a parallelizable loop over the y-axis, or latitude axis, of the grid.
+  
+    For problems involving repeated mapping on the same measurement grid, 
+    the sub-components of <a href="polymap.html">POLYMAP</a> can be called individually for a great 
+    computational savings, as described in "One grid, many fields" below.
+ 
+    For algorithm details, see XXX.
+    __________________________________________________________________
+ 
+    Local polynomial fitting on the plane
+  
+    Let's say we have an array Z of observations at locations X,Y. X,Y,
+    and Z can be arrays of any size provided they are all the same size.
+ 
+    The problem is to obtain a mapped field ZHAT on some regular grid 
+    specified by the vectors XO and YO.  These are arrays of length M and L
+    giving the bin center locations of an L x M matrix of grid points, i.e.
+ 
+       XO= [XO_1 XO_2 ... XO_M]      YO =  [YO_1;    
+                                            YO_2; 
+                                             ...
+                                            YO_L].
+ 
+    ZHAT=<a href="polymap.html">POLYMAP</a>(X,Y,[],[],Z,XO,YO,{P,H,ALPHA,BETA}) performs a Pth order 
+    local polynomial fit to the data at each grid point, with the weighting
+    controlled by H, ALPHA, and BETA. ZHAT will be a matrix of size L x M.
+  
+    The fit is found by minimizing the weighted mean squared error between 
+    the fitted surface and the observed values.  
+ 
+    The data locations (X,Y) and grid point locations (X0,Y0) should have
+    the same units as the bandwidth H (e.g., kilometers).  Note that any
+    non-finite values in X, Y, or Z are ignored.
+  
+    The fit order P may be chosen as P=0 (fit to a constant), P=1 (fit to a
+    plane), or else P=2 (fit to a parabolic surface). 
+ 
+    The bandwidth H sets the distance outside at which the weight assigned
+    to the data will vanish.  It may either be a scalar or an L x M matrix.
+ 
+    ALPHA and BETA set the choice of weighting function, known as the 
+    kernel, as described next. 
+    __________________________________________________________________
+ 
+    Choice of kernel
+ 
+    Let R be the radial distance between an observation point and a grid 
+    point.  <a href="polymap.html">POLYMAP</a> uses a kernel of the form
+ 
+         K = KAPPA * (1-(R/H)^ALPHA)^BETA
+ 
+    which is a general type of kernel called the generalized beta kernel.
+    KAPPA is a normalization coefficient that depends on ALPHA and BETA.
+ 
+    This form includes many kernels commonly used in the literature:
+  
+         ALPHA=1, BETA=0 --- uniform kernel, K=constant
+         ALPHA=2, BETA=1 --- Epanechnikov (parabolic) kernel, K~1-(DS/H)^2
+         ALPHA=2, BETA=2 --- bisquare kernel, K~(1-(DS/H)^2)^2
+         ALPHA=3, BETA=3 --- tricubic kernel, K~(1-(DS/H)^3)^3
+ 
+    Note that the kernel is defined to vanish for distances R>=H.
+ 
+    Like the bandwidth H, ALPHA and BETA may either be scalars, or matrices 
+    of size L x M to specify a spatially-varying kernel. 
+    __________________________________________________________________
+ 
+    Minimum population
+ 
+    <a href="polymap.html">POLYMAP</a>(...,'minpop',NMIN) uses the input bandwidth H, but also
+    guarantees that the population of data points---that is, the number of 
+    data points subject to a nonzero weight---is at least NMIN at each
+    grid point. This is done by expanding the bandwidth H as necessary.  
+    __________________________________________________________________
+ 
+    Masking out mapping points
+ 
+    ZHAT=<a href="polymap.html">POLYMAP</a>(...,'mask',BOOL), where BOOL is a boolean L x M matrix,
+    suppresses the computation of the polynomial fit at locations where 
+    BOOL is false.  At these locations, ZHAT is set to NaN.
+  
+    This is useful in accelerating <a href="polymap.html">POLYMAP</a> by avoiding calculations where
+    no fit is desired.  For example, for mapping ocean quantities BOOL
+    could be set to false over land.
+    __________________________________________________________________
+ 
+    Fixed population
+ 
+    ZHAT=<a href="polymap.html">POLYMAP</a>(...,{P,HO,ALPHA,BETA},'population',N) specifies a fixed 
+    population, or variable bandwidth, fit with population N and maximum 
+    bandwidth HO.  N can be a scalar or an L x M matrix.
+  
+    Here the bandwidth is varied spatially to be just large enough such 
+    that N points have nonzero weights at every grid point, if possible.
+  
+    The second argument of the cell array, HO, is now the maximum
+    bandwidth over which distances are computed. 
+  
+    The number of data points employed at each mapping point may be smaller
+    than the target population N, if additional points are required to 
+    reach N that lie outside the maximum bandwidth radius HO.
+   
+    To check the population and bandwidth actually used in the fix, see the 
+    first two pages of the auxilliary output variable AUX, described below.
+ 
+    The fixed population algorithm can give excellent results when the data
+    spacing is uneven, particularly when used with a higher-order fit.
+    __________________________________________________________________
+ 
+    Smoothing on the surface of the Earth
+ 
+    ZHAT=<a href="polymap.html">POLYMAP</a>(LON,LAT,[],[],Z,LONO,LATO,{P,H,ALPHA,BETA},'sphere')
+    performs the local polynomial fit on the surface of a sphere having the 
+    radius of the Earth.
+ 
+    The bandwidth H in this case should have units of kilometers. The mean
+    radius of the Earth of 6371 kilometers is used.
+ 
+    The modification of local polynomial fitting to the sphere is described
+    in XXX.
+    __________________________________________________________________
+ 
+    Inclusion of temporal variability
+ 
+    It may be that one wishes to take temporal variability of the 
+    underlying field into account in constructing the estimate ZHAT.
+ 
+    In this case, data points with values Z are taken at locations X,Y and
+    also at times T. <a href="polymap.html">POLYMAP</a> is then called as follows:
+ 
+        ZHAT=<a href="polymap.html">POLYMAP</a>(X,Y,T,[],Z,XO,YO,{P,H,ALPHA,BETA},{MU,TAU,TAL,TBE})
+ 
+    which will fit the data to the sum of spatial polynomial of bandwidth H
+    and order P, and a temporal polynomial of bandwidth TAU and order MU.
+ 
+    Here TAL and TBE are the alpha and beta parameters controlling the 
+    kernel K to be used along the time axis, with K~(1-|T/TAU|^TAL)^TBE.
+ 
+    TAU, TAL, and TBE may all either be scalars or matrices of size L x M.
+    The units of TAU should be the same as those of the times T.  
+ 
+    The times T should be given relative to the center of the time window,
+    that is, time T=0 should correspond to the time at which you wish to 
+    construct the map. 
+ 
+    When the 'population' flag is input, described above, it only affects
+    the spatial kernel. The temporal kernel remains specified in terms of 
+    the temporal bandwidth TAU. 
+    __________________________________________________________________
+ 
+    Weighted data points
+ 
+    <a href="polymap.html">POLYMAP</a> can incorporate an additional weighting factor on the data
+    points. Let W be an array of positive values the same size as the data 
+    array Z.  One may form a map incorporating these weights as follows:
+ 
+        ZHAT=<a href="polymap.html">POLYMAP</a>(X,Y,[],W,Z,XO,YO,{P,H,ALPHA,BETA})
+ 
+    The weights W could represent the confidence in the measurement values,
+    a weighting used in robustification, or an aggregation of invididual
+    measurements into clusters.  The latter approach may be used to 
+    condense large datasets to a managable size.
+ 
+    This also works together with the temporal fitting described above.
+ 
+    When used with the fixed population or minimum population options, each
+    data point contributes an amount to the population specified by W. 
+    __________________________________________________________________
+ 
+    Additional output arguments
+ 
+    [ZHAT,BETA,AUX]=<a href="polymap.html">POLYMAP</a>(...) returns two additional arguments.
+ 
+    BETA contains the estimated field, the same as ZHAT, together with 
+    estimates of all spatial derivatives of the field up to Pth order:
+  
+         BETA(:,:,1) = ZHAT     --- The field z
+         BETA(:,:,2) = ZXHAT    --- The first derivative dz/dx
+         BETA(:,:,3) = ZYHAT    --- The first derivative dz/dy
+         BETA(:,:,4) = ZXXHAT   --- The second derivative d^2z/dx^2
+         BETA(:,:,5) = ZXYHAT   --- The second derivative d^2z/dxdy 
+         BETA(:,:,6) = ZYYHAT   --- The second derivative d^2z/dy^2
+ 
+    The length of the third dimension of BETA is set by the total number of
+    derivatives of order P or less.  This number, denoted Q, is given by 
+    Q = 1, 3, and 6 for P = 0, 1, and 2 respectively. 
+ 
+    After these, in the case that TS is input, the estimated time 
+    derivatives are returned up to order MU:
+ 
+        BETA(:,:,Q+1) = ZT   --- The first time derivative dz/dt
+        BETA(:,:,Q+2) = ZTT  --- The second time derivative d^2z/dt^2
+    
+    AUX is an M x N x 5 array of auxiliary fields associated with the fit.
+ 
+         AUX(:,:,1) = N  --- The number of data points with nonzero weight
+         AUX(:,:,2) = H  --- The bandwidth used at each point
+         AUX(:,:,3) = W  --- The total weight 
+         AUX(:,:,4) = C  --- The matrix condition number
+         AUX(:,:,5) = E  --- The RMS error between the data and the fit
+ 
+    N, called the population, is the total number of data points less than
+    one bandwidth distance H from each of the (L,M) grid points. 
+ 
+    The condition number C arises because a matrix must be inverted at each
+    (L,M) location for the P=1 or P=2 fits. C is equal to 1 for P=0. 
+ 
+    C is computed by COND.  At (L,M) points where C is large, the least 
+    squares solution is unstable, and one should consider using a lower-
+    order fit P or a larger value of the bandwidth H.
+ 
+    The root-mean-squared error E is computed using the same weighted 
+    kernel that is applied to the data.
+    __________________________________________________________________
+ 
+    Robustification 
+ 
+    ZHAT=<a href="polymap.html">POLYMAP</a>(...,'robust',NI) implements the median-based iterative 
+    robust algorithm of Cleveland (1979), p 830--831, using NI iterations.  
+ 
+    This can be useful when outliers are present in the data.  Typically
+    a single iteration is sufficient to remove most outliers. 
+ 
+    ZHAT will in this case have NI+1 entries along its third dimension.
+    The iterative estimates are stored in reverse order, with the last 
+    iteration in ZHAT(:,:,1) and the original estimate in ZHAT(:,:,NI+1).
+    __________________________________________________________________
+ 
+    Parallelization
+ 
+    <a href="polymap.html">POLYMAP</a>(...,'parallel') parallelizes the computation using a PARFOR
+    loop, by operating on each latitude (or matrix row) separately.   This 
+    requires that Matlab's Parallel Computing toolbox be installed.  
+ 
+    <a href="polymap.html">POLYMAP</a> will then using an existing parallel pool, or if one does 
+    not exist, a pool will be created using all availabale workers.
+ 
+    <a href="polymap.html">POLYMAP</a>(...'parallel',Nworkers) alternately specifies the number of
+    workers to use. If you run into memory constraints, reduce Nworkers.
+ 
+    If you are working on multiple maps simultaneously, depending on the 
+    size of your problem, it may be faster to use an exterior PARFOR loop,
+    rather than calling <a href="polymap.html">POLYMAP</a> with the 'parallel' flag. 
+    __________________________________________________________________
+ 
+    Verbose option
+ 
+    <a href="polymap.html">POLYMAP</a>(...,'verbose') displays a status message saying what row it
+    is working on.  <a href="polymap.html">POLYMAP</a>(...,'quiet') is the default.
+    _________________________________________________________________
+ 
+    One grid, many fields
+ 
+    It is often the case that the field to be mapped, Z, consists of many 
+    repeated sets of observations at the same (X,Y) points. 
+ 
+    For example, X and Y could be mark the locations of measurements that
+    are repeated at different times (as in satellite altimetry), or else
+    there could be multiple fields Z that are measured simultaneously. 
+    Alternatively, one may simply wish to try out different parameters.
+ 
+    In such cases, there is a vast computational savings to be gained by
+    only computing quantities which depend on the grid a single time.  
+   
+    The standard spatial mapping of <a href="polymap.html">POLYMAP</a> is then performed as follows. 
+ 
+     (1)  [DS,XS,YS,INDEXS]=<a href="pm_sort.html">PM_SORT</a>(X,Y,XO,YO,HO); 
+     (2)  [AMAT,XMAT,WMAT,H,C]=<a href="pm_weight.html">PM_WEIGHT</a>(DS,XS,YS,[],[],{P,HO,ALPHA,BETA});
+     (3)  Z1S=<a href="pm_index.html">PM_INDEX</a>(INDEXS,Z1); 
+     (4)  [Z1HAT,BETA,AUX]=<a href="pm_apply.html">PM_APPLY</a>(Z1S,AMAT,XMAT,WMAT,H,C);
+ 
+    The first call (1) sorts the data points x,y relative to the grid
+    points xo,yo, returning their distances DS up to the bandwidth HO,
+    the x- and y-deviations X-XO and Y-YO in XS and YS respectively, and
+    an index INDEXS.  See <a href="pm_sort.html">PM_SORT</a> for the structure of the output fields.
+  
+    Then (2) creates certain important matrix quantities AMAT, XMAT, and
+    WMAT that depend only on the observations and the grid, and not on the
+    observed values Z.  The output H is an L x M matrix of bandwidths that
+    is modified from HO if any population flags are passed to <a href="pm_weight.html">PM_WEIGHT</a>.
+ 
+    Given an array of observed values Z1 of the same size as X and Y, (3)
+    sorts those values into Z1S, which is the same size as DS, XS, etc.
+ 
+    Finally, (4) uses the quantities created in step (2) together with the
+    sorted observational values from step (3) to create the final map.
+ 
+    Steps (3) and (4) can then be iterated for Z2, Z3, Z4, etc, provided
+    these are all on the same grid as Z1. In typical problems steps (1)
+    and (2) take a least an order of magnitude more time that (3) and (4).
+  
+    Moreover, because the least squares problem is essentially already 
+    solved in (2), steps (3) and (4) do not increase in computational cost
+    as the fit order increases.
+ 
+    A subtlety is the case in which the grid is the same, but Z1, Z2, etc.
+    may have missing data at different points. This will leads to NaNs in
+    DS etc. that propagate through to the final map.  This cannot be
+    solved by e.g. swapping NaNs for 0s in Z1S, Z2S, etc. because the grid
+    itself has in fact changed, and the output of (2) should reflect this.
+  
+    If not too much of the grid is affected, one workaround is to first 
+    compute (1)--(4) for an entire grid with no missing data, and then 
+    re-do all of steps (1)--(4) as needed for each Z1, Z2, etc., only for
+    those grid points for which the original fit yeilded NaNs.
+ 
+    Some of the other options for <a href="polymap.html">POLYMAP</a> are implemented as follows.
+ 
+    For mapping on the sphere, only (1) needs to be changed:
+ 
+     (1) [DS,XS,YS,INDEXS]=<a href="pm_sort.html">PM_SORT</a>(LON,LAT,LONO,LATO,HO,'sphere');  
+ 
+    For weighted data points, fixed population, or minimum population, 
+    only (2) needs to be changed:
+ 
+     (2)  [AMAT,XMAT,WMAT,H,C]=<a href="pm_weight.html">PM_WEIGHT</a>(DS,XS,YS,[],WS,{P,HO,ALPHA,BETA});
+     (2)  [AMAT,XMAT,WMAT,H,C]=...
+             <a href="pm_weight.html">PM_WEIGHT</a>(DS,XS,YS,[],[],{P,HO,ALPHA,BETA},'population',N);
+     (2)  [AMAT,XMAT,WMAT,H,C]=...
+             <a href="pm_weight.html">PM_WEIGHT</a>(DS,XS,YS,[],[],{P,HO,ALPHA,BETA},'minpop',NMIN);
+ 
+    For temporal fitting, one should add a step (0) before (1) 
+  
+     (0)  [X,Y,T,W,Z1,Z2,...,ZK]=<a href="pm_window.html">PM_WINDOW</a>(X,Y,T,W,Z1,Z2,...,ZK,TAU);
+  
+    which remove out-of-range time points and then change (2) to be
+ 
+     (2)  [AMAT,XMAT,WMAT,H,C]=...
+             <a href="pm_weight.html">PM_WEIGHT</a>(DS,XS,YS,TS,[],{P,HO,ALPHA,BETA},{MU,TAU,TAL,TBE});
+ 
+    For parallelization, each of (1)--(4) can be called with the 'parallel'
+    flag. Each can also be called with the 'verbose' flag. 
+    __________________________________________________________________
+ 
+    '<a href="polymap.html">polymap</a> --t' runs some tests.
+    '<a href="polymap.html">polymap</a> --f' generates a sample figure.
+ 
+    Usage: zhat=<a href="polymap.html">polymap</a>(x,y,[],[],z,xo,yo,{P,H,alpha,beta});
+           zhat=<a href="polymap.html">polymap</a>(x,y,t,[],z,xo,yo,{P,H,alpha,beta},{mu,tau,tal,tbe});
+           zhat=<a href="polymap.html">polymap</a>(lon,lat,[],[],z,lono,lato,{P,H,alpha,beta},'sphere');
+           [zhat,beta,aux]=<a href="polymap.html">polymap</a>(x,y,[],[],z,xo,yo,{P,H,alpha,beta});
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2008--2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

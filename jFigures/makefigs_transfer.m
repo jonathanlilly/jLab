@@ -1,4 +1,4 @@
-function[varargout]=makefigs_gulftransfer(str)
+function[varargout]=makefigs_transfer(str)
 %MAKEFIGS_TRANSFER Makes all figures for Lilly and Elipot (2021).
 %
 %   This function makes all figures for 
@@ -11,7 +11,7 @@ function[varargout]=makefigs_gulftransfer(str)
 %   intensive.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2021 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2021--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if nargin==0
@@ -19,7 +19,7 @@ if nargin==0
 end
 
 if strcmp(str,'--f')
-     makefigs_gulfdrifters('noprint');return
+     makefigs_transfer('noprint');return
 end
 
 %This is where you want things to be printed to
@@ -40,7 +40,7 @@ G1(~isfinite(G1))=1e6;
 zeta=2*sqrt(2)*frac(zo,delta).*sqrt((1+zmat./zo).*abs(1+ommat./fc));
 
 %str='Transfer Function Magnitude (m^2s/kg)';
-str='Log10 Transfer Function Magnitude (m^{-1})';
+labelstr='Log10 Transfer Function Magnitude (m^{-1})';
 
 figure,
 clf
@@ -101,7 +101,7 @@ text(-7.5,45,'IX-$h$','color',[1 1 1],'HorizontalAlignment','center')
 ha=packfig(1,2,'col');
 axes(ha(1)),%ylim([0 62]),ytick([0:10:50])
 hc=colorbar('SouthOutside');
-hc.Label.String=str;
+hc.Label.String=labelstr;
 pos1=get(ha(1),'position');
 pos2=get(ha(2),'position');
 pos=get(hc,'position');%pos(4)=pos(4)/2;
@@ -113,6 +113,7 @@ fontsize 10 10 9 8
 set(gcf,'paperposition',[1 1 10 6])
 if strcmp(str,'print')
     jprint(dirname,'transferfunctionschematic')
+%    jprint(dirname,'transferfunctionschematic-highres','-r500')
 end
 % %--------------------------------------------------------------------------
 % %Green's function 

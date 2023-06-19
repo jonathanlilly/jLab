@@ -97,6 +97,7 @@
     <a href="ellrossby.html">ellrossby</a>     - Ellipse Rossby number, for oceanographic applications.                               
     <a href="ellsig.html">ellsig</a>        - Creates a modulated elliptical signal in two or three dimensions.                    
     <a href="ellvel.html">ellvel</a>        - Average and instantaneous ellipse velocities.                                        
+    <a href="equivkern.html">equivkern</a>     - Equivalent kernels for local polynomial fitting.                                     
     <a href="fillbad.html">fillbad</a>       - Linearly interpolate over bad data points.                                           
     <a href="findfiles.html">findfiles</a>     - Returns all files in a directory with a specified extension.                         
     <a href="findpath.html">findpath</a>      - Returns the full pathname of a directory on the Matlab search path.                  
@@ -113,7 +114,7 @@
     <a href="haxby.html">haxby</a>         - The Haxby colormap.                                                                  
     <a href="haxby_copyright.html">haxby_copyright</a> - Copyright statement for the <a href="haxby.html">HAXBY</a> colormap.                                        
     <a href="hermfun.html">hermfun</a>       - Orthonormal Hermite functions. [with F. Rekibi]                                      
-    <a href="hermpoly.html">hermpoly</a>      - Hermite polynomials. [with F. Rekibi]                                                
+    <a href="hermpoly.html">hermpoly</a>      - Hermite polynomial of degree n.                                                      
     <a href="hlines.html">hlines</a>        - Add horizontal lines to a plot.                                                      
     <a href="hodograph.html">hodograph</a>     - Generate <a href="hodograph.html">hodograph</a> plots (simple and fancy).                                         
     <a href="imlog.html">imlog</a>         - Imaginary part of log: <a href="imlog.html">IMLOG</a>(X)=UNWRAP(IMAG(LOG(X)))                                 
@@ -202,8 +203,8 @@
     <a href="makefigs_multivariate.html">makefigs_multivariate</a> - has been moved to <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a>.                                             
     <a href="makefigs_patchcontourf.html">makefigs_patchcontourf</a> - Makes a sample figure for <a href="patchcontourf.html">PATCHCONTOURF</a>.                                    
     <a href="makefigs_periodize.html">makefigs_periodize</a> - Makes a sample figure for <a href="periodize.html">PERIODIZE</a>.                                            
-    <a href="makefigs_polysmooth.html">makefigs_polysmooth</a> - Makes some sample figures for <a href="polysmooth.html">POLYSMOOTH</a>.                                      
-    <a href="makefigs_polysmooth2.html">makefigs_polysmooth2</a> - Makes a sample figure for <a href="polysmooth.html">POLYSMOOTH</a> using TPJAOS.MAT.                        
+    <a href="makefigs_polymap.html">makefigs_polymap</a> - Makes some sample figures for <a href="polymap.html">POLYMAP</a>.                                            
+    <a href="makefigs_polymap2.html">makefigs_polymap2</a> - Makes a sample figure for <a href="polymap.html">POLYMAP</a> using TPJAOS.MAT.                              
     <a href="makefigs_psi2fields.html">makefigs_psi2fields</a> - Makes a sample figure for <a href="psi2fields.html">PSI2FIELDS</a>.                                          
     <a href="makefigs_regionplot.html">makefigs_regionplot</a> - Makes some sample figures for <a href="regionplot.html">REGIONPLOT</a>.                                      
     <a href="makefigs_ridges.html">makefigs_ridges</a> - has been moved to <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a>.                                                   
@@ -211,7 +212,6 @@
     <a href="makefigs_ridgewalk.html">makefigs_ridgewalk</a> - Makes a sample figure for <a href="ridgewalk.html">RIDGEWALK</a>.                                            
     <a href="makefigs_seminfhaxby.html">makefigs_seminfhaxby</a> - Makes a sample figure for <a href="seminfhaxby.html">SEMINFHAXBY</a>.                                        
     <a href="makefigs_simplepdf.html">makefigs_simplepdf</a> - Makes a sample figure for <a href="simplepdf.html">SIMPLEPDF</a>.                                            
-    <a href="makefigs_slidetrans.html">makefigs_slidetrans</a> - Makes a sample figure for <a href="slidetrans.html">SLIDETRANS</a>.                                          
     <a href="makefigs_sphereinterp.html">makefigs_sphereinterp</a> - Makes two sample figures for <a href="sphereinterp.html">SPHEREINTERP</a>.                                   
     <a href="makefigs_stickvect.html">makefigs_stickvect</a> - Makes a sample figure for <a href="stickvect.html">STICKVECT</a>.                                            
     <a href="makefigs_superfamily.html">makefigs_superfamily</a> - has been moved to <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a>.                                              
@@ -239,13 +239,12 @@
     <a href="maternoise.html">maternoise</a>    - Realizations of the Matern process and variations, including fBm. [with A. Sykulski] 
     <a href="maternspec.html">maternspec</a>    - Fourier spectrum of the Matern random process and variations.                        
     <a href="matinv.html">matinv</a>        - Fast inversion of arrays of small matrices.                                          
-    <a href="matmult.html">matmult</a>       - Matrix multiplication for arrays of matrices.                                        
     <a href="matsave.html">matsave</a>       - Create and save structure of variables as a mat-file.                                
     <a href="max2eddy.html">max2eddy</a>      - Converts transform maxima into oceanic coherent eddy properties.                     
-    <a href="maxmax.html">maxmax</a>        - <a href="maxmax.html">MAXMAX</a>(X)=MAX(X(ISFINITE(X)))                                                        
+    <a href="maxmax.html">maxmax</a>        - <a href="maxmax.html">MAXMAX</a>(X)=MAX(X(~ISNAN(X(:))))                                                       
     <a href="maxprops.html">maxprops</a>      - Returns properties of wavelet transform maxima.                                      
     <a href="mconf.html">mconf</a>         - Confidence intervals for the multitaper spectral estimate.                           
-    <a href="minmin.html">minmin</a>        - <a href="minmin.html">MINMIN</a>(X)=MIN(X(ISFINITE(X)))                                                        
+    <a href="minmin.html">minmin</a>        - <a href="minmin.html">MINMIN</a>(X)=MIN(X(~ISNAN(X(:))))                                                       
     <a href="mom2cum.html">mom2cum</a>       - Convert moments to cumulants.                                                        
     <a href="monthstats.html">monthstats</a>    - Mean month and standard deviation using circular statistics.                         
     <a href="morlfreq.html">morlfreq</a>      - Compute Morlet wavelet carrier frequency given peak frequency.                       
@@ -280,12 +279,15 @@
     <a href="pdfprops.html">pdfprops</a>      - Mean and variance associated with a probability distribution.                        
     <a href="periodindex.html">periodindex</a>   - Returns time index in increments of instantaneous period.                            
     <a href="periodize.html">periodize</a>     - Returns a doubly periodic version of an input array.                                 
+    <a href="pm_apply.html">pm_apply</a>      - Apply weights to data to generate a local polynomial fit.                            
+    <a href="pm_index.html">pm_index</a>      - Applies an index output by <a href="pm_sort.html">PM_SORT</a> to sort data for <a href="polymap.html">POLYMAP</a>.                         
+    <a href="pm_kernmom.html">pm_kernmom</a>    - Moments of smoothing kernels for local polynomial fitting.                           
+    <a href="pm_robust.html">pm_robust</a>     - Returns a weighting function used in robustifying <a href="polymap.html">POLYMAP</a>.                           
+    <a href="pm_sort.html">pm_sort</a>       - Sort data points according to distance from grid points in 2D.                       
+    <a href="pm_weight.html">pm_weight</a>     - Weighting function for local polynomial fitting.                                     
+    <a href="pm_window.html">pm_window</a>     - Remove data outside of time window for <a href="polymap.html">POLYMAP</a>.                                      
     <a href="polparams.html">polparams</a>     - Spectral matrix polarization parameters.                                             
-    <a href="polysmooth.html">polysmooth</a>    - Mapping using local polynomial fitting, also known as loess.                         
-    <a href="polysmooth_bandwidth.html">polysmooth_bandwidth</a> - Determine bandwidth given population for <a href="polysmooth.html">POLYSMOOTH</a>.                          
-    <a href="polysmooth_kernel.html">polysmooth_kernel</a> - Returns the weighting kernel employed by <a href="polysmooth.html">POLYSMOOTH</a>.                             
-    <a href="polysmooth_presort.html">polysmooth_presort</a> - Sort arguments to <a href="polysmooth.html">POLYSMOOTH</a> in case of missing data.                           
-    <a href="polysmooth_sortfield.html">polysmooth_sortfield</a> - Returns sorted field values for a mapping problem.                            
+    <a href="polymap.html">polymap</a>       - Mapping using local polynomial fitting, also known as loess.                         
     <a href="printall.html">printall</a>      - Print and close all open figures.                                                    
     <a href="provec.html">provec</a>        - Generate progressive vector diagrams (simple and fancy).                             
     <a href="psi2fields.html">psi2fields</a>    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
@@ -308,7 +310,6 @@
     <a href="simpleddy.html">simpleddy</a>     - Streamfunction, velocity, and vorticity for various eddy profiles.                   
     <a href="simplepdf.html">simplepdf</a>     - Gaussian, uniform, Cauchy, and exponential pdfs.                                     
     <a href="sleptap.html">sleptap</a>       - Calculate Slepian tapers.                                                            
-    <a href="slidetrans.html">slidetrans</a>    - Sliding-window ('moving-window') Fourier transform.                                  
     <a href="specdiag.html">specdiag</a>      - Diagonalize a 2 x 2 spectral matrix.                                                 
     <a href="sphere2uvw.html">sphere2uvw</a>    - Converts a 3D spherical vector to a 3D Cartesian vector.                             
     <a href="spherecurl.html">spherecurl</a>    - Curl of a vector field on the surface of a sphere.                                   
@@ -317,7 +318,6 @@
     <a href="spheregrad.html">spheregrad</a>    - Gradient of a field on the surface of a sphere.                                      
     <a href="sphereinterp.html">sphereinterp</a>  - Fast linear interpolation on the sphere from non-plaid grids.                        
     <a href="spherelap.html">spherelap</a>     - Laplacian of a field on the surface of a sphere.                                     
-    <a href="spheresort.html">spheresort</a>    - Sorted great circle distances to nearby points on the earth.                         
     <a href="spheretrans.html">spheretrans</a>   - Wavelet transform for oscillations on the surface of a sphere.                       
     <a href="squared.html">squared</a>       - Squares the modulus of its argument:  <a href="squared.html">SQUARED</a>(X)=ABS(X).^2                           
     <a href="standalone.html">standalone</a>    - Create stand-alone version of an m-file, including dependencies.                     
@@ -339,7 +339,6 @@
     <a href="transmaxdist.html">transmaxdist</a>  - Distributions of wavelet transform maxima in noise.                                  
     <a href="twodhist.html">twodhist</a>      - Two-dimensional histogram.                                                           
     <a href="twodmed.html">twodmed</a>       - Median value of a function of two variables.                                         
-    <a href="twodsort.html">twodsort</a>      - Distances from data points to nearby grid points.                                    
     <a href="twodstats.html">twodstats</a>     - Mean, variance, and covariance of functions of two variables.                        
     <a href="twospecplot.html">twospecplot</a>   - Plots a pair of rotary or Cartesian spectra.                                         
     <a href="use.html">use</a>           - Copies structure fields into named variables in workspace.                           
@@ -382,8 +381,8 @@
     <a href="ylog.html">ylog</a>          - Sets y-axis scale to log.                                                            
     <a href="yoffset.html">yoffset</a>       - Offsets lines in the y-direction after plotting.                                     
     <a href="ytick.html">ytick</a>         - Sets locations of y-axis tick marks.                                                 
-    <a href="ztick.html">ztick</a>         - Sets locations of z-axis tick marks.                                                 
-    __________________________________________________________________
+    <a href="ztick.html">ztick</a>         - Sets locations of z-axis tick marks. 
+    _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2015--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2004--2023 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

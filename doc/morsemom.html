@@ -25,6 +25,11 @@
     [MP,NP,KP,LP]=<a href="morsemom.html">MORSEMOM</a>(...) also returns the Pth order cumulant KP and
     the Pth order energy cumulant LP.
  
+    Note that for very large BETA, the standard form of the moments fail
+    for numerical reasons, and one must use asymptotic forms.  These are
+    used by default when the argument to the gamma function exceeds 100 
+    and when then standard expressions yield non-finite or zero values. 
+ 
     For details see
  
         Lilly and Olhede (2009).  Higher-order properties of analytic 
@@ -39,5 +44,5 @@
             [mp,np,kp,lp]=<a href="morsemom.html">morsemom</a>(p,ga,be);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2007--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2007--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

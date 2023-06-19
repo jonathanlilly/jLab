@@ -112,7 +112,6 @@ end
 
 %Find all m-files in sourcedirectory
 mfiles=findfiles(sourcedir,'m','recursive');
-
 %Remove the m-extension
 for i=1:length(mfiles)
     mfiles{i}=mfiles{i}(1:end-2);
@@ -138,7 +137,8 @@ for i=1:length(mfiles)
        bool(i)=~iscommented(text,mfiles{i});
     end
 end
-mfiles=mfiles(bool);  
+mfiles=mfiles(bool);
+%return   %XXX  
 
 %Remove duplicates from multiple calls
 mfiles=remove_repeated(mfiles);
@@ -154,6 +154,7 @@ if brecursion
     mfiles_previous=mfiles;  %Files from previous depth level
     while ~bdone
         %depth=depth+1
+        %mfiles_previous,sourcedir
         mfiles_next=standalone(mfiles_previous,sourcedir,false);
         %Files from next depth level
         

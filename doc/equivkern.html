@@ -1,0 +1,89 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>EQUIVKERN is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="equivkern.html">EQUIVKERN</a>  Equivalent kernels for local polynomial fitting.
+ 
+    WS=<a href="equivkern.html">EQUIVKERN</a>(DS,XS,YS,RHO,H,ALPHA,BETA) computes the equivalent kernel
+    WS for a order RHO local polynomial fit using the generalized beta 
+    kernel with parameters ALPHA and BETA, and bandwidth H.
+  
+    DS, XS, and YS are cell arrays containing the distance, x deviations, 
+    and y deviations between observation points and mapping points as 
+    output by those functions.  WS is a cell arry of the same size as DS.
+ 
+    <a href="equivkern.html">EQUIVKERN</a> is to be called after calling TWODSORT or SPHERESORT and 
+    before calling POLYSMOOTH.  
+  
+    For RHO=1 or RHO=2, using the equivalent kernel can greatly accelarate 
+    POLYFIT for problems in which the same design (the distribution of 
+    observation points) is used multiple times. 
+ 
+    To use with POLYSMOOTH, use WS as a weight function in the input to 
+    POLYSMOOTH, and call POLYSMOOTH with a uniform kernel (BETA=0) and 
+    bandwidth H. See POLYSMOOTH for details.
+ 
+    The idea of equivalent kernels goes back to Silverman (1984).  The 
+    expressions used herein for linear and quadratic fits are taken from
+  
+        Takeda, Farsiu, and Milanfar (2007), "Kernel regression for image 
+            processing and reconstruction", IEEE Transactions on Image 
+            Processing, v. 16 (2), 349--366.
+ 
+    _________________________________________________________________
+ 
+    XXX dumped from <a href="polymap.html">POLYMAP</a> 
+    Acceleration for repeated designs
+ 
+    For problems in which observations are carried out multiple times using
+    the same design, or distribution of observational points, computations
+    of the field value (but not, at the moment, its derivatives) for RHO>0 
+    can be greatly accerated via the use of equivalent kernels.
+  
+    The idea behind the equivalent kernel is that a fit to a polynomial
+    results in a weighted sum of the data points.  This implies that a 
+    higher-order fit be expressed as a zeroth-order fit using a data-
+    depedent kernel called the equivalent kernel.
+  
+    The equivalent kernel depends on the original choice of smoothing
+    kernel and bandwidth, together with the observational design.
+    Importantly, it does not depend upon the values of the observations.
+ 
+    Thus, we can compute the equivalent kernel one time for, say, a
+    first-order fit.  Then we can generate many maps with different
+    observed data values but the same design, implementing the first-order 
+    fit through its equivalent, but faster, zeroth-order representation.
+ 
+    To make use of the equivalent kernel, after calling TWODSORT or 
+    SPHERESORT, one would then call <a href="equivkern.html">EQUIVKERN</a> followed by <a href="polymap.html">POLYMAP</a>,
+ 
+         WS=<a href="equivkern.html">EQUIVKERN</a>(DS,XS,YS,RHO,H,ALPHA,BETA);
+         ZHAT=<a href="polymap.html">POLYMAP</a>(DS,XS,YS,[],ZS,WS,RHO,{H,ALPHA,0});
+   
+    where in the input to <a href="polymap.html">POLYMAP</a>, the weights WS output by EQUIVKERN
+    have the effect of weighting the data points.  Importantly, in the call
+    to <a href="polymap.html">POLYMAP</a>, one should set BETA to zero to specify a uniform kernel.
+    This has the effect of not modifying the equivalent kernel weights WS.
+ 
+    After the equivalent kernel is computed, <a href="polymap.html">POLYMAP</a> proceeds about 4x
+    faster for a linear fit, or 10x faster for a quadratic fit.
+ 
+    The idea of equivalent kernels goes back to Silverman (1984).  The 
+    expressions used herein for linear and quadratic fits are taken from
+  
+        Takeda, Farsiu, and Milanfar (2007), "Kernel regression for image 
+            processing and reconstruction", IEEE Transactions on Image 
+            Processing, v. 16 (2), 349--366.
+ 
+    While it is possible to formulate the equivalent kernels for the
+    derivatives of the filed, in BETA, this has not yet been implemented.
+ 
+    See POLYSMOOTH for more details.
+ 
+    '<a href="equivkern.html">equivkern</a> --t' runs a test.
+ 
+    Usage: W=<a href="equivkern.html">equivkern</a>(ds,xs,ys,rho,H,alpha,beta);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

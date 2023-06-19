@@ -93,18 +93,31 @@ function[varargout]=wavetrans(varargin)
 %   Complex-valued data
 %
 %   The wavelet transform is normalized differently for complex-valued data
-%   than for real-valued data.  If WX and WY are the wavelet transforms of
-%   two real-valued signals, X and Y, then
+%   than for real-valued data, and this in turns depends on whether the 
+%   'bandpass' or 'energy' normalizations are specified. 
+%
+%   If WX and WY are the wavelet transforms of two real-valued signals, 
+%   X and Y, then if the 'bandpass' normalization is specified, 
+%
+%        WP=WAVETRANS(X+iY,PSI)   = (1/2)*(WX + i WY)
+%        WN=WAVETRANS(X-iY,PSI)   = (1/2)*(WX - i WY)
+%
+%   defines the positive and negative rotary transforms WP and WN.
+%
+%   The factor of 1/2 sets the peak value of the wavelet transform of a
+%   complex exponential to the amplitude of the complex exponential itself.
+%
+%   Alternatively, if the 'energy' normalization is specified, 
 %
 %        WP=WAVETRANS(X+iY,PSI)   = (1/SQRT(2))*(WX + i WY)
 %        WN=WAVETRANS(X-iY,PSI)   = (1/SQRT(2))*(WX - i WY)
 %
-%   defines the positive and negative rotary transforms WP and WN.
+%   is used instead. The factors of SQRT(2) are included such that the
+%   total power is unchanged between the rotary and Cartesian transforms:
 %
-%   The factors of SQRT(2) are included such that the transform power is
-%   unchanged, that is, ABS(WX).^2+ABS(WY).^2 = ABS(WP).^2+ABS(WN).^2.
+%        ABS(WX).^2+ABS(WY).^2 = ABS(WP).^2+ABS(WN).^2.
 %
-%   There are therefore two equivalent ways to compute the positive and
+%   There are two equivalent ways to compute the positive and
 %   negative rotary transforms.  The first is
 %
 %     [WP,WN]=WAVETRANS(X+iY,X-iY,PSI) 
@@ -113,11 +126,12 @@ function[varargout]=wavetrans(varargin)
 % 
 %   The second is to take the wavelet transform of the real-valued data
 %
-%       [WX,WY]=WAVETRANS(X,Y,PSI)      followed by 
-%       [WP,WN]=VECTMULT(TMAT,WX,WY) 
+%       [WX,WY]=WAVETRANS(X,Y,PSI)              followed by 
+%       [WP,WN]=VECTMULT(TMAT/SQRT(2),WX,WY)    (bandpass normalization) or 
+%       [WP,WN]=VECTMULT(TMAT,WX,WY)            (energy normalization) 
 %
-%   which converts WX and WY to WP and WN using a matrix multiplication
-%   with the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
+%   which converts WX and WY to WP and WN with a matrix multiplication
+%   using the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
 %   ___________________________________________________________________
 %
 %   Parallelization
@@ -139,7 +153,7 @@ function[varargout]=wavetrans(varargin)
 %           [wp,wn]=wavetrans(x+i*y,x-i*y,{gamma,beta,f,str},str);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2021 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(varargin{1},'--t')
@@ -165,7 +179,7 @@ bool=zeros(length(varargin),1);
 for i=1:length(varargin)
     bool(i)=ischar(varargin{i});
 end
-if ~allall(bool==0);
+if ~allall(bool==0)
     N=find(bool,1,'first')-2;
 else
     N=length(varargin)-1;
@@ -230,9 +244,22 @@ T=squeeze(T);
 
 function[T]=wavetrans_continue(x,argcell,parstr)
 
-%Unitary transform normalization
+normstr='bandpass'; %default for wavetrans
+if iscell(argcell{1})
+    if ischar(argcell{1}(end))
+        normstr=argcell{1}(end);
+    end
+end
+
 if ~isreal(x)
-    x=x./sqrt(2);
+    %Unitary transform normalization --- use this only for 'energy'
+    if strcmpi(normstr(1:3),'ene')
+        x=x./sqrt(2);
+    %Bandpass transform normalization --- use this for 'bandpass'
+    elseif strcmpi(normstr(1:3),'ban')
+        x=x./2;
+%        x=x./sqrt(2); %XXXX
+    end
 end
 
 w=argcell{1};
@@ -478,7 +505,7 @@ fs=2*pi./(logspace(log10(10),log10(100),50)');
 %Compute wavelet transforms using generalized Morse wavelets
 [wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
 [wp,wn]=wavetrans(cx,conj(cx),{1,2,4,fs,'bandpass'},'mirror');
-[wp2,wn2]=vectmult(tmat,wx,wy);
+[wp2,wn2]=vectmult(tmat./sqrt(2),wx,wy);
 
 
 reporttest('WAVETRANS complex-valued input',aresame(wp,wp2,1e-6)&&aresame(wn,wn2,1e-6))

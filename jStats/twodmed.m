@@ -56,7 +56,7 @@ function[mat,xmid,ymid]=twodmed(varargin)
 %          [med,xmid,ymid]=twodmed(x,y,z,xbin,ybin);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2007--2022 J.M. Lilly --- type 'help jlab_license' for details    
 
  
 if strcmpi(varargin,'--t')
@@ -82,7 +82,9 @@ vcolon(xdata,ydata,zdata);
 if ~aresame(size(xdata),size(ydata))||~aresame(size(xdata),size(zdata))
      error('X, Y, and Z should have the same number of points.')
 end
-bool=isfinite(xdata)&isfinite(ydata)&isfinite(zdata);
+%bool=isfinite(xdata)&isfinite(ydata)&isfinite(zdata);
+bool=~isnan(xdata)&~isnan(ydata)&~isnan(sum(zdata,2));
+
 xdata=xdata(bool);
 ydata=ydata(bool);
 zdata=zdata(bool);

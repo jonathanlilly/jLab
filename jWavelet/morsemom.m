@@ -22,6 +22,11 @@ function[m,n,k,l]=morsemom(p,ga,be)
 %   [MP,NP,KP,LP]=MORSEMOM(...) also returns the Pth order cumulant KP and
 %   the Pth order energy cumulant LP.
 %
+%   Note that for very large BETA, the standard form of the moments fail
+%   for numerical reasons, and one must use asymptotic forms.  These are
+%   used by default when the argument to the gamma function exceeds 100 
+%   and when then standard expressions yield non-finite or zero values. 
+%
 %   For details see
 %
 %       Lilly and Olhede (2009).  Higher-order properties of analytic 
@@ -36,7 +41,7 @@ function[m,n,k,l]=morsemom(p,ga,be)
 %           [mp,np,kp,lp]=morsemom(p,ga,be);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2021 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(p, '--t')
     morsemom_test,return
@@ -84,7 +89,37 @@ end
 
 
 function[m]=morsemom1(p,ga,be)
+m=morsemom1_standard(p,ga,be);
+
+%correction for asymptotics 
+if anyany(~isfinite(m))
+    garg=frac(be+p+1,ga);
+    if length(be)==1&&length(m)~=1
+        be=be+zeros(size(m));
+    end
+    if length(p)==1&&length(m)~=1
+        p=p+zeros(size(m));
+    end
+    if length(ga)==1&&length(m)~=1
+        ga=ga+zeros(size(m));
+    end
+    bool=(~isfinite(m)|m==0)&(garg>100);
+    %vsize(p,ga,be)
+    m(bool)=morsemom1_asymptotic(p(bool),ga(bool),be(bool));
+end
+
+%morsef(ga,be+p)
+%function[m]=morsemom1(p,ga,be)
+%lnm=log(morseafun(ga,be))+log(frac(1,2*pi*ga))+gammaln(frac(be+p+1,ga));
+%m=exp(lnm);
+
+function[m]=morsemom1_asymptotic(p,ga,be)
+fact=sqrt(frac(2,pi.*ga.*(be+p+1)));
+m=fact.*frac(be+p+1,ga).^((p+1)./ga);
+
+function[m]=morsemom1_standard(p,ga,be)
 m=morseafun(ga,be).*morsef(ga,be+p);
+
 
 function[f]=morsef(ga,be)
 %MORSEF  Returns the generalized Morse wavelet first moment "f".
@@ -95,13 +130,25 @@ function[f]=morsef(ga,be)
 
 f=frac(1,2*pi*ga).*gamma(frac(be+1,ga));
 
+
 function[]=morsemom_test
+
 morsemom_test_expression;
 morsemom_test_numerical;
 morsemom_test_cumulant;
 morsemom_test_energycumulant;
 morsemom_test_alternate;
 morsemom_test_ratio;
+
+%function[]=morsemom_test_asymptotic
+%A little plot to check asymptotic forms
+%be=[4:1000]';
+%m1=morsemom1_standard(-4,3,be);
+%m2=morsemom1_asymptotic(-4,3,be);
+%plot(be,[m1 m2]),ylog
+
+%plot(morsemom(-4,3,be))
+%ylog
 
 function[]=morsemom_test_energycumulant 
 ga=[3 0.5 9];be=[2.0000 15.1200 0.751];

@@ -67,7 +67,7 @@ function[mat,xmid,ymid]=twodhist(varargin)
 %          [mat,xmid,ymid]=twodhist(x,y,xbin,ybin,'parallel');
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2004--2022 J.M. Lilly --- type 'help jlab_license' for details    
 
   
 %   Additional output
@@ -103,7 +103,8 @@ if ~aresame(size(xdata),size(ydata))
 end
 vcolon(xdata,ydata);
 
-bool=isfinite(xdata)&isfinite(ydata);
+%bool=isfinite(xdata)&isfinite(ydata);
+bool=~isnan(xdata)&~isnan(ydata);
 xdata=xdata(bool);
 ydata=ydata(bool);
 

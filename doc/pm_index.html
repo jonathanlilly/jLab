@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PM_INDEX is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pm_index.html">PM_INDEX</a>  Applies an index output by <a href="pm_sort.html">PM_SORT</a> to sort data for <a href="polymap.html">POLYMAP</a>.
+ 
+    <a href="pm_index.html">PM_INDEX</a> is called internally by <a href="polymap.html">POLYMAP</a>.  However, for large problems
+    it may be preferable to call it externally, as documented in <a href="polymap.html">POLYMAP</a>.
+ 
+    ZS=<a href="pm_index.html">PM_INDEX</a>(INDEXS,Z), where INDEXS is a cell array of indices as 
+    output by <a href="pm_sort.html">PM_SORT</a>, applies INDEXS to the input field Z.
+ 
+    ZS then contains the elements of Z, arranged on the grid that was input 
+    to <a href="pm_sort.html">PM_SORT</a> and by terms of increasing distance from the grid points.
+ 
+    If Z is empty, <a href="pm_sort.html">PM_SORT</a> returns ZS as a cell array of empty arrays.
+ 
+    [ZS1,ZS2,...,ZSK]=<a href="pm_sort.html">PM_SORT</a>(INDEXS,Z1,Z2,...,ZK) also works.
+ 
+    See also: <a href="polymap.html">POLYMAP</a> and <a href="pm_sort.html">PM_SORT</a>.
+ 
+    Usage: zs=<a href="pm_index.html">pm_index</a>(indexs,z);
+           [zs1,zs2,zs3]=<a href="pm_index.html">pm_index</a>(indexs,z1,z2,z3);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

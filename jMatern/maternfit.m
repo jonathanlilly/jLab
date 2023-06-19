@@ -9,14 +9,16 @@ function [structout] = maternfit(varargin)
 %   The Matern process plus spin has a spectrum given by, see MATERNSPEC, 
 %
 %        SPP(F) = SIGMA^2 / [(F-NU)^2/LAMBDA^2 + 1]^ALPHA 
-%                           / (LAMBDA * MATERNC(ALPHA)) + 2*pi * EPSILON^2
+%                           / (LAMBDA * MATERNC(ALPHA)) + DT*EPSILON^2
 %
-%   where SIGMA is the standard deviation, NU is a frequency shift, LAMBDA 
-%   is a damping coefficient, ALPHA is 1/2 of the spectral slope, and 
-%   EPSILON^2 is the variance of an optional additive noise component.
+%   where the frequency F is an angular or radian frequency, SIGMA is the 
+%   standard deviation of the Matern process, NU is a frequency shift, 
+%   LAMBDA is a damping coefficient, ALPHA is 1/2 of the spectral slope, 
+%   and EPSILON^2 is the variance of an optional additive noise component.
+%   Note that the total variance will be SIGMA^2+EPSILON^2.
 %
 %   The coefficient LAMBDA * MATERNC(ALPHA) in the above form lets us 
-%   parameterize the spectrum in terms of the process variance SIGMA^2.
+%   parameterize the spectrum in terms of the Matern variance SIGMA^2.
 %
 %   The optimal parameters are found using a frequency-domain maximum
 %   likelihood method, accounting for both aliasing and spectral blurring.
@@ -70,8 +72,8 @@ function [structout] = maternfit(varargin)
 %        EPSILON  =  [0     0.01     2] * STD(Z)
 %
 %   for the range of the EPSILON parameter.  According to the spectral
-%   normalizations used here, a white noice time series with standard 
-%   deviation EPSILON will have a spectral  
+%   normalizations used here, a white noise time series with standard 
+%   deviation EPSILON will have a spectral level of DT*EPSILON^2.
 %   __________________________________________________________________
 %
 %   Output format
@@ -370,6 +372,14 @@ function [structout] = maternfit(varargin)
 %
 %   MATERFIT(...,'composite') fits to the spectrum of an composite Matern
 %   process. A parameter MU is used with the default range
+
+%Note on spectral level for white noise
+%sigma^2=int S(f) df = 1 / (2 pi) int S( omega) d omega 
+%f=omega/2/pi  df = d omega/2/pi
+%so spectral level should not change from radian to cyclic 
+%domega = 2 * pi / N*dt
+%1 / (2 pi) int S( omega) d omega = (1/N*dt) sum_n=1^N S(\omega) 
+%so for white noise with variance epsilon^2 we have S = epsilon^2 *dt
 
 %Notes to self:
 %Note, this is all set up to run the 5-parameter Matern process, I have
@@ -874,7 +884,7 @@ end
 
 %Final value of likelihood and spectra
 %vsize(dt,x,spp,snn,a:b,N,opts,realflag)
-[like,Spp,Snn,f,indexn]=specmodel(dt,x,spp,snn,a:b,N,opts,realflag);
+[like,Spp,Snn,~,indexn]=specmodel(dt,x,spp,snn,a:b,N,opts,realflag);
 
 % Compute the number of free parameters
 P=0;

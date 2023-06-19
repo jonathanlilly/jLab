@@ -139,7 +139,7 @@ function[h,indexout]=ellipseplot(varargin)
 %          ellipseplot(k,l,th,z,'2r--')
 %   ______________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2016 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1},'--f')
    type makefigs_ellipseplot
@@ -171,7 +171,7 @@ skip=[];
 phi=[];
 x=[];
 scale=[];
-npoints=32;
+npoints=64;
 
 while naold~=na
     naold=na;   
@@ -223,6 +223,9 @@ if ~iscell(k)
     th=th(:);
     if ~isempty(x)
         x=x(:);
+        if length(x)==1
+            x=x+0*k;
+        end
     end
 end
 
@@ -373,8 +376,10 @@ if ~isempty(index)
         
         %Make sure signal will be complex-valued
         l(l==0)=1e-10;
-        if ~isempty(index)
-            vindex(k,l,th,phi,x,id,indexfull,index,1);
+        if ~isempty(index) 
+            if ~aresame(index,1)
+                vindex(k,l,th,phi,x,id,indexfull,index,1);
+            end
             h=ellipseplot1(k,l,th,phi,x,ar1,ar2,npoints,str);
         end
     end

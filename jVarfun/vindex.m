@@ -32,7 +32,7 @@ function[varargout]=vindex(varargin)
 %           vindex(x1,x2,x3,index,dim);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2014 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2022 J.M. Lilly --- type 'help jlab_license' for details    
 
 
 if strcmpi(varargin{1}, '--t')
@@ -48,7 +48,8 @@ vars=varargin(1:nvars);
 %eval(to_grab_from_caller(2))  %assigns vars, varnames, nvars
 
 for i=1:nvars
-  varargout{i}=vindex1(vars{i},index,dim);
+  varargout{i}=vindex1_subsref(vars{i},index,dim);
+% varargout{i}=vindex1(vars{i},index,dim);
 end
 
 eval(to_overwrite(nargin-2));
@@ -56,6 +57,23 @@ eval(to_overwrite(nargin-2));
 %now to_overwrite uses
 %varnames not inputnames ... and does not take input argument
    
+function[y]=vindex1_subsref(x,index,dim)  
+
+if isempty(x)||isempty(index)
+    y=[];
+else
+    S.type='()';
+    for i=1:lnsd(x)
+        if i~=dim
+            S.subs{i}=':';
+        else
+            S.subs{i}=index;
+        end
+    end
+    %see https://www.mathworks.com/help/matlab/ref/subsref.html
+    y=subsref(x,S);
+end
+
 function[y]=vindex1(x,index,dim)  
 
 y=[];
@@ -109,13 +127,13 @@ vindex(x1,index,1);
 reporttest('VINDEX row case, logical ', aresame(x1,ans1))
 
 x1=[1 2];
-index=1:10;
+index=1;
 ans1=x1;
 vindex(x1,index,1);
 reporttest('VINDEX row vector indexed along rows case', aresame(x1,ans1))
 
 x1=[1 2]';
-index=1:10;
+index=1:2;
 ans1=x1;
 vindex(x1,index,2);
 reporttest('VINDEX column vector indexed along columns case', aresame(x1,ans1))

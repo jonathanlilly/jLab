@@ -609,7 +609,8 @@ SZ(2,1,:,:)=conj(spn);
 
 T=sqrt(2)*vrep(vrep(tmat,size(S,3),3),size(S,4),4);
 
-SZ2=matmult(matmult(T,S,1),conj(permute(T,[2 1 3 4])),1);
+SZ2=pagemtimes(pagemtimes(T,S),conj(permute(T,[2 1 3 4])));
+
 
 reporttest('MSPEC for (x,y) and (z,z^*) are orthogonal transforms with matrix SQRT(2)*T',aresame(SZ,SZ2,1e-10))
 

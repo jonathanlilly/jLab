@@ -24,6 +24,12 @@
     being periodic, and if so it handles the interpolation appropriately by
     appending the last column of ZO to its front and the last to is back.
  
+    <a href="interplatlon.html">INTERPLATLON</a> accounts for the fact that LONO may have an arbitrary 
+    starting value, not necessarily -180 or 0, as its initial point, e.g.
+    LONO may begin at -20 and end at 340.  Note that both LONO and LON are
+    interpreted as angles on the complex plane, so the modifications
+    LONO+n*360 or LON+n*360 for integer n would not change the result.  
+ 
     ZO may have multiple elements along its 3rd, 4th, or 5th dimension.  Z
     will then have its first two dimensions matching LAT and LON, and
     higher dimensions matching ZO.  
@@ -36,9 +42,12 @@
  
     Interpolation algorithm
  
-    <a href="interplatlon.html">INTERPLATLON</a> uses Matlab's INTERP2 with linear interpolation.  Data 
-    points for which linear interpolation does not return a valid value 
-    are filled with results from INTERP2 using the nearest-neighbor method.
+    By default, <a href="interplatlon.html">INTERPLATLON</a> uses Matlab's INTERP2 with linear 
+    interpolation.  Alternatively, <a href="interplatlon.html">INTERPLATLON</a>(...,METHOD) uses the method
+    specified by the string METHOD, as described in INTERP2.
+  
+    Data points for which the chosen interpolation method does not return a
+    valid value are then filled using nearest-neighbor interpolation.
  
     INTERPLATON(...,'fill'), if LAT and LON are matrices of the from output 
     by MESHGRID, will instead fill missing data points from the linear
@@ -57,7 +66,10 @@
  
     Z=<a href="interplatlon.html">INTERPLATLON</a>(LATO,LONO,TO,ZO,LAT,LON,T) similarly performs a 3D
     interpolation, where TO is now time, with SIZE(ZO,3) being the same as
-    LENGTH(TO).  LAT, LON, and T are all the same size. 
+    LENGTH(TO).  LAT, LON, and T are all the same size.  
+ 
+    Again, <a href="interplatlon.html">INTERPLATLON</a>(...,METHOD) specifies the interpolation method,
+    which defaults to 'linear'.
  
     Note that the 'fill' option does not work with 3D interpolation.
     __________________________________________________________________
@@ -68,5 +80,5 @@
            z=<a href="interplatlon.html">interplatlon</a>(lato,lono,to,zo,lat,lon,t,bool);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2018 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2018--2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

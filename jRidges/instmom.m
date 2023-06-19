@@ -1,7 +1,5 @@
 function[varargout]=instmom(varargin)
 %INSTMOM  Univariate and multivariate instantaneous moments.
-%   don't need this because it really doesn't seep things up much from 
-%   using anatrans and instmome
 %
 %   [A,OMEGA,UPSILON]=INSTMOM(X), where X is an analytic signal, computes 
 %   the amplitude A, instantaneous *radian* frequency OMEGA, and 

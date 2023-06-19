@@ -111,7 +111,9 @@ uistack(h,'bottom')
 axis([min(x) max(x) min(y) max(y)])
 boxon
 
-colorquant
+try 
+    colorquant
+end
 
 set(gca,'layer','top')
 %This shows tickmarks

@@ -57,6 +57,21 @@ function[varargout]=morsewave(varargin)
 %   the peak value of the first frequency-domain wavelet equal to 2.
 %   _________________________________________________________________
 %
+%   The zero beta 
+%
+%   For BETA equal to zero, the generalized Morse wavelets describe
+%   a non-zero-mean function which is not in fact a wavelet. 
+%
+%   Only 'bandpass' normalization is supported for this case.
+%
+%   In this case the input frequency speficies the half-power point of the
+%   analytic lowpass filter.  
+%
+%   The frequency-domain definition of MORSEWAVE is not necessarily 
+%   a good way to compute the zero-beta functions, however.  You will
+%   probably need to take a very small DT.
+%   _________________________________________________________________
+%
 %   Background
 %
 %   For further details on generalized Morse wavelets, see the following 
@@ -84,27 +99,6 @@ function[varargout]=morsewave(varargin)
 %   (C) 2004--2016 J.M. Lilly and F. Rekibi
 %                         --- type 'help jlab_license' for details  
  
-
-%   _________________________________________________________________
-%
-%   The zero beta case
-%
-%   It is unlikely that you will need to read this section, which is 
-%   why the comment is hidden.  It describes a feature mostly used for 
-%   testing purposes.
-%
-%   For BETA equal to zero, the generalized Morse wavelets describe
-%   a non-zero-mean function which is not in fact a wavelet. 
-%
-%   Only 'bandpass' normalization is supported for this case.
-%
-%   In this case the frequency speficies the half-power point of the
-%   analytic lowpass filter.  
-%
-%   The frequency-domain definition of MORSEWAVE is not necessarily 
-%   a good way to compute the zero-beta functions, however.  You will
-%   probably need to take a very small DT.
-%   _________________________________________________________________
 
 
 %

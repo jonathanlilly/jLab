@@ -1,0 +1,27 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>PM_WINDOW is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="pm_window.html">PM_WINDOW</a>  Remove data outside of time window for <a href="polymap.html">POLYMAP</a>.
+ 
+    [XI,YI,TI]=<a href="pm_window.html">PM_WINDOW</a>(X,Y,T,MU), where the X, Y, and T are arrays of the
+    same size and MU is a temporal bandwith, returns indexed versions XI, 
+    YI, and TI corresponding to all times T such that ABS(T)<MU.
+   
+    [XI,YI,TI,Z1I,Z2I,...,ZNI]=<a href="pm_window.html">PM_WINDOW</a>(X,Y,T,Z1,Z2,...,ZN,MU) for any
+    number of additional input arguments also works.
+ 
+    Note that any empty input arrays are returned as empty.
+ 
+    <a href="pm_window.html">PM_WINDOW</a> is called internally by <a href="polymap.html">POLYMAP</a>.  However, for large problems
+    it may be preferable to call it externally, as documented in <a href="polymap.html">POLYMAP</a>.
+ 
+    See also <a href="polymap.html">POLYMAP</a>.
+ 
+    Usage: [xi,yi,ti]=<a href="pm_window.html">pm_window</a>(x,y,t,mu);
+           [xi,yi,ti,zi]=<a href="pm_window.html">pm_window</a>(x,y,t,z,mu);
+           [xi,yi,ti,wi,zi]=<a href="pm_window.html">pm_window</a>(x,y,t,w,z,mu);
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

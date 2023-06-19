@@ -15,7 +15,7 @@ function[varargout]=jprint(varargin)
 %          jprint(dirname,filename,'jpeg')
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2019--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2019--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 dir=varargin{1};
 filename=varargin{2};
@@ -32,12 +32,23 @@ end
 
 olddir=pwd;
 cd(dir)
-eval(['print ' str ' -d' formatstr ' ' filename])
-fullfilename=findfiles(pwd,'*','include',filename);
-bool=false(length(fullfilename),1);
-for i=1:length(fullfilename)
-    bool(i)=aresame(fullfilename{i}(1:length(filename)),filename);
+
+eval(append('print ',str,' -d',formatstr,' ',filename))
+fullfilename=findfiles(pwd,formatstr,'include',filename);
+
+if iscell(fullfilename)
+    fullfilename=fullfilename{1};
 end
-fullfilename=fullfilename(bool);
-eval(['crop ' fullfilename{1}])
+
+%fullfilename=[pwd '/' filename '.' formatstr]
+%bool=false(length(fullfilename),1);
+% for i=1:length(fullfilename)
+%     fullfilename{i}(1:length(filename))
+%     bool(i)=aresame(fullfilename{i}(1:length(filename)),filename);
+% end
+% fullfilename=fullfilename(bool);
+if strcmpi(formatstr,'png')
+    eval(['crop ' fullfilename])
+end
 cd(olddir)
+

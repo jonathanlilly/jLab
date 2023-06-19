@@ -95,18 +95,31 @@
     Complex-valued data
  
     The wavelet transform is normalized differently for complex-valued data
-    than for real-valued data.  If WX and WY are the wavelet transforms of
-    two real-valued signals, X and Y, then
+    than for real-valued data, and this in turns depends on whether the 
+    'bandpass' or 'energy' normalizations are specified. 
+ 
+    If WX and WY are the wavelet transforms of two real-valued signals, 
+    X and Y, then if the 'bandpass' normalization is specified, 
+ 
+         WP=<a href="wavetrans.html">WAVETRANS</a>(X+iY,PSI)   = (1/2)*(WX + i WY)
+         WN=<a href="wavetrans.html">WAVETRANS</a>(X-iY,PSI)   = (1/2)*(WX - i WY)
+ 
+    defines the positive and negative rotary transforms WP and WN.
+ 
+    The factor of 1/2 sets the peak value of the wavelet transform of a
+    complex exponential to the amplitude of the complex exponential itself.
+ 
+    Alternatively, if the 'energy' normalization is specified, 
  
          WP=<a href="wavetrans.html">WAVETRANS</a>(X+iY,PSI)   = (1/SQRT(2))*(WX + i WY)
          WN=<a href="wavetrans.html">WAVETRANS</a>(X-iY,PSI)   = (1/SQRT(2))*(WX - i WY)
  
-    defines the positive and negative rotary transforms WP and WN.
+    is used instead. The factors of SQRT(2) are included such that the
+    total power is unchanged between the rotary and Cartesian transforms:
  
-    The factors of SQRT(2) are included such that the transform power is
-    unchanged, that is, ABS(WX).^2+ABS(WY).^2 = ABS(WP).^2+ABS(WN).^2.
+         ABS(WX).^2+ABS(WY).^2 = ABS(WP).^2+ABS(WN).^2.
  
-    There are therefore two equivalent ways to compute the positive and
+    There are two equivalent ways to compute the positive and
     negative rotary transforms.  The first is
  
       [WP,WN]=<a href="wavetrans.html">WAVETRANS</a>(X+iY,X-iY,PSI) 
@@ -115,11 +128,12 @@
   
     The second is to take the wavelet transform of the real-valued data
  
-        [WX,WY]=<a href="wavetrans.html">WAVETRANS</a>(X,Y,PSI)      followed by 
-        [WP,WN]=<a href="vectmult.html">VECTMULT</a>(TMAT,WX,WY) 
+        [WX,WY]=<a href="wavetrans.html">WAVETRANS</a>(X,Y,PSI)              followed by 
+        [WP,WN]=<a href="vectmult.html">VECTMULT</a>(TMAT/SQRT(2),WX,WY)    (bandpass normalization) or 
+        [WP,WN]=<a href="vectmult.html">VECTMULT</a>(TMAT,WX,WY)            (energy normalization) 
  
-    which converts WX and WY to WP and WN using a matrix multiplication
-    with the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
+    which converts WX and WY to WP and WN with a matrix multiplication
+    using the unitary matrix TMAT=[1 i; 1 -i]/SQRT(2).
     ___________________________________________________________________
  
     Parallelization
@@ -141,5 +155,5 @@
             [wp,wn]=<a href="wavetrans.html">wavetrans</a>(x+i*y,x-i*y,{gamma,beta,f,str},str);
     _________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2004--2016 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2004--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

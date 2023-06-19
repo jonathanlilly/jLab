@@ -21,6 +21,12 @@ function[znew]=interplatlon(varargin)
 %   being periodic, and if so it handles the interpolation appropriately by
 %   appending the last column of ZO to its front and the last to is back.
 %
+%   INTERPLATLON accounts for the fact that LONO may have an arbitrary 
+%   starting value, not necessarily -180 or 0, as its initial point, e.g.
+%   LONO may begin at -20 and end at 340.  Note that both LONO and LON are
+%   interpreted as angles on the complex plane, so the modifications
+%   LONO+n*360 or LON+n*360 for integer n would not change the result.  
+%
 %   ZO may have multiple elements along its 3rd, 4th, or 5th dimension.  Z
 %   will then have its first two dimensions matching LAT and LON, and
 %   higher dimensions matching ZO.  
@@ -33,9 +39,12 @@ function[znew]=interplatlon(varargin)
 %
 %   Interpolation algorithm
 %
-%   INTERPLATLON uses Matlab's INTERP2 with linear interpolation.  Data 
-%   points for which linear interpolation does not return a valid value 
-%   are filled with results from INTERP2 using the nearest-neighbor method.
+%   By default, INTERPLATLON uses Matlab's INTERP2 with linear 
+%   interpolation.  Alternatively, INTERPLATLON(...,METHOD) uses the method
+%   specified by the string METHOD, as described in INTERP2.
+% 
+%   Data points for which the chosen interpolation method does not return a
+%   valid value are then filled using nearest-neighbor interpolation.
 %
 %   INTERPLATON(...,'fill'), if LAT and LON are matrices of the from output 
 %   by MESHGRID, will instead fill missing data points from the linear
@@ -54,7 +63,10 @@ function[znew]=interplatlon(varargin)
 %
 %   Z=INTERPLATLON(LATO,LONO,TO,ZO,LAT,LON,T) similarly performs a 3D
 %   interpolation, where TO is now time, with SIZE(ZO,3) being the same as
-%   LENGTH(TO).  LAT, LON, and T are all the same size. 
+%   LENGTH(TO).  LAT, LON, and T are all the same size.  
+%
+%   Again, INTERPLATLON(...,METHOD) specifies the interpolation method,
+%   which defaults to 'linear'.
 %
 %   Note that the 'fill' option does not work with 3D interpolation.
 %   __________________________________________________________________
@@ -65,14 +77,20 @@ function[znew]=interplatlon(varargin)
 %          z=interplatlon(lato,lono,to,zo,lat,lon,t,bool);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2018--2022 J.M. Lilly --- type 'help jlab_license' for details
  
 str='nofill';
-if ischar(varargin{end})
-    str=varargin{end};
-    varargin=varargin(1:end-1);
+interpstr='linear';
+for i=1:2
+    if ischar(varargin{end})
+        if strcmpi(varargin{end}(1:3),'fil')||strcmpi(varargin{end}(1:3),'nof')
+            str=varargin{end};
+        else
+            interpstr=varargin{end};
+        end
+        varargin=varargin(1:end-1);
+    end
 end
-
 tol=1e-6;
 
 lato=varargin{1}(:);
@@ -99,8 +117,7 @@ dlono=lono(2)-lono(1);
 if aresame(rot(2*pi*(lono(1)-dlono)/360),rot(2*pi*lono(end)/360),tol)
     if ~aresame(lono(end)-lono(end-1),dlono,tol)
         error('INTERPLATLON detecting periodicity, but LONO spacing is not the same at the beginning and end.')
-    end
-   
+    end 
     disp('INTERPLATLON detects periodic longitude array; wrapping ends.')
     lono=[lono(1)-dlono;lono;lono(end)+dlono];
     %this appends the last column to the front and the first to the end
@@ -108,6 +125,18 @@ if aresame(rot(2*pi*(lono(1)-dlono)/360),rot(2*pi*lono(end)/360),tol)
     zo(:,end+1,:,:,:)=zo(:,1,:,:,:);
     zo(:,end+1,:,:,:)=zo(:,2,:,:,:);    
 end
+
+%[min(lono) max(lono)]
+
+%lono(1)
+%account for the fact that lono may not start at -180 or 0
+%This sets the minimum value of the longitude I'm interpolating onto to be
+%halfway between the first two longitudes we're interpolating from
+lon=frac(360,2*pi)*angle(rot(frac(2*pi,360)*(lon-lono(1)-dlono/2-180)))+lono(1)+dlono/2+180;
+%xx=frac(360,2*pi)*angle(rot(frac(2*pi,360)*([-180:.1:180]-25-1/2-180)))+25+180+1/2;
+%min(xx)
+%minmin(lon),maxmax(lon),minmin(lono),maxmax(lono)
+%minmin(lon)>minmin(lono)&&maxmax(lon)<maxmax(lono)
 
 ismeshgrid=false;
 if strcmpi(str(1:3),'fil')
@@ -140,7 +169,7 @@ if isempty(t)
         for j=1:size(zo,4)
             for k=1:size(zo,5)
                 %vsize(lonog,latog,zo(:,:,i,j,k),lon,lat)
-                temp=interp2(lono,lato,zo(:,:,i,j,k),lon,lat);
+                temp=interp2(lono,lato,zo(:,:,i,j,k),lon,lat,interpstr);
                 if ismeshgrid
                     %vsize(lonog,latog,zo(:,:,i,j,k),lon,lat,xedges,yedges)
                     %fill missing data from linear interpolation with bin averages
@@ -169,7 +198,7 @@ else
     for j=1:size(zo,4)
         for k=1:size(zo,5)
             %vsize(lonog,latog,zo(:,:,i,j,k),lon,lat)
-            temp=interp3(lono,lato,to,zo(:,:,:,j,k),lon,lat,t);
+            temp=interp3(lono,lato,to,zo(:,:,:,j,k),lon,lat,t,interpstr);
             bool=isnan(temp);
             temp(bool)=interp3(lono,lato,to,zo(:,:,:,j,k),lon(bool),lat(bool),t(bool),'nearest');
             if ~isempty(land)

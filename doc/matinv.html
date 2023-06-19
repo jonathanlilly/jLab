@@ -4,22 +4,21 @@
 <div><h1>MATINV is the <a href="jMap.html">jMap</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="matinv.html">MATINV</a>  Fast inversion of arrays of small matrices.
  
-    <a href="matinv.html">MATINV</a> is a low-level function called by <a href="polysmooth.html">POLYSMOOTH</a>.
+    <a href="matinv.html">MATINV</a> is a low-level function called by POLYSMOOTH.
    
     Let MAT be an array of K different M x M matrices A1,A2,...,AK.
     INV=<a href="matinv.html">MATINV</a>(MAT) then returns an array of N inverse matrices.
      
-    If MAT has dimensions K1 x K2 x .... M x M, then <a href="matinv.html">MATINV</a> returns an 
+    If MAT has dimensions M x M x K1 x ... KK, then <a href="matinv.html">MATINV</a> returns an 
     array of the same size containing the inverses of the M x M matrices.
  
-    For example, MAT could be 10 x 10 x 4 x 4, in which case the inverses
+    For example, MAT could be 4 x 4 x 10 x 10, in which case the inverses
     of one hundred 4 x 4 matrices are found.
  
     MAT can have any dimensionality so long as the matrices to be inverted
-    occupy the last two dimensions.  The last dimension is interpreted as
-    "columns" and the second to last as "rows."
+    occupy the first two dimensions. 
  
-    Note that <a href="matinv.html">MATINV</a> only works matrices with M=2 through M=8.
+    Note that <a href="matinv.html">MATINV</a> only works matrices with M=2 through M=12.
     ____________________________________________________________
  
     Algorithms
@@ -38,15 +37,14 @@
     straightforward loop.
  
     The direct algorithm, which is the default, can be much faster when
-    MAT is large and the dimension to be inverted is small.
+    MAT is large and the dimension to be inverted is small.  For arrays of 
+    matrices larger than 8 x 8, the straightforward loop may be faster.
     ____________________________________________________________
- 
-    See also <a href="matmult.html">MATMULT</a>.
  
     '<a href="matinv.html">matinv</a> --t' runs some tests.
  
     Usage: inv=<a href="matinv.html">matinv</a>(mat);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2008--2020 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2008--2022 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

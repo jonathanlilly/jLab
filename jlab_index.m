@@ -94,6 +94,7 @@ function[]=jlab_index(varargin)
 %   ellrossby     - Ellipse Rossby number, for oceanographic applications.                               
 %   ellsig        - Creates a modulated elliptical signal in two or three dimensions.                    
 %   ellvel        - Average and instantaneous ellipse velocities.                                        
+%   equivkern     - Equivalent kernels for local polynomial fitting.                                     
 %   fillbad       - Linearly interpolate over bad data points.                                           
 %   findfiles     - Returns all files in a directory with a specified extension.                         
 %   findpath      - Returns the full pathname of a directory on the Matlab search path.                  
@@ -110,7 +111,7 @@ function[]=jlab_index(varargin)
 %   haxby         - The Haxby colormap.                                                                  
 %   haxby_copyright - Copyright statement for the HAXBY colormap.                                        
 %   hermfun       - Orthonormal Hermite functions. [with F. Rekibi]                                      
-%   hermpoly      - Hermite polynomials. [with F. Rekibi]                                                
+%   hermpoly      - Hermite polynomial of degree n.                                                      
 %   hlines        - Add horizontal lines to a plot.                                                      
 %   hodograph     - Generate hodograph plots (simple and fancy).                                         
 %   imlog         - Imaginary part of log: IMLOG(X)=UNWRAP(IMAG(LOG(X)))                                 
@@ -199,8 +200,8 @@ function[]=jlab_index(varargin)
 %   makefigs_multivariate - has been moved to JLAB_MAKEFIGS.                                             
 %   makefigs_patchcontourf - Makes a sample figure for PATCHCONTOURF.                                    
 %   makefigs_periodize - Makes a sample figure for PERIODIZE.                                            
-%   makefigs_polysmooth - Makes some sample figures for POLYSMOOTH.                                      
-%   makefigs_polysmooth2 - Makes a sample figure for POLYSMOOTH using TPJAOS.MAT.                        
+%   makefigs_polymap - Makes some sample figures for POLYMAP.                                            
+%   makefigs_polymap2 - Makes a sample figure for POLYMAP using TPJAOS.MAT.                              
 %   makefigs_psi2fields - Makes a sample figure for PSI2FIELDS.                                          
 %   makefigs_regionplot - Makes some sample figures for REGIONPLOT.                                      
 %   makefigs_ridges - has been moved to JLAB_MAKEFIGS.                                                   
@@ -208,7 +209,6 @@ function[]=jlab_index(varargin)
 %   makefigs_ridgewalk - Makes a sample figure for RIDGEWALK.                                            
 %   makefigs_seminfhaxby - Makes a sample figure for SEMINFHAXBY.                                        
 %   makefigs_simplepdf - Makes a sample figure for SIMPLEPDF.                                            
-%   makefigs_slidetrans - Makes a sample figure for SLIDETRANS.                                          
 %   makefigs_sphereinterp - Makes two sample figures for SPHEREINTERP.                                   
 %   makefigs_stickvect - Makes a sample figure for STICKVECT.                                            
 %   makefigs_superfamily - has been moved to JLAB_MAKEFIGS.                                              
@@ -236,13 +236,12 @@ function[]=jlab_index(varargin)
 %   maternoise    - Realizations of the Matern process and variations, including fBm. [with A. Sykulski] 
 %   maternspec    - Fourier spectrum of the Matern random process and variations.                        
 %   matinv        - Fast inversion of arrays of small matrices.                                          
-%   matmult       - Matrix multiplication for arrays of matrices.                                        
 %   matsave       - Create and save structure of variables as a mat-file.                                
 %   max2eddy      - Converts transform maxima into oceanic coherent eddy properties.                     
-%   maxmax        - MAXMAX(X)=MAX(X(ISFINITE(X)))                                                        
+%   maxmax        - MAXMAX(X)=MAX(X(~ISNAN(X(:))))                                                       
 %   maxprops      - Returns properties of wavelet transform maxima.                                      
 %   mconf         - Confidence intervals for the multitaper spectral estimate.                           
-%   minmin        - MINMIN(X)=MIN(X(ISFINITE(X)))                                                        
+%   minmin        - MINMIN(X)=MIN(X(~ISNAN(X(:))))                                                       
 %   mom2cum       - Convert moments to cumulants.                                                        
 %   monthstats    - Mean month and standard deviation using circular statistics.                         
 %   morlfreq      - Compute Morlet wavelet carrier frequency given peak frequency.                       
@@ -277,12 +276,15 @@ function[]=jlab_index(varargin)
 %   pdfprops      - Mean and variance associated with a probability distribution.                        
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
+%   pm_apply      - Apply weights to data to generate a local polynomial fit.                            
+%   pm_index      - Applies an index output by PM_SORT to sort data for POLYMAP.                         
+%   pm_kernmom    - Moments of smoothing kernels for local polynomial fitting.                           
+%   pm_robust     - Returns a weighting function used in robustifying POLYMAP.                           
+%   pm_sort       - Sort data points according to distance from grid points in 2D.                       
+%   pm_weight     - Weighting function for local polynomial fitting.                                     
+%   pm_window     - Remove data outside of time window for POLYMAP.                                      
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polysmooth    - Mapping using local polynomial fitting, also known as loess.                         
-%   polysmooth_bandwidth - Determine bandwidth given population for POLYSMOOTH.                          
-%   polysmooth_kernel - Returns the weighting kernel employed by POLYSMOOTH.                             
-%   polysmooth_presort - Sort arguments to POLYSMOOTH in case of missing data.                           
-%   polysmooth_sortfield - Returns sorted field values for a mapping problem.                            
+%   polymap       - Mapping using local polynomial fitting, also known as loess.                         
 %   printall      - Print and close all open figures.                                                    
 %   provec        - Generate progressive vector diagrams (simple and fancy).                             
 %   psi2fields    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
@@ -305,7 +307,6 @@ function[]=jlab_index(varargin)
 %   simpleddy     - Streamfunction, velocity, and vorticity for various eddy profiles.                   
 %   simplepdf     - Gaussian, uniform, Cauchy, and exponential pdfs.                                     
 %   sleptap       - Calculate Slepian tapers.                                                            
-%   slidetrans    - Sliding-window ('moving-window') Fourier transform.                                  
 %   specdiag      - Diagonalize a 2 x 2 spectral matrix.                                                 
 %   sphere2uvw    - Converts a 3D spherical vector to a 3D Cartesian vector.                             
 %   spherecurl    - Curl of a vector field on the surface of a sphere.                                   
@@ -314,7 +315,6 @@ function[]=jlab_index(varargin)
 %   spheregrad    - Gradient of a field on the surface of a sphere.                                      
 %   sphereinterp  - Fast linear interpolation on the sphere from non-plaid grids.                        
 %   spherelap     - Laplacian of a field on the surface of a sphere.                                     
-%   spheresort    - Sorted great circle distances to nearby points on the earth.                         
 %   spheretrans   - Wavelet transform for oscillations on the surface of a sphere.                       
 %   squared       - Squares the modulus of its argument:  SQUARED(X)=ABS(X).^2                           
 %   standalone    - Create stand-alone version of an m-file, including dependencies.                     
@@ -336,7 +336,6 @@ function[]=jlab_index(varargin)
 %   transmaxdist  - Distributions of wavelet transform maxima in noise.                                  
 %   twodhist      - Two-dimensional histogram.                                                           
 %   twodmed       - Median value of a function of two variables.                                         
-%   twodsort      - Distances from data points to nearby grid points.                                    
 %   twodstats     - Mean, variance, and covariance of functions of two variables.                        
 %   twospecplot   - Plots a pair of rotary or Cartesian spectra.                                         
 %   use           - Copies structure fields into named variables in workspace.                           
@@ -379,11 +378,12 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks.                                                 
-%   __________________________________________________________________
+%   ztick         - Sets locations of z-axis tick marks. 
+%   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2021 J.M. Lilly --- type 'help jlab_license' for details
- 
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details
+
+
 if nargin==0
     help jlab_index
 else

@@ -25,7 +25,7 @@ function[cax]=colorquant(a,b)
 %          colorquant 10
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2018 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2018--2022 J.M. Lilly --- type 'help jlab_license' for details
 
 ao=0.1;
 if nargin==1||nargin==2
@@ -61,8 +61,8 @@ for i=1:length(hc)
 end
 
 %size(z)
-z=sort(z(:));
 z=z(isfinite(z));
+z=sort(z(:));
 %figure,plot(z)
 
 ii=[1:length(z)]/length(z);
@@ -74,8 +74,7 @@ bi=find(ii<b/100,1,'last');
 %z(ai), z(bi)
 %ai, bi
 cax=[z(ai) z(bi)];
-%cax
-%caxis(cax)
+caxis(cax)
 if nargout==0
     clear cax
 end

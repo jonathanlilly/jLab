@@ -11,7 +11,6 @@
 %   specdiag   - Diagonalize a 2 x 2 spectral matrix.        
 %
 % Assorted other transforms 
-%   slidetrans  - Sliding-window ('moving-window') Fourier transform.   
 %   anatrans    - Analytic part of signal.                                         
 %   wigdist     - Wigner distribution (alias-free algorithm).   
 % 
