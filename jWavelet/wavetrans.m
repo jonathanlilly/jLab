@@ -107,7 +107,7 @@ function[varargout]=wavetrans(varargin)
 %   The factor of 1/2 sets the peak value of the wavelet transform of a
 %   complex exponential to the amplitude of the complex exponential itself.
 %
-%   Alternatively, if the 'energy' normalization is specified, 
+%   Alternatively, if the 'energy' normalization is specified, then
 %
 %        WP=WAVETRANS(X+iY,PSI)   = (1/SQRT(2))*(WX + i WY)
 %        WN=WAVETRANS(X-iY,PSI)   = (1/SQRT(2))*(WX - i WY)
@@ -153,7 +153,7 @@ function[varargout]=wavetrans(varargin)
 %           [wp,wn]=wavetrans(x+i*y,x-i*y,{gamma,beta,f,str},str);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2021 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(varargin{1},'--t')
@@ -241,6 +241,21 @@ end
 
 T=squeeze(T);
 
+normstr='bandpass'; %default for wavetrans
+if iscell(argcell{1})
+    if ischar(argcell{1}(end))
+        normstr=argcell{1}(end);
+    end
+end
+
+if isreal(x)
+    T=2*T;
+else 
+    if strcmpi(normstr(1:3),'ene')
+        T=T./sqrt(2);
+    end 
+end
+
 
 function[T]=wavetrans_continue(x,argcell,parstr)
 
@@ -251,16 +266,17 @@ if iscell(argcell{1})
     end
 end
 
-if ~isreal(x)
-    %Unitary transform normalization --- use this only for 'energy'
-    if strcmpi(normstr(1:3),'ene')
-        x=x./sqrt(2);
-    %Bandpass transform normalization --- use this for 'bandpass'
-    elseif strcmpi(normstr(1:3),'ban')
-        x=x./2;
-%        x=x./sqrt(2); %XXXX
-    end
-end
+% if ~isreal(x)
+%     %Unitary transform normalization --- use this only for 'energy'
+%     if strcmpi(normstr(1:3),'ene')
+%         x=x./sqrt(2);
+%     end
+%     %Bandpass transform normalization --- use this for 'bandpass'
+% %    elseif strcmpi(normstr(1:3),'ban')
+% %        x=x./2;
+% %        x=x./sqrt(2); %XXXX
+% %    end
+% end
 
 w=argcell{1};
 detrendstr='detrend';
@@ -505,7 +521,7 @@ fs=2*pi./(logspace(log10(10),log10(100),50)');
 %Compute wavelet transforms using generalized Morse wavelets
 [wx,wy]=wavetrans(real(cx),imag(cx),{1,2,4,fs,'bandpass'},'mirror');
 [wp,wn]=wavetrans(cx,conj(cx),{1,2,4,fs,'bandpass'},'mirror');
-[wp2,wn2]=vectmult(tmat./sqrt(2),wx,wy);
+[wp2,wn2]=vectmult(frac(1,2)*[1 1i; 1 -1i],wx,wy);
 
 
 reporttest('WAVETRANS complex-valued input',aresame(wp,wp2,1e-6)&&aresame(wn,wn2,1e-6))

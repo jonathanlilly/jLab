@@ -1,15 +1,6 @@
 function[]=jlab_index(varargin)
-%JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.
+%JLAB_INDEX  Alphabetical index into JLAB contents.
 %
-% JDATA index
-%   about_floats  - Historical dataset of eddy-resolving subsurface floats.         
-%   about_ibcao   - International Bathymetric Chart of the Arctic Ocean topography. 
-%   about_sandwell - One minute resolution topography data from Smith and Sandwell. 
-%   about_tpjaos  - Sea surface height anomalies from the Beckley merged dataset.   
-%   readtopo      - Read one-minute topography data from Smith and Sandwell.        
-%   topo_copyright - Copyright statement for the Smith and Sandwell topography.     
-%
-% JLAB index
 %   ab2kl         - Converts A and B to ellipse parameters Kappa and Lambda.                             
 %   about_jtopo   - One-sixth degree global topography, from Smith and Sandwell + IBCAO.                 
 %   allall        - ALLALL(X)=ALL(X(:))                                                                  
@@ -94,7 +85,6 @@ function[]=jlab_index(varargin)
 %   ellrossby     - Ellipse Rossby number, for oceanographic applications.                               
 %   ellsig        - Creates a modulated elliptical signal in two or three dimensions.                    
 %   ellvel        - Average and instantaneous ellipse velocities.                                        
-%   equivkern     - Equivalent kernels for local polynomial fitting.                                     
 %   fillbad       - Linearly interpolate over bad data points.                                           
 %   findfiles     - Returns all files in a directory with a specified extension.                         
 %   findpath      - Returns the full pathname of a directory on the Matlab search path.                  
@@ -110,8 +100,6 @@ function[]=jlab_index(varargin)
 %   gulf4plot     - A four-panel circulation plot for the Gulf of Mexico.                                
 %   haxby         - The Haxby colormap.                                                                  
 %   haxby_copyright - Copyright statement for the HAXBY colormap.                                        
-%   hermfun       - Orthonormal Hermite functions. [with F. Rekibi]                                      
-%   hermpoly      - Hermite polynomial of degree n.                                                      
 %   hlines        - Add horizontal lines to a plot.                                                      
 %   hodograph     - Generate hodograph plots (simple and fancy).                                         
 %   imlog         - Imaginary part of log: IMLOG(X)=UNWRAP(IMAG(LOG(X)))                                 
@@ -129,14 +117,16 @@ function[]=jlab_index(varargin)
 %   jfig          - Shorthand for tweaking figures.                                                      
 %   jhanning      - Hanning window.                                                                      
 %   jhelp         - Opens linked JLAB help files in Matlab's internal web browser.                       
+%   jhermfun      - Orthonormal Hermite functions. [with F. Rekibi]                                      
+%   jhermpoly     - Hermite polynomials. [with F. Rekibi]                                                
 %   jlab_addpath  - Adds JLAB and JDATA subdirectories to your Matlab search path.                       
-%   jlab_allhelp  - Displays the help comments for all JLAB modules.                                     
+%   jcell:        - Tools for operating on cell arrays of column vectors                                 
 %   jlab_changes  - Changes to JLAB in each release.                                                     
 %   jlab_highlights - Introduction to some of the most useful routines.                                  
 %   jlab_index    - Alphabetical index into JLAB and JDATA contents.                                     
 %   jlab_install  - Instructions for installing JLAB.                                                    
 %   jlab_license  - License statement and permissions for JLAB package.                                  
-%   jlab_makefigs - Makes figures for papers by J.M. Lilly.                                              
+%   jlab_makefigs - Make figures for papers by J. M. Lilly.                                              
 %   jlab_runtests - Runs a test suite for JLAB package.                                                  
 %   jlab_thanks   - Sources of support for developing this software.                                     
 %   jmat2         - 2x2 rotation matrix through specified angle.                                         
@@ -161,29 +151,38 @@ function[]=jlab_index(varargin)
 %   lnsd          - Last non-singleton dimension of an array.                                            
 %   lonshift      - Shifts longitude origin for plotting purposes.                                       
 %   make          - Create a structure containing named variables as fields.                             
-%   makefigs_analytic - has been moved to JLAB_MAKEFIGS.                                                 
-%   makefigs_asilomar - has been moved to JLAB_MAKEFIGS.                                                 
-%   makefigs_bandwidth - has been moved to JLAB_MAKEFIGS.                                                
+%   make_betaeddyone - Create the BetaEddyOne nonlinear QG eddy simulation.                              
+%   make_goldaltimetry - Create a synthetic altimeter dataset and gridded statistics.                    
+%   make_goldocean - Create quarter-degree gridded files from GOLD simulations.                          
+%   make_gomed    - Create a drifter-derived eddy database for the Gulf of Mexico.                       
+%   make_gulfdrifters - Create a drifter dataset for the Gulf of Mexico.                                 
+%   make_gulfflow - Create a gridded velocity dataset for the Gulf of Mexico.                            
+%   make_jason    - Create a reformatted version of the Beckley altimeter dataset.                       
+%   makefigs_analytic - Make figures for Lilly and Olhede (2010b).                                       
+%   makefigs_asilomar - Make figures for Lilly and Olhede (2009b).                                       
+%   makefigs_bandwidth - Make figures for Lilly and Olhede (2010a).                                      
 %   makefigs_closedcurves - Makes a sample figure for CLOSEDCURVES.                                      
 %   makefigs_curvemoments - Makes a sample figure for CURVEMOMENTS.                                      
 %   makefigs_dlines - Makes a sample figure for DLINES.                                                  
 %   makefigs_doublen - Makes a sample figure for DOUBLEN.                                                
 %   makefigs_ecconv - Makes a sample figure for ECCONV.                                                  
-%   makefigs_element - Makes all figures for Lilly (2017), "Element Analysis."                           
+%   makefigs_element - Make figures for Lilly (2017).                                                    
 %   makefigs_ellband - Makes a sample figure for ELLBAND.                                                
 %   makefigs_ellipseplot - Makes a sample figure for ELLIPSEPLOT.                                        
 %   makefigs_ellvel - Makes a sample figure for ELLVEL.                                                  
-%   makefigs_gulfcensus - Makes all figures for Lilly and Perez-Brunius (2021b).                         
-%   makefigs_gulfdrifters - Makes all figures for Lilly and Perez-Brunius (2021a).                       
-%   makefigs_hermfun - Makes a sample figure for HERMFUN.                                                
+%   makefigs_gulfcensus - Make figures for Lilly and Perez-Brunius (2021b).                              
+%   makefigs_gulfdrifters - Make figures for Lilly and Perez-Brunius (2021a).                            
 %   makefigs_inellipse - Makes a sample figure for INELLIPSE.                                            
 %   makefigs_instmom - Makes some sample figures for INSTMOM.                                            
 %   makefigs_jdawson - Makes a sample figure for DJAWSON.                                                
 %   makefigs_jfig - Makes a sample figure for JFIG.                                                      
+%   makefigs_jhermfun - Makes a sample figure for JHERMFUN.                                              
 %   makefigs_jpcolor - Makes a sample figure for JPCOLOR.                                                
 %   makefigs_jtopo - Makes a sample figure for ABOUT_JTOPO.                                              
+%   makefigs_kinematics - Make figures for Lilly (2018).                                                 
 %   makefigs_lansey - Makes a sample figure for LANSEY.                                                  
-%   makefigs_matern - Makes all figures for Lilly et al. 2017.                                           
+%   makefigs_matern - Make all figures for Lilly et al. 2017.                                            
+%   makefigs_matern - Make all figures for Lilly et al. 2017.                                            
 %   makefigs_maternoise - Makes a sample figure for MATERNOISE.                                          
 %   makefigs_maternspec - Makes some sample figures for MATERNSPEC.                                      
 %   makefigs_mconf - Makes sample figure for MCONF.                                                      
@@ -195,33 +194,34 @@ function[]=jlab_index(varargin)
 %   makefigs_morseregion - Makes somes sample figures for MORSEREGION.                                   
 %   makefigs_morsespace - Makes some sample figures for MORSESPACE.                                      
 %   makefigs_morsewave - Makes some sample figures for MORSEWAVE.                                        
-%   makefigs_morsies - has been moved to JLAB_MAKEFIGS.                                                  
+%   makefigs_morsies - Make figures for Lilly and Olhede (2009a).                                        
 %   makefigs_mspec - Makes some sample figures for MSPEC.                                                
-%   makefigs_multivariate - has been moved to JLAB_MAKEFIGS.                                             
+%   makefigs_multivariate - Make figures for Lilly and Olhede (2012a).                                   
 %   makefigs_patchcontourf - Makes a sample figure for PATCHCONTOURF.                                    
 %   makefigs_periodize - Makes a sample figure for PERIODIZE.                                            
 %   makefigs_polymap - Makes some sample figures for POLYMAP.                                            
 %   makefigs_polymap2 - Makes a sample figure for POLYMAP using TPJAOS.MAT.                              
 %   makefigs_psi2fields - Makes a sample figure for PSI2FIELDS.                                          
 %   makefigs_regionplot - Makes some sample figures for REGIONPLOT.                                      
-%   makefigs_ridges - has been moved to JLAB_MAKEFIGS.                                                   
+%   makefigs_ridges - Make figures for Lilly, Scott, and Olhede (2011).                                  
 %   makefigs_ridgetrim - Makes a sample figure for RIDGETRIM.                                            
 %   makefigs_ridgewalk - Makes a sample figure for RIDGEWALK.                                            
 %   makefigs_seminfhaxby - Makes a sample figure for SEMINFHAXBY.                                        
 %   makefigs_simplepdf - Makes a sample figure for SIMPLEPDF.                                            
 %   makefigs_sphereinterp - Makes two sample figures for SPHEREINTERP.                                   
 %   makefigs_stickvect - Makes a sample figure for STICKVECT.                                            
-%   makefigs_superfamily - has been moved to JLAB_MAKEFIGS.                                              
+%   makefigs_stokes - Make figures for Lilly et al. (2024).                                              
+%   makefigs_superfamily - Make figures for Lilly and Olhede (2012b).                                    
 %   makefigs_topoplot - Makes a sample figure for TOPOPLOT.                                              
 %   makefigs_trackextract - Makes a sample figure for TRACKEXTRACT.                                      
 %   makefigs_trajextract - Makes a sample figure for TRAJEXTRACT.                                        
 %   makefigs_trajwrap - Makes a sample figure for TRAJWRAP.                                              
-%   makefigs_transfer - Makes all figures for Lilly and Elipot (2021).                                   
-%   makefigs_trivariate - has been moved to JLAB_MAKEFIGS.                                               
+%   makefigs_transfer - Make figures for Lilly and Elipot (2021).                                        
+%   makefigs_trivariate - Make figures for Lilly (2011).                                                 
 %   makefigs_twodhist - Makes a sample figure for TWODHIST.                                              
 %   makefigs_twodmed - Makes a sample figure for TWODMED.                                                
 %   makefigs_twodstats - Makes a sample figure for TWODSTATS.                                            
-%   makefigs_vortex - has been moved to JLAB_MAKEFIGS.                                                   
+%   makefigs_vortex - Make figures for Lilly and Gascard (2006).                                         
 %   makefigs_wavespecplot - Makes a sample figure for WAVESPECPLOT.                                      
 %   makefigs_wavetrans - Makes a sample figure for WAVETRANS.                                            
 %   makefigs_widgist - Makes some sample figures for WIGDIST.                                            
@@ -235,7 +235,6 @@ function[]=jlab_index(varargin)
 %   maternimp     - Impulse response function for the Matern random process.                             
 %   maternoise    - Realizations of the Matern process and variations, including fBm. [with A. Sykulski] 
 %   maternspec    - Fourier spectrum of the Matern random process and variations.                        
-%   matinv        - Fast inversion of arrays of small matrices.                                          
 %   matsave       - Create and save structure of variables as a mat-file.                                
 %   max2eddy      - Converts transform maxima into oceanic coherent eddy properties.                     
 %   maxmax        - MAXMAX(X)=MAX(X(~ISNAN(X(:))))                                                       
@@ -276,15 +275,7 @@ function[]=jlab_index(varargin)
 %   pdfprops      - Mean and variance associated with a probability distribution.                        
 %   periodindex   - Returns time index in increments of instantaneous period.                            
 %   periodize     - Returns a doubly periodic version of an input array.                                 
-%   pm_apply      - Apply weights to data to generate a local polynomial fit.                            
-%   pm_index      - Applies an index output by PM_SORT to sort data for POLYMAP.                         
-%   pm_kernmom    - Moments of smoothing kernels for local polynomial fitting.                           
-%   pm_robust     - Returns a weighting function used in robustifying POLYMAP.                           
-%   pm_sort       - Sort data points according to distance from grid points in 2D.                       
-%   pm_weight     - Weighting function for local polynomial fitting.                                     
-%   pm_window     - Remove data outside of time window for POLYMAP.                                      
 %   polparams     - Spectral matrix polarization parameters.                                             
-%   polymap       - Mapping using local polynomial fitting, also known as loess.                         
 %   printall      - Print and close all open figures.                                                    
 %   provec        - Generate progressive vector diagrams (simple and fancy).                             
 %   psi2fields    - Velocity and other fields from the streamfunction. [with P.E. Isachsen]              
@@ -378,10 +369,10 @@ function[]=jlab_index(varargin)
 %   ylog          - Sets y-axis scale to log.                                                            
 %   yoffset       - Offsets lines in the y-direction after plotting.                                     
 %   ytick         - Sets locations of y-axis tick marks.                                                 
-%   ztick         - Sets locations of z-axis tick marks. 
+%   ztick         - Sets locations of z-axis tick marks.     
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2024 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if nargin==0
@@ -395,10 +386,10 @@ end
 
 function[]=jlab_index_create
 jlab_dir=whichdir('jlab_license');
-jdata_dir=[jlab_dir(1:end-4) 'jdata'];
+jdata_dir=[jlab_dir(1:end-4) 'jData'];
 
 
-for k=1:2
+for k=1
     switch k
         case 1
             mfiles=findfiles(jlab_dir,'m','recursive');
@@ -435,13 +426,18 @@ end
 % comments{1}=comments2;
 % comments{2}=comments1;
 
+% disp('Start here -->')
+% disp('%JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.')
+% disp('%')
+% disp('% JDATA index')
+% disp(comments2)
+% disp('%')
+% disp('% JLAB index')
+% disp(comments1)
+
 disp('Start here -->')
-disp('%JLAB_INDEX  Alphabetical index into JLAB and JDATA contents.')
+disp('%JLAB_INDEX  Alphabetical index into JLAB contents.')
 disp('%')
-disp('% JDATA index')
-disp(comments2)
-disp('%')
-disp('% JLAB index')
 disp(comments1)
 
 

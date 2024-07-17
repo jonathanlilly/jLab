@@ -1,59 +1,25 @@
 %JLAB_LICENSE  License statement and permissions for JLAB package.
 %
-%   Copyright (C) 1993--2023 J.M. Lilly
+%   Copyright (C) 1993--2024 J.M. Lilly
 %   _______________________________________________________________________
 %
-%   Citation
+%   Permission is hereby granted, free of charge, to any person obtaining a
+%   copy of this software and associated documentation files (the 
+%   “Software”), to deal in the Software without restriction, including 
+%   without limitation the rights to use, copy, modify, merge, publish, 
+%   distribute, sublicense, and/or sell copies of the Software, and to 
+%   permit persons to whom the Software is furnished to do so, subject to 
+%   the following conditions:
 %
-%   This software is distributed free of charge.  If you use it in research
-%   resulting in a scientific presentation or publication, the software 
-%   should be acknowledged and cited as:
+%   The above copyright notice and this permission notice shall be included
+%   in all copies or substantial portions of the Software.
 %
-%   Lilly, J. M. (2023),  jLab: A data analysis package for Matlab, 
-%      v.1.7.2, doi:10.5281/zenodo.4547006, http://www.jmlilly.net/software.
-%   _______________________________________________________________________
-%
-%   License
-%
-%   JLAB is distributed under the 
-%   
-%     "Creative Commons Attribution-Noncommercial-ShareAlike License"
-%
-%   Version 4.0, available at 
-%
-%      http://creativecommons.org/licenses/by-nc-sa/4.0/
-%
-%   You are free:
-%
-%       To Share -- copy and redistribute the material in any format
-%
-%       To Adapt -- remix, transform, and build upon the material
-%
-%   Under the following conditions:
-%
-%     Attribution -- You must give appropriate credit, provide a link to 
-%          the license, and indicate if changes were made. You may do so in 
-%          any reasonable manner, but not in any way that suggests the 
-%          licensor endorses you or your use.
-%
-%       Noncommercial -- You may not use the material for commercial 
-%           purposes.
-%
-%       ShareAlike --  If you remix, transform, or build upon the 
-%          material, you must distribute your contributions under the same 
-%          license as the original.
-%
-%   See the above link for the full text of the license.
-%   _______________________________________________________________________
-%
-%   Disclaimer
-%
-%   This software is provided 'as-is', without any express or implied
-%   warranty. In no event will the author be held liable for any damages
-%   arising from the use of this software.
-%   _______________________________________________________________________
-%
-%   This is part of JLAB --- type 'help jlab' for more information 
-%   (C) 1993--2023 J.M. Lilly --- type 'help jlab_license' for details
+%   THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS
+%   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+%   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+%   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+%   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+%   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+%   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 help jlab_license

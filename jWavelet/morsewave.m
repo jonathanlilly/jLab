@@ -28,7 +28,9 @@ function[varargout]=morsewave(varargin)
 %   MORSEWAVE supports two kinds of normalization for the wavelets.
 %
 %   MORSEWAVE(...,'bandpass') uses "bandpass normalization", meaning that
-%   the FFT of the wavelet has a peak value of 2 for all frequencies FS. 
+%   the FFT of the wavelet has a peak value of 1 over all frequencies FS. 
+%   Please note that this is a new change as of v. 1.7.2, with associated
+%   changes in the definition of the wavelet transform.
 %
 %   MORSEWAVE(...,'energy') uses the unit energy normalization.  The time-
 %   domain wavelet energy SUM(ABS(PSI).^2,1) is then always unity. 
@@ -54,7 +56,7 @@ function[varargout]=morsewave(varargin)
 %
 %   Again either bandpass or energy normalization can be applied.  With
 %   bandpass normalization, all wavelets are divided by a constant, setting
-%   the peak value of the first frequency-domain wavelet equal to 2.
+%   the peak value of the first frequency-domain wavelet equal to unity.
 %   _________________________________________________________________
 %
 %   The zero beta 
@@ -96,7 +98,7 @@ function[varargout]=morsewave(varargin)
 %          [psi,psif]=morsewave(N,K,ga,be,fs,'bandpass');
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2016 J.M. Lilly and F. Rekibi
+%   (C) 2004--2023 J.M. Lilly and F. Rekibi
 %                         --- type 'help jlab_license' for details  
  
 
@@ -123,7 +125,7 @@ function[varargout]=morsewave(varargin)
 %   Under the 'energy' normalization, both the primary and edge wavelets
 %   are set to have unit energy.  Under the 'bandpass' normalization, both
 %   wavelets are subsequently divided by a constant such that the maximum 
-%   value of the primary wavelet in the frequency domain is equal to 2.
+%   value of the primary wavelet in the frequency domain is equal to unity.
 %   _________________________________________________________________
 %
 %   The first page of PSI, PSI(:,:,1), is again the first or standard
@@ -219,20 +221,26 @@ fo=morsefreq(ga,be);
 fact=fs./fo;
 om=2*pi*linspace(0,1-1./N,N)'./fact;
 
+psizero=exp(be.*log(om)-om.^ga);
 if strcmpi(str,'ene')
-    if be==0
-        psizero=exp(-om.^ga);
-    else
-        psizero=exp(be.*log(om)-om.^ga);
-    end
-else
-    if be==0
-        psizero=2*exp(-om.^ga);
-    else
-        %Alternate calculation to cancel things that blow up
-        psizero=2*exp(-be.*log(fo)+fo.^ga+be.*log(om)-om.^ga);
-    end
+    psizero = sqrt(1./fact).*psizero;
 end
+
+
+% if strcmpi(str,'ene')
+%     if be==0
+%         psizero=exp(-om.^ga);
+%     else
+%         psizero=exp(be.*log(om)-om.^ga);
+%     end
+% else
+%     if be==0
+%         psizero=exp(-om.^ga);
+%     else
+%         %Alternate calculation to cancel things that blow up
+%         psizero=exp(-be.*log(fo)+fo.^ga+be.*log(om)-om.^ga);
+%     end
+% end
 %figure,plot(psizero)
 psizero(1)=1/2*psizero(1); %Due to unit step function
 %Ensure nice lowpass filters for beta=0;
@@ -265,21 +273,13 @@ index=(1:round(N/2));
 psif=zeros(length(psizero),1,K);
 
 for k=0:K-1
-  %Log of gamma function much better ... trick from Maltab's ``beta''
-  if strcmpi(str,'ene')
-        A=morseafun(k+1,ga,be,str);
-        coeff = sqrt(1./fact)*A;
-  elseif strcmpi(str,'ban')
-        if be~=0
-            coeff=sqrt(exp(gammaln(r)+gammaln(k+1)-gammaln(k+r)));
-        else
-            coeff=1;
-        end
-  end
+    coeff = morseafun(k+1,ga,be,str);
+    % if strcmpi(str,'ene')
+    %     coeff = sqrt(1./fact).*coeff;
+    % end
     L(index)=laguerre(2*om(index).^ga,k,c);
     psif(:,:,k+1)=coeff.*psizero.*L;%maxmax(coeff),maxmax(psizero),maxmax(L)
 end
-
 
 %  See Olhede and Walden, "Noise reduction in directional signals
 %  using multiple Morse wavelets", IEEE Trans. Bio. Eng., v50, 51--57.
@@ -287,7 +287,6 @@ end
 %  preceding expressions. Morse wavelets are defined in the frequency  
 %  domain, and so not interpolated in the time domain in the same way
 %  as other continuous wavelets.
-
 
 %The second family is not used for anything right now.  It's experimental.
 function[X]=morsewave_second_family(fact,N,K,ga,be,om,psizero,str)
@@ -540,12 +539,13 @@ reporttest('MORSEWAVE centered for even N',all(bool))
 function[]=morsewave_test_scorer
 
 dt=1;
-t=(-50:dt:50)';
-psi1=morsewave(length(t),1,3,0,morsefreq(3,1)./dt,'bandpass');
+%t=(-50:dt:50)';
+t=(-200:dt:200)';
+psi1=morsewave(length(t),1,3,0,morsefreq(3,0)./dt,'bandpass');
 c=3.^(1/3);
-psi2=(1./c).*scorer(sqrt(-1)*t./c,1000);
-%figure,uvplot(psi1),
-%figure,uvplot(psi2)
+psi2=(1./c).*scorer(sqrt(-1)*t./c,10000)./2;
+%figure,plot(abs(psi1)),hold on,plot(abs(psi2))
+%figure,plot(abs(psi1)./abs(psi2))%,hold on,plot(abs(psi2))
 
 err=vsum(abs(psi1-psi2).^2,1)./vsum(abs(psi1).^2,1);
 reporttest('MORSEWAVE for GAMMA=3 wavelet versus Scorer function expression',err<1e-1)
@@ -570,9 +570,10 @@ function[]=morsewave_test_cauchy
 
 
 dt=.01;
-t=(-25:dt:25)';
-psi1=morsewave(length(t),1,1,0,morsefreq(1,1).*dt,'bandpass')./dt;
-psi2=frac(1,pi).*frac(1,1-sqrt(-1)*t);
+t=(-50:dt:50)';
+psi1=morsewave(length(t),1,1,0,morsefreq(1,0).*dt,'bandpass')./dt;
+psi2=frac(1,2*pi).*frac(1,1-sqrt(-1)*t);
+%figure,plot(abs(psi1)),hold on,plot(abs(psi2))
 
 err=vsum(abs(psi1-psi2).^2,1)./vsum(abs(psi1).^2,1);
 reporttest('MORSEWAVE for GAMMA=1 wavelet versus Cauchy function expression',err<1e-1)
@@ -583,7 +584,7 @@ function[]=morsewave_test_gaussian
 dt=.1;
 t=(-50:dt:50)';
 psi1=morsewave(length(t),1,2,0,morsefreq(2,1).*dt,'bandpass')./dt;
-psi2=frac(1,2*sqrt(pi)).*(exp(-(t/2).^2)+sqrt(-1)*jdawson(t/2)*frac(2,sqrt(pi)));
+psi2=frac(1,4*sqrt(pi)).*(exp(-(t/2).^2)+sqrt(-1)*jdawson(t/2)*frac(2,sqrt(pi)));
 err=vsum(abs(psi1-psi2).^2,1)./vsum(abs(psi1).^2,1);
 reporttest('MORSEWAVE for GAMMA=2 wavelet versus Gaussian function expression',err<1e-1)
 
@@ -592,7 +593,7 @@ dt=0.01;
 t=(-15:dt:15)';
 
 n=5;
-herm=hermpoly(t(:)/2,n+1);
+herm=jhermpoly(t(:)/2,n+1);
 herm=herm(:,2:end);
 g=exp(-frac(t.^2,4));
 

@@ -160,7 +160,7 @@ function[varargout]=sphereinterp(varargin)
 %          z=sphereinterp(dx,dy,index,bool,zo);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017--2022 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2017--2024 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     sphereinterp_test,return
@@ -390,12 +390,27 @@ jjshift(bool)=size(lato,1);
 %dlon2=(1-abs(dx)).*lono1(ii)+abs(dx).*lono1(ii+iishift)-long;
 %dlat2=(1-abs(dy)).*lato1(jj)+abs(dy).*lato1(jj+jjshift)-latg;
 
+% size(lato),size(ii),size(jj)
+% maxmax(jj),minmin(jj)
+% maxmax(ii),minmin(ii)
+% clear index
+% sub2ind(size(lato),1951,2879)
+% xx=sub2ind(size(lato),jj,ii)
+% minmin(xx)
+% maxmax(xx)
 
+%Modification needed because sub2ind now throws an error for nan subscripts
 clear index
-index{1}=sub2ind(size(lato),jj,ii);                 %Shifting neither
-index{2}=sub2ind(size(lato),jj,ii+iishift);         %Shifting lon
-index{3}=sub2ind(size(lato),jj+jjshift,ii);         %Shifting lat
-index{4}=sub2ind(size(lato),jj+jjshift,ii+iishift); %Shifting both
+index{1}=nan*ii;
+index{2}=nan*ii;
+index{3}=nan*ii;
+index{4}=nan*ii;
+nani=isfinite(jj) & isfinite(ii) & isfinite(iishift) & isfinite(jjshift);
+
+index{1}(nani)=sub2ind(size(lato),jj(nani),ii(nani));                       %Shifting neither
+index{2}(nani)=sub2ind(size(lato),jj(nani),ii(nani)+iishift(nani));         %Shifting lon
+index{3}(nani)=sub2ind(size(lato),jj(nani)+jjshift(nani),ii(nani));         %Shifting lat
+index{4}(nani)=sub2ind(size(lato),jj(nani)+jjshift(nani),ii(nani)+iishift(nani)); %Shifting both
 bool=isfinite(index{1}.*index{2}.*index{3}.*index{4});
 
 %Condition number loop

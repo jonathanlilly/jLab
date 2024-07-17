@@ -6,7 +6,6 @@
 %   maternimp  - Impulse response function for the Matern random process.    
 %   maternoise - Realizations of the Matern process and variations, including fBm. [with A. Sykulski]
 %   maternfit  - Parametric spectral fit to the Matern form. [with A. Sykulski]
-%   makefigs_matern - Makes all figures for Lilly et al. 2017.
 %
 % Other utilities
 %   blurspec   - Returns the blurred and aliased spectrum given the autocovariance.
@@ -17,6 +16,6 @@
 %   maternchol - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski]
 %   maternedge - Long-time cutoff edge for the Matern impulse response function.               
 %
-% See also jSpectral.
+% See also jSpectral, makefigs_matern.
 
 help jMatern

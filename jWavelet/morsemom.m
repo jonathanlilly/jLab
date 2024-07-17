@@ -41,7 +41,7 @@ function[m,n,k,l]=morsemom(p,ga,be)
 %           [mp,np,kp,lp]=morsemom(p,ga,be);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2007--2021 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2007--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(p, '--t')
     morsemom_test,return
@@ -52,7 +52,7 @@ m=morsemom1(p,ga,be);
 
 if nargout>1
     n=frac(morseafun(ga,be).^2,morseafun(ga,2*be)).*frac(1,2.^(frac(2*be+1+p,ga))).*morsemom1(p,ga,2*be);
-    n=frac(2,2.^(frac(1+p,ga))).*morsemom1(p,ga,2*be);
+    n=frac(1,2.^(frac(1+p,ga))).*morsemom1(p,ga,2*be);
 end
 
 if nargout>2
@@ -73,7 +73,7 @@ end
 
 if nargout>3
      for i=0:maxmax(p)
-          ncell{i+1}=frac(2,2.^frac(1+i,ga)).*morsemom1(i,ga,2*be);
+          ncell{i+1}=frac(1,2.^frac(1+i,ga)).*morsemom1(i,ga,2*be);
      end
      lcell=mom2cum(ncell);
      if length(p)==1 
@@ -166,7 +166,7 @@ be=(1:.1:10);
 clear bool
 for p=1:10
     [mp,np]=morsemom(p,ga,be);
-    mp2=2*frac(exp(1)*ga,be).^(be./ga).*frac(1,2*pi*ga).*gamma(frac(be+1+p,ga));
+    mp2=frac(exp(1)*ga,be).^(be./ga).*frac(1,2*pi*ga).*gamma(frac(be+1+p,ga));
     bool(p)=aresame(mp,mp2,1e-10);
 end
 

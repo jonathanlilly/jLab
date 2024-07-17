@@ -26,7 +26,7 @@ function[varargout]=maxprops(varargin)
 %   Usage: [C,rho,frho]=maxprops(ww,ff,ga,be,mu);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2017--2023 J.M. Lilly --- type 'help jlab_license' for details
   
 str='band';
 if ischar(varargin{end})
@@ -52,7 +52,7 @@ elseif strcmpi(str(1:3),'ban')
 end
 
 %fhat=ff*frac(mu,mu+1).^(1./ga); %This form does not work if mu=0
-chat=2*ww./morsezeta(ga,be,mu,str);
+chat=ww./morsezeta(ga,be,mu,str);
 
 varargout{1}=chat;
 varargout{2}=morsefreq(ga,mu)./fhat;

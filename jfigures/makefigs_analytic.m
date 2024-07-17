@@ -1,1 +1,0 @@
-%MAKEFIGS_ANALYTIC has been moved to JLAB_MAKEFIGS.

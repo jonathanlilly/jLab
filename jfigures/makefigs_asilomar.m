@@ -1,1 +1,0 @@
-%MAKEFIGS_ASILOMAR has been moved to JLAB_MAKEFIGS.

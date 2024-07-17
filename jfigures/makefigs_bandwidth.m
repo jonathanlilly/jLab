@@ -1,1 +1,0 @@
-%MAKEFIGS_BANDWIDTH has been moved to JLAB_MAKEFIGS.

@@ -57,13 +57,13 @@ for i=1:5
         %linestyle b r k
         hlines(0,'k:'),%vlines([-1/2 1/2],'k:')
         %if iseven(i+(5-j+1)*5),set(gca,'color',[1 1 1]*0.9),end
-        if j==5,xlabel(['\gamma=' num2str(ga(i),3)]),end
-        if i==1,ylabel(['\beta=' num2str(be(j),3)]),end
+        if j==5,xlabel(['$\gamma=' num2str(ga(i),3) '$'],'interpreter','latex'),end
+        if i==1,ylabel(['$\beta=' num2str(be(j),3) '$'],'interpreter','latex'),end
         set(gca,'xtick',[]),set(gca,'ytick',[]),%set(gca,'xcolor','w'),set(gca,'ycolor','w')
         set(get(gca,'ylabel'),'color','k')
     end
 end
-subplot(5,5,3),title('The Generalized Morse Wavelets \psi_{\beta,\gamma}(t)')
+subplot(5,5,3),title('The Generalized Morse Wavelets $\psi_{\beta,\gamma}(t)$','interpreter','latex')
 packfig(5,5)
 
 fontsize 14 10 10 10 

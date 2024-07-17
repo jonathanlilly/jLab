@@ -8,7 +8,7 @@ function[a]=morseafun(varargin)
 %   amplitude, called "A_{BETA,GAMMA}" by Lilly and Olhede (2009).
 %
 %   By default, A is chosen such that the maximum of the frequency-
-%   domain wavelet is equal to 2, the ``bandpass normalization.''
+%   domain wavelet is equal to 1, the "bandpass normalization."
 %
 %   A=MORSEAFUN(GAMMA,BETA,'energy') instead returns the coefficient
 %   giving the wavelet unit energy.  
@@ -17,7 +17,7 @@ function[a]=morseafun(varargin)
 %   appropriate for the Kth-order wavelet.  The default choice is K=1.
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmpi(varargin{1},'--t')
       morseafun_test;return
@@ -40,10 +40,12 @@ be=varargin{2};
 if strcmpi(str(1:3),'ban')
     om=morsefreq(ga,be);     
 %    a=frac(2,(om.^be).*exp(-om.^ga));
-    a=frac(2,exp(be.*log(om)-om.^ga));
-    a(be==0)=2;
+%    a=frac(2,exp(be.*log(om)-om.^ga));
+    %a=frac(2,exp(be.*log(om)-om.^ga));
+    a=frac(ga.*exp(1),be).^(be./ga);
+    a(be==0)=1;
 elseif strcmpi(str(1:3),'tes')
-    a=sqrt(frac(2 *pi*ga.*2.^frac(2*be+1,ga),gamma(frac(2*be+1,ga)))); 
+    a=sqrt(frac(2*pi*ga.*2.^frac(2*be+1,ga),gamma(frac(2*be+1,ga)))); 
 elseif strcmpi(str(1:3),'ene')
     r=frac(2*be+1,ga);
     a=double((2*pi*ga.*(2.^r).*exp(gammaln(k)-gammaln(k+r-1))).^(1/2));

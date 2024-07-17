@@ -6,9 +6,9 @@
  
     <a href="ridgeinterp.html">RIDGEINTERP</a> is a low-level function called by <a href="ridgewalk.html">RIDGEWALK</a>.
  
-    XI=<a href="ridgeinterp.html">RIDGEINTERP</a>(FS,RQ,IR,JR,X) where RQ is a "ridge quantity" at
-    *radian* frequencies FS, and IR and JR are time and scale indices of 
-    ridges, interpolates quantity X along the ridge locations to give XI.
+    XI=<a href="ridgeinterp.html">RIDGEINTERP</a>(RQ,IR,JR,X) where RQ is a "ridge quantity" and IR and JR
+    are time and scale indices of ridges, interpolates quantity X along the
+    ridge locations to give XI.
  
     IR and JR give indices into the first two dimensions of X.  The output
     XI has the the same number of rows and columns as IR and JR, that is,
@@ -25,13 +25,13 @@
     levels to find a more precise value of the transform along the ridges
     than simply looking up the values of X at rows IR and columns JR.  
  
-    XI=<a href="ridgeinterp.html">RIDGEINTERP</a>(FS,RQ,IR,JR,MU,X) interprets the ridges as belonging
-    to the MU-th derivative of the signal to which the quantity X belongs
-    and applies an appropriate correction factor. 
+    XI=<a href="ridgeinterp.html">RIDGEINTERP</a>(RQ,IR,JR,MU,X) interprets the ridges as belonging to the
+    MU-th derivative of the signal to which the quantity X belongs and 
+    applies an appropriate correction factor. 
  
-    [XI1,XI2,...,XIN]=<a href="ridgeinterp.html">RIDGEINTERP</a>(FS,RQ,IR,JR,X1,X2,...,XN) also 
-    interpolates the quantities X1,X2,...,XN, all having the same number of 
-    rows and columns as IR and JR.
+    [XI1,XI2,...,XIN]=<a href="ridgeinterp.html">RIDGEINTERP</a>(RQ,IR,JR,X1,X2,...,XN) also interpolates
+    the quantities X1,X2,...,XN, all having the same number of rows and 
+     columns as IR and JR.
  
     <a href="ridgeinterp.html">RIDGEINTERP</a> uses fast quadratic interpolation via <a href="quadinterp.html">QUADINTERP</a>.  In rare
     cases, quadratic interpolation fails for an individual point and 
@@ -46,5 +46,5 @@
             [xi1,xi2,xi3]=<a href="ridgeinterp.html">ridgeinterp</a>(rq,ir,jr,x1,x2,x3);
     __________________________________________________________________
     This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
-    (C) 2005--2019 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+    (C) 2005--2023 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
 </pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

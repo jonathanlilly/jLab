@@ -1,0 +1,36 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MAKE_GOMED is the <a href="jData.html">jData</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="make_gomed.html">MAKE_GOMED</a>   Create a drifter-derived eddy database for the Gulf of Mexico.
+ 
+    This function creates the Gulf of Mexico Eddy Dataset, or GOMED, which
+    contains estimated properties of coherent eddy-like features in surface
+    drifter data.  For details, see
+ 
+        Lilly, J. M. and P. Perez-Brunius (2021). Extracting statistically
+            significant eddy signals from large Lagrangian datasets using
+            wavelet ridge analysis, with application to the Gulf of Mexico.
+            Nonlinear Processes in Geophysics. https://doi.org/10.5194/npg-28-181-2021
+ 
+    The dataset is available at 
+ 
+         Lilly, J. M. and P. Perez-Brunius (2021).  The Gulf of Mexico Eddy 
+            Dataset (GOMED), a census of statistically significant eddy-
+            like events from all available surface drifter data (V. 1.1.0). 
+            [Data set]. Zenodo. http://doi.org/10.5281/zenodo.3978803.
+ 
+    This function contains the code for creating GOMED.NC.  It is
+    provided for completeness, although it will not be possible for you to 
+    recreate it because some of the drifter source files are proprietary. 
+    The code can be run on the publicly available portion of the data by 
+    swapping 'GulfDriftersAll' for 'GulfDriftersOpen' below.  
+ 
+    Thanks to Paula Garcia Carrillo of CICESE for help with the conversion 
+    to NetCDF.
+ 
+    Usage: make_gomed --create     
+    _________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2020--2021 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

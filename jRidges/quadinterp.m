@@ -44,13 +44,13 @@ function[x,t]=quadinterp(t1,t2,t3,x1,x2,x3,t)
 %   result to interpolate X to any other value of T.   
 %   __________________________________________________________________
 %
-%   See also LININTERP, CUBEINTERP.  
+%   See also LININTERP.  
 %  
 %   Usage:   x=quadinterp(t1,t2,t3,x1,x2,x3,t);
 %            [xe,te]=quadinterp(t1,t2,t3,x1,x2,x3,t);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2006 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2006--2024 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmpi(t1, '--t')
     quadinterp_test,return

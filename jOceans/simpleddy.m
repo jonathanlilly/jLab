@@ -214,8 +214,6 @@ psi=-1.*vo.*ro.*exp(1/2.*(1-r.^2./ro.^2));
 v=100*1000*r.*(vo./ro).*exp(1/2.*(1-r.^2./ro.^2));
 zeta=(vo./ro).*(2-r.^2./ro.^2).*exp(1/2.*(1-r.^2./ro.^2));
 
-
-
 function[v,psi,zeta]=materneddy(alpha,R,V,r)
 %MATERNEDDY
 %
@@ -232,13 +230,13 @@ function[v,psi,zeta]=materneddy(alpha,R,V,r)
 %Don't need this because I only need the ratio H/Halpha
 
 %figure,plot(abs(r(:)))
-alpha
-R
-V
-maternfun(alpha-1,maternrad(alpha))
-maternrad(alpha)
+%alpha
+%R
+%V
+%maternfun(alpha-1,maternrad(alpha))
+%maternrad(alpha)
 alpha=alpha(:);
-R
+%R
 
 %vcolon(R,V,alpha);
 R=R(:)';
@@ -253,8 +251,8 @@ Hnorm=frac(V,c);
 Rnorm=R./maternrad(alpha);
 %vsize(Rnorm,alpha,r)
 
-size(Rnorm)
-size(Hnorm)
+%size(Rnorm)
+%size(Hnorm)
 
 
 if ~aresame(size(alpha),size(r))
@@ -270,7 +268,7 @@ end
 %figure,plot(abs(Rnorm(:)),'.')
 %figure,plot(abs(Hnorm(:)))
 %figure,plot(abs(alpha(:)))
-vsize(r,Rnorm,alpha)
+%vsize(r,Rnorm,alpha)
 
 v=-100*1000*Hnorm.*r.*(1./Rnorm.^2).*maternfun(alpha-1,r./Rnorm);
 

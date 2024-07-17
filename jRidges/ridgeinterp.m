@@ -3,9 +3,9 @@ function[varargout]=ridgeinterp(varargin)
 %
 %   RIDGEINTERP is a low-level function called by RIDGEWALK.
 %
-%   XI=RIDGEINTERP(FS,RQ,IR,JR,X) where RQ is a "ridge quantity" at
-%   *radian* frequencies FS, and IR and JR are time and scale indices of 
-%   ridges, interpolates quantity X along the ridge locations to give XI.
+%   XI=RIDGEINTERP(RQ,IR,JR,X) where RQ is a "ridge quantity" and IR and JR
+%   are time and scale indices of ridges, interpolates quantity X along the
+%   ridge locations to give XI.
 %
 %   IR and JR give indices into the first two dimensions of X.  The output
 %   XI has the the same number of rows and columns as IR and JR, that is,
@@ -22,13 +22,13 @@ function[varargout]=ridgeinterp(varargin)
 %   levels to find a more precise value of the transform along the ridges
 %   than simply looking up the values of X at rows IR and columns JR.  
 %
-%   XI=RIDGEINTERP(FS,RQ,IR,JR,MU,X) interprets the ridges as belonging
-%   to the MU-th derivative of the signal to which the quantity X belongs
-%   and applies an appropriate correction factor. 
+%   XI=RIDGEINTERP(RQ,IR,JR,MU,X) interprets the ridges as belonging to the
+%   MU-th derivative of the signal to which the quantity X belongs and 
+%   applies an appropriate correction factor. 
 %
-%   [XI1,XI2,...,XIN]=RIDGEINTERP(FS,RQ,IR,JR,X1,X2,...,XN) also 
-%   interpolates the quantities X1,X2,...,XN, all having the same number of 
-%   rows and columns as IR and JR.
+%   [XI1,XI2,...,XIN]=RIDGEINTERP(RQ,IR,JR,X1,X2,...,XN) also interpolates
+%   the quantities X1,X2,...,XN, all having the same number of rows and 
+%    columns as IR and JR.
 %
 %   RIDGEINTERP uses fast quadratic interpolation via QUADINTERP.  In rare
 %   cases, quadratic interpolation fails for an individual point and 
@@ -43,7 +43,7 @@ function[varargout]=ridgeinterp(varargin)
 %           [xi1,xi2,xi3]=ridgeinterp(rq,ir,jr,x1,x2,x3);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2005--2019 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2005--2023 J.M. Lilly --- type 'help jlab_license' for details    
 
 
 rq=varargin{1};

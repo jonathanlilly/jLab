@@ -32,7 +32,7 @@ function[varargout]=vindex(varargin)
 %           vindex(x1,x2,x3,index,dim);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2001--2022 J.M. Lilly --- type 'help jlab_license' for details    
+%   (C) 2001--2023 J.M. Lilly --- type 'help jlab_license' for details    
 
 
 if strcmpi(varargin{1}, '--t')
@@ -48,8 +48,13 @@ vars=varargin(1:nvars);
 %eval(to_grab_from_caller(2))  %assigns vars, varnames, nvars
 
 for i=1:nvars
-  varargout{i}=vindex1_subsref(vars{i},index,dim);
-% varargout{i}=vindex1(vars{i},index,dim);
+  if length(index)~=1
+      varargout{i}=vindex1_subsref(vars{i},index,dim);
+  else
+      %revert to earlier method for case of unit length index due to 
+      %error in the other approach
+      varargout{i}=vindex1(vars{i},index,dim);
+  end
 end
 
 eval(to_overwrite(nargin-2));

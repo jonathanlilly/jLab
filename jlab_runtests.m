@@ -6,7 +6,7 @@ function[]=jlab_runtests(str)
 %   'jlab_runtests' runs all automated tests.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2002--2015 J.M. Lilly --- type 'help jlab_license' for details      
+%   (C) 2002--2024 J.M. Lilly --- type 'help jlab_license' for details      
 
 
 % 'jlab_runtests figures' makes all sample figures.  Note that this is
@@ -96,7 +96,7 @@ end
 
 if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot') 
     disp('---------------------------------------------')
-    disp('Please email the following to eponym@jmlilly.net after your first run.')
+    disp('Please email the following to jmlilly@psi.edu after your first run.')
     disp(['JLAB_RUNTESTS --- ' int2str(sum(BOOL_JLAB_RUNTEST)) ' of '  int2str(length(BOOL_JLAB_RUNTEST)) ' tests passed.'])
     if sum(~BOOL_JLAB_RUNTEST)>0
           disp('    Tests in the following routines failed:')
@@ -107,10 +107,10 @@ if strcmpi(str(1:3),'tes')||strcmpi(str(1:3),'bot')
               end
           end
     end
-    if exist('jData')~=7&&exist('jdata')~=7
-        disp('JDATA directory not found.  That''s only a problem if you thought you installed it.')
-        %disp('Tests dependent upon the JDATA data will not execute.')
-    end
+%    if exist('jData')~=7&&exist('jdata')~=7
+%        disp('JDATA directory not found.  That''s only a problem if you thought you installed it.')
+%        %disp('Tests dependent upon the JDATA data will not execute.')
+%    end
 %     if vsum(testfailures,1)>0
 %         disp('    Tests in the following some routines did not execute.')
 %         for i=1:length(names)

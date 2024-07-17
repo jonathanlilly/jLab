@@ -1,16 +1,28 @@
 function[varargout]=makefigs_matern(str)
-%MAKEFIGS_MATERN  Makes all figures for Lilly et al. 2017.
+%MAKEFIGS_MATERN  Make figures for Lilly et al. (2017).
 % 
-%   To use this script, you'll need to download the file materndata.zip
-%   from http://jmlilly.net/ftp/pub, unzip it, and put the files in it in a 
+%   This function makes all figures for the paper 
+%
+%   Lilly, J. M., A. M. Sykulski, J. J. Early, and S. C. Olhede (2017).
+%       Fractional Brownian motion, the Matern process, and stochastic 
+%       modeling of turbulent dispersion.  Nonlinear Processes in
+%       Geophysics, 24: 481--514.
+%
+%   To use it, you'll need to download the file materndata.zip from 
+%   http://jmlilly.net/ftp/pub, unzip it, and put the files in it in a 
 %   directory that is on your Matlab search path.  
 %
 %   Please note that some of these calculations are fairly intensive and
 %   may take a little while. 
+%
+%   Usage: makefigs_matern
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2017--2023 J.M. Lilly --- type 'help jlab_license' for details
 
+if nargin==0
+    str='noprint';
+end
 
 % This portion creates a data file in Matlab format from the model output.
 % You won't need to use it, as the Matlab format output is distributed 

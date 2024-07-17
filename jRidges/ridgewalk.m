@@ -135,7 +135,7 @@ function[varargout]=ridgewalk(varargin)
 %                                         =ridgewalk(dt,wx,wy,fs,P,M,rho);
 %   _______________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2020 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 %   Note that (62) of L&O (2012) reduces to (64) of L&O (2010)
 
@@ -311,6 +311,7 @@ if rho>0
      disp(['RIDGEWALK trimming to ' int2str(length(ir)) ' ridge points.'])
 end
 
+%vsize(fr,ir,jr,wr,er,br,cr)
 %ir,jr,wr,fr,br,er
 for n=1:length(varargin)
     if ~isempty(wr)
@@ -362,38 +363,34 @@ end
 %/*************************************************************************
 %Break ridges, interpolate, and compute bias parameters 
 if ~isempty(id)
-    [id,ir,jr,fr]=colbreaks(id,ir,jr,fr);
+    [id,ir,jr,fr,wr]=colbreaks(id,ir,jr,fr,wr);
 
     %Account for sample rate
     fr=fr./dt;
     
-    %Deviation vectors 
-    w1=vdiff(w,1,'endpoint')./dt;
-    w2=vdiff(w1,1,'nans')./dt;
-    
-    %Fix for the second derivative at the first and last point
-    w2(1,:,:)=w2(2,:,:);
-    w2(end,:,:)=w2(end-1,:,:);
-    
-    %Interpolate quantities within ridge for better estimation
-    %Note fr has already been interpolated inside RIDGECHAINS
-    [wr,w1r,w2r]=ridgeinterp(rq,ir,jr,w,w1,w2);
-    
-    %Multivariate formulation of the bias parameters
+    %Forming deviation vectors from local bandwidth and local curvature
+    [~,om,up,curv]=instmom(dt,w,'endpoint');  
+    [wr,f1r,b1r,c1r]=ridgeinterp(rq,ir,jr,w,om,up,curv);
     frmat=vrep(fr,size(wr,2),2);
-    wrmag=vrep(sqrt(sum(squared(wr),2)),size(wr,2),2);
-    br=(w1r-sqrt(-1)*frmat.*wr)./wrmag;                     %See (17) of L012
-    cr=(w2r-2*sqrt(-1)*frmat.*w1r-frmat.^2.*wr)./wrmag;     %See (18) of L012
+
+    br=b1r+1i*(f1r-frmat);                          %See (17) of L012
+    cr=c1r+1i*2*(f1r-frmat).*br+(f1r.^2-frmat.^2);  %See (18) of L012
+    %Eqns (17) and (18) are here rexpressed in terms of the difference 
+    %between the local (f1r) and global (frmat) instantaneous frequencies
+    %This is done so that I can take derivatives using instmom
+    %br and cr are both here divided by x
+    
+    %put back in factor of x
+    br=br.*wr;
+    cr=cr.*wr;
+
     if ~isempty(P)
-        er=frac(1,2)*squared(frac(P,fr)).*sqrt(sum(squared(cr),2));  %See (62) of LO12
+        er=frac(1,2)*squared(frac(P,fr)).*sqrt(sum(squared(cr),2))./sqrt(sum(squared(wr),2));  %See (62) of LO12
     end
+    %vsize(ir,jr,wr,fr,er,br,cr,w)
 end
 %\*************************************************************************
 
-
-% The above reduces to this for a single time series
-% [a,om,up,curv]=instmom(dt,w,'endpoint');
-% [wr,fr,br,cr]=ridgeinterp(fs,rq,ir,jr,w,om,up,curv);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

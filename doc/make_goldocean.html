@@ -1,0 +1,29 @@
+<html><head><meta http-equiv="Content-Style-Type" content="text/html; charset=UTF-8" />
+<style type="text/css" media="all"> @import "m2html.css";</style>
+<title>jLab Help Files</title></head><body>
+<div><h1>MAKE_GOLDOCEAN is the <a href="jData.html">jData</a> module of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
+ <a href="make_goldocean.html">MAKE_GOLDOCEAN</a>  Create quarter-degree gridded files from GOLD simulations.
+ 
+    <a href="make_goldocean.html">MAKE_GOLDOCEAN</a> creates NetCDF files of hourly sea surface height from 
+    two different yearlong simulations using the Generalized Ocean Layer 
+    Dynamics (GOLD) model run by Harper Simmons, one that includes tidal 
+    forcing and one that does not.
+  
+    The resulting files, GoldOcean.nc and GoldOceanNT.nc, are available on
+    Zenodo at https://zenodo.org/doi/10.5281/zenodo.11396564 and 
+    https://zenodo.org/doi/10.5281/zenodo.11396570 respectively.
+ 
+    The SSH fields are interpolated from the model grid of nominal 1/8 
+    resolution to a uniform 1/4 degree grid, the same grid used for the 
+    AVISO/CMEMS gridded altimetry products.
+ 
+    This file is provided for completeness, although it will not be 
+    possible to run it without access to the original model files.
+ 
+    make_goldocean --f generates two sample figures. 
+ 
+    Usage: make_goldocean --create
+    __________________________________________________________________
+    This is part of <a href="jLab.html">JLAB</a> --- type 'help jlab' for more information
+    (C) 2024 J.M. Lilly --- type 'help <a href="jlab_license.html">jlab_license</a>' for details
+</pre></div><h2><a href="jLab.html">contents</a>  |  <a href="jlab_allhelp.html">allhelp</a>  |  <a href="jlab_index.html">index</a></h2></body></html>

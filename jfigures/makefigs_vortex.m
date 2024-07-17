@@ -1,1 +1,0 @@
-%MAKEFIGS_VORTEX has been moved to JLAB_MAKEFIGS.

@@ -226,7 +226,7 @@ function[struct]=eddyridges(varargin)
 %          struct=eddyridges(f,beta,num,z,fmax,fmin,P,M,rho);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2013--2021 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2013--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 if strcmp(varargin{1}, '--t')
     eddyridges_test,return
@@ -849,9 +849,9 @@ reporttest('EDDYRIDGES spherical and Cartesian algorithms match',bool)
 % 
 % 
 % function[]=eddyridges_test6
-%load ebasnfloats
-%use ebasnfloats
-%struct=eddyridges(num,lat,lon,1/2,1/64,3,2,1);
+% load ebasnfloats
+% use ebasnfloats
+% struct=eddyridges(num,lat,lon,1/2,1/64,3,2,1);
 % 
 % 
 % 

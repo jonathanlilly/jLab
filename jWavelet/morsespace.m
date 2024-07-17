@@ -92,7 +92,7 @@ function[fs]=morsespace(varargin)
 %          f=morsespace(ga,be,{eta,high},{p,N,low},D);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2009--2016 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2009--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 
 %   Note then when HIGH and LOW are explicitly input, the time series
@@ -190,7 +190,7 @@ om=cumsum(dom,1);
 
 fhigh=morsehigh(ga,be,eta);
 [psi,morse] = morsewave(10000,ga,be,fhigh);
-reporttest('MORSESPACE high-frequency cutoff',aresame(morse(end/2)./2,eta,1e-3))
+reporttest('MORSESPACE high-frequency cutoff',aresame(morse(end/2),eta,1e-3))
 
 function[]=morsespace_lowtest
 %Test for low-frequency cutoff
@@ -203,7 +203,7 @@ be1=(1:1:10);
 
 [ga,be]=meshgrid(ga1,be1);
 vcolon(ga,be);
-[a,sigt,sigo]=morsebox(ga,be);
+%[a,sigt,sigo]=morsebox(ga,be);
 
 psi=zeros(N,length(ga));
 for i=1:length(ga)

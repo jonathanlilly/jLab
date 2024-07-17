@@ -15,22 +15,23 @@ jlab_path(bool)='/';
 
 %jlab_path
 
-for k=1:2
-    if k==1
-        disp('Adding JLAB subdirectories to your Matlab search path.')
-        if exist(jlab_path)
-            jlab_addpath_subdirectories(jlab_path);
-        end
-    end
-    if k==2
-        jlab_path=[jlab_path(1:end-5) '/jdata'];
-        if exist(jlab_path)
-            disp('Looks like you have JDATA installed; adding this to your path also.')
-            addpath(jlab_path)
-            jlab_addpath_subdirectories(jlab_path);
-        end
-    end
+disp('Adding JLAB subdirectories to your Matlab search path.')
+if exist(jlab_path)
+    jlab_addpath_subdirectories(jlab_path);
 end
+
+%for k=1:2
+% if k==1
+    %end
+    % if k==2
+    %     jlab_path=[jlab_path(1:end-5) '/jdata'];
+    %     if exist(jlab_path)
+    %         disp('Looks like you have JDATA installed; adding this to your path also.')
+    %         addpath(jlab_path)
+    %         jlab_addpath_subdirectories(jlab_path);
+    %     end
+    % end
+%end
 clear i j k dirlist dirlisti jlab_path fullpath bool
 
 function[]=jlab_addpath_subdirectories(path)

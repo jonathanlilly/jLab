@@ -1,6 +1,4 @@
 function[varargout]=jlab_allhelp(varargin)
-%JLAB_ALLHELP  Displays the help comments for all JLAB modules. 
-%
 %   jCell:  Tools for operating on cell arrays of column vectors 
 %   
 %   Basic mathematical operations 
@@ -81,8 +79,8 @@ function[varargout]=jlab_allhelp(varargin)
 %     jmat3      - 3x3 rotation matrix through specified angle.   
 %     tmat       - 2x2 complex grouping matrix.  TMAT = [1  i; 1 -i] / SQRT(2) 
 %     bellpoly   - Complete Bell polynomials.   
-%     hermpoly   - Hermite polynomials. [with F. Rekibi]    
-%     hermfun    - Orthonormal Hermite functions. [with F. Rekibi]    
+%     jhermpoly  - Hermite polynomials. [with F. Rekibi]    
+%     jhermfun   - Orthonormal Hermite functions. [with F. Rekibi]    
 %     chisquared - The chi-squared distribution. 
 %   
 %   Dataset organization as structures 
@@ -104,6 +102,17 @@ function[varargout]=jlab_allhelp(varargin)
 %   Date, time, and units 
 %     yearfrac    - Converts a DATENUM into 'year.fraction' and 'month.fraction'. 
 %     cms2kmd     - Converts centimeters per second to kilometers per day. 
+%   __________________________________________________________________ 
+%  
+%   jData: Routines for generating oceanographic datasets 
+%   
+%     make_goldaltimetry - Create a synthetic altimeter dataset and gridded statistics. 
+%     make_goldocean    - Create quarter-degree gridded files from GOLD simulations. 
+%     make_betaeddyone  - Create the BetaEddyOne nonlinear QG eddy simulation. 
+%     make_gomed        - Create a drifter-derived eddy database for the Gulf of Mexico. 
+%     make_gulfdrifters - Create a drifter dataset for the Gulf of Mexico. 
+%     make_gulfflow     - Create a gridded velocity dataset for the Gulf of Mexico. 
+%     make_jason        - Create a reformatted version of the Beckley altimeter dataset. 
 %   __________________________________________________________________ 
 %  
 %   jEllipse:  Analysis of modulated elliptical, or bivariate, signals 
@@ -204,18 +213,6 @@ function[varargout]=jlab_allhelp(varargin)
 %     gulf4plot     - A four-panel circulation plot for the Gulf of Mexico. 
 %   __________________________________________________________________ 
 %  
-%   jMap:  Mapping scattered data using local polynomial fitting 
-%   
-%     polysmooth - Smoothing scattered 2D data with local polynomial fitting.  
-%     spheresort - Sorted great circle distances to nearby points on the earth. 
-%     twodsort   - Distances from data points to nearby grid points.    
-%     equivkern  - Equivalent kernels for local polynomial fitting. 
-%   
-%     Low level functions 
-%     kernmom    - Moments of smoothing kernels for local polynomial fitting. 
-%     matinv     - Fast inversion of arrays of small matrices. 
-%   __________________________________________________________________ 
-%  
 %   jMatern:  Parametric spectral analysis based on the Matern process 
 %   
 %   Top-level functions 
@@ -224,7 +221,6 @@ function[varargout]=jlab_allhelp(varargin)
 %     maternimp  - Impulse response function for the Matern random process.     
 %     maternoise - Realizations of the Matern process and variations, including fBm. [with A. Sykulski] 
 %     maternfit  - Parametric spectral fit to the Matern form. [with A. Sykulski] 
-%     makefigs_matern - Makes all figures for Lilly et al. 2017. 
 %   
 %   Other utilities 
 %     blurspec   - Returns the blurred and aliased spectrum given the autocovariance. 
@@ -235,7 +231,7 @@ function[varargout]=jlab_allhelp(varargin)
 %     maternchol - Cholesky decomposition of Matern and fBm covariances. [with A. Sykulski] 
 %     maternedge - Long-time cutoff edge for the Matern impulse response function.                
 %   
-%   See also jSpectral. 
+%   See also jSpectral, makefigs_matern. 
 %   __________________________________________________________________ 
 %  
 %   jMatfiles:  Descriptions of included mat-files, mostly for testing and examples. 
@@ -312,6 +308,26 @@ function[varargout]=jlab_allhelp(varargin)
 %     topo_copyright - Copyright statement for the Smith and Sandwell topography. 
 %   
 %    See also jData. 
+%   __________________________________________________________________ 
+%  
+%   jPapers: Routines for generating figures from published papers. 
+%          
+%     makefigs_stokes - Make figures for Lilly et al. (2024).                   
+%     makefigs_gulfcensus - Make figures for Lilly and Perez-Brunius (2021b).   
+%     makefigs_gulfdrifters - Make figures for Lilly and Perez-Brunius (2021a). 
+%     makefigs_transfer - Make figures for Lilly and Elipot (2021).   
+%     makefigs_kinematics - Make figures for Lilly (2018).                      
+%     makefigs_matern - Make figures for Lilly et al. (2017). 
+%     makefigs_element - Make figures for Lilly (2017). 
+%     makefigs_superfamily - Make figures for Lilly and Olhede (2012b).         
+%     makefigs_multivariate - Make figures for Lilly and Olhede (2012a).        
+%     makefigs_ridges - Make figures for Lilly, Scott, and Olhede (2011).       
+%     makefigs_trivariate - Make figures for Lilly (2011).  
+%     makefigs_analytic - Make figures for Lilly and Olhede (2010b).            
+%     makefigs_bandwidth - Make figures for Lilly and Olhede (2010a).    
+%     makefigs_asilomar - Make figures for Lilly and Olhede (2009b).            
+%     makefigs_morsies - Make figures for Lilly and Olhede (2009a).             
+%     makefigs_vortex - Make figures for Lilly and Gascard (2006). 
 %   __________________________________________________________________ 
 %  
 %   jRidges:  Wavelet ridge analysis of modulated oscillatory signals 
@@ -484,7 +500,7 @@ function[varargout]=jlab_allhelp(varargin)
 %   See also jRidges, jSpectral, jEllipse. 
 %   __________________________________________________________________ 
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2015--2023 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2015--2024 J.M. Lilly --- type 'help jlab_license' for details
  
 if nargin==0
     help jlab_allhelp

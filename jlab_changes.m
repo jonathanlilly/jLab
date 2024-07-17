@@ -1,5 +1,34 @@
 %JLAB_CHANGES   Changes to JLAB in each release.
 %
+%   Changes new in version 1.7.3
+%
+%   Code in support of a new publication, see JLAB_MAKEFIGS:
+%
+%   Lilly, Feske, Fox-Kemper, and Early (2024).  Integral theorems for the 
+%       gradient of a vector field, with a fluid dynamical application.  
+%       Proceedings of the Royal Society of London, Series A. 480 (2293): 
+%       20230550, 1–30. https://doi.org/10.1098/rspa.2023.0550.
+%
+%   Functions in support of new datasets:
+%
+%   make_goldaltimetry - Create a synthetic altimeter dataset and gridded statistics.
+%   make_goldocean     - Create quarter-degree gridded files from GOLD simulations.
+%   make_betaeddyone   - Create the BetaEddyOne nonlinear QG eddy simulation.
+%   make_jason         - Create a reformatted version of the Beckley altimeter dataset.
+%
+%   Other new functions:
+%
+%   spheretrans   - Wavelet transform for oscillations on the surface of a sphere.
+%
+%   Changes and improvements:
+%
+%   SPHEREINTERP bugfix due to change in behavior of SUB2IND for NaNs.
+%
+%   Removed functions:
+%
+%   The jMap module has been moved out of jLab, rewritten, and renamed 
+%      EarthMapper, see https://github.com/jonathanlilly/EarthMapper.
+%   -----------------------------------------------------------------------
 %   Changes new in version 1.7.2
 %
 %   This version contains a completely refactored mapping package jMap,
@@ -16,12 +45,26 @@
 %   pm_window     - Remove data outside of time window for POLYMAP.      
 %   pm_robust     - Returns a weighting function used in robustifying POLYMAP.
 %
+%   It also includes a new module, jPapers. 
+%
+%   jPapers       - Routines for generating figures from published papers.
+%
+%   Please note there is also a change to the morse wavelet normalization.  
+%   The morse wavelet is now defined for bandpass normalization as having a
+%   maximum value of unity in the frequency domain, and the wavelet
+%   transform of a real-valued signal is defined as involving a factor of
+%   two. This should leave no change affecting the user, but involved
+%   internal changes to MORSEWAVE, WAVETRANS, MORSEMOM, and MAX2EDDY.
+%
 %   Changes and improvements:
 %
+%   ANATRANS buxfixes for failing tests.
+%   HERMPOLY and HERMFUN renamed JHERMPOLY and JHERMFUN to avoid name 
+%        clashes with the CHEBFUN package.
 %   WAVETRANS normalization change for complex-valued signals.
 %   VINDEX refactorization.
 %   MATINV convention change such that the matrices to be inverted occupy
-%       the first two, rather than the last two, dimensions.
+%        the first two, rather than the last two, dimensions.
 %   MATERNFIT documentation error for spectrum of noise component fixed;
 %        it should be DT*EPSILON^2.  Thanks to S. Elipot the bug report.
 %   SLIDETRANS was outdated and has been removed.

@@ -18,8 +18,6 @@ function[varargout]=vectmult(varargin)
 %
 %   The matrix A may be a M x N matrix, or alternatively, it may be an 
 %   array of size M x N x SIZE(XN).
-%
-%   See also MATMULT.
 %   
 %   Usage: [y1,y2]=vectmult(a,x1,x2);
 %          [y1,y2,y3]=vectmult(a,x1,x2,y3);
@@ -27,7 +25,7 @@ function[varargout]=vectmult(varargin)
 %   'vectmult --t' runs a test.
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2015 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details
 
 
 if strcmpi(varargin{1},'--t')

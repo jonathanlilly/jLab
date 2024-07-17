@@ -59,8 +59,8 @@ end
 
 function[y]=jdawsonderiv(x,n)    
 
-herm=hermpoly(x(:),n);
-iherm=hermpoly(sqrt(-1)*x(:),n);
+herm=jhermpoly(x(:),n);
+iherm=jhermpoly(sqrt(-1)*x(:),n);
 
 for k=1:n+1
     hermcell{k}=reshape(herm(:,k),size(x));

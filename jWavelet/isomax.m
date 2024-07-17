@@ -118,6 +118,7 @@ originalposition=[1:length(ww)]';
 %Sort by magnitude
 if ~isempty(ww)
     [temp,sorter]=sort(-abs(ww));
+    %sorter
     vindex(ww,ii,ff,originalposition,sorter,1);
 end
 

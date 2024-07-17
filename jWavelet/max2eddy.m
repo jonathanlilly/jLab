@@ -31,7 +31,7 @@ function[varargout]=max2eddy(varargin)
 %   Usage: [A,R,V,Ro]=max2eddy(dx,lat,C,rho);
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2019 J.M. Lilly --- type 'help jlab_license' for details
+%   (C) 2019--2023 J.M. Lilly --- type 'help jlab_license' for details
  
 if strcmp(varargin{1}, '--t')
     max2eddy_test,return
@@ -42,7 +42,8 @@ lat=varargin{2};
 C=varargin{3};
 rho=varargin{4};
 
-A=frac(C,2*sqrt(pi));
+%A=frac(C,2*sqrt(pi));
+A=frac(C,4*sqrt(pi));%additional factor of two is due to recent change in normalization
 R=sqrt(2)*rho.*dx;
 Ro=-1*frac(9.81*A/100,sqrt(exp(1)).*squared(corfreq(lat)/3600.*(R*1000)));
 V =-1*frac(9.81*A/100,sqrt(exp(1)).*(corfreq(lat)/3600.*(R*1000)));

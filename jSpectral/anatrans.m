@@ -65,7 +65,7 @@ function[varargout]=anatrans(varargin)
 %          [zp,zn]=anatrans(z,conj(z));
 %   __________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2019 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2004--2023 J.M. Lilly --- type 'help jlab_license' for details        
 
 
 if strcmpi(varargin{1},'--t')
@@ -95,11 +95,9 @@ M0=size(x,dim);
 mx=mean(x,dim);
 x=x-vrep(mx,M0,dim);
 
-
 if ~strcmpi(str(1:3),'fre')
     x=timeseries_boundary(x,dim,str,'nodetrend');
 end
-
 
 M=size(x,dim);
 
@@ -113,18 +111,13 @@ clear x
 %size(Z)
 
 if iseven(M)
-    %analytic signal has M/2 + 1 coefficients
-    index=(M/2+2):size(Z,dim);
-    Z=vindexinto(Z,0,index,dim);
-    %divide Nyquist by two in even case
-    %Z(M/2+1,:)=Z(M/2+1,:)/2;
-    %size(vindex(Z,M/2+1,dim)/2)
-    Z=vindexinto(Z,vindex(Z,M/2+1,dim)/2,M,dim);
+    %for M=4, [0 1 2 3] cycles per number of datapoints, so Nyquist is at M/2+1
+    index=(M/2+1):size(Z,dim);%set Nyquist and higher to zero for even case
 else
-    %analytic signal has M/2 + 1 coefficients
-    index=(M+3)/2:size(Z,dim);
-    Z=vindexinto(Z,0,index,dim);
+    %for M=5, [0 1 2 3 4] cycles per number of datapoints, so Nyquist is at (M+2)/2
+    index=(M+3)/2:size(Z,dim);%set point just higher than Nyquist and up to zero
 end
+Z=vindexinto(Z,0,index,dim);
 
 %size(Z)
 
@@ -145,21 +138,34 @@ x=[x y z];
 z=anatrans(x,'periodic');
 
 res=frac(vsum(abs(real(z)-x).^2,1),vsum(abs(z).^2,1));
-reporttest('ANATRANS departure of real part from real-valued original less than 1/1000, Solomon Islands',allall(res<1/1000))
+reporttest('ANATRANS departure of real part from real-valued original less than 1/1000, Solomon Islands odd case',allall(res<1/1000))
+
+z=anatrans(x(1:end-1,:),'periodic');
+res=frac(vsum(abs(real(z)-x(1:end-1,:)).^2,1),vsum(abs(z).^2,1));
+reporttest('ANATRANS departure of real part from real-valued original less than 1/1000, Solomon Islands even case',allall(res<1/1000))
 
 [zp,zn]=anatrans(z,conj(z),'periodic');
 res=frac(vsum(abs(z-zp).^2,1),vsum(abs(z).^2,1));
 reporttest('ANATRANS positive rotary part recovers input analytic signal, Solomon Islands',allall(res<1/1000))
-res=vsum(abs(zn).^2,1);
-reporttest('ANATRANS negative rotary part negligible for input analytic signal, Solomon Islands',allall(abs(zn)<1e-8))
 
-z2=anatrans(x',2,'periodic');
-reporttest('ANATRANS transpose orientation, periodic conditions',aresame(conj(z2'),z,1e-10))
+z=anatrans(x(1:end-1,:),'periodic');
+[zp,zn]=anatrans(z,conj(z),'periodic');
+res=vsum(abs(zn).^2,1);
+reporttest('ANATRANS negative rotary part negligible for input analytic signal, even case, Solomon Islands',allall(abs(zn)<1e-8))
+
+z=anatrans(x,'periodic');
+[zp,zn]=anatrans(z,conj(z),'periodic');
+res=vsum(abs(zn).^2,1);
+reporttest('ANATRANS negative rotary part negligible for input analytic signal, odd case, Solomon Islands',allall(abs(zn)<1e-8))
 
 z=anatrans(x,'periodic');
 z2=anatrans(x',2,'periodic');
+reporttest('ANATRANS transpose orientation, periodic conditions',aresame(conj(z2'),z,1e-10))
+
+z2=anatrans(x',2,'periodic');
 reporttest('ANATRANS transpose orientation, mirror conditions',aresame(conj(z2'),z,1e-10))
 
+[zp,zn]=anatrans(z,conj(z),'periodic');
 [z2,zp2,zn2,z4]=anatrans(x,z,conj(z),x,'periodic');
 bool=aresame(z2,z)&&aresame(zp,zp2)&&aresame(zn,zn2)&&aresame(z4,z);
 reporttest('ANATRANS multiple input arguments',bool)

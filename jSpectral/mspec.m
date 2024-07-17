@@ -218,7 +218,7 @@ function[varargout]=mspec(varargin)
 %           [f,sxx,syy,sxy]=mspec(x,y,psi,dim);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2000--2020 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2000--2023 J.M. Lilly --- type 'help jlab_license' for details        
   
 %   The Cartesian and rotary spectra are then related by a unitary
 %   transformation.  For details see

@@ -290,6 +290,9 @@ else
 end
 
 set(gca,'dataaspectratio',[ar1 ar2 1])
+
+if 0
+%h(1)
 if iscell(h)
     for i=1:length(h)
         %I can deal with this by forming a long string like '2b','2b', etc
@@ -298,17 +301,21 @@ if iscell(h)
         linestyle(h{i},sty{mod(i-1,length(sty))+1});
         %end
     end
-elseif size(h,2)>1
-    for i=1:size(h,2)
-        sty{mod(i-1,length(sty))+1};
-        linestyle(h(:,i),sty{mod(i-1,length(sty))+1});
-    end
-% else
-%     for i=1:length(h)
-%         i
+% elseif size(h,2)>1
+%     for i=1:size(h,2)
 %         sty{mod(i-1,length(sty))+1};
-%         linestyle(h(i),sty{mod(i-1,length(sty))+1});
-%     end
+%         linestyle(h(:,i),sty{mod(i-1,length(sty))+1});
+%    end
+else
+   if length(sty)==1
+       linestyle(h,sty{1});
+   else
+       for i=1:length(h)
+          sty{mod(i-1,length(sty))+1};
+          linestyle(h(i),sty{mod(i-1,length(sty))+1});
+       end
+   end
+end
 end
 
 if verLessThan('matlab','8.4.0')

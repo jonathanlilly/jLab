@@ -34,8 +34,8 @@
 %   jmat3      - 3x3 rotation matrix through specified angle.  
 %   tmat       - 2x2 complex grouping matrix.  TMAT = [1  i; 1 -i] / SQRT(2)
 %   bellpoly   - Complete Bell polynomials.  
-%   hermpoly   - Hermite polynomials. [with F. Rekibi]   
-%   hermfun    - Orthonormal Hermite functions. [with F. Rekibi]   
+%   jhermpoly  - Hermite polynomials. [with F. Rekibi]   
+%   jhermfun   - Orthonormal Hermite functions. [with F. Rekibi]   
 %   chisquared - The chi-squared distribution.
 %
 % Dataset organization as structures

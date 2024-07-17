@@ -3,9 +3,9 @@ function[varargout]=transmax(varargin)
 %
 %   This function is part of 'element analysis' described in Lilly (2017), 
 %   "Element analysis: a wavelet-based method for analyzing time-localized
-%   events in noisy time series", available at www.jmlilly.net.
+%   events in noisy time series".
 %  
-%   [INDEX,WW,FF]=TRANSMAX(FA,W) gives the indicies INDEX, transform values
+%   [INDEX,WW,FF]=TRANSMAX(FA,W) gives the indices INDEX, transform values
 %   WW, and scale frequencies FF of all the maxima points in time and scale
 %   of the wavelet transform W, which has been performed at frequencies FS.
 %
@@ -69,7 +69,7 @@ function[varargout]=transmax(varargin)
 %          [index,ww,ff,rr]=transmax(fs,w,{ga,be,bool},chi);
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2017 J.M. Lilly --- type 'help jlab_license' for details        
+%   (C) 2017--2024 J.M. Lilly --- type 'help jlab_license' for details        
 
 if strcmpi(varargin{1},'--f')
     transmax_fig;return
@@ -95,8 +95,6 @@ end
 [index,ww]=transmax1(w,chi);
 [ww,ff,jj]=transmax_interp1(fs,w,index);
     
-
-
 varargout{1}=index;
 varargout{2}=ww;
 varargout{3}=ff;

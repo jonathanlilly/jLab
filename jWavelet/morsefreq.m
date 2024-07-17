@@ -33,7 +33,7 @@ function [fm,fe,fi,cf] = morsefreq(ga,be)
 %          [fm,fe,fi,cf] = morsefreq(ga,be);  
 %   _________________________________________________________________
 %   This is part of JLAB --- type 'help jlab' for more information
-%   (C) 2004--2016 J. M. Lilly and F. Rekibi
+%   (C) 2004--2023 J. M. Lilly and F. Rekibi
 %                         --- type 'help jlab_license' for details    
 
 %   'morsefreq --f' generates a sample figure, but I'm hiding this since
@@ -49,6 +49,7 @@ end
 fm=exp(frac(1,ga).*(log(be)-log(ga)));
 fm(be==0)=(log(2)).^frac(1,ga(be==0)); %Half-power point
 
+%e^-omega^gamma
 
 %fm(be==0)=sqrt(3)*sqrt(frac(gamma(frac(3,ga(be==0))),gamma(frac(1,ga(be==0)))));
 %Instead the square root of the second

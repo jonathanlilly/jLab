@@ -4,28 +4,71 @@
 <div><h1>JLAB_CHANGES is in the main directory of <a href="jLab.html">jLab</a>.</h1></div><div class="fragment"><pre class="comment">
  <a href="jlab_changes.html">JLAB_CHANGES</a>   Changes to <a href="jLab.html">JLAB</a> in each release.
  
+    Changes new in version 1.7.3
+ 
+    Code in support of a new publication, see JLAB_MAKEFIGS:
+ 
+    Lilly, Feske, Fox-Kemper, and Early (2024).  Integral theorems for the 
+        gradient of a vector field, with a fluid dynamical application.  
+        Proceedings of the Royal Society of London, Series A. 480 (2293): 
+        20230550, 1–30. https://doi.org/10.1098/rspa.2023.0550.
+ 
+    Functions in support of new datasets:
+ 
+    <a href="make_goldaltimetry.html">make_goldaltimetry</a> - Create a synthetic altimeter dataset and gridded statistics.
+    <a href="make_goldocean.html">make_goldocean</a>     - Create quarter-degree gridded files from GOLD simulations.
+    <a href="make_betaeddyone.html">make_betaeddyone</a>   - Create the BetaEddyOne nonlinear QG eddy simulation.
+    <a href="make_jason.html">make_jason</a>         - Create a reformatted version of the Beckley altimeter dataset.
+ 
+    Other new functions:
+ 
+    <a href="spheretrans.html">spheretrans</a>   - Wavelet transform for oscillations on the surface of a sphere.
+ 
+    Changes and improvements:
+ 
+    <a href="sphereinterp.html">SPHEREINTERP</a> bugfix due to change in behavior of SUB2IND for NaNs.
+ 
+    Removed functions:
+ 
+    The jMap module has been moved out of <a href="jLab.html">jLab</a>, rewritten, and renamed 
+       EarthMapper, see https://github.com/jonathanlilly/EarthMapper.
+    -----------------------------------------------------------------------
     Changes new in version 1.7.2
  
-    This version contains a completely refactored mapping package <a href="jMap.html">jMap</a>,
+    This version contains a completely refactored mapping package jMap,
     with considerable speed and memory improvements, a new, simpler, and
     more general formulation of the mapping kernel, major new options, and
     several bug fixes.     
  
-    <a href="polymap.html">polymap</a>       - Mapping using local polynomial fitting, also known as loess. 
-    <a href="pm_apply.html">pm_apply</a>      - Apply weights to data to generate a local polynomial fit.     
-    <a href="pm_index.html">pm_index</a>      - Applies an index output by <a href="pm_sort.html">PM_SORT</a> to sort data for <a href="polymap.html">POLYMAP</a>.  
-    <a href="pm_kernmom.html">pm_kernmom</a>    - Moments of smoothing kernels for local polynomial fitting.    
-    <a href="pm_sort.html">pm_sort</a>       - Sort data points according to distance from grid points in 2D.
-    <a href="pm_weight.html">pm_weight</a>     - Weighting function for local polynomial fitting.              
-    <a href="pm_window.html">pm_window</a>     - Remove data outside of time window for <a href="polymap.html">POLYMAP</a>.      
-    <a href="pm_robust.html">pm_robust</a>     - Returns a weighting function used in robustifying <a href="polymap.html">POLYMAP</a>.
+    polymap       - Mapping using local polynomial fitting, also known as loess. 
+    pm_apply      - Apply weights to data to generate a local polynomial fit.     
+    pm_index      - Applies an index output by PM_SORT to sort data for POLYMAP.  
+    pm_kernmom    - Moments of smoothing kernels for local polynomial fitting.    
+    pm_sort       - Sort data points according to distance from grid points in 2D.
+    pm_weight     - Weighting function for local polynomial fitting.              
+    pm_window     - Remove data outside of time window for POLYMAP.      
+    pm_robust     - Returns a weighting function used in robustifying POLYMAP.
+ 
+    It also includes a new module, <a href="jPapers.html">jPapers</a>. 
+ 
+    <a href="jPapers.html">jPapers</a>       - Routines for generating figures from published papers.
+ 
+    Please note there is also a change to the morse wavelet normalization.  
+    The morse wavelet is now defined for bandpass normalization as having a
+    maximum value of unity in the frequency domain, and the wavelet
+    transform of a real-valued signal is defined as involving a factor of
+    two. This should leave no change affecting the user, but involved
+    internal changes to <a href="morsewave.html">MORSEWAVE</a>, <a href="wavetrans.html">WAVETRANS</a>, <a href="morsemom.html">MORSEMOM</a>, and <a href="max2eddy.html">MAX2EDDY</a>.
  
     Changes and improvements:
  
+    <a href="anatrans.html">ANATRANS</a> buxfixes for failing tests.
+    HERMPOLY and HERMFUN renamed <a href="jhermpoly.html">JHERMPOLY</a> and <a href="jhermfun.html">JHERMFUN</a> to avoid name 
+         clashes with the CHEBFUN package.
     <a href="wavetrans.html">WAVETRANS</a> normalization change for complex-valued signals.
     <a href="vindex.html">VINDEX</a> refactorization.
-    <a href="matinv.html">MATINV</a> convention change such that the matrices to be inverted occupy
-        the first two, rather than the last two, dimensions.
+    MATINV convention change such that the matrices to be inverted occupy
+         the first two, rather than the last two, dimensions.
     <a href="maternfit.html">MATERNFIT</a> documentation error for spectrum of noise component fixed;
          it should be DT*EPSILON^2.  Thanks to S. Elipot the bug report.
     SLIDETRANS was outdated and has been removed.
@@ -41,7 +84,7 @@
     POLSYMOOTH now supports the <a href="use.html">use</a> of equivalent kernels for a
         considerable acceleration mapping repeated designs.
     TWODSORT and SPHERESORT have been refactored and combined into the new
-        function <a href="pm_sort.html">PM_SORT</a>.
+        function PM_SORT.
     <a href="interplatlon.html">INTERPLATLON</a> bugfix for the fact that the longitude being interpolated 
         from may start at an arbitrary value, not necessarily -180 or 0.
     <a href="interplatlon.html">INTERPLATLON</a> added option to pass interpolation method to INTERP2/3.
@@ -51,8 +94,8 @@
  
     Removed functions:
  
-    POLYSMOOTH has been completely refactored and renamed <a href="polymap.html">POLYMAP</a>.
-    TWODSORT and SPHERESORT have been refactored and combined into <a href="pm_sort.html">PM_SORT</a>.
+    POLYSMOOTH has been completely refactored and renamed POLYMAP.
+    TWODSORT and SPHERESORT have been refactored and combined into PM_SORT.
     MATMULT has been removed.  Use the faster built-in Matlab function
         PAGEMTIMES for this functionality instead. 
     -----------------------------------------------------------------------
@@ -115,7 +158,7 @@
     SPHERESORT and TWODSORT improvements and major change to output format.
     <a href="spherelap.html">SPHERELAP</a> now computes all the terms in the Hessian matrix.
     <a href="ab2kl.html">AB2KL</a> bugfix for B=0.
-    <a href="readtopo.html">READTOPO</a> bugfixes when using interpolation option.
+    READTOPO bugfixes when using interpolation option.
     <a href="periodindex.html">PERIODINDEX</a> new, faster algorithm based on ridge age.
     <a href="vmoment.html">VMOMENT</a> bugfix affecting all odd moments.
     <a href="letterlabels.html">LETTERLABELS</a> bugfix to avoid legend handles, if present. 
@@ -159,15 +202,15 @@
          Use the <a href="jLab.html">jLab</a> routine <a href="ncload.html">NCLOAD</a> to load a whole NetCDF file at once.
  
     floats.mat and floats.nc     - Major update to the historical dataset of 
-         eddy-resolving subsurface floats.  See <a href="about_floats.html">about_floats</a>.
+         eddy-resolving subsurface floats.  See about_floats.
     drifters.mat and drifters.nc - The global surface drifter dataset, 
         updated through April 1, 2018.  See about_drifters.
     tpjaos.mat and tpjaos.nc     - Alongtrack SSH anomalies from the 
-        Beckley dataset, updated through May 30, 2018.  See <a href="about_tpjaos.html">about_tpjaos</a>.
+        Beckley dataset, updated through May 30, 2018.  See about_tpjaos.
     sandwell.mat and sandwell.nc - One minute resolution topography data 
-        from Smith and Sandwell. See <a href="about_sandwell.html">about_sandwell</a>.
+        from Smith and Sandwell. See about_sandwell.
     ibcao.mat and ibcao.nc       -  International Bathymetric Chart of the 
-       Arctic Ocean topography. See <a href="about_ibcao.html">about_ibcao</a>.
+       Arctic Ocean topography. See about_ibcao.
  
     Major bugfix:
  
@@ -191,7 +234,7 @@
     <a href="cellgrid.html">CELLGRID</a> now accepts array-valued DT arguments.
     <a href="cellsplit.html">CELLSPLIT</a> now accepts array-valued TOL arguments.
     <a href="twodstats.html">TWODSTATS</a> bugfix for complex-valued input using HISTCOUNTS2 algorithm.
-    <a href="matinv.html">MATINV</a> now works for matrices up to dimension 12. 
+    MATINV now works for matrices up to dimension 12. 
     <a href="latlon2xy.html">LATLON2XY</a> added new correction for small angles and additional tests.
     SPHERESORT and TWODSORT now have options for truncating size of output.
     POLYSMOOTH has major changes, including speed and memory improvements.
@@ -207,7 +250,7 @@
     <a href="cellfill.html">CELLFILL</a>, -STRIP, and -PACK now <a href="use.html">use</a> INFs (not NaNs) as the data flag.
     <a href="cellmean.html">CELLMEAN</a> and -STD now support weighted means and standard deviations.
     <a href="ellparams.html">ELLPARAMS</a> input format simplifications.
-    <a href="readtopo.html">READTOPO</a> bugfixes and additional testing.
+    READTOPO bugfixes and additional testing.
     -----------------------------------------------------------------------
  
     Changes new in version 1.6.5
@@ -267,7 +310,7 @@
     drifters.mat  - The global surface drifter dataset from NOAA's Global
          Drifter Program, updated through Sept. 2016.  See about_drifters.
     tpjaos.mat    - Alongtrack sea surface height anomalies from the 
-         Beckley dataset, updated through Oct. 12, 2016.  See <a href="about_tpjaos.html">about_tpjaos</a>.
+         Beckley dataset, updated through Oct. 12, 2016.  See about_tpjaos.
   
     Changes and improvements:
  
@@ -281,7 +324,7 @@
     <a href="yearfrac.html">YEARFRAC</a> now passes Inf values through, as well as NaNs.
     <a href="ellipseplot.html">ELLIPSEPLOT</a> and <a href="linestyle.html">LINESTYLE</a> now support the new Matlab colors.
     <a href="ridgewalk.html">RIDGEWALK</a> now supports cell array input.
-    <a href="readtopo.html">READTOPO</a> bugfix for longitude regions spanning 360 degrees.
+    READTOPO bugfix for longitude regions spanning 360 degrees.
     <a href="morsehigh.html">MORSEHIGH</a> simplifications.
     <a href="morsespace.html">MORSESPACE</a> minor re-definition of low-frequency cutoff parameter.
     <a href="vsum.html">VSUM</a> modified for backwards compatibility with earlier Matlab versions.
@@ -374,7 +417,7 @@
  
     New datasets:
  
-    <a href="about_ibcao.html">about_ibcao</a> - International Bathymetric Chart of the Arctic Ocean topography.
+    about_ibcao - International Bathymetric Chart of the Arctic Ocean topography.
  
     New functions:
  
@@ -447,7 +490,7 @@
     Minor changes and improvements:
  
     SPHERESORT speed improvements, bug fix, and support for parallel computing.
-    <a href="readtopo.html">READTOPO</a> now works with Smith and Sandwell v. 18.1
+    READTOPO now works with Smith and Sandwell v. 18.1
     <a href="findfiles.html">FINDFILES</a> now optionally searches directories recurvisely. 
     PACKBOTH, PACKROWS, and PACKCOLS are now combined into <a href="packfig.html">PACKFIG</a>.
     <a href="jlab_makefigs.html">JLAB_MAKEFIGS</a> is now one file that makes figures for recent published papers. 
