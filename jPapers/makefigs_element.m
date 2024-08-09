@@ -361,7 +361,7 @@ end
          
 %--------------------------------------------------------------------------
 %Computation of transform maxima for (2,2) wavelet only
-%Note:  This figure takes about 5 minutes on a powerful machine
+%Note:  This figure takes about 5 minutes on my laptop
 M=10000;  %Reduce this to 1000 if it is too big for your machine
 N=12000;
 ga=2;be=2;mu=1;
@@ -380,7 +380,6 @@ for alpha=[0 1]
     %[mu,sigma,skew]=pdfprops(bins,counttilde(:,1));  %mu=1.36, skew =0.34
     
     %Same thing but for noise simulation
-    M=2000;
     if alpha==0
         x=randn(N*M,1);
     elseif alpha==1
@@ -388,14 +387,14 @@ for alpha=[0 1]
         x=x./std(x);
     end
     tic;w=wavetrans(x,{ga,be,fs(1:3)});toc
-    [index,ww]=transmax(fs(1:3),w);%*sqrt(2)
+    [index,ww,ff]=transmax(fs(1:3),w);
     [ii,jj]=ind2sub(size(w),index);
-    sigma=vstd(w(:,2),1);
+    sigma=abs(vstd(w(:,2),1));
     n=hist(abs(ww)./sigma,bins)';
     L=2*sqrt(2)*sqrt(be*ga)./fs(2);
     ntilde=n./(N*M./L);
     nrate=cumsum(n,1,'reverse')./(N*M./L);
-    
+
     figure,subplot(1,2,1)
     h1=plot(bins,counttilde(:,26:end-1)*1e4);linestyle -h h1 G,hold on
     h2=plot(bins,counttilde(:,3:25)*1e4);linestyle -h h2 C,hold on
@@ -758,9 +757,9 @@ make bravotrackcensus sizew index ii jj ff kk ww rr lat lon num fdr C rho frho A
 %load  bravotrackcensus
 use bravotrackcensus
 bool=(fdr<1/1000&rr<0.1);
-vindex(index,ii,jj,ff,kk,ww,rr,lat,lon,num,fdr,C,rho,frho,A,R,Ro,sigma,bool,1);
+vindex(index,ii,jj,ff,kk,ww,rr,lat,lon,num,fdr,C,rho,frho,A,R,Ro,bool,1);
 [bool,z]=isomax(sizew,index,ww,ff,ga,be,mu,1/2);
-vindex(index,ii,jj,ff,kk,ww,rr,lat,lon,num,fdr,C,rho,frho,A,R,Ro,sigma,bool,1);
+vindex(index,ii,jj,ff,kk,ww,rr,lat,lon,num,fdr,C,rho,frho,A,R,Ro,bool,1);
 
 psihat=morsewave(size(ssh,1),ga,mu,frho);
 parfor i=1:length(ii)
@@ -783,10 +782,8 @@ timeindexkk=find(yearfrac(num)>=2007&yearfrac(num)<2008);
 offsetmatrix=vrep(offsetter*[0:length(timeindex)-1],size(ssh,1),1);
 atdaxis=labseatpjaos.atd(a:b,31)-bravoatd;
 
-
 length(find(~isnan(ssh(:,timeindex)))) %5216
 %67/5216*100
-
 
 figure
 %subplot(1,3,1),plot(atdaxis,ssh(:,timeindex)+offsetmatrix,'k');linestyle 2E k

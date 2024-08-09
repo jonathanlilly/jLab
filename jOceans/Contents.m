@@ -52,8 +52,9 @@
 % Low-level functions
 %   besselktilde  - K-type Bessel function after factoring off exponential decay.
 %   besselitilde  - I-type Bessel function after factoring off exponential growth.
-%   curveinterp  - Interpolate a field or its gradient onto a set of curves.           
-%   orbitbreaks  - Separate orbit into passes based on turning points.          
+%   curveinterp   - Interpolate a field or its gradient onto a set of curves.           
+%   orbitbreaks   - Separate orbit into passes based on turning points. 
+%   trianglepath  - Moving instrument path composed of adjacent triangles.
 %   topo_copyright - Copyright statement for the Smith and Sandwell topography.
 %
 %  See also jData.

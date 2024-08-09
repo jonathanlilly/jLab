@@ -135,21 +135,19 @@ yo=0.5*(y(80)+y(81));
 edgecolor=0.6*[1 1 1];
 edgewidth=1;
 
-[z,lt,ut]=trianglepath(.1,0,50,8);
+[z,tc]=trianglepath(.1,50,8);
 z=z*rot(pi/12)+15-1i*120;
-for i=1:length(ut)
-     ut{i}=ut{i}*rot(pi/12)+15-1i*120;
-     lt{i}=lt{i}*rot(pi/12)+15-1i*120;
+for i=1:length(tc)
+     tc{i}=tc{i}*rot(pi/12)+15-1i*120;
 end
  
-[zo,lto,uto]=trianglepath(.1,0,40,6);
+[zo,tco]=trianglepath(.1,40,6);
 zo=zo-110+1i*20;
-for i=1:length(uto)
-     uto{i}=uto{i}-110+1i*20;
-     lto{i}=lto{i}-110+1i*20;
+for i=1:length(tco)
+     tco{i}=tco{i}-110+1i*20;
 end
  
-figure
+clf
 subplot(3,1,1),contourf(x-xo,y-yo,zeta(:,:,300)./fo*100,200)
 subplot(3,1,2),contourf(x-xo,y-yo,N(:,:,300)./fo*100,200)
 subplot(3,1,3),contourf(x-xo,y-yo,S(:,:,300)./fo*100,200)
@@ -159,28 +157,22 @@ for i=1:3
     axis equal
     axis([-166 439 -185 120])
     caxis([-.099 .099]*100)
-    plot(z,'w','linewidth',2)
-    plot(zo,'w','linewidth',2)
-    plot(z,'color',0.4*[1 1 1],'linewidth',1)
-    plot(zo,'color',0.4*[1 1 1],'linewidth',1)
-    %cmocean('diff')
+    cellplot(tc,'2w')
+    cellplot(tco,'2w')
+    cellplot(tc,'1D')
+    cellplot(tco,'1D')
     crameri('broc')
 end
 
 %--------------------------------------------------------------------------
 %interpolate onto triangles and find moments
 
-[zetac,sigmac,nuc]=vzeros(length(lt),2);
-for i=1:length(lt)
+[zetac,sigmac,nuc]=vzeros(length(tc),1);
+for i=1:length(tc)
     %upper triangle
-    xc=real(ut{i});yc=imag(ut{i});
+    xc=real(tc{i});yc=imag(tc{i});
     zc=interp2(x-xo,y-yo,cv(:,:,300),xc,yc);
     [zetac(i,1),~,sigmac(i,1),nuc(i,1)]=curvemoments(xc,yc,zc);
-
-    %lower triangle
-    xc=real(lt{i});yc=imag(lt{i});
-    zc=interp2(x-xo,y-yo,cv(:,:,300),xc,yc);
-    [zetac(i,2),~,sigmac(i,2),nuc(i,2)]=curvemoments(xc,yc,zc);
 end
 
 zetac=zetac./fo*100;
@@ -188,44 +180,31 @@ nuc=nuc./fo*100;
 sigmac=sigmac./fo*100;
 
 %--------------------------------------------------------------------------
-%plot average values in each triange 
+%plot average values in each triangle 
 
 subplot(3,1,1)
-for i=1:length(lt)
-    scatter(real(mean(ut{i})),imag(mean(ut{i})),100,zetac(i,1),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lt{i})),imag(mean(lt{i})),100,zetac(i,2),'filled',...
+for i=1:length(tc)
+    scatter(real(mean(tc{i})),imag(mean(tc{i})),100,zetac(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
 end
 subplot(3,1,2)
-for i=1:length(lt)
-    scatter(real(mean(ut{i})),imag(mean(ut{i})),100,nuc(i,1),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lt{i})),imag(mean(lt{i})),100,nuc(i,2),'filled',...
+for i=1:length(tc)
+    scatter(real(mean(tc{i})),imag(mean(tc{i})),100,nuc(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
 end
 subplot(3,1,3)
-for i=1:length(lt)
-    scatter(real(mean(ut{i})),imag(mean(ut{i})),100,sigmac(i,1),'filled',...
+for i=1:length(tc)
+    scatter(real(mean(tc{i})),imag(mean(tc{i})),100,sigmac(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lt{i})),imag(mean(lt{i})),100,sigmac(i,2),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)  
 end
 
 %--------------------------------------------------------------------------
 %interpolate onto triangles and find moments
-
-[zetaco,sigmaco,nuco]=vzeros(length(lto),2);
-for i=1:length(lto)
-    %upper triangle
-    xc=real(uto{i});yc=imag(uto{i});
+[zetaco,sigmaco,nuco]=vzeros(length(tco),1);
+for i=1:length(tco)
+    xc=real(tco{i});yc=imag(tco{i});
     zc=interp2(x-xo,y-yo,cv(:,:,300),xc,yc);
     [zetaco(i,1),~,sigmaco(i,1),nuco(i,1)]=curvemoments(xc,yc,zc);
-
-    %lower triangle
-    xc=real(lto{i});yc=imag(lto{i});
-    zc=interp2(x-xo,y-yo,cv(:,:,300),xc,yc);
-    [zetaco(i,2),~,sigmaco(i,2),nuco(i,2)]=curvemoments(xc,yc,zc);
 end
 
 zetaco=zetaco./fo*100;
@@ -236,24 +215,18 @@ sigmaco=sigmaco./fo*100;
 %plot average values in each triange 
 
 subplot(3,1,1)
-for i=1:length(lto)
-    scatter(real(mean(uto{i})),imag(mean(uto{i})),100,zetaco(i,1),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lto{i})),imag(mean(lto{i})),100,zetaco(i,2),'filled',...
+for i=1:length(tco)
+    scatter(real(mean(tco{i})),imag(mean(tco{i})),100,zetaco(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
 end
 subplot(3,1,2)
-for i=1:length(lto)
-    scatter(real(mean(uto{i})),imag(mean(uto{i})),100,nuco(i,1),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lto{i})),imag(mean(lto{i})),100,nuco(i,2),'filled',...
+for i=1:length(tco)
+    scatter(real(mean(tco{i})),imag(mean(tco{i})),100,nuco(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
 end
 subplot(3,1,3)
-for i=1:length(lto)
-    scatter(real(mean(uto{i})),imag(mean(uto{i})),100,sigmaco(i,1),'filled',...
-        'markeredgecolor',edgecolor,'linewidth',edgewidth)
-    scatter(real(mean(lto{i})),imag(mean(lto{i})),100,sigmaco(i,2),'filled',...
+for i=1:length(tco)
+    scatter(real(mean(tco{i})),imag(mean(tco{i})),100,sigmaco(i,1),'filled',...
         'markeredgecolor',edgecolor,'linewidth',edgewidth)
 end
 
@@ -322,7 +295,7 @@ dparo=vdiff(zo,1);
 uparo=real(cvco.*conj(dparo))./abs(dparo);
 upero=imag(cvco.*conj(dparo))./abs(dparo);
 
-%plot(uparo),hold on,plot(upero)
+plot(uparo),hold on,plot(upero)
 
 %find alongtrack shear 
 %dudx=vdiff(real(cvco),1)./abs(vdiff(zo,1))/1000/100/fo*100;
@@ -339,14 +312,16 @@ dvdxo(abs(dvdxo)>20)=nan;
 %--------------------------------------------------------------------------
 %plotting
 
+%Note there is an error in the published version of this figure where 
+%circles for only half of the triangular cells are plotted 
+
 cmap=crameri('broc');
 %c1=cmap(1+48,:);
 %c2=cmap(end-48,:);
 c1=cmap(1+40,:);
 c2=cmap(end-40,:);
 
-
-figure
+clf
 clear hl
 for i=1:3
     subplot(3,1,i)
@@ -358,7 +333,6 @@ for i=1:3
     else
          axis([-166 439 -13.5 13.5])
          text(-155,-11.5,['(' setstr(96+i) ')'])
-
     end       
     vlines(0,'D:'),hlines(0,'D:')
 end
@@ -366,44 +340,34 @@ end
 subplot(3,1,1),
 h(1)=plot(real(zo),Zco,'color',c1,'linewidth',2);
 h(2)=plot(real(z),Zc,'color',c2,'linewidth',2);
-%h(2)=plot(real(z),Zc);
-%linestyle(h,'2T- 2U-')
 hl(1)=h(1);hl(2)=h(2);
 subplot(3,1,2),
-%h(1)=plot(real(zo),Nco);
-%h(2)=plot(real(z),Nc);
 h(1)=plot(real(zo),Nco,'color',c1,'linewidth',2);
 h(2)=plot(real(z),Nc,'color',c2,'linewidth',2);
-%linestyle(h,'2T- 2U-')
 subplot(3,1,3)
-%h(1)=plot(real(zo),Sco);
-%h(2)=plot(real(z),Sc);
-%linestyle(h,'2T- 2U-')
 h(1)=plot(real(zo),Sco,'color',c1,'linewidth',2);
 h(2)=plot(real(z),Sc,'color',c2,'linewidth',2);
-%linestyle(h,'2T- 2U-')
-
 
 subplot(3,1,1)
-for i=1:length(lt)
-    hl(5)=plot(mean(real(ut{i})),zetac(i,1),'wo','markerfacecolor','k','linewidth',1);hold on
+for i=1:length(tc)
+    hl(5)=plot(mean(real(tc{i})),zetac(i,1),'wo','markerfacecolor','k','linewidth',1);hold on
 end
-for i=1:length(lto)
-    plot(mean(real(uto{i})),zetaco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
+for i=1:length(tco)
+    plot(mean(real(tco{i})),zetaco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
 end
 subplot(3,1,2)
-for i=1:length(lt)
-    plot(mean(real(ut{i})),nuc(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
+for i=1:length(tc)
+    plot(mean(real(tc{i})),nuc(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
 end
-for i=1:length(lto)
-    plot(mean(real(uto{i})),nuco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
+for i=1:length(tco)
+    plot(mean(real(tco{i})),nuco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
 end
 subplot(3,1,3)
-for i=1:length(lt)
-    plot(mean(real(ut{i})),sigmac(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
+for i=1:length(tc)
+    plot(mean(real(tc{i})),sigmac(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
 end
-for i=1:length(lto)
-    plot(mean(real(uto{i})),sigmaco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
+for i=1:length(tco)
+    plot(mean(real(tco{i})),sigmaco(i,1),'wo','markerfacecolor','k','linewidth',1),hold on
 end
 
 for i=1:3
@@ -429,6 +393,3 @@ if strcmp(str,'print')
    jprint(dirname,'vortex-profiles','jpeg','-r400')
 end
 %\*************************************************************************
-
-
-
