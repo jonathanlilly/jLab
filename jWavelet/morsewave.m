@@ -258,7 +258,10 @@ end
 X=vswap(X,inf,0);
 
 ommat=vrep(vrep(om,size(X,3),3),size(X,2),2);
-Xr=X.*rot(ommat.*(N+1)/2*fact); %ensures wavelets are centered 
+Xr=X.*(-1).^[0:N-1]'; %ensures wavelets are centered
+if ~mod(N, 2)
+  Xr(N/2+1, :)/=2; %ensures proper wavelet decay and analyticity
+endif
 %figure,plot(vrep(om,size(X,2),2).*(N+1)/2*fact)
 
 x=ifft(Xr);
@@ -269,7 +272,7 @@ function[psif]=morsewave_first_family(fact,N,K,ga,be,om,psizero,str)
 r=(2*be+1)./ga;
 c=r-1;
 L=0*om;
-index=(1:round(N/2));
+index=(1:floor(N/2)+1);
 psif=zeros(length(psizero),1,K);
 
 for k=0:K-1
